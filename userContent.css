@@ -15,6 +15,11 @@
     	--newtab-border-primary-color: var(--foreground) !important;
     }
 
+    .top-site-outer .title span {
+	font-weight: bold !important;
+	font-size: 0.8em !important;
+     }
+
     .collapsible-section .section-top-bar .context-menu-button {
 	display: none !important;
     }
