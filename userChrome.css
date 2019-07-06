@@ -1,0 +1,158 @@
+@import url('file:///home/johan/.cache/wal/colors.css');
+
+#main-window {
+    font-size: 0.85em !important;
+    --panel-separator-color: var(--background) !important;
+    --autocomplete-popup-background: var(--background) !important;
+    --autocomplete-popup-color: var(--foreground) !important;
+    --autocomplete-popup-border-color: var(--background) !important;
+    --autocomplete-popup-highlight-background: var(--foreground) !important;
+    --autocomplete-popup-highlight-color: var(--background) !important;
+    --arrowpanel-border-color: var(--background) !important;
+}
+
+#appMenu-popup panelview, #customizationui-widget-multiview panelview:not([extension]) {
+    border-color: var(--background) !important;
+}
+
+#downloadsPanel, #widget-overflow, #appMenu-popup, #customizationui-widget-panel {
+    margin-top: -7px;
+}
+
+/* Remove the ugly white border below the toolbar */
+#navigator-toolbox::after {
+    border-bottom: none !important;
+}
+
+.tab-line[selected="true"] {
+    display: none !important;
+    background: var(--color7) !important;
+} 
+
+/* Removes the border between the top of the window and the tab */
+.tab-background[multiselected="true"], .tab-background[selected="true"] {
+    border-top-color: var(--foreground) !important;
+}
+
+.toolbars-items {
+    background: var(--background) !important; 
+}
+
+/* The menu bar that comes up when pressing alt */
+#titlebar {
+    background: var(--background) !important;
+}
+
+#main-menubar > menu {
+    color: var(--foreground) !important;
+}
+
+/* Tab bar bottom border */
+#navigator-toolbox {
+    --tabs-border-color: var(--background) !important;
+}
+
+/* New tab button */
+#TabsToolbar .toolbarbutton-1, .tabbrowser-arrowscrollbox > .scrollbutton-up, .tabbrowser-arrowscrollbox > .scrollbutton-down {
+    color: var(--foreground) !important;
+}
+
+.tabbrowser-tab {
+    font-weight: bold !important;
+    font-size: 0.85em !important;
+}
+
+/* Current tab */
+.tabbrowser-tab[visuallyselected="true"] {
+    color: var(--background) !important;
+}
+
+.tabbrowser-tab:not([visuallyselected="true"]) {
+    color: var(--foreground) !important;
+}
+
+/* Set background for current tab */
+.tab-background[selected=true] {
+    background: var(--color7) !important;
+}
+
+/* The buttons inside the urlbar */ 
+#page-action-buttons {
+    opacity: 0.5 !important;
+}
+
+/* The border inside the urlbar between some of the action buttons */
+#page-action-buttons > :not([hidden]):not(toolbartabstop) ~ #pageActionSeparator {
+    margin: 0px !important;
+    visibility: hidden !important;
+}
+
+/* Search autocomplete box with search for <url> with: */
+.search-panel-header {
+    background-color: var(--background) !important;
+    border-top: none !important;
+    color: var(--foreground) !important;
+}
+
+/* Search autocomplete suggestions */
+#PopupAutoCompleteRichResult .autocomplete-richlistitem {
+    font-size: 0.9em !important;
+}
+
+#nav-bar {
+    /* Changes the color of the hamburger menu */
+    color: var(--foreground) !important;
+    background: var(--background) !important;
+}
+
+#back-button, #forward-button {
+    color: var(--foreground) !important;
+}
+
+#urlbar {
+    /* Changes the color of the urlbar text */ 
+    color: white !important;
+}
+
+/* When not focused */
+#urlbar:not([focused="true"]) {
+    border-color: var(--background) !important;
+    background: var(--background) !important;
+}
+
+/* When focused */
+#urlbar[focused="true"] {
+    border-color: var(--background) !important;
+    background: var(--background) !important;
+}
+
+/* Colors of the bookmarks and overflow menu icon  */
+toolbar[overflowable] > .customization-target {
+    color: var(--foreground) !important;
+    font-weight: bold !important;
+    font-size: 0.9em !important;
+}
+
+/* Tab context menu */
+.arrowscrollbox-scrollbox {
+    background: var(--background) !important;
+    color: var(--foreground) !important;
+}
+
+/* History right click context menu */
+.popup-internal-box {
+    background: var(--background) !important;
+    color: var(--foreground) !important;
+}
+
+/* HTTPS thingy context menu */
+#identity-popup-mainView {
+    background: var(--background) !important;
+    color: var(--foreground) !important;
+}
+
+/* Hamburger dropdown menu */
+.panel-subview-body {
+    background: var(--background) !important;
+    color: var(--foreground) !important;
+}
