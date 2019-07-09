@@ -9,6 +9,14 @@
     --autocomplete-popup-highlight-background: var(--foreground) !important;
     --autocomplete-popup-highlight-color: var(--background) !important;
     --arrowpanel-border-color: var(--background) !important;
+    --toolbar-non-lwt-bgcolor: var(--background) !important;
+    --toolbar-field-focus-border-color: var(--foreground) !important;
+    --arrowpanel-dimmed: var(--background) !important;	
+    --toolbar-non-lwt-bgcolor: var(--background) !important;
+    --toolbar-non-lwt-textcolor: var(--foreground) !important;
+    --toolbar-non-lwt-bgcolor: var(--background) !important;
+    --toolbar-non-lwt-textcolor: var(--foreground) !important;
+    --toolbar-non-lwt-bgimage: none !important;
 }
 
 #appMenu-popup panelview, #customizationui-widget-multiview panelview:not([extension]) {
@@ -164,4 +172,71 @@ toolbarbutton#alltabs-button {
 /* Remove underline from container tabs */
 .tabbrowser-tab[usercontextid] .tab-bottom-line {
     display: none !important;
+}
+
+#TabsToolbar .toolbarbutton-1, .tabbrowser-arrowscrollbox > .scrollbutton-up, .tabbrowser-arrowscrollbox > .scrollbutton-down {
+    background: var(--background) !important;
+}
+
+#tabbrowser-tabs {
+    background: var(--background) !important;
+}
+
+#sidebar-box {
+    background-color: var(--background) !important;
+    color: var(--foreground) !important;
+}
+
+#sidebar-header {
+    border-bottom: 0px !important;
+    font-weight: bold !important;	
+}
+
+.sidebar-splitter {
+    width: 0px !important;
+    border: 0px !important; 
+}
+
+#viewButton {
+    color: var(--foreground) !important;
+}
+
+textbox {
+    -moz-appearance: none !important;
+    background: none !important;
+    color: var(--foreground) !important;
+    font-weight: bold !important;
+}
+
+.sidebar-panel {
+    color: var(--foreground) !important;
+}
+
+.findbar-container {
+    color: var(--foreground) !important;
+    font-weight: bold !important;
+    font-size: smaller !important;
+}
+
+.close-icon {
+    fill: var(--foreground) !important;
+}
+
+panelmultiview {
+    font-size: smaller !important;
+}
+
+button {
+    -moz-appearance: none !important;
+    color: var(--foreground) !important;
+}
+
+.tabbrowser-tab[visuallyselected="true"] > .tab-stack > .tab-content > .close-icon {
+    fill: var(--background) !important;
+}
+
+panelview {
+    background: var(--background) !important;
+    color: var(--foreground) !important;
+    font-weight: bold !important;
 }
