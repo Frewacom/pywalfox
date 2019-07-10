@@ -98,4 +98,12 @@
 	border-color: var(--foreground) !important;
 	fill: var(--background-dark) !important;
     }
+
+    .icon.icon-settings {
+	fill: var(--foreground) !important;
+    }
+
+    .prefs-button button:hover, .prefs-button button:focus {
+	background-color: var(--background-light) !important;
+	border-radius: 5px !important;
 }

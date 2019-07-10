@@ -240,3 +240,19 @@ panelview {
     color: var(--foreground) !important;
     font-weight: bold !important;
 }
+
+#identity-box {
+    color: var(--foreground) !important;
+}
+
+html|*.textbox-input {
+    color: var(--foreground) !important;
+}
+
+:root[uidensity="compact"] .urlbar-icon {
+    color: var(--foreground) !important;
+}
+
+.textbox-input.urlbar-input {
+    color: var(--foreground) !important;
+}
