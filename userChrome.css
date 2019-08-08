@@ -2,6 +2,7 @@
 
 #main-window {
     font-size: 0.85em !important;
+    --background: <background>;
     --panel-separator-color: var(--background) !important;
     --autocomplete-popup-background: var(--background) !important;
     --autocomplete-popup-color: var(--foreground) !important;
