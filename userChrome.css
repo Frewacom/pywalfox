@@ -89,6 +89,10 @@
     background: var(--color7) !important;
 }
 
+.tabbrowser-tab::before,.tabbrowser-tab::after{
+    display: none !important;
+}
+
 /* The buttons inside the urlbar */ 
 #page-action-buttons {
     opacity: 0.5 !important;
