@@ -4,15 +4,17 @@
 	--foreground: <foreground>;
 	--background-light: <background-light>;
 	--background-dark: <background-dark>;
+	--background-main: <background-main>;
     }    
 
     body {
-        background: var(--background-dark) !important;
+        background: var(--background-main) !important;
         --newtab-element-hover-color: var(--foreground) !important;
   	--newtab-card-active-outline-color: var(--foreground) !important;
 	--newtab-contextmenu-button-color: var(--foreground) !important;
     	--newtab-icon-primary-color: var(--background-dark) !important;
     	--newtab-border-primary-color: var(--foreground) !important;
+	--newtab-background-color: var(--background-main) !important;
     }
 
     .top-site-outer .title span {

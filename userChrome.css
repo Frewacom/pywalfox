@@ -33,6 +33,10 @@
     border-bottom: none !important;
 }
 
+#navigator-toolbox {
+    border-bottom: none !important;
+}
+
 .tab-line[selected="true"] {
     display: none !important;
     background: var(--color7) !important;
