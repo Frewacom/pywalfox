@@ -265,3 +265,7 @@ html|*.textbox-input {
 .textbox-input.urlbar-input {
     color: var(--foreground) !important;
 }
+
+#urlbar, .searchbar-textbox {
+    box-shadow: none !important;
+}
