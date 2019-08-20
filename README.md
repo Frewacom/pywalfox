@@ -1,5 +1,10 @@
+![Theme preview](https://i.imgur.com/Wa8XqRG.png "Theme preview")
+![Theme preview - New tab page](https://i.imgur.com/F853V62.png "Theme preview - New tab page")
+
 # Pywalfox
 ### Warning
+The layout presented in the screenshots with the bookmarks to the right of the URL-bar is simply my preferred layout. You are free to use whatever you like.
+
 There are some bugs and not everything is styled. Dropdown- and context menus are not quite finished yet and it is definitely not "polished". It looks much better than the default, though. Also, during development we used the default theme in Firefox and it probably looks like absolute shit when using a different one.
 
 
