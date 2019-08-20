@@ -1,5 +1,6 @@
-![Theme preview](https://i.imgur.com/Wa8XqRG.png "Theme preview")
-![Theme preview - New tab page](https://i.imgur.com/F853V62.png "Theme preview - New tab page")
+![Theme preview](https://i.imgur.com/CMU0v5V.png "Theme preview Black")
+![Theme preview](https://i.imgur.com/YTSW17k.png "Theme preview Pink")
+![Theme preview](https://i.imgur.com/uoNtrde.png "Theme preview Blue")
 
 # Pywalfox
 ### Warning
