@@ -2,7 +2,10 @@
 
 #main-window {
     font-size: 0.85em !important;
-    --background: <background>;
+    /* We decided that we wanted a bit lighter color as background
+       and wal simply doesn't have anything we thought looked good, so we used colorpicker.py to generate
+       a new one and insert it here. */
+    --background: <background>; 
     --panel-separator-color: var(--background) !important;
     --autocomplete-popup-background: var(--background) !important;
     --autocomplete-popup-color: var(--foreground) !important;
@@ -29,14 +32,11 @@
 }
 
 /* Remove the ugly white border below the toolbar */
-#navigator-toolbox::after {
+#navigator-toolbox, #navigator-toolbox::after {
     border-bottom: none !important;
 }
 
-#navigator-toolbox {
-    border-bottom: none !important;
-}
-
+/* Removes the top-border from the selected tab */
 .tab-line[selected="true"] {
     display: none !important;
     background: var(--color7) !important;
@@ -63,11 +63,6 @@
 /* Tab bar bottom border */
 #navigator-toolbox {
     --tabs-border-color: var(--background) !important;
-}
-
-/* New tab button */
-#TabsToolbar .toolbarbutton-1, .tabbrowser-arrowscrollbox > .scrollbutton-up, .tabbrowser-arrowscrollbox > .scrollbutton-down {
-    color: var(--foreground) !important;
 }
 
 .tabbrowser-tab {
@@ -183,8 +178,12 @@ toolbarbutton#alltabs-button {
     display: none !important;
 }
 
-#TabsToolbar .toolbarbutton-1, .tabbrowser-arrowscrollbox > .scrollbutton-up, .tabbrowser-arrowscrollbox > .scrollbutton-down {
+/* New tab button */
+#TabsToolbar .toolbarbutton-1, 
+.tabbrowser-arrowscrollbox > .scrollbutton-up, 
+.tabbrowser-arrowscrollbox > .scrollbutton-down {
     background: var(--background) !important;
+    color: var(--foreground) !important;
 }
 
 #tabbrowser-tabs {
@@ -268,4 +267,19 @@ html|*.textbox-input {
 
 #urlbar, .searchbar-textbox {
     box-shadow: none !important;
+}
+
+/* Hover on buttons in dropdown menus */
+panelview .toolbarbutton-1:not(:-moz-any([disabled], [open], :active)):-moz-any(:hover, :focus), 
+toolbarbutton.subviewbutton:not(:-moz-any([disabled], [open], :active)):-moz-any(:hover, :focus), 
+.navigable.subviewbutton:not(:-moz-any([disabled], [open], :active)):-moz-any(:hover, :focus), 
+menu.subviewbutton:not(:-moz-any([disabled], :active))[_moz-menuactive], 
+menuitem.subviewbutton:not(:-moz-any([disabled], :active))[_moz-menuactive], 
+.widget-overflow-list .toolbarbutton-1:not(:-moz-any([disabled], [open], 
+:active)):-moz-any(:hover, :focus), 
+.toolbaritem-combined-buttons:-moz-any(:not([cui-areatype="toolbar"]), 
+[overflowedItem="true"]) > toolbarbutton:not(:-moz-any([disabled], [open], 
+:active)):-moz-any(:hover, :focus) {
+    color: var(--background) !important;
+    background-color: var(--foreground) !important;
 }
