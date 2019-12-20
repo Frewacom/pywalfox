@@ -1,11 +1,18 @@
-@import url('file:///home/<username>/.cache/wal/colors.css');
+/*@import url('file:///home/<username>/.cache/wal/colors.css');*/
+
+:root {
+    --background: <background>;
+    --background-main: <background-main>;
+    --foreground: <foreground>;
+    --color7: <accent>;
+}
 
 #main-window {
     font-size: 0.85em !important;
     /* We decided that we wanted a bit lighter color as background
        and wal simply doesn't have anything we thought looked good, so we used colorpicker.py to generate
        a new one and insert it here. */
-    --background: <background>; 
+    --background: var(--background-main);
     --panel-separator-color: var(--background) !important;
     --autocomplete-popup-background: var(--background) !important;
     --autocomplete-popup-color: var(--foreground) !important;
@@ -15,12 +22,28 @@
     --arrowpanel-border-color: var(--background) !important;
     --toolbar-non-lwt-bgcolor: var(--background) !important;
     --toolbar-field-focus-border-color: var(--foreground) !important;
-    --arrowpanel-dimmed: var(--background) !important;	
+    --arrowpanel-dimmed: var(--background) !important;
     --toolbar-non-lwt-bgcolor: var(--background) !important;
     --toolbar-non-lwt-textcolor: var(--foreground) !important;
     --toolbar-non-lwt-bgcolor: var(--background) !important;
     --toolbar-non-lwt-textcolor: var(--foreground) !important;
     --toolbar-non-lwt-bgimage: none !important;
+
+    /* We should create some color for hover background on buttons */
+    /*--toolbarbutton-hover-background: var(--foreground) !important;*/
+
+    /* Color of the bookmark-folder */
+    /*--lwt-toolbarbutton-icon-fill: var(--color7) !important;*/
+    --tab-min-height: 26px !important;
+}
+
+#urlbar-input-container {
+    font-size: 1em !important;
+}
+
+/* Fixes a issues with the new tab icon being squished */
+#TabsToolbar .toolbarbutton-1, .tabbrowser-arrowscrollbox::part(scrollbutton-up), .tabbrowser-arrowscrollbox::part(scrollbutton-down) {
+    margin: 0px !important;
 }
 
 #appMenu-popup panelview, #customizationui-widget-multiview panelview:not([extension]) {
@@ -39,16 +62,16 @@
 /* Removes the top-border from the selected tab */
 .tab-line[selected="true"] {
     display: none !important;
-    background: var(--color7) !important;
-} 
+    background: var(--foreground) !important;
+}
 
 /* Removes the border between the top of the window and the tab */
 .tab-background[multiselected="true"], .tab-background[selected="true"] {
-    border-top-color: var(--foreground) !important;
+    border-top-color: var(--color7) !important;
 }
 
 .toolbars-items {
-    background: var(--background) !important; 
+    background: var(--background) !important;
 }
 
 /* The menu bar that comes up when pressing alt */
@@ -76,7 +99,8 @@
 }
 
 .tabbrowser-tab:not([visuallyselected="true"]) {
-    color: var(--foreground) !important;
+    /*color: var(--foreground) !important;*/
+    opacity: 0.8 !important;
 }
 
 /* Set background for current tab */
@@ -88,7 +112,7 @@
     display: none !important;
 }
 
-/* The buttons inside the urlbar */ 
+/* The buttons inside the urlbar */
 #page-action-buttons {
     opacity: 0.5 !important;
 }
@@ -113,7 +137,7 @@
 
 #nav-bar {
     /* Changes the color of the hamburger menu */
-    color: var(--foreground) !important;
+    /*color: var(--foreground) !important;*/
     background: var(--background) !important;
 }
 
@@ -122,7 +146,7 @@
 }
 
 #urlbar {
-    /* Changes the color of the urlbar text */ 
+    /* Changes the color of the urlbar text */
     color: white !important;
 }
 
@@ -140,9 +164,8 @@
 
 /* Colors of the bookmarks and overflow menu icon  */
 toolbar[overflowable] > .customization-target {
-    color: var(--foreground) !important;
     font-weight: bold !important;
-    font-size: 0.9em !important;
+    font-size: 0.85em !important;
 }
 
 /* Tab context menu */
@@ -179,14 +202,15 @@ toolbarbutton#alltabs-button {
 }
 
 /* New tab button */
-#TabsToolbar .toolbarbutton-1, 
-.tabbrowser-arrowscrollbox > .scrollbutton-up, 
+#TabsToolbar .toolbarbutton-1,
+.tabbrowser-arrowscrollbox > .scrollbutton-up,
 .tabbrowser-arrowscrollbox > .scrollbutton-down {
     background: var(--background) !important;
     color: var(--foreground) !important;
 }
 
 #tabbrowser-tabs {
+    height: var(--tab-min-height);
     background: var(--background) !important;
 }
 
@@ -197,12 +221,12 @@ toolbarbutton#alltabs-button {
 
 #sidebar-header {
     border-bottom: 0px !important;
-    font-weight: bold !important;	
+    font-weight: bold !important;
 }
 
 .sidebar-splitter {
     width: 0px !important;
-    border: 0px !important; 
+    border: 0px !important;
 }
 
 #viewButton {
@@ -270,15 +294,15 @@ html|*.textbox-input {
 }
 
 /* Hover on buttons in dropdown menus */
-panelview .toolbarbutton-1:not(:-moz-any([disabled], [open], :active)):-moz-any(:hover, :focus), 
-toolbarbutton.subviewbutton:not(:-moz-any([disabled], [open], :active)):-moz-any(:hover, :focus), 
-.navigable.subviewbutton:not(:-moz-any([disabled], [open], :active)):-moz-any(:hover, :focus), 
-menu.subviewbutton:not(:-moz-any([disabled], :active))[_moz-menuactive], 
-menuitem.subviewbutton:not(:-moz-any([disabled], :active))[_moz-menuactive], 
-.widget-overflow-list .toolbarbutton-1:not(:-moz-any([disabled], [open], 
-:active)):-moz-any(:hover, :focus), 
-.toolbaritem-combined-buttons:-moz-any(:not([cui-areatype="toolbar"]), 
-[overflowedItem="true"]) > toolbarbutton:not(:-moz-any([disabled], [open], 
+panelview .toolbarbutton-1:not(:-moz-any([disabled], [open], :active)):-moz-any(:hover, :focus),
+toolbarbutton.subviewbutton:not(:-moz-any([disabled], [open], :active)):-moz-any(:hover, :focus),
+.navigable.subviewbutton:not(:-moz-any([disabled], [open], :active)):-moz-any(:hover, :focus),
+menu.subviewbutton:not(:-moz-any([disabled], :active))[_moz-menuactive],
+menuitem.subviewbutton:not(:-moz-any([disabled], :active))[_moz-menuactive],
+.widget-overflow-list .toolbarbutton-1:not(:-moz-any([disabled], [open],
+:active)):-moz-any(:hover, :focus),
+.toolbaritem-combined-buttons:-moz-any(:not([cui-areatype="toolbar"]),
+[overflowedItem="true"]) > toolbarbutton:not(:-moz-any([disabled], [open],
 :active)):-moz-any(:hover, :focus) {
     color: var(--background) !important;
     background-color: var(--foreground) !important;
