@@ -1,0 +1,19 @@
+{
+    "manifest_version": 2,
+    "name": "Pywalfox",
+    "version": "1.0",
+    "description": "Fetches pywal colors from system and applies them to Firefox",
+    "icons": {
+        "48": "icons/border-48.png"
+    },
+    "browser_action": {
+        "default_icon": "icons/beasts-32.png",
+        "default_title": "Pywalfox",
+        "default_popup": "popup/main.html"
+    },
+    "background": {
+        "scripts": [
+            "daemon.js"
+        ]
+    }
+}
