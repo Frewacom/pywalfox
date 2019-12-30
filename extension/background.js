@@ -17,6 +17,7 @@ function createTheme(colors) {
             tab_background_separator: colors.background,
             toolbar: colors.background,
             toolbar_field: colors.background,
+            toolbar_field_focus: colors.background,
             toolbar_field_text: '#fff',
             toolbar_field_text_focus: '#fff',
             toolbar_field_border: colors.background,
@@ -26,7 +27,7 @@ function createTheme(colors) {
             toolbar_field_highlight_text: '#fff',
             toolbar_bottom_separator: colors.background,
             toolbar_top_separator: colors.background,
-            toolbar_vertical_separator: colors.foreground,
+            toolbar_vertical_separator: colors.background_light,
             ntp_background: colors.background,
             ntp_text: colors.foreground,
             popup: colors.background,
@@ -40,6 +41,8 @@ function createTheme(colors) {
             sidebar_highlight: colors.accent_primary_light,
             sidebar_highlight_text: '#fff',
             bookmark_text: colors.foreground,
+            button_background_hover: colors.background_light,
+            button_background_active: colors.background_light,
         }
     };
 
@@ -51,6 +54,7 @@ Listen for messages from the app.
 */
 port.onMessage.addListener((response) => {
     if (response.success) {
+        console.log(response.data);
         const theme = createTheme(response.data);
         browser.theme.update(theme);
     }

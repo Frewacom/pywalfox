@@ -1,6 +1,6 @@
 body {
-    background-color: white;
-    color: #333;
+    background-color: var(--background);
+    color: var(--foreground);
     height: 300px;
     width: 400px;
 }
