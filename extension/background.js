@@ -50,7 +50,7 @@ function createTheme(colors) {
 }
 
 function output(message) {
-    browser.tabs.sendMessage({ action: 'output', message });
+    browser.runtime.sendMessage({ action: 'output', message });
 }
 
 /*
@@ -59,9 +59,9 @@ Listen for messages from the app.
 port.onMessage.addListener((response) => {
     if (response.key == 'colorscheme') {
         if (response.success) {
-            output(response.data);
             const theme = createTheme(response.data);
             browser.theme.update(theme);
+            output('Fetched and applied colorscheme successfully.')
         } else {
             output(response.error);
         }
@@ -76,10 +76,8 @@ port.onMessage.addListener((response) => {
 
 browser.runtime.onMessage.addListener((message) => {
     if (message.action == 'update') {
-        console.log('Fetching latest colors from system...');
         port.postMessage('update');
     } else if (message.action == 'reset') {
-        console.log('Resetting to default theme...');
         browser.theme.reset();
     } else if (message.action == 'enableCustomCss') {
         port.postMessage('enableCustomCss');

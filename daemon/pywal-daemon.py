@@ -172,14 +172,14 @@ def getChromePath():
 def enableCustomCss(path, filename):
     try:
         shutil.copy('./assets/%s' % filename, '%s/%s' % (path, filename))
-        return (True, 'Custom CSS has been enabled.')
+        return (True, 'Custom CSS: "%s" has been enabled.' % filename)
     except:
         return (False, 'Could not copy custom CSS to folder.')
 
 def disableCustomCss(path, filename):
     try:
         os.remove('%s/%s' % (path, filename))
-        return (True, 'Custom CSS has been disabled.')
+        return (True, 'Custom CSS: "%s" has been disabled.' % filename)
     except IOError:
         return (False, 'Could not remove custom CSS.')
 

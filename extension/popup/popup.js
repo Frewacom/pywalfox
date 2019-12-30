@@ -1,8 +1,3 @@
-function setExtensionTheme(theme) {
-    document.body.style.backgroundColor = theme.colors.frame;
-    document.body.style.color = theme.colors.toolbar_field_text;
-}
-
 // Watch for theme updates
 browser.theme.onUpdated.addListener(async ({ theme, windowId }) => {
   const sidebarWindow = await browser.windows.getCurrent();
@@ -20,27 +15,41 @@ const updateButton = document.getElementById('update');
 const resetButton = document.getElementById('reset');
 const enableCssButton = document.getElementById('enableCustomCss');
 const disableCssButton = document.getElementById('disableCustomCss');
-const output = document.getElementById('output');
+const outputArea = document.getElementById('output');
+
+function setExtensionTheme(theme) {
+    document.body.style.backgroundColor = theme.colors.frame;
+    document.body.style.color = theme.colors.toolbar_field_text;
+    document.getElementById('buttons').style.borderColor = theme.colors.button_background_hover;
+}
+
+function output(message) {
+    outputArea.value += message + '\n';
+}
 
 updateButton.addEventListener('click', () => {
     browser.runtime.sendMessage({action: 'update'})
 });
 
 resetButton.addEventListener('click', () => {
+    output('Resetting to default theme.');
+    setInitialStyle();
     browser.runtime.sendMessage({ action: 'reset' })
 });
 
 enableCssButton.addEventListener('click', () => {
     browser.runtime.sendMessage({ action: 'enableCustomCss' })
+    output('Restart is required for custom CSS to take effect.');
 });
 
 disableCssButton.addEventListener('click', () => {
     browser.runtime.sendMessage({ action: 'disableCustomCss' })
+    output('Restart is required for custom CSS to take effect.');
 });
 
 browser.runtime.onMessage.addListener((response) => {
     if (response.action == 'output') {
-        output.value += response.message;
+        output(response.message);
     }
 });
 
