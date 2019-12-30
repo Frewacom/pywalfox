@@ -11,7 +11,7 @@ function createTheme(colors) {
             frame: colors.background,
             tab_text: colors.background,
             tab_loading: colors.accent_primary_light,
-            tab_background_text: colors.foreground,
+            tab_background_text: '#fff',
             tab_selected: colors.foreground,
             tab_line: colors.foreground,
             tab_background_separator: colors.background,
@@ -40,7 +40,7 @@ function createTheme(colors) {
             sidebar_text: colors.foreground,
             sidebar_highlight: colors.accent_primary_light,
             sidebar_highlight_text: '#fff',
-            bookmark_text: colors.foreground,
+            bookmark_text: '#fff',
             button_background_hover: colors.background_light,
             button_background_active: colors.background_light,
         }
