@@ -13,7 +13,17 @@
     },
     "background": {
         "scripts": [
-            "daemon.js"
+            "background.js"
         ]
-    }
+    },
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "pywalfox@frewacom.org",
+            "strict_min_version": "50.0"
+        }
+    },
+    "permissions": [
+        "nativeMessaging",
+        "theme"
+    ]
 }
