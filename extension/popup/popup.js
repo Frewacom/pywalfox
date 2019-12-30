@@ -16,9 +16,32 @@ browser.theme.onUpdated.addListener(async ({ theme, windowId }) => {
   }
 });
 
-var updateButton = document.getElementById('update');
+const updateButton = document.getElementById('update');
+const resetButton = document.getElementById('reset');
+const enableCssButton = document.getElementById('enableCustomCss');
+const disableCssButton = document.getElementById('disableCustomCss');
+const output = document.getElementById('output');
+
 updateButton.addEventListener('click', () => {
     browser.runtime.sendMessage({action: 'update'})
+});
+
+resetButton.addEventListener('click', () => {
+    browser.runtime.sendMessage({ action: 'reset' })
+});
+
+enableCssButton.addEventListener('click', () => {
+    browser.runtime.sendMessage({ action: 'enableCustomCss' })
+});
+
+disableCssButton.addEventListener('click', () => {
+    browser.runtime.sendMessage({ action: 'disableCustomCss' })
+});
+
+browser.runtime.onMessage.addListener((response) => {
+    if (response.action == 'output') {
+        output.value += response.message;
+    }
 });
 
 // Set the element style when the extension page loads

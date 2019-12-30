@@ -49,23 +49,41 @@ function createTheme(colors) {
     return theme;
 }
 
+function output(message) {
+    browser.tabs.sendMessage({ action: 'output', message });
+}
+
 /*
 Listen for messages from the app.
 */
 port.onMessage.addListener((response) => {
-    if (response.success) {
-        console.log(response.data);
-        const theme = createTheme(response.data);
-        browser.theme.update(theme);
+    if (response.key == 'colorscheme') {
+        if (response.success) {
+            output(response.data);
+            const theme = createTheme(response.data);
+            browser.theme.update(theme);
+        } else {
+            output(response.error);
+        }
+    } else if (response.key == 'customCss') {
+        if (response.success) {
+            output(response.data);
+        } else {
+            output(response.error);
+        }
     }
 });
 
 browser.runtime.onMessage.addListener((message) => {
     if (message.action == 'update') {
-        console.log("Fetching latest colors from system...");
-        port.postMessage("update");
+        console.log('Fetching latest colors from system...');
+        port.postMessage('update');
     } else if (message.action == 'reset') {
         console.log('Resetting to default theme...');
         browser.theme.reset();
+    } else if (message.action == 'enableCustomCss') {
+        port.postMessage('enableCustomCss');
+    } else if (message.action == 'disableCustomCss') {
+        port.postMessage('disableCustomCss');
     }
 });

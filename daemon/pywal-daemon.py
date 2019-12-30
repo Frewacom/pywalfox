@@ -5,6 +5,8 @@ import sys
 import json
 import struct
 import math
+import glob
+import shutil
 
 try:
     # Python 3.x version
@@ -53,16 +55,18 @@ except AttributeError:
         sys.stdout.write(encodedMessage['content'])
         sys.stdout.flush()
 
-def createMessage(success, data):
-    if success:
+def createMessage(key, response):
+    if response[0]:
         return encodeMessage({
+            'key': key,
             'success': True,
-            'data': data
+            'data': response[1]
         })
 
     return encodeMessage({
+        'key': key,
         'success': False,
-        'error': data
+        'error': response[1]
     })
 
 def fetchColors():
@@ -158,8 +162,39 @@ def generateLighterShade(hexcolor, modifier):
     rgb = hsv_to_rgb((hsv[0], hsv[1], limit(hsv[2] + modifier)))
     return rgb_to_hex(rgb)
 
+def getChromePath():
+    path = glob.glob('%s/*.default-release/chrome' % os.path.expanduser('~/.mozilla/firefox'))
+    if len(path) == 1:
+        return path[0]
+
+    return False
+
+def enableCustomCss(path, filename):
+    try:
+        shutil.copy('./assets/%s' % filename, '%s/%s' % (path, filename))
+        return (True, 'Custom CSS has been enabled.')
+    except:
+        return (False, 'Could not copy custom CSS to folder.')
+
+def disableCustomCss(path, filename):
+    try:
+        os.remove('%s/%s' % (path, filename))
+        return (True, 'Custom CSS has been disabled.')
+    except IOError:
+        return (False, 'Could not remove custom CSS.')
+
+customCssPath = getChromePath()
+if not customCssPath:
+    sendMessage(createMessage('custom-css', False, 'Could not find the folder to put custom CSS in.'))
+
 while True:
     receivedMessage = getMessage()
     if receivedMessage == 'update':
-        (success, value) = fetchColors()
-        sendMessage(createMessage(success, value))
+        sendMessage(createMessage('colorscheme', fetchColors()))
+    elif receivedMessage == 'enableCustomCss':
+        sendMessage(createMessage('customCss', enableCustomCss(customCssPath, 'userChrome.css')))
+        sendMessage(createMessage('customCss', enableCustomCss(customCssPath, 'userContent.css')))
+    elif receivedMessage == 'disableCustomCss':
+        sendMessage(createMessage('customCss', disableCustomCss(customCssPath, 'userChrome.css')))
+        sendMessage(createMessage('customCss', disableCustomCss(customCssPath, 'userContent.css')))
+

@@ -1,28 +1,10 @@
 #main-window {
-    font-size: 0.85em !important;
-    /* We decided that we wanted a bit lighter color as background
-       and wal simply doesn't have anything we thought looked good, so we used colorpicker.py to generate
-       a new one and insert it here. */
-    /* --background: var(--background-main); */
-    /* --panel-separator-color: var(--background) !important; */
-    /* --autocomplete-popup-background: var(--background) !important; */
-    /* --autocomplete-popup-color: var(--foreground) !important; */
-    /* --autocomplete-popup-border-color: var(--background) !important; */
-    /* --autocomplete-popup-highlight-background: var(--foreground) !important; */
-    /* --autocomplete-popup-highlight-color: var(--background) !important; */
-    /* --arrowpanel-border-color: var(--background) !important; */
-    /* --toolbar-non-lwt-bgcolor: var(--background) !important; */
-    /* --toolbar-field-focus-border-color: var(--foreground) !important; */
-    /* --arrowpanel-dimmed: var(--background) !important; */
-    /* --toolbar-non-lwt-bgcolor: var(--background) !important; */
-    /* --toolbar-non-lwt-textcolor: var(--foreground) !important; */
-    /* --toolbar-non-lwt-bgcolor: var(--background) !important; */
-    /* --toolbar-non-lwt-textcolor: var(--foreground) !important; */
-    /* --toolbar-non-lwt-bgimage: none !important; */
+    --font-size: 0.85em !important;
+    font-size: var(--font-size) !important;
 }
 
 #urlbar-input-container {
-    font-size: 1em !important;
+    font-size: calc(var(--font-size) * 1.15) !important;
 }
 
 #downloadsPanel, #widget-overflow, #appMenu-popup, #customizationui-widget-panel {
@@ -31,7 +13,7 @@
 
 .tabbrowser-tab {
     font-weight: bold !important;
-    font-size: 0.85em !important;
+    font-size: var(--font-size) !important;
 }
 
 .tabbrowser-tab:not([visuallyselected="true"]) {
@@ -55,13 +37,13 @@
 
 /* Search autocomplete suggestions */
 #PopupAutoCompleteRichResult .autocomplete-richlistitem {
-    font-size: 0.9em !important;
+    font-size: calc(var(--font-size) * 1.05) !important;
 }
 
 /* Colors of the bookmarks and overflow menu icon  */
 toolbar[overflowable] > .customization-target {
     font-weight: bold !important;
-    font-size: 0.85em !important;
+    font-size: var(--font-size) !important;
 }
 
 #sidebar-header {
