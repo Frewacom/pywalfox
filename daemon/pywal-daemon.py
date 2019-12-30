@@ -82,13 +82,13 @@ def fetchColors():
 
     colorscheme = {
         'background_dark': colors[0],
-        'background': generateLighterShade(colors[0], 15),
+        'background': generateDarkerShade(colors[2], 130),
         'foreground': colors[-1],
         'accent_primary': colors[1],
         'accent_secondary': colors[2],
         'accent_primary_light': colors[4],
         'accent_secondary_light': colors[5],
-        'background_light': generateLighterShade(colors[0], 40)
+        'background_light': generateDarkerShade(colors[2], 90)
     }
 
     return (True, colorscheme)
@@ -96,6 +96,8 @@ def fetchColors():
 def limit(x):
     if x > 255:
         return 255
+    elif x < 0:
+        return 0
 
     return x
 
@@ -160,6 +162,14 @@ def generateLighterShade(hexcolor, modifier):
 
     hsv = rgb_to_hsv(values)
     rgb = hsv_to_rgb((hsv[0], hsv[1], limit(hsv[2] + modifier)))
+    return rgb_to_hex(rgb)
+
+def generateDarkerShade(hexcolor, modifier):
+    h = hexcolor.lstrip('#')
+    values = hex_to_rgb(h)
+
+    hsv = rgb_to_hsv(values)
+    rgb = hsv_to_rgb((hsv[0], hsv[1], limit(hsv[2] - modifier)))
     return rgb_to_hex(rgb)
 
 def getChromePath():

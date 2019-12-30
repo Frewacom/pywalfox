@@ -24,7 +24,7 @@ button {
     color: inherit;
     outline: none;
     opacity: 0.65;
-    transition: opacity 0.15;
+    transition: opacity 0.15s;
     cursor: pointer;
     border-color: inherit;
 }
@@ -49,6 +49,7 @@ button:nth-of-type(2n-1) {
     background: inherit;
     color: inherit;
     border: none;
+    font-weight: bold;
 }
 
 .row {

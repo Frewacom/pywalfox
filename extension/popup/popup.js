@@ -19,7 +19,7 @@ const outputArea = document.getElementById('output');
 
 function setExtensionTheme(theme) {
     document.body.style.backgroundColor = theme.colors.frame;
-    document.body.style.color = theme.colors.toolbar_field_text;
+    document.body.style.color = theme.colors.tab_selected;
     document.getElementById('buttons').style.borderColor = theme.colors.button_background_hover;
 }
 
