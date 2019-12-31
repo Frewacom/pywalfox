@@ -10,6 +10,11 @@ html {
     --foreground: var(--arrowpanel-color);
 }
 
+/* Remove underline from container tabs */
+.tabbrowser-tab[usercontextid] .tab-bottom-line {
+    display: none !important;
+}
+
 /* Tab context menu */
 .arrowscrollbox-scrollbox {
     background: var(--background) !important;
