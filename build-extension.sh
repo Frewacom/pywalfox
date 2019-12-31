@@ -1,2 +1,3 @@
 mkdir -p dist
-zip -r -FS ./dist/pywalfox.zip ./extension/* --exclude *.git*
+cd ./extension
+zip -r -FS ../dist/pywalfox.zip * --exclude *.git*
