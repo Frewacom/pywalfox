@@ -1,3 +1,8 @@
+/* Makes all scrollbars thin and less noticeable, however, this doesn't remove them completely. */
+html {
+    scrollbar-width: thin !important;
+}
+
 #main-window {
     --font-size: 0.85em !important;
     font-size: var(--font-size) !important;
