@@ -8,7 +8,7 @@ You can download the Firefox Addon here: https://addons.mozilla.org/en-US/firefo
 
 Pywalfox allows Firefox to be themed using Pywal. It also includes custom CSS that adds things such as a thin scrollbar, smaller and bold text, styled dropdowns, etc.
 
-The addon is using the new Theme API to dynamically change colors in a more efficient and future-proof way (they are slowly removing support for custom CSS).
+The addon is using the new Theme API to dynamically change colors in a more efficient and future-proof way.
 
 The custom CSS is optional and can be enabled/disabled from within the extension (there may be some issues if you have multiple profiles in firefox).
 You also have to enable the support for custom CSS for it to work. How to do this is described down below.
@@ -32,6 +32,11 @@ Finished.
 ```
 
 When this is done, you should be able to set the theme using the addon.
+
+### Custom CSS, userChrome.css and userContent.css
+If you want to use the custom CSS, you must do the following:
+1. Open `about:config` in Firefox
+2. Set `toolkit.legacyUserProfileCustomizations.stylesheets` to `true`
 
 ### Troubleshooting
 * Make sure that `path` in `~/.mozilla/native-messaging-hostst/pywalfox.json` points to the location of `native-app/pywal-fetcher.py`
