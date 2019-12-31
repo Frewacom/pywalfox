@@ -6,6 +6,10 @@ browser.theme.onUpdated.addListener(async ({ theme, windowId }) => {
         If a windowId is passed during an update, it means that the theme is applied to that specific window.
         Otherwise, the theme is applied globally to all windows.
     */
+
+    // browser.storage.local.set({ isApplied: false });
+
+    console.log('theme saved');
     if (!windowId || windowId == sidebarWindow.id) {
         setExtensionTheme(theme);
     }
@@ -33,7 +37,11 @@ updateButton.addEventListener('click', () => {
 
 resetButton.addEventListener('click', () => {
     output('Resetting to default theme.');
-    browser.theme.reset(); // It is a known bug that this does not reset to the theme he user previously had chosen.
+    browser.storage.local.set({ isApplied: false });
+
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=1415267
+    // It is a known bug that the reset doesnt respect default theme
+    browser.theme.reset();
 });
 
 enableCssButton.addEventListener('click', () => {

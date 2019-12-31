@@ -1,8 +1,8 @@
 body {
     background-color: var(--background);
     color: var(--foreground);
-    height: 300px;
-    width: 400px;
+    height: 175px;
+    width: 325px;
 }
 
 main {

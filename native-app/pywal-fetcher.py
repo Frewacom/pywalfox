@@ -82,13 +82,13 @@ def fetchColors():
 
     colorscheme = {
         'background_dark': colors[0],
-        'background': generateDarkerShade(colors[2], 130),
+        'background': generateDarkerShade(colors[2], 150),
         'foreground': colors[-1],
         'accent_primary': colors[1],
         'accent_secondary': colors[2],
         'accent_primary_light': colors[4],
         'accent_secondary_light': colors[5],
-        'background_light': generateDarkerShade(colors[2], 90)
+        'background_light': generateDarkerShade(colors[2], 110)
     }
 
     return (True, colorscheme)

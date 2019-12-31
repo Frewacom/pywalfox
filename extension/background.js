@@ -93,3 +93,12 @@ browser.runtime.onMessage.addListener((message) => {
         port.postMessage('disableCustomCss');
     }
 });
+
+async function applyThemeOnStartup() {
+    const state = await browser.storage.local.get('isApplied');
+    if (state.isApplied) {
+        port.postMessage('update');
+    }
+}
+
+applyThemeOnStartup();
