@@ -1,5 +1,3 @@
-You can download the Firefox Addon here: https://addons.mozilla.org/en-US/firefox/addon/pywalfox/
-
 ![Theme preview](https://i.imgur.com/Gw7lp2u.png "Theme preview Black")
 ![Theme preview](https://i.imgur.com/lFaQAve.png "Theme preview Pink")
 ![Theme preview](https://i.imgur.com/GQKzDff.png "Theme preview Blue")
@@ -12,6 +10,8 @@ The addon is using the new Theme API to dynamically change colors in a more effi
 
 The custom CSS is optional and can be enabled/disabled from within the extension (there may be some issues if you have multiple profiles in firefox).
 You also have to enable the support for custom CSS for it to work. How to do this is described down below.
+
+You can download the Firefox Addon here: https://addons.mozilla.org/en-US/firefox/addon/pywalfox/
 
 ### Warning
 The layout presented in the screenshots with the bookmarks to the right of the URL-bar is simply my preferred layout. You are free to use whatever you like.
