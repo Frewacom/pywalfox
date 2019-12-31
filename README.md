@@ -31,11 +31,11 @@ Setting execution permissions on daemon (pywal-fetcher.py)
 Finished.
 ```
 
-When this is done, you should be able to set the theme using the addon.
+When this is done, you should be able to apply the theme using the addon menu.
 
 ### Custom CSS, userChrome.css and userContent.css
 If you want to use the custom CSS, you must do the following:
-1. Open `about:config` in Firefox
+1. Navigate to `about:config` in Firefox
 2. Set `toolkit.legacyUserProfileCustomizations.stylesheets` to `true`
 
 ### Troubleshooting
