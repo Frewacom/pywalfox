@@ -1,0 +1,61 @@
+body {
+    background-color: var(--background);
+    color: var(--foreground);
+    height: 175px;
+    width: 325px;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+button {
+    flex: 1;
+    border-radius: 0px;
+    border: 1px solid #333;
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-right: 0px;
+    margin-top: 5px;
+    padding: 5px 0px;
+    background-color: inherit;
+    color: inherit;
+    outline: none;
+    opacity: 0.8;
+    transition: opacity 0.15s;
+    cursor: pointer;
+    border-color: inherit;
+}
+
+button:hover {
+    opacity: 1;
+}
+
+button::-moz-focus-inner {
+  border: 0;
+}
+
+button:nth-of-type(2n-1) {
+    margin-right: 5px;
+}
+
+#output {
+    font-family: monospace;
+    padding: 5px;
+    width: calc(100% - 10px);
+    flex: 1;
+    background: inherit;
+    color: inherit;
+    border: none;
+    font-weight: bold;
+}
+
+.row {
+    border-color: inherit;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
