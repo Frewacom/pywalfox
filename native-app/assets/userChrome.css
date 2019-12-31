@@ -6,6 +6,20 @@ html {
 #main-window {
     --font-size: 0.85em !important;
     font-size: var(--font-size) !important;
+    --background: var(--lwt-accent-color);
+    --foreground: var(--arrowpanel-color);
+}
+
+/* Tab context menu */
+.arrowscrollbox-scrollbox {
+    background: var(--background) !important;
+    color: var(--foreground) !important;
+}
+
+/* History right click context menu */
+.popup-internal-box {
+    background: var(--background) !important;
+    color: var(--foreground) !important;
 }
 
 #urlbar-input-container {
@@ -80,9 +94,26 @@ button {
 }
 
 panelview {
+    background: var(--background) !important;
+    color: var(--foreground) !important;
     font-weight: bold !important;
 }
 
 #urlbar, .searchbar-textbox {
     box-shadow: none !important;
+}
+
+/* Hover on buttons in dropdown menus */
+panelview .toolbarbutton-1:not(:-moz-any([disabled], [open], :active)):-moz-any(:hover, :focus),
+toolbarbutton.subviewbutton:not(:-moz-any([disabled], [open], :active)):-moz-any(:hover, :focus),
+.navigable.subviewbutton:not(:-moz-any([disabled], [open], :active)):-moz-any(:hover, :focus),
+menu.subviewbutton:not(:-moz-any([disabled], :active))[_moz-menuactive],
+menuitem.subviewbutton:not(:-moz-any([disabled], :active))[_moz-menuactive],
+.widget-overflow-list .toolbarbutton-1:not(:-moz-any([disabled], [open],
+:active)):-moz-any(:hover, :focus),
+.toolbaritem-combined-buttons:-moz-any(:not([cui-areatype="toolbar"]),
+[overflowedItem="true"]) > toolbarbutton:not(:-moz-any([disabled], [open],
+:active)):-moz-any(:hover, :focus) {
+    color: var(--background) !important;
+    background-color: var(--foreground) !important;
 }
