@@ -81,6 +81,10 @@ port.onMessage.addListener((response) => {
         changeState(response, 'customCssOn', true);
     } else if (response.key == 'disableCustomCss') {
         changeState(response, 'customCssOn', false);
+    } else if (response.key == 'enableNoScrollbar') {
+        changeState(response, 'noScrollbar', true);
+    } else if (response.key == 'disableNoScrollbar') {
+        changeState(response, 'noScrollbar', false);
     }
 });
 
@@ -91,6 +95,10 @@ browser.runtime.onMessage.addListener((message) => {
         port.postMessage('enableCustomCss');
     } else if (message.action == 'disableCustomCss') {
         port.postMessage('disableCustomCss');
+    } else if (message.action == 'enableNoScrollbar') {
+        port.postMessage('enableNoScrollbar');
+    } else if (message.action == 'disableNoScrollbar') {
+        port.postMessage('disableNoScrollbar');
     }
 });
 

@@ -195,7 +195,7 @@ def disableCustomCss(path, filename):
 
 customCssPath = getChromePath()
 if not customCssPath:
-    sendMessage(createMessage('customCss', False, 'Could not find the folder to put custom CSS in.'))
+    sendMessage(createMessage('enableCustomCss', False, 'Could not find the folder to put custom CSS in.'))
 
 while True:
     receivedMessage = getMessage()
@@ -217,3 +217,7 @@ while True:
         else:
             sendMessage(createMessage('disableCustomCss', (successChrome, dataChrome)))
             sendMessage(createMessage('disableCustomCss', (successContent, dataContent)))
+    elif receivedMessage == 'enableNoScrollbar':
+        sendMessage(createMessage('enableNoScrollbar', enableCustomCss(customCssPath, 'hide-scrollbar.as.css')))
+    elif receivedMessage == 'disableNoScrollbar':
+        sendMessage(createMessage('disableNoScrollbar', disableCustomCss(customCssPath, 'hide-scrollbar.as.css')))

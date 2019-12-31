@@ -1,7 +1,13 @@
+:root {
+    --background: white;
+    --foreground: #333;
+    --background-light: #f5f5f5;
+}
+
 body {
     background-color: var(--background);
     color: var(--foreground);
-    height: 175px;
+    height: 250px;
     width: 325px;
 }
 
@@ -14,23 +20,22 @@ main {
 button {
     flex: 1;
     border-radius: 0px;
-    border: 1px solid #333;
+    border: none;
     font-size: 0.8em;
     font-weight: bold;
     margin-right: 0px;
     margin-top: 5px;
     padding: 5px 0px;
-    background-color: inherit;
-    color: inherit;
+    background-color: var(--background-light);
+    color: white;
     outline: none;
-    opacity: 0.8;
-    transition: opacity 0.15s;
+    transition: color 0.15s, background-color 0.15s;
     cursor: pointer;
-    border-color: inherit;
 }
 
 button:hover {
-    opacity: 1;
+    color: var(--background);
+    background-color: var(--foreground);
 }
 
 button::-moz-focus-inner {
@@ -44,16 +49,16 @@ button:nth-of-type(2n-1) {
 #output {
     font-family: monospace;
     padding: 5px;
-    width: calc(100% - 10px);
+    width: 100%;
     flex: 1;
-    background: inherit;
-    color: inherit;
-    border: none;
+    background: var(--background);
+    color: var(--foreground);
+    border: 2px solid var(--background-light);
+    box-sizing: border-box;
     font-weight: bold;
 }
 
 .row {
-    border-color: inherit;
     display: flex;
     flex-direction: row;
     justify-content: center;

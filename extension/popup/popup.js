@@ -20,11 +20,13 @@ const resetButton = document.getElementById('reset');
 const enableCssButton = document.getElementById('enableCustomCss');
 const disableCssButton = document.getElementById('disableCustomCss');
 const outputArea = document.getElementById('output');
+const enableNoScrollbar = document.getElementById('enableNoScrollbar');
+const disableNoScrollbar = document.getElementById('disableNoScrollbar');
 
 function setExtensionTheme(theme) {
-    document.body.style.backgroundColor = theme.colors.frame || '#fff';
-    document.body.style.color = theme.colors.tab_selected || '#333';
-    document.getElementById('buttons').style.borderColor = theme.colors.button_background_hover || '#f5f5f5';
+    document.documentElement.style.setProperty('--background', theme.colors.frame);
+    document.documentElement.style.setProperty('--background-light', theme.colors.button_background_hover);
+    document.documentElement.style.setProperty('--foreground', theme.colors.tab_selected);
 }
 
 function output(message) {
@@ -52,6 +54,14 @@ enableCssButton.addEventListener('click', () => {
 disableCssButton.addEventListener('click', () => {
     browser.runtime.sendMessage({ action: 'disableCustomCss' })
     output('Restart is required for custom CSS to take effect.');
+});
+
+enableNoScrollbar.addEventListener('click', () => {
+    browser.runtime.sendMessage({ action: 'enableNoScrollbar' });
+});
+
+disableNoScrollbar.addEventListener('click', () => {
+    browser.runtime.sendMessage({ action: 'disableNoScrollbar' });
 });
 
 browser.runtime.onMessage.addListener((response) => {
