@@ -11,6 +11,21 @@
 <body>
     <main>
         <textarea id="output" readonly></textarea>
+        <label>Custom colors</label>
+        <section class="column">
+            <div class="container">
+                Background:
+                <input id="customColorBg" type="color">
+            </div>
+            <div class="container">
+                Foreground:
+                <input id="customColorFg" type="color">
+            </div>
+            <div class="container">
+                Background light:
+                <input id="customColorBgLight" type="color">
+            </div>
+        </section>
         <section id="buttons">
             <div class="row">
                 <button id="update">Apply theme</button>
@@ -21,8 +36,8 @@
                 <button id="disableCustomCss">Disable custom CSS</button>
             </div>
             <div class="row">
-                <button id="enableNoScrollbar">Hide scrollbar</button>
-                <button id="disableNoScrollbar">Show scrollbar</button>
+                <button id="enableNoScrollbar">Enable no scrollbar</button>
+                <button id="disableNoScrollbar">Disable no scrollbar</button>
             </div>
         </section>
     </main>

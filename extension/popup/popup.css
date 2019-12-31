@@ -2,13 +2,17 @@
     --background: white;
     --foreground: #333;
     --background-light: #f5f5f5;
+    --transition-time: 0.1s;
+    --font-size: 0.85em;
 }
 
 body {
     background-color: var(--background);
     color: var(--foreground);
-    height: 250px;
+    height: 375px;
     width: 325px;
+    font-family: sans-serif;
+    color: var(--foreground);
 }
 
 main {
@@ -17,11 +21,37 @@ main {
     height: 100%;
 }
 
+label {
+    font-family: sans-serif;
+    color: white;
+    font-weight: bold;
+    font-size: var(--font-size);
+    padding-left: 2px;
+}
+
+input {
+    height: 20px;
+    background-color: transparent;
+    border: none;
+}
+
+.container {
+    width: 100%;
+    font-size: var(--font-size);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0px;
+    padding-left: 2px;
+    box-sizing: border-box;
+}
+
 button {
     flex: 1;
     border-radius: 0px;
     border: none;
-    font-size: 0.8em;
+    font-size: calc(var(--font-size)*0.95);
     font-weight: bold;
     margin-right: 0px;
     margin-top: 5px;
@@ -29,11 +59,11 @@ button {
     background-color: var(--background-light);
     color: white;
     outline: none;
-    transition: color 0.15s, background-color 0.15s;
+    transition: color var(--transition-time), background-color var(--transition-time);
     cursor: pointer;
 }
 
-button:hover {
+button:hover, .button-mimic:hover {
     color: var(--background);
     background-color: var(--foreground);
 }
@@ -56,6 +86,11 @@ button:nth-of-type(2n-1) {
     border: 2px solid var(--background-light);
     box-sizing: border-box;
     font-weight: bold;
+    margin-bottom: 15px;
+}
+
+#buttons {
+    margin-top: 10px;
 }
 
 .row {
@@ -63,4 +98,9 @@ button:nth-of-type(2n-1) {
     flex-direction: row;
     justify-content: center;
     align-items: center;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
 }

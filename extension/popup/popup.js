@@ -22,6 +22,9 @@ const disableCssButton = document.getElementById('disableCustomCss');
 const outputArea = document.getElementById('output');
 const enableNoScrollbar = document.getElementById('enableNoScrollbar');
 const disableNoScrollbar = document.getElementById('disableNoScrollbar');
+const customColorBg = document.getElementById('customColorBg');
+const customColorFg = document.getElementById('customColorFg');
+const customColorBgLight = document.getElementById('customColorBgLight');
 
 function setExtensionTheme(theme) {
     document.documentElement.style.setProperty('--background', theme.colors.frame);
@@ -73,6 +76,14 @@ browser.runtime.onMessage.addListener((response) => {
 async function setInitialStyle() {
     const theme = await browser.theme.getCurrent();
     setExtensionTheme(theme);
+
+    // Set the default value for the color picker
+    customColorBg.value = theme.colors.frame;
+    customColorBgLight.value = theme.colors.button_background_hover;
+    customColorFg.value = theme.colors.tab_selected;
 }
 
+// Update the colors of the extension to match the theme
 setInitialStyle();
+
+
