@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Pywalfox",
-    "version": "1.0",
+    "version": "1.0.1",
     "description": "Fetches pywal colors from system and applies them to Firefox",
     "icons": {
         "48": "icons/icon-48.png"
