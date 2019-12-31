@@ -53,6 +53,17 @@ function output(message) {
     browser.runtime.sendMessage({ action: 'output', message });
 }
 
+function changeState(response, storageKey, value) {
+    if (response.success) {
+        browser.storage.local.set({
+            [storageKey]: value
+        });
+        output(response.data);
+    } else {
+        output(response.error);
+    }
+}
+
 /*
 Listen for messages from the app.
 */
@@ -61,24 +72,21 @@ port.onMessage.addListener((response) => {
         if (response.success) {
             const theme = createTheme(response.data);
             browser.theme.update(theme);
+            browser.storage.local.set({ isApplied: true });
             output('Fetched and applied colorscheme successfully.')
         } else {
             output(response.error);
         }
-    } else if (response.key == 'customCss') {
-        if (response.success) {
-            output(response.data);
-        } else {
-            output(response.error);
-        }
+    } else if (response.key == 'enableCustomCss') {
+        changeState(response, 'customCssOn', true);
+    } else if (response.key == 'disableCustomCss') {
+        changeState(response, 'customCssOn', false);
     }
 });
 
 browser.runtime.onMessage.addListener((message) => {
     if (message.action == 'update') {
         port.postMessage('update');
-    } else if (message.action == 'reset') {
-        browser.theme.reset();
     } else if (message.action == 'enableCustomCss') {
         port.postMessage('enableCustomCss');
     } else if (message.action == 'disableCustomCss') {
