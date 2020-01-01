@@ -9,9 +9,7 @@ const disableCssButton = document.getElementById('disableCustomCss');
 const outputArea = document.getElementById('output');
 const enableNoScrollbar = document.getElementById('enableNoScrollbar');
 const disableNoScrollbar = document.getElementById('disableNoScrollbar');
-const customColorBg = document.getElementById('customColorBg');
-const customColorFg = document.getElementById('customColorFg');
-const customColorBgLight = document.getElementById('customColorBgLight');
+const colorpickers = Array.from(document.getElementsByClassName('colorpicker'));
 
 function getExtensionColorsFromTheme(theme) {
     if (theme.colors) {
@@ -45,8 +43,13 @@ function doCustomCssAction(action) {
     output('Restart is required for custom CSS to take effect.');
 }
 
-function onCustomColorChanged(type, newValue) {
-    browser.runtime.sendMessage({ action: 'customColor', type: type, value: newValue });
+function onCustomColorChanged(e) {
+    console.log('asdasd');
+    browser.runtime.sendMessage({
+        action: 'customColor',
+        type: e.target.getAttribute('data-type'),
+        value: e.target.value
+    });
 }
 
 updateButton.addEventListener('click', () => {
@@ -74,9 +77,9 @@ disableNoScrollbar.addEventListener('click', () => {
     doCustomCssAction('disableNoScrollbar');
 });
 
-customColorBg.addEventListener('change', (e) => onCustomColorChanged('background', e.target.value));
-customColorFg.addEventListener('change', (e) => onCustomColorChanged('foreground', e.target.value));
-customColorBgLight.addEventListener('change', (e) => onCustomColorChanged('backgroundLight', e.target.value));
+colorpickers.forEach((colorpicker) => {
+    colorpicker.addEventListener('change', onCustomColorChanged);
+});
 
 // Watch for theme updates
 browser.theme.onUpdated.addListener(async ({ theme, windowId }) => {
@@ -101,9 +104,9 @@ async function updateExtensionTheme() {
     setExtensionTheme(colors);
 
     // Set the default values for the color pickers
-    customColorBg.value = colors.background;
-    customColorBgLight.value = colors.backgroundLight;
-    customColorFg.value = colors.foreground;
+    colorpickers.forEach((colorpicker) => {
+        colorpicker.value = colors[colorpicker.getAttribute('data-type')];
+    });
 }
 
 // Update the colors of the extension to match the theme
