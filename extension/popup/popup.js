@@ -1,20 +1,3 @@
-// Watch for theme updates
-browser.theme.onUpdated.addListener(async ({ theme, windowId }) => {
-    const sidebarWindow = await browser.windows.getCurrent();
-    /*
-        Only update theme if it applies to the window the sidebar is in.
-        If a windowId is passed during an update, it means that the theme is applied to that specific window.
-        Otherwise, the theme is applied globally to all windows.
-    */
-
-    // browser.storage.local.set({ isApplied: false });
-
-    console.log('theme saved');
-    if (!windowId || windowId == sidebarWindow.id) {
-        setExtensionTheme(theme);
-    }
-});
-
 const updateButton = document.getElementById('update');
 const resetButton = document.getElementById('reset');
 const enableCssButton = document.getElementById('enableCustomCss');
@@ -36,6 +19,16 @@ function output(message) {
     outputArea.value += message + '\n';
 }
 
+// Sends action to background script to disable/enable custom CSS
+function doCustomCssAction(action) {
+    browser.runtime.sendMessage({ action })
+    output('Restart is required for custom CSS to take effect.');
+}
+
+function onCustomColorChanged(type, newValue) {
+    browser.runtime.sendMessage({ action: 'customColor', type: type, value: newValue });
+}
+
 updateButton.addEventListener('click', () => {
     browser.runtime.sendMessage({action: 'update'})
 });
@@ -50,34 +43,55 @@ resetButton.addEventListener('click', () => {
 });
 
 enableCssButton.addEventListener('click', () => {
-    browser.runtime.sendMessage({ action: 'enableCustomCss' })
-    output('Restart is required for custom CSS to take effect.');
+    doCustomCssAction('enableCustomCss');
 });
 
 disableCssButton.addEventListener('click', () => {
-    browser.runtime.sendMessage({ action: 'disableCustomCss' })
-    output('Restart is required for custom CSS to take effect.');
+    doCustomCssAction('disableCustomCss');
 });
 
 enableNoScrollbar.addEventListener('click', () => {
-    browser.runtime.sendMessage({ action: 'enableNoScrollbar' });
+    doCustomCssAction('enableNoScrollbar');
 });
 
 disableNoScrollbar.addEventListener('click', () => {
-    browser.runtime.sendMessage({ action: 'disableNoScrollbar' });
+    doCustomCssAction('disableNoScrollbar');
 });
 
+customColorBg.addEventListener('change', (e) => onCustomColorChanged('background', e.target.value));
+customColorFg.addEventListener('change', (e) => onCustomColorChanged('forground', e.target.value));
+customColorBgLight.addEventListener('change', (e) => onCustomColorChanged('background-light', e.target.value));
+
+// Watch for theme updates
+browser.theme.onUpdated.addListener(async ({ theme, windowId }) => {
+    const sidebarWindow = await browser.windows.getCurrent();
+    /*
+        Only update theme if it applies to the window the sidebar is in.
+        If a windowId is passed during an update, it means that the theme is applied to that specific window.
+        Otherwise, the theme is applied globally to all windows.
+    */
+
+    // browser.storage.local.set({ isApplied: false });
+
+    console.log('theme saved');
+    if (!windowId || windowId == sidebarWindow.id) {
+        setExtensionTheme(theme);
+    }
+});
+
+// Listen for messages from background script
 browser.runtime.onMessage.addListener((response) => {
     if (response.action == 'output') {
         output(response.message);
     }
 });
 
+// Sets the theme of the extension to match the one in the browser
 async function setInitialStyle() {
     const theme = await browser.theme.getCurrent();
     setExtensionTheme(theme);
 
-    // Set the default value for the color picker
+    // Set the default values for the color pickers
     customColorBg.value = theme.colors.frame;
     customColorBgLight.value = theme.colors.button_background_hover;
     customColorFg.value = theme.colors.tab_selected;
