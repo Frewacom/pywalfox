@@ -134,9 +134,9 @@ function resetToDefaultTheme() {
 
 // Listen for errors with connection to native app
 port.onDisconnect.addListener((p) => {
-  if (p.error) {
-    output(`Disconnected from native app: ${p}`);
-  }
+    if (p.error) {
+        output(`Disconnected from native app: ${p}`);
+    }
 });
 
 // Listen for messages from the app.
@@ -179,6 +179,13 @@ browser.runtime.onMessage.addListener((message) => {
         // replacing the default value for 'message.type' with the custom color
         setTheme(pywalColors);
     }
+});
+
+browser.browserAction.onClicked.addListener(() => {
+    let createData = {
+        url: 'popup/main.html'
+    };
+    let creating = browser.tabs.create(createData);
 });
 
 // Make sure to apply the theme when starting Firefox, if it is enabled
