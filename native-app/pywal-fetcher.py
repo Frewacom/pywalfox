@@ -217,7 +217,7 @@ if not customCssPath:
 while True:
     receivedMessage = getMessage()
     if receivedMessage == 'update':
-        sendMessage(createMessage('colorscheme', fetchColors()))
+        sendMessage(createMessage('colors', fetchColors()))
     elif receivedMessage == 'enableCustomCss':
         (successChrome, dataChrome) = enableCustomCss(customCssPath, 'userChrome.css');
         (successContent, dataContent) = enableCustomCss(customCssPath, 'userContent.css');

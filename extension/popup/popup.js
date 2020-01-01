@@ -30,16 +30,11 @@ function onCustomColorChanged(type, newValue) {
 }
 
 updateButton.addEventListener('click', () => {
-    browser.runtime.sendMessage({action: 'update'})
+    browser.runtime.sendMessage({ action: 'update' });
 });
 
 resetButton.addEventListener('click', () => {
-    output('Resetting to default theme.');
-    browser.storage.local.set({ isApplied: false });
-
-    // https://bugzilla.mozilla.org/show_bug.cgi?id=1415267
-    // It is a known bug that the reset doesnt respect default theme
-    browser.theme.reset();
+    browser.runtime.sendMessage({ action: 'reset' });
 });
 
 enableCssButton.addEventListener('click', () => {
@@ -59,22 +54,14 @@ disableNoScrollbar.addEventListener('click', () => {
 });
 
 customColorBg.addEventListener('change', (e) => onCustomColorChanged('background', e.target.value));
-customColorFg.addEventListener('change', (e) => onCustomColorChanged('forground', e.target.value));
-customColorBgLight.addEventListener('change', (e) => onCustomColorChanged('background-light', e.target.value));
+customColorFg.addEventListener('change', (e) => onCustomColorChanged('foreground', e.target.value));
+customColorBgLight.addEventListener('change', (e) => onCustomColorChanged('backgroundLight', e.target.value));
 
 // Watch for theme updates
 browser.theme.onUpdated.addListener(async ({ theme, windowId }) => {
     const sidebarWindow = await browser.windows.getCurrent();
-    /*
-        Only update theme if it applies to the window the sidebar is in.
-        If a windowId is passed during an update, it means that the theme is applied to that specific window.
-        Otherwise, the theme is applied globally to all windows.
-    */
-
-    // browser.storage.local.set({ isApplied: false });
-
-    console.log('theme saved');
     if (!windowId || windowId == sidebarWindow.id) {
+        output('Theme was updated');
         setExtensionTheme(theme);
     }
 });
