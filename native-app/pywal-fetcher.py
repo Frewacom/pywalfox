@@ -199,20 +199,20 @@ def getChromePath():
 def enableCustomCss(path, filename):
     try:
         shutil.copy('./assets/%s' % filename, '%s/%s' % (path, filename))
-        return (True, 'Custom CSS: "%s" has been enabled.' % filename)
+        return (True, 'Custom CSS: "%s" has been enabled' % filename)
     except Exception as e:
         return (False, 'Could not copy custom CSS to folder: %s' % str(e))
 
 def disableCustomCss(path, filename):
     try:
         os.remove('%s/%s' % (path, filename))
-        return (True, 'Custom CSS: "%s" has been disabled.' % filename)
+        return (True, 'Custom CSS: "%s" has been disabled' % filename)
     except Exception as e:
         return (False, 'Could not remove custom CSS: %s' % str(e))
 
 customCssPath = getChromePath()
 if not customCssPath:
-    sendMessage(createMessage('enableCustomCss', False, 'Could not find the folder to put custom CSS in.'))
+    sendMessage(createMessage('enableCustomCss', False, 'Could not find the folder to put custom CSS in'))
 
 while True:
     receivedMessage = getMessage()
@@ -222,7 +222,7 @@ while True:
         (successChrome, dataChrome) = enableCustomCss(customCssPath, 'userChrome.css');
         (successContent, dataContent) = enableCustomCss(customCssPath, 'userContent.css');
         if successContent and successChrome:
-            sendMessage(createMessage('enableCustomCss', (True, 'userChrome.css and userContent.css has been enabled.')))
+            sendMessage(createMessage('enableCustomCss', (True, 'Custom CSS: "userChrome.css" and "userContent.css" has been enabled')))
         else:
             sendMessage(createMessage('enableCustomCss', (successChrome, dataChrome)))
             sendMessage(createMessage('enableCustomCss', (successContent, dataContent)))
@@ -230,7 +230,7 @@ while True:
         (successChrome, dataChrome) = disableCustomCss(customCssPath, 'userChrome.css');
         (successContent, dataContent) = disableCustomCss(customCssPath, 'userContent.css');
         if successContent and successChrome:
-            sendMessage(createMessage('disableCustomCss', (False, 'Custom CSS has been disabled.')))
+            sendMessage(createMessage('disableCustomCss', (False, 'Custom CSS has been disabled')))
         else:
             sendMessage(createMessage('disableCustomCss', (successChrome, dataChrome)))
             sendMessage(createMessage('disableCustomCss', (successContent, dataContent)))

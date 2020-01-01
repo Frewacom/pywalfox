@@ -15,6 +15,8 @@ const CUSTOM_COLOR_KEYS = [
 const port = browser.runtime.connectNative("pywalfox");
 
 var pywalColors = {};
+var settingsPageTabId = null;
+var settingsPageTabListener = null;
 
 function createThemeFromColorscheme(colorscheme) {
     return {
@@ -126,7 +128,15 @@ function resetToDefaultTheme() {
     browser.theme.reset();
     resetCustomColors();
     browser.storage.local.set({ isApplied: false });
-    output('Reset to default theme.');
+    output('Reset to default theme');
+}
+
+function onSettingsPageClosed(tabId, removeInfo) {
+    if (tabId == settingsPageTabId) {
+        browser.tabs.onRemoved.removeListener(onSettingsPageClosed);
+        settingsPageTabListener = null;
+        settingsPageTabId = null;
+    }
 }
 
 // Listen for errors with connection to native app
@@ -178,8 +188,16 @@ browser.runtime.onMessage.addListener((message) => {
     }
 });
 
-browser.browserAction.onClicked.addListener(() => {
-    browser.tabs.create({ url: 'popup/main.html' });
+browser.browserAction.onClicked.addListener(async () => {
+    if (settingsPageTabId === null) {
+        let tab = await browser.tabs.create({ url: 'popup/main.html' });
+        settingsPageTabId = tab.id;
+        settingsPageTabListener = browser.tabs.onRemoved.addListener(onSettingsPageClosed);
+    } else {
+        let tab = await browser.tabs.get(settingsPageTabId);
+        browser.windows.update(tab.windowId, { focused: true });
+        browser.tabs.update(tab.id, { active: true });
+    }
 });
 
 // Make sure to apply the theme when starting Firefox, if it is enabled

@@ -3,7 +3,7 @@
     --foreground: #333;
     --background-light: #f5f5f5;
     --transition-time: 0s;
-    --font-size: 0.85em;
+    --font-size: 0.9em;
     --content-width: 500px;
 }
 
@@ -38,7 +38,7 @@ body {
 }
 
 #banner.show {
-    height: 45px;
+    height: 30px;
     color: var(--background);
 }
 
@@ -47,6 +47,7 @@ main {
     flex-direction: column;
     height: 100vh;
     width: var(--content-width);
+    margin-top: 15px;
 }
 
 label {
@@ -79,11 +80,11 @@ button {
     flex: 1;
     border-radius: 0px;
     border: none;
-    font-size: calc(var(--font-size)*0.95);
+    font-size: calc(var(--font-size)*0.9);
     font-weight: bold;
     margin-right: 0px;
     margin-top: 5px;
-    padding: 5px 0px;
+    padding: 0.7rem 0px;
     background-color: var(--background-light);
     color: white;
     outline: none;

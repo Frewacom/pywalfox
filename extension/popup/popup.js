@@ -38,6 +38,7 @@ function showRestartBanner() {
 
 function output(message) {
     outputArea.value += message + '\n';
+    outputArea.scrollTop = outputArea.scrollHeight; // Scrolls to bottom of textarea on append
 }
 
 // Sends action to background script to disable/enable custom CSS
