@@ -1,3 +1,7 @@
+const DEFAULT_BACKGROUND = '#000000';
+const DEFAULT_FOREGROUND = '#ffffff';
+const DEFAULT_BACKGROUND_LIGHT = '#222222';
+
 const updateButton = document.getElementById('update');
 const resetButton = document.getElementById('reset');
 const enableCssButton = document.getElementById('enableCustomCss');
@@ -9,10 +13,26 @@ const customColorBg = document.getElementById('customColorBg');
 const customColorFg = document.getElementById('customColorFg');
 const customColorBgLight = document.getElementById('customColorBgLight');
 
-function setExtensionTheme(theme) {
-    document.documentElement.style.setProperty('--background', theme.colors.frame);
-    document.documentElement.style.setProperty('--background-light', theme.colors.button_background_hover);
-    document.documentElement.style.setProperty('--foreground', theme.colors.tab_selected);
+function getExtensionColorsFromTheme(theme) {
+    if (theme.colors) {
+        return {
+            background: theme.colors.frame,
+            foreground: theme.colors.tab_selected,
+            backgroundLight: theme.colors.button_background_hover
+        };
+    }
+
+    return {
+        background: DEFAULT_BACKGROUND,
+        foreground: DEFAULT_FOREGROUND,
+        backgroundLight: DEFAULT_BACKGROUND_LIGHT
+    };
+}
+
+function setExtensionTheme(colors) {
+    document.documentElement.style.setProperty('--background', colors.background);
+    document.documentElement.style.setProperty('--background-light', colors.backgroundLight);
+    document.documentElement.style.setProperty('--foreground', colors.foreground);
 }
 
 function output(message) {
@@ -34,6 +54,7 @@ updateButton.addEventListener('click', () => {
 });
 
 resetButton.addEventListener('click', () => {
+    setInitialStyle();
     browser.runtime.sendMessage({ action: 'reset' });
 });
 
@@ -62,7 +83,7 @@ browser.theme.onUpdated.addListener(async ({ theme, windowId }) => {
     const sidebarWindow = await browser.windows.getCurrent();
     if (!windowId || windowId == sidebarWindow.id) {
         output('Theme was updated');
-        setExtensionTheme(theme);
+        setInitialStyle();
     }
 });
 
@@ -76,12 +97,14 @@ browser.runtime.onMessage.addListener((response) => {
 // Sets the theme of the extension to match the one in the browser
 async function setInitialStyle() {
     const theme = await browser.theme.getCurrent();
-    setExtensionTheme(theme);
+    const colors = getExtensionColorsFromTheme(theme);
+    console.log(colors);
+    setExtensionTheme(colors);
 
     // Set the default values for the color pickers
-    customColorBg.value = theme.colors.frame;
-    customColorBgLight.value = theme.colors.button_background_hover;
-    customColorFg.value = theme.colors.tab_selected;
+    customColorBg.value = colors.background;
+    customColorBgLight.value = colors.backgroundLight;
+    customColorFg.value = colors.foreground;
 }
 
 // Update the colors of the extension to match the theme

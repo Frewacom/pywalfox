@@ -86,9 +86,11 @@ button:nth-of-type(2n-1) {
     font-family: monospace;
     padding: 5px;
     width: 100%;
+    max-width: var(--content-width);
+    min-width: var(--content-width);
     height: 150px;
-    background: var(--background);
-    color: var(--foreground);
+    background: var(--background-light);
+    color: white;
     border: 2px solid var(--background-light);
     box-sizing: border-box;
     font-weight: bold;
