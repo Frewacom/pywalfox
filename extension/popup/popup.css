@@ -20,6 +20,28 @@ body {
     align-items: center;
 }
 
+#banner {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    display: flex;
+    background-color: var(--foreground);
+    color: transparent;
+    height: 0px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+    font-weight: bold;
+    font-size: calc(var(--font-size) * 1.05);
+    transition: height 0.1s, color 0.2s;
+}
+
+#banner.show {
+    height: 45px;
+    color: var(--background);
+}
+
 main {
     display: flex;
     flex-direction: column;
