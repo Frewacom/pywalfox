@@ -80,8 +80,6 @@ async function getSavedCustomColors() {
 async function createColorschemeFromPywal(colors) {
     const savedColors = await getSavedCustomColors();
 
-    console.log(savedColors);
-
     return {
         background: ifSet(savedColors.background, colors.background),
         foreground: ifSet(savedColors.foreground, colors.color15),
@@ -98,7 +96,6 @@ async function createColorschemeFromPywal(colors) {
 async function setTheme(colors) {
     pywalColors = colors;
     const colorscheme = await createColorschemeFromPywal(colors);
-    console.log(colorscheme);
     const theme = createThemeFromColorscheme(colorscheme);
     browser.theme.update(theme);
     browser.storage.local.set({ isApplied: true });
@@ -182,10 +179,7 @@ browser.runtime.onMessage.addListener((message) => {
 });
 
 browser.browserAction.onClicked.addListener(() => {
-    let createData = {
-        url: 'popup/main.html'
-    };
-    let creating = browser.tabs.create(createData);
+    browser.tabs.create({ url: 'popup/main.html' });
 });
 
 // Make sure to apply the theme when starting Firefox, if it is enabled

@@ -54,7 +54,7 @@ updateButton.addEventListener('click', () => {
 });
 
 resetButton.addEventListener('click', () => {
-    setInitialStyle();
+    updateExtensionTheme();
     browser.runtime.sendMessage({ action: 'reset' });
 });
 
@@ -83,7 +83,7 @@ browser.theme.onUpdated.addListener(async ({ theme, windowId }) => {
     const sidebarWindow = await browser.windows.getCurrent();
     if (!windowId || windowId == sidebarWindow.id) {
         output('Theme was updated');
-        setInitialStyle();
+        updateExtensionTheme();
     }
 });
 
@@ -95,10 +95,9 @@ browser.runtime.onMessage.addListener((response) => {
 });
 
 // Sets the theme of the extension to match the one in the browser
-async function setInitialStyle() {
+async function updateExtensionTheme() {
     const theme = await browser.theme.getCurrent();
     const colors = getExtensionColorsFromTheme(theme);
-    console.log(colors);
     setExtensionTheme(colors);
 
     // Set the default values for the color pickers
@@ -108,6 +107,6 @@ async function setInitialStyle() {
 }
 
 // Update the colors of the extension to match the theme
-setInitialStyle();
+updateExtensionTheme();
 
 
