@@ -230,7 +230,7 @@ while True:
         (successChrome, dataChrome) = disableCustomCss(customCssPath, 'userChrome.css');
         (successContent, dataContent) = disableCustomCss(customCssPath, 'userContent.css');
         if successContent and successChrome:
-            sendMessage(createMessage('disableCustomCss', (False, 'Custom CSS has been disabled')))
+            sendMessage(createMessage('disableCustomCss', (False, 'Custom CSS: "userChrome.css" and "userContent.css" has been disabled')))
         else:
             sendMessage(createMessage('disableCustomCss', (successChrome, dataChrome)))
             sendMessage(createMessage('disableCustomCss', (successContent, dataContent)))

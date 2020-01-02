@@ -1,21 +1,35 @@
 :root {
     --transition-time: 0s;
-    --font-size: 0.9em;
+    --font-size: 14px;
+    --header-height: 50px;
     --content-width: 500px;
 }
 
 body {
     background-color: var(--background);
     color: var(--foreground);
-    height: 100vh;
     width: 100%;
     font-family: sans-serif;
+    font-size: var(--font-size);
     color: var(--foreground);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     margin: 0px;
+}
+
+header {
+    z-index: 99;
+    top: 0px;
+    position: fixed;
+    width: 100%;
+    height: var(--header-height);
+    background-color: var(--background-light);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 }
 
 h4 {
@@ -34,7 +48,7 @@ p {
 
 #banner {
     position: fixed;
-    top: 0px;
+    bottom: 0px;
     left: 0px;
     display: flex;
     background-color: var(--foreground);
@@ -43,14 +57,13 @@ p {
     width: 100%;
     justify-content: center;
     align-items: center;
-    margin-bottom: 15px;
     font-weight: bold;
     font-size: calc(var(--font-size) * 1.05);
     transition: height 0.1s, color 0.2s;
 }
 
 #banner.show {
-    height: 30px;
+    height: 50px;
     color: var(--background);
 }
 
@@ -59,7 +72,7 @@ main {
     flex-direction: column;
     height: 100vh;
     width: var(--content-width);
-    margin-top: 15px;
+    margin-top: var(--header-height);
 }
 
 label {
@@ -68,6 +81,7 @@ label {
     font-weight: bold;
     font-size: var(--font-size);
     padding-left: 2px;
+    margin-bottom: 5px;
 }
 
 input {
@@ -76,9 +90,25 @@ input {
     border: none;
 }
 
+.spacer {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0px 15px;
+    color: white;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.align-left {
+    justify-content: flex-end;
+}
+
 .container {
     width: 100%;
-    font-size: var(--font-size);
+    font-size: 1em;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -88,15 +118,50 @@ input {
     box-sizing: border-box;
 }
 
+.description {
+    display: flex;
+    flex-direction: column;
+    margin: 0px;
+    font-weight: bold;
+    color: white;
+    font-size: 0.8em;
+}
+
+.description > span {
+    color: #ddd;
+    font-weight: normal;
+}
+
+.toggle {
+    flex: 0;
+    width: 50px;
+    background-color: var(--background-light);
+}
+
+.toggle:hover {
+    opacity: 0.8;
+    background-color: var(--background-light);
+    color: var(--foreground);
+}
+
+.toggle.enabled {
+    background-color: var(--foreground);
+}
+
+.toggle.enabled:hover {
+    opacity: 0.8;
+    background-color: var(--foreground);
+    color: var(--background);
+}
+
 button {
     flex: 1;
-    border-radius: 0px;
+    border-radius: 3px;
     border: none;
-    font-size: calc(var(--font-size)*0.9);
+    font-size: 0.8em;
     font-weight: bold;
     margin-right: 0px;
-    margin-top: 5px;
-    padding: 0.7rem 0px;
+    padding: 0.7em 0.9em;
     background-color: var(--accent-primary);
     color: white;
     outline: none;
@@ -129,14 +194,14 @@ button:nth-of-type(2n-1) {
     border: 1px solid var(--accent-primary);
     box-sizing: border-box;
     font-weight: bold;
-    margin-bottom: 15px;
 }
 
 #buttons {
-    margin-top: 10px;
+    width: var(--content-width);
 }
 
 .row {
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -147,6 +212,18 @@ button:nth-of-type(2n-1) {
     display: flex;
     flex-direction: column;
     position: relative;
+    margin-top: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--background-light);
+}
+
+.no-bottom-border {
+    border-bottom: none;
+}
+
+.enabled {
+    background-color: var(--foreground);
+    color: var(--background);
 }
 
 #cp-modal {
@@ -156,5 +233,6 @@ button:nth-of-type(2n-1) {
     height: 100%;
     background-color: var(--background-light);
 }
+
 
 

@@ -15,6 +15,12 @@
             "background.js"
         ]
     },
+    "content_scripts": [
+        {
+            "matches": ["*://*.duckduckgo.com/*"],
+            "js": ["duckduckgo.js"]
+        }
+    ],
     "browser_specific_settings": {
         "gecko": {
             "id": "pywalfox@frewacom.org",
@@ -24,6 +30,7 @@
     "permissions": [
         "nativeMessaging",
         "theme",
-        "storage"
+        "storage",
+        "tabs"
     ]
 }

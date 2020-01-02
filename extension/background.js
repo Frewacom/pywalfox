@@ -3,10 +3,18 @@ const CUSTOM_COLOR_KEYS = [
     'background',
     'foreground',
     'backgroundLight',
-    'backgroundDark',
     'accentPrimary',
     'accentSecondary',
     'text'
+];
+
+const THEME_COLOR_KEYS = [
+    'themeBackground',
+    'themeForeground',
+    'themeBackgroundLight',
+    'themeAccentPrimary',
+    'themeAccentSecondary',
+    'themeText'
 ];
 
 // On startup, connect to the "ping_pong" app.
@@ -68,9 +76,30 @@ function ifSet(value, fallback) {
     return fallback;
 }
 
-function saveCustomColor(type, value) {
-    browser.storage.local.set({ [type]: value });
+// Save the colors of the current pywal theme so that they can be
+// accessed from the duckduckgo script, for example
+function saveThemeColors(colorscheme) {
+    browser.storage.local.set({
+        themeBackground: colorscheme.background,
+        themeForeground: colorscheme.foreground,
+        themeBackgroundLight: colorscheme.backgroundLight,
+        themeAccentPrimary: colorscheme.accentPrimary,
+        themeAccentSecondary: colorscheme.accentSecondary,
+        themeText: colorscheme.text
+    });
+}
+
+async function saveCustomColor(type, value) {
+    await browser.storage.local.set({ [type]: value });
     output(`Set custom color "${type}" to ${value}`);
+}
+
+async function sendMessageToTabs(data) {
+    const tabs = await browser.tabs.query({});
+
+    for (const tab of tabs) {
+        browser.tabs.sendMessage(tab.id, data);
+    }
 }
 
 async function getSavedCustomColors() {
@@ -87,7 +116,6 @@ async function createColorschemeFromPywal(colors) {
         accentSecondary: ifSet(savedColors.accentSecondary, colors.color2),
         text: ifSet(savedColors.text, colors.text),
         backgroundLight: ifSet(savedColors.backgroundLight, colors.backgroundLight),
-        backgroundDark: ifSet(savedColors.backgroundDark, colors.color0)
     };
 }
 
@@ -95,7 +123,10 @@ async function setTheme(colors) {
     pywalColors = colors;
     const colorscheme = await createColorschemeFromPywal(colors);
     const theme = createThemeFromColorscheme(colorscheme);
+    await saveThemeColors(colorscheme);
+
     browser.theme.update(theme);
+    sendMessageToTabs({ action: 'updateDDGTheme' });
     browser.storage.local.set({ isApplied: true });
 }
 
@@ -118,10 +149,15 @@ function resetCustomColors() {
     browser.storage.local.remove(CUSTOM_COLOR_KEYS);
 }
 
+function resetThemeColors() {
+    browser.storage.local.remove(THEME_COLOR_KEYS);
+}
+
 function resetToDefaultTheme() {
     // https://bugzilla.mozilla.org/show_bug.cgi?id=1415267
     // It is a known bug that the reset doesnt respect default theme
     browser.theme.reset();
+    resetThemeColors();
     resetCustomColors();
     browser.storage.local.set({ isApplied: false });
     output('Reset to default theme');
@@ -168,14 +204,20 @@ browser.runtime.onMessage.addListener((message) => {
         port.postMessage('update');
     } else if (message.action == 'reset') {
         resetToDefaultTheme();
-    } else if (message.action == 'enableCustomCss') {
-        port.postMessage('enableCustomCss');
-    } else if (message.action == 'disableCustomCss') {
-        port.postMessage('disableCustomCss');
-    } else if (message.action == 'enableNoScrollbar') {
-        port.postMessage('enableNoScrollbar');
-    } else if (message.action == 'disableNoScrollbar') {
-        port.postMessage('disableNoScrollbar');
+    } else if (message.action == 'customCssEnabled') {
+        if (message.enabled) {
+            port.postMessage('enableCustomCss');
+        } else {
+            port.postMessage('disableCustomCss');
+        }
+    } else if (message.action == 'noScrollbarEnabled') {
+        if (message.enabled) {
+            port.postMessage('enableNoScrollbar');
+        } else {
+            port.postMessage('disableNoScrollbar');
+        }
+    } else if (message.action == 'ddgThemeEnabled') {
+        browser.storage.local.set({ [message.action]: message.enabled });
     } else if (message.action == 'customColor') {
         saveCustomColor(message.type, message.value);
         // Use the colors from pywal that we have already fetched and update the theme,
