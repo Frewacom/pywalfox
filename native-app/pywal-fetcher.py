@@ -81,14 +81,31 @@ def fetchColors():
         return (False, 'Could not read colors from: %s' % colors_path)
 
     colorscheme = {
-        'background_dark': colors[0],
-        'background': generateDarkerShade(colors[2], 150),
+        'background': generateDarkerShade(colors[2], 155),
+        'backgroundDark': colors[0],
+        'backgroundLight': generateDarkerShade(colors[2], 120),
         'foreground': colors[-1],
-        'accent_primary': colors[1],
-        'accent_secondary': colors[2],
-        'accent_primary_light': colors[4],
-        'accent_secondary_light': colors[5],
-        'background_light': generateDarkerShade(colors[2], 110)
+        'accentPrimary': colors[1],
+        'accentSecondary': colors[2],
+        'accentPrimaryLight': colors[4],
+        'accentSecondaryLight': colors[5],
+        'text': '#ffffff',
+        'color0': colors[0],
+        'color1': colors[1],
+        'color2': colors[2],
+        'color3': colors[3],
+        'color4': colors[4],
+        'color5': colors[5],
+        'color6': colors[6],
+        'color7': colors[7],
+        'color8': colors[8],
+        'color9': colors[9],
+        'color10': colors[10],
+        'color11': colors[11],
+        'color12': colors[12],
+        'color13': colors[13],
+        'color14': colors[14],
+        'color15': colors[15]
     }
 
     return (True, colorscheme)
@@ -96,8 +113,8 @@ def fetchColors():
 def limit(x):
     if x > 255:
         return 255
-    elif x < 0:
-        return 0
+    elif x < 20:
+        return 20
 
     return x
 
@@ -182,30 +199,30 @@ def getChromePath():
 def enableCustomCss(path, filename):
     try:
         shutil.copy('./assets/%s' % filename, '%s/%s' % (path, filename))
-        return (True, 'Custom CSS: "%s" has been enabled.' % filename)
+        return (True, 'Custom CSS: "%s" has been enabled' % filename)
     except Exception as e:
         return (False, 'Could not copy custom CSS to folder: %s' % str(e))
 
 def disableCustomCss(path, filename):
     try:
         os.remove('%s/%s' % (path, filename))
-        return (True, 'Custom CSS: "%s" has been disabled.' % filename)
+        return (True, 'Custom CSS: "%s" has been disabled' % filename)
     except Exception as e:
         return (False, 'Could not remove custom CSS: %s' % str(e))
 
 customCssPath = getChromePath()
 if not customCssPath:
-    sendMessage(createMessage('enableCustomCss', False, 'Could not find the folder to put custom CSS in.'))
+    sendMessage(createMessage('enableCustomCss', False, 'Could not find the folder to put custom CSS in'))
 
 while True:
     receivedMessage = getMessage()
     if receivedMessage == 'update':
-        sendMessage(createMessage('colorscheme', fetchColors()))
+        sendMessage(createMessage('colors', fetchColors()))
     elif receivedMessage == 'enableCustomCss':
         (successChrome, dataChrome) = enableCustomCss(customCssPath, 'userChrome.css');
         (successContent, dataContent) = enableCustomCss(customCssPath, 'userContent.css');
         if successContent and successChrome:
-            sendMessage(createMessage('enableCustomCss', (True, 'userChrome.css and userContent.css has been enabled.')))
+            sendMessage(createMessage('enableCustomCss', (True, 'Custom CSS: "userChrome.css" and "userContent.css" has been enabled')))
         else:
             sendMessage(createMessage('enableCustomCss', (successChrome, dataChrome)))
             sendMessage(createMessage('enableCustomCss', (successContent, dataContent)))
@@ -213,7 +230,7 @@ while True:
         (successChrome, dataChrome) = disableCustomCss(customCssPath, 'userChrome.css');
         (successContent, dataContent) = disableCustomCss(customCssPath, 'userContent.css');
         if successContent and successChrome:
-            sendMessage(createMessage('disableCustomCss', (False, 'Custom CSS has been disabled.')))
+            sendMessage(createMessage('disableCustomCss', (False, 'Custom CSS has been disabled')))
         else:
             sendMessage(createMessage('disableCustomCss', (successChrome, dataChrome)))
             sendMessage(createMessage('disableCustomCss', (successContent, dataContent)))

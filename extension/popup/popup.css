@@ -1,39 +1,110 @@
 :root {
-    --background: white;
-    --foreground: #333;
-    --background-light: #f5f5f5;
+    --transition-time: 0s;
+    --font-size: 0.9em;
+    --content-width: 500px;
 }
 
 body {
     background-color: var(--background);
     color: var(--foreground);
-    height: 250px;
-    width: 325px;
+    height: 100vh;
+    width: 100%;
+    font-family: sans-serif;
+    color: var(--foreground);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0px;
+}
+
+h4 {
+    font-size: var(--font-size);
+    color: white;
+    margin: 10px;
+    font-weight: bold;
+    font-family: sans-serif;
+}
+
+p {
+    font-size: var(--font-size);
+    color: var(--foreground);
+    margin: 10px 10px;
+}
+
+#banner {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    display: flex;
+    background-color: var(--foreground);
+    color: transparent;
+    height: 0px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+    font-weight: bold;
+    font-size: calc(var(--font-size) * 1.05);
+    transition: height 0.1s, color 0.2s;
+}
+
+#banner.show {
+    height: 30px;
+    color: var(--background);
 }
 
 main {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 100vh;
+    width: var(--content-width);
+    margin-top: 15px;
+}
+
+label {
+    font-family: sans-serif;
+    color: white;
+    font-weight: bold;
+    font-size: var(--font-size);
+    padding-left: 2px;
+}
+
+input {
+    height: 20px;
+    background-color: transparent;
+    border: none;
+}
+
+.container {
+    width: 100%;
+    font-size: var(--font-size);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0px;
+    padding-left: 2px;
+    box-sizing: border-box;
 }
 
 button {
     flex: 1;
     border-radius: 0px;
     border: none;
-    font-size: 0.8em;
+    font-size: calc(var(--font-size)*0.9);
     font-weight: bold;
     margin-right: 0px;
     margin-top: 5px;
-    padding: 5px 0px;
-    background-color: var(--background-light);
+    padding: 0.7rem 0px;
+    background-color: var(--accent-primary);
     color: white;
     outline: none;
-    transition: color 0.15s, background-color 0.15s;
+    transition: color var(--transition-time), background-color var(--transition-time);
     cursor: pointer;
 }
 
-button:hover {
+button:hover, .button-mimic:hover {
     color: var(--background);
     background-color: var(--foreground);
 }
@@ -48,14 +119,21 @@ button:nth-of-type(2n-1) {
 
 #output {
     font-family: monospace;
-    padding: 5px;
+    padding: 10px;
     width: 100%;
-    flex: 1;
-    background: var(--background);
-    color: var(--foreground);
-    border: 2px solid var(--background-light);
+    max-width: var(--content-width);
+    min-width: var(--content-width);
+    height: 150px;
+    background: transparent;
+    color: white;
+    border: 1px solid var(--accent-primary);
     box-sizing: border-box;
     font-weight: bold;
+    margin-bottom: 15px;
+}
+
+#buttons {
+    margin-top: 10px;
 }
 
 .row {
@@ -64,3 +142,19 @@ button:nth-of-type(2n-1) {
     justify-content: center;
     align-items: center;
 }
+
+.column {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+#cp-modal {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: var(--background-light);
+}
+
+

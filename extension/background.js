@@ -1,52 +1,102 @@
-/*
-On startup, connect to the "ping_pong" app.
-*/
-var port = browser.runtime.connectNative("pywalfox");
+// The keys in which custom colors will be stored
+const CUSTOM_COLOR_KEYS = [
+    'background',
+    'foreground',
+    'backgroundLight',
+    'backgroundDark',
+    'accentPrimary',
+    'accentSecondary',
+    'text'
+];
 
-function createTheme(colors) {
-    const theme = {
+// On startup, connect to the "ping_pong" app.
+const port = browser.runtime.connectNative("pywalfox");
+
+var pywalColors = {};
+var settingsPageTabId = null;
+var settingsPageTabListener = null;
+
+function createThemeFromColorscheme(colorscheme) {
+    return {
         colors: {
-            icons: colors.foreground,
-            icons_attention: colors.accent_secondary_light,
-            frame: colors.background,
-            tab_text: colors.background,
-            tab_loading: colors.accent_primary_light,
-            tab_background_text: '#fff',
-            tab_selected: colors.foreground,
-            tab_line: colors.foreground,
-            tab_background_separator: colors.background,
-            toolbar: colors.background,
-            toolbar_field: colors.background,
-            toolbar_field_focus: colors.background,
-            toolbar_field_text: '#fff',
-            toolbar_field_text_focus: '#fff',
-            toolbar_field_border: colors.background,
-            toolbar_field_border_focus: colors.background,
-            toolbar_field_separator: colors.background,
-            toolbar_field_highlight: colors.accent_secondary_light,
-            toolbar_field_highlight_text: '#fff',
-            toolbar_bottom_separator: colors.background,
-            toolbar_top_separator: colors.background,
-            toolbar_vertical_separator: colors.background_light,
-            ntp_background: colors.background,
-            ntp_text: colors.foreground,
-            popup: colors.background,
-            popup_border: colors.background,
-            popup_text: colors.foreground,
-            popup_highlight: colors.accent_secondary,
-            popup_highlight_text: '#fff',
-            sidebar: colors.background,
-            sidebar_border: colors.background,
-            sidebar_text: colors.foreground,
-            sidebar_highlight: colors.accent_primary_light,
-            sidebar_highlight_text: '#fff',
-            bookmark_text: '#fff',
-            button_background_hover: colors.background_light,
-            button_background_active: colors.background_light,
+            icons: colorscheme.accentPrimary,
+            icons_attention: colorscheme.accentSecondary,
+            frame: colorscheme.background,
+            tab_text: colorscheme.background,
+            tab_loading: colorscheme.accentPrimary,
+            tab_background_text: colorscheme.text,
+            tab_selected: colorscheme.foreground,
+            tab_line: colorscheme.foreground,
+            tab_background_separator: colorscheme.background,
+            toolbar: colorscheme.background,
+            toolbar_field: colorscheme.background,
+            toolbar_field_focus: colorscheme.background,
+            toolbar_field_text: colorscheme.text,
+            toolbar_field_text_focus: colorscheme.text,
+            toolbar_field_border: colorscheme.background,
+            toolbar_field_border_focus: colorscheme.background,
+            toolbar_field_separator: colorscheme.background,
+            toolbar_field_highlight: colorscheme.accentPrimary,
+            toolbar_field_highlight_text: colorscheme.text,
+            toolbar_bottom_separator: colorscheme.background,
+            toolbar_top_separator: colorscheme.background,
+            toolbar_vertical_separator: colorscheme.backgroundLight,
+            ntp_background: colorscheme.background,
+            ntp_text: colorscheme.foreground,
+            popup: colorscheme.background,
+            popup_border: colorscheme.backgroundLight,
+            popup_text: colorscheme.foreground,
+            popup_highlight: colorscheme.accentSecondary,
+            popup_highlight_text: colorscheme.text,
+            sidebar: colorscheme.background,
+            sidebar_border: colorscheme.backgroundLight,
+            sidebar_text: colorscheme.foreground,
+            sidebar_highlight: colorscheme.accentPrimary,
+            sidebar_highlight_text: colorscheme.text,
+            bookmark_text: colorscheme.text,
+            button_background_hover: colorscheme.backgroundLight,
+            button_background_active: colorscheme.backgroundLight,
         }
     };
+}
 
-    return theme;
+function ifSet(value, fallback) {
+    if (value) {
+        return value;
+    }
+
+    return fallback;
+}
+
+function saveCustomColor(type, value) {
+    browser.storage.local.set({ [type]: value });
+    output(`Set custom color "${type}" to ${value}`);
+}
+
+async function getSavedCustomColors() {
+    return await browser.storage.local.get(CUSTOM_COLOR_KEYS);
+}
+
+async function createColorschemeFromPywal(colors) {
+    const savedColors = await getSavedCustomColors();
+
+    return {
+        background: ifSet(savedColors.background, colors.background),
+        foreground: ifSet(savedColors.foreground, colors.color15),
+        accentPrimary: ifSet(savedColors.accentPrimary, colors.color1),
+        accentSecondary: ifSet(savedColors.accentSecondary, colors.color2),
+        text: ifSet(savedColors.text, colors.text),
+        backgroundLight: ifSet(savedColors.backgroundLight, colors.backgroundLight),
+        backgroundDark: ifSet(savedColors.backgroundDark, colors.color0)
+    };
+}
+
+async function setTheme(colors) {
+    pywalColors = colors;
+    const colorscheme = await createColorschemeFromPywal(colors);
+    const theme = createThemeFromColorscheme(colorscheme);
+    browser.theme.update(theme);
+    browser.storage.local.set({ isApplied: true });
 }
 
 function output(message) {
@@ -64,16 +114,39 @@ function changeState(response, storageKey, value) {
     }
 }
 
-/*
-Listen for messages from the app.
-*/
-port.onMessage.addListener((response) => {
-    if (response.key == 'colorscheme') {
+function resetCustomColors() {
+    browser.storage.local.remove(CUSTOM_COLOR_KEYS);
+}
+
+function resetToDefaultTheme() {
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=1415267
+    // It is a known bug that the reset doesnt respect default theme
+    browser.theme.reset();
+    resetCustomColors();
+    browser.storage.local.set({ isApplied: false });
+    output('Reset to default theme');
+}
+
+function onSettingsPageClosed(tabId, removeInfo) {
+    if (tabId == settingsPageTabId) {
+        browser.tabs.onRemoved.removeListener(onSettingsPageClosed);
+        settingsPageTabListener = null;
+        settingsPageTabId = null;
+    }
+}
+
+// Listen for errors with connection to native app
+port.onDisconnect.addListener((p) => {
+    if (p.error) {
+        output(`Disconnected from native app: ${p}`);
+    }
+});
+
+// Listen for messages from the app.
+port.onMessage.addListener(async (response) => {
+    if (response.key == 'colors') {
         if (response.success) {
-            const theme = createTheme(response.data);
-            browser.theme.update(theme);
-            browser.storage.local.set({ isApplied: true });
-            output('Fetched and applied colorscheme successfully.')
+            setTheme(response.data);
         } else {
             output(response.error);
         }
@@ -88,9 +161,13 @@ port.onMessage.addListener((response) => {
     }
 });
 
+// Listen for messages from the content script
 browser.runtime.onMessage.addListener((message) => {
     if (message.action == 'update') {
+        resetCustomColors();
         port.postMessage('update');
+    } else if (message.action == 'reset') {
+        resetToDefaultTheme();
     } else if (message.action == 'enableCustomCss') {
         port.postMessage('enableCustomCss');
     } else if (message.action == 'disableCustomCss') {
@@ -99,9 +176,27 @@ browser.runtime.onMessage.addListener((message) => {
         port.postMessage('enableNoScrollbar');
     } else if (message.action == 'disableNoScrollbar') {
         port.postMessage('disableNoScrollbar');
+    } else if (message.action == 'customColor') {
+        saveCustomColor(message.type, message.value);
+        // Use the colors from pywal that we have already fetched and update the theme,
+        // replacing the default value for 'message.type' with the custom color
+        setTheme(pywalColors);
     }
 });
 
+browser.browserAction.onClicked.addListener(async () => {
+    if (settingsPageTabId === null) {
+        let tab = await browser.tabs.create({ url: 'popup/main.html' });
+        settingsPageTabId = tab.id;
+        settingsPageTabListener = browser.tabs.onRemoved.addListener(onSettingsPageClosed);
+    } else {
+        let tab = await browser.tabs.get(settingsPageTabId);
+        browser.windows.update(tab.windowId, { focused: true });
+        browser.tabs.update(tab.id, { active: true });
+    }
+});
+
+// Make sure to apply the theme when starting Firefox, if it is enabled
 async function applyThemeOnStartup() {
     const state = await browser.storage.local.get('isApplied');
     if (state.isApplied) {

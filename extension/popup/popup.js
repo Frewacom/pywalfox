@@ -1,78 +1,111 @@
-// Watch for theme updates
-browser.theme.onUpdated.addListener(async ({ theme, windowId }) => {
-    const sidebarWindow = await browser.windows.getCurrent();
-    /*
-        Only update theme if it applies to the window the sidebar is in.
-        If a windowId is passed during an update, it means that the theme is applied to that specific window.
-        Otherwise, the theme is applied globally to all windows.
-    */
+const DEFAULT_BACKGROUND = '#000000';
+const DEFAULT_FOREGROUND = '#ffffff';
+const DEFAULT_BACKGROUND_LIGHT = '#222222';
+const DEFAULT_ACCENT_PRIMARY = '#222222';
+const DEFAULT_ACCENT_SECONDARY = '#222222';
 
-    // browser.storage.local.set({ isApplied: false });
-
-    console.log('theme saved');
-    if (!windowId || windowId == sidebarWindow.id) {
-        setExtensionTheme(theme);
-    }
-});
-
+const restartBanner = document.getElementById('banner');
 const updateButton = document.getElementById('update');
 const resetButton = document.getElementById('reset');
-const enableCssButton = document.getElementById('enableCustomCss');
-const disableCssButton = document.getElementById('disableCustomCss');
 const outputArea = document.getElementById('output');
-const enableNoScrollbar = document.getElementById('enableNoScrollbar');
-const disableNoScrollbar = document.getElementById('disableNoScrollbar');
 
-function setExtensionTheme(theme) {
-    document.documentElement.style.setProperty('--background', theme.colors.frame);
-    document.documentElement.style.setProperty('--background-light', theme.colors.button_background_hover);
-    document.documentElement.style.setProperty('--foreground', theme.colors.tab_selected);
+const cssButtons = Array.from(document.getElementsByClassName('css-btn'));
+const colorpickers = Array.from(document.getElementsByClassName('colorpicker'));
+
+var restartBannerTimeout = null;
+
+function getExtensionColorsFromTheme(theme) {
+    return {
+        background: theme.colors ? theme.colors.frame : DEFAULT_BACKGROUND,
+        foreground: theme.colors ? theme.colors.tab_selected : DEFAULT_FOREGROUND,
+        backgroundLight: theme.colors ? theme.colors.button_background_hover : DEFAULT_BACKGROUND_LIGHT,
+        accentPrimary: theme.colors ? theme.colors.tab_loading : DEFAULT_ACCENT_PRIMARY,
+        accentSecondary: theme.colors ? theme.colors.popup_highlight : DEFAULT_ACCENT_SECONDARY
+    };
+}
+
+function setExtensionTheme(extensionColors) {
+    document.documentElement.style.setProperty('--background', extensionColors.background);
+    document.documentElement.style.setProperty('--background-light', extensionColors.backgroundLight);
+    document.documentElement.style.setProperty('--foreground', extensionColors.foreground);
+    document.documentElement.style.setProperty('--accent-primary', extensionColors.accentPrimary);
+    document.documentElement.style.setProperty('--accent-secondary', extensionColors.accentSecondary);
+}
+
+function showRestartBanner() {
+    if (restartBannerTimeout === null) {
+        banner.classList.add('show');
+        restartBannerTimeout = setTimeout(() => {
+            banner.classList.remove('show');
+            restartBannerTimeout = null;
+        }, 3000);
+    }
 }
 
 function output(message) {
     outputArea.value += message + '\n';
+    outputArea.scrollTop = outputArea.scrollHeight; // Scrolls to bottom of textarea
+}
+
+// Sends action to background script to disable/enable custom CSS
+function doCustomCssAction(e) {
+    showRestartBanner();
+    browser.runtime.sendMessage({ action: e.target.getAttribute('data-action') });
+}
+
+function onCustomColorChanged(e) {
+    browser.runtime.sendMessage({
+        action: 'customColor',
+        type: e.target.getAttribute('data-action'),
+        value: e.target.value
+    });
 }
 
 updateButton.addEventListener('click', () => {
-    browser.runtime.sendMessage({action: 'update'})
+    browser.runtime.sendMessage({ action: 'update' });
 });
 
 resetButton.addEventListener('click', () => {
-    output('Resetting to default theme.');
-    browser.storage.local.set({ isApplied: false });
-
-    // https://bugzilla.mozilla.org/show_bug.cgi?id=1415267
-    // It is a known bug that the reset doesnt respect default theme
-    browser.theme.reset();
+    updateExtensionTheme();
+    browser.runtime.sendMessage({ action: 'reset' });
 });
 
-enableCssButton.addEventListener('click', () => {
-    browser.runtime.sendMessage({ action: 'enableCustomCss' })
-    output('Restart is required for custom CSS to take effect.');
+cssButtons.forEach((cssButton) => {
+    cssButton.addEventListener('click', doCustomCssAction);
 });
 
-disableCssButton.addEventListener('click', () => {
-    browser.runtime.sendMessage({ action: 'disableCustomCss' })
-    output('Restart is required for custom CSS to take effect.');
+colorpickers.forEach((colorpicker) => {
+    colorpicker.addEventListener('change', onCustomColorChanged);
 });
 
-enableNoScrollbar.addEventListener('click', () => {
-    browser.runtime.sendMessage({ action: 'enableNoScrollbar' });
+// Watch for theme updates
+browser.theme.onUpdated.addListener(async ({ theme, windowId }) => {
+    const sidebarWindow = await browser.windows.getCurrent();
+    if (!windowId || windowId == sidebarWindow.id) {
+        output('Theme was updated');
+        updateExtensionTheme();
+    }
 });
 
-disableNoScrollbar.addEventListener('click', () => {
-    browser.runtime.sendMessage({ action: 'disableNoScrollbar' });
-});
-
+// Listen for messages from background script
 browser.runtime.onMessage.addListener((response) => {
     if (response.action == 'output') {
         output(response.message);
     }
 });
 
-async function setInitialStyle() {
+// Sets the theme of the extension to match the one in the browser
+async function updateExtensionTheme() {
     const theme = await browser.theme.getCurrent();
-    setExtensionTheme(theme);
+    const colors = getExtensionColorsFromTheme(theme);
+    setExtensionTheme(colors);
+
+    // Set the default values for the color pickers
+    colorpickers.forEach((colorpicker) => {
+        colorpicker.value = colors[colorpicker.getAttribute('data-action')];
+    });
 }
 
-setInitialStyle();
+// Update the colors of the extension to match the theme
+updateExtensionTheme();
+

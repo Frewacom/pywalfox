@@ -4,25 +4,55 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>Pywalfox</title>
+    <title>Pywalfox Settings</title>
     <link type="text/css" rel="stylesheet" href="popup.css">
 </head>
 
 <body>
+    <div id="cp-modal">
+        <h4>Changing color for <span id="cp-modal-name"></span></h4>
+
+    </div>
+    <header id="banner">
+        Restart needed for custom CSS to take effect!
+    </header>
     <main>
         <textarea id="output" readonly></textarea>
+        <section class="column">
+            <label>Custom colors</label>
+            <div class="container">
+                Background:
+                <input class="colorpicker" data-action="background" type="color">
+            </div>
+            <div class="container">
+                Foreground:
+                <input class="colorpicker" data-action="foreground" type="color">
+            </div>
+            <div class="container">
+                Background light:
+                <input class="colorpicker" data-action="backgroundLight" type="color">
+            </div>
+            <div class="container">
+                Accent primary:
+                <input class="colorpicker" data-action="accentPrimary" type="color">
+            </div>
+            <div class="container">
+                Accent secondary:
+                <input class="colorpicker" data-action="accentSecondary" type="color">
+            </div>
+        </section>
         <section id="buttons">
             <div class="row">
-                <button id="update">Apply theme</button>
-                <button id="reset">Reset</button>
+                <button id="update">Fetch pywal colors</button>
+                <button id="reset">Disable theme</button>
             </div>
             <div class="row">
-                <button id="enableCustomCss">Enable custom CSS</button>
-                <button id="disableCustomCss">Disable custom CSS</button>
+                <button class="css-btn" data-action="enableCustomCss">Enable custom CSS</button>
+                <button class="css-btn" data-action="disableCustomCss">Disable custom CSS</button>
             </div>
             <div class="row">
-                <button id="enableNoScrollbar">Hide scrollbar</button>
-                <button id="disableNoScrollbar">Show scrollbar</button>
+                <button class="css-btn" data-action="enableNoScrollbar">Enable no scrollbar</button>
+                <button class="css-btn" data-action="disableNoScrollbar">Disable no scrollbar</button>
             </div>
         </section>
     </main>
