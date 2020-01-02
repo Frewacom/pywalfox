@@ -1,8 +1,8 @@
 const DEFAULT_BACKGROUND = '#000000';
 const DEFAULT_FOREGROUND = '#ffffff';
 const DEFAULT_BACKGROUND_LIGHT = '#222222';
-const DEFAULT_ACCENT_PRIMARY = '#193842';
-const DEFAULT_ACCENT_SECONDARY = '#293292';
+const DEFAULT_ACCENT_PRIMARY = '#222222';
+const DEFAULT_ACCENT_SECONDARY = '#222222';
 
 const restartBanner = document.getElementById('banner');
 const updateButton = document.getElementById('update');

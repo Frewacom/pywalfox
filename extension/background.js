@@ -44,12 +44,12 @@ function createThemeFromColorscheme(colorscheme) {
             ntp_background: colorscheme.background,
             ntp_text: colorscheme.foreground,
             popup: colorscheme.background,
-            popup_border: colorscheme.background,
+            popup_border: colorscheme.backgroundLight,
             popup_text: colorscheme.foreground,
             popup_highlight: colorscheme.accentSecondary,
             popup_highlight_text: colorscheme.text,
             sidebar: colorscheme.background,
-            sidebar_border: colorscheme.background,
+            sidebar_border: colorscheme.backgroundLight,
             sidebar_text: colorscheme.foreground,
             sidebar_highlight: colorscheme.accentPrimary,
             sidebar_highlight_text: colorscheme.text,
@@ -83,7 +83,7 @@ async function createColorschemeFromPywal(colors) {
     return {
         background: ifSet(savedColors.background, colors.background),
         foreground: ifSet(savedColors.foreground, colors.color15),
-        accentPrimary: ifSet(savedColors.foreground, colors.color1),
+        accentPrimary: ifSet(savedColors.accentPrimary, colors.color1),
         accentSecondary: ifSet(savedColors.accentSecondary, colors.color2),
         text: ifSet(savedColors.text, colors.text),
         backgroundLight: ifSet(savedColors.backgroundLight, colors.backgroundLight),
@@ -178,7 +178,6 @@ browser.runtime.onMessage.addListener((message) => {
         port.postMessage('disableNoScrollbar');
     } else if (message.action == 'customColor') {
         saveCustomColor(message.type, message.value);
-        if ()
         // Use the colors from pywal that we have already fetched and update the theme,
         // replacing the default value for 'message.type' with the custom color
         setTheme(pywalColors);

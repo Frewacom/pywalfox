@@ -81,9 +81,9 @@ def fetchColors():
         return (False, 'Could not read colors from: %s' % colors_path)
 
     colorscheme = {
-        'background': generateDarkerShade(colors[2], 150),
+        'background': generateDarkerShade(colors[2], 155),
         'backgroundDark': colors[0],
-        'backgroundLight': generateDarkerShade(colors[2], 110),
+        'backgroundLight': generateDarkerShade(colors[2], 120),
         'foreground': colors[-1],
         'accentPrimary': colors[1],
         'accentSecondary': colors[2],
@@ -113,8 +113,8 @@ def fetchColors():
 def limit(x):
     if x > 255:
         return 255
-    elif x < 0:
-        return 0
+    elif x < 20:
+        return 20
 
     return x
 

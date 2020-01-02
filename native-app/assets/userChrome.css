@@ -8,6 +8,7 @@ html {
     font-size: var(--font-size) !important;
     --background: var(--lwt-accent-color);
     --foreground: var(--arrowpanel-color);
+    --accent-primary: var(--lwt-toolbar-field-highlight);
 }
 
 /* Remove underline from container tabs */
@@ -121,6 +122,15 @@ menuitem.subviewbutton:not(:-moz-any([disabled], :active))[_moz-menuactive],
 :active)):-moz-any(:hover, :focus) {
     color: var(--background) !important;
     background-color: var(--foreground) !important;
+}
+
+.bookmark-item {
+    fill: var(--accent-primary) !important;
+}
+
+.menu-text, .menu-iconic-left, .menu-iconic-text {
+    font-size: calc(var(--font-size) * 1.05);
+    color: white !important;
 }
 
 /* So that we can hide the scrollbar */

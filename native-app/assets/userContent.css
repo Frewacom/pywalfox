@@ -38,5 +38,9 @@
         font-weight: bold !important;
         font-size: 0.8em !important;
     }
+
+    #newtab-search-text {
+        background-color: var(--background-light);
+    }
 }
 
