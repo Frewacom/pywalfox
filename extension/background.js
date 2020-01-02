@@ -8,6 +8,15 @@ const CUSTOM_COLOR_KEYS = [
     'text'
 ];
 
+const THEME_COLOR_KEYS = [
+    'themeBackground',
+    'themeForeground',
+    'themeBackgroundLight',
+    'themeAccentPrimary',
+    'themeAccentSecondary',
+    'themeText'
+];
+
 // On startup, connect to the "ping_pong" app.
 const port = browser.runtime.connectNative("pywalfox");
 
@@ -80,9 +89,17 @@ function saveThemeColors(colorscheme) {
     });
 }
 
-function saveCustomColor(type, value) {
-    browser.storage.local.set({ [type]: value });
+async function saveCustomColor(type, value) {
+    await browser.storage.local.set({ [type]: value });
     output(`Set custom color "${type}" to ${value}`);
+}
+
+async function sendMessageToTabs(data) {
+    const tabs = await browser.tabs.query({});
+
+    for (const tab of tabs) {
+        browser.tabs.sendMessage(tab.id, data);
+    }
 }
 
 async function getSavedCustomColors() {
@@ -106,9 +123,10 @@ async function setTheme(colors) {
     pywalColors = colors;
     const colorscheme = await createColorschemeFromPywal(colors);
     const theme = createThemeFromColorscheme(colorscheme);
-    saveThemeColors(colorscheme);
+    await saveThemeColors(colorscheme);
 
     browser.theme.update(theme);
+    sendMessageToTabs({ action: 'updateDDGTheme' });
     browser.storage.local.set({ isApplied: true });
 }
 
@@ -186,14 +204,20 @@ browser.runtime.onMessage.addListener((message) => {
         port.postMessage('update');
     } else if (message.action == 'reset') {
         resetToDefaultTheme();
-    } else if (message.action == 'enableCustomCss') {
-        port.postMessage('enableCustomCss');
-    } else if (message.action == 'disableCustomCss') {
-        port.postMessage('disableCustomCss');
-    } else if (message.action == 'enableNoScrollbar') {
-        port.postMessage('enableNoScrollbar');
-    } else if (message.action == 'disableNoScrollbar') {
-        port.postMessage('disableNoScrollbar');
+    } else if (message.action == 'customCssEnabled') {
+        if (message.enabled) {
+            port.postMessage('enableCustomCss');
+        } else {
+            port.postMessage('disableCustomCss');
+        }
+    } else if (message.action == 'noScrollbarEnabled') {
+        if (message.enabled) {
+            port.postMessage('enableNoScrollbar');
+        } else {
+            port.postMessage('disableNoScrollbar');
+        }
+    } else if (message.action == 'ddgThemeEnabled') {
+        browser.storage.local.set({ [message.action]: message.enabled });
     } else if (message.action == 'customColor') {
         saveCustomColor(message.type, message.value);
         // Use the colors from pywal that we have already fetched and update the theme,

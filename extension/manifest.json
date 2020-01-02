@@ -30,6 +30,7 @@
     "permissions": [
         "nativeMessaging",
         "theme",
-        "storage"
+        "storage",
+        "tabs"
     ]
 }

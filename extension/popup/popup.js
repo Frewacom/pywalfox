@@ -4,12 +4,13 @@ const DEFAULT_BACKGROUND_LIGHT = '#222222';
 const DEFAULT_ACCENT_PRIMARY = '#222222';
 const DEFAULT_ACCENT_SECONDARY = '#222222';
 
+const versionLabel = document.getElementById('version');
 const restartBanner = document.getElementById('banner');
 const updateButton = document.getElementById('update');
 const resetButton = document.getElementById('reset');
 const outputArea = document.getElementById('output');
 
-const cssButtons = Array.from(document.getElementsByClassName('css-btn'));
+const toggleButtons = Array.from(document.getElementsByClassName('toggle'));
 const colorpickers = Array.from(document.getElementsByClassName('colorpicker'));
 
 var restartBannerTimeout = null;
@@ -32,8 +33,9 @@ function setExtensionTheme(extensionColors) {
     document.documentElement.style.setProperty('--accent-secondary', extensionColors.accentSecondary);
 }
 
-function showRestartBanner() {
+function showBanner(message) {
     if (restartBannerTimeout === null) {
+        banner.innerHTML = message;
         banner.classList.add('show');
         restartBannerTimeout = setTimeout(() => {
             banner.classList.remove('show');
@@ -47,10 +49,32 @@ function output(message) {
     outputArea.scrollTop = outputArea.scrollHeight; // Scrolls to bottom of textarea
 }
 
+async function sendMessageToTabs(data) {
+    const tabs = await browser.tabs.query({});
+
+    for (const tab of tabs) {
+        browser.tabs.sendMessage(tab.id, data);
+    }
+}
+
 // Sends action to background script to disable/enable custom CSS
-function doCustomCssAction(e) {
-    showRestartBanner();
-    browser.runtime.sendMessage({ action: e.target.getAttribute('data-action') });
+async function toggleOption(e) {
+    const action = e.target.getAttribute('data-action');
+    const state = await browser.storage.local.get(action);
+    let updatedValue = state[action] ? false : true;
+
+    if (action == 'customCssEnabled' || action == 'noScrollbarEnabled') {
+        showBanner('Restart needed for custom CSS to take effect!');
+        browser.runtime.sendMessage({ action: action, enabled: updatedValue });
+    } else if (action == 'ddgThemeEnabled') {
+        if (updatedValue == false) { showBanner('Select a random theme in DuckDuckGo settings to fully disable!'); }
+        sendMessageToTabs({ action: action, enabled: updatedValue });
+    }
+
+    browser.storage.local.set({ [action]: updatedValue });
+
+    e.target.innerHTML = updatedValue ? 'On' : 'Off';
+    e.target.classList.toggle('enabled');
 }
 
 function onCustomColorChanged(e) {
@@ -66,12 +90,12 @@ updateButton.addEventListener('click', () => {
 });
 
 resetButton.addEventListener('click', () => {
-    updateExtensionTheme();
+    onExtensionLoad();
     browser.runtime.sendMessage({ action: 'reset' });
 });
 
-cssButtons.forEach((cssButton) => {
-    cssButton.addEventListener('click', doCustomCssAction);
+toggleButtons.forEach((toggleButton) => {
+    toggleButton.addEventListener('click', toggleOption);
 });
 
 colorpickers.forEach((colorpicker) => {
@@ -83,7 +107,7 @@ browser.theme.onUpdated.addListener(async ({ theme, windowId }) => {
     const sidebarWindow = await browser.windows.getCurrent();
     if (!windowId || windowId == sidebarWindow.id) {
         output('Theme was updated');
-        updateExtensionTheme();
+        onExtensionLoad();
     }
 });
 
@@ -95,7 +119,7 @@ browser.runtime.onMessage.addListener((response) => {
 });
 
 // Sets the theme of the extension to match the one in the browser
-async function updateExtensionTheme() {
+async function onExtensionLoad() {
     const theme = await browser.theme.getCurrent();
     const colors = getExtensionColorsFromTheme(theme);
     setExtensionTheme(colors);
@@ -104,8 +128,21 @@ async function updateExtensionTheme() {
     colorpickers.forEach((colorpicker) => {
         colorpicker.value = colors[colorpicker.getAttribute('data-action')];
     });
+
+    toggleButtons.forEach(async (toggleButton) => {
+        const action = toggleButton.getAttribute('data-action');
+        const state = await browser.storage.local.get(action);
+        if (state[action] == true) {
+            toggleButton.classList.add('enabled');
+            toggleButton.innerHTML = 'On';
+        }
+    });
 }
 
-// Update the colors of the extension to match the theme
-updateExtensionTheme();
+// Updates extension colors, updates the current value of settings, etc
+onExtensionLoad();
+
+versionLabel.innerHTML = `v${browser.runtime.getManifest().version}`;
+
+
 

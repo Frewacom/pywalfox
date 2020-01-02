@@ -13,48 +13,85 @@
         <h4>Changing color for <span id="cp-modal-name"></span></h4>
 
     </div>
-    <header id="banner">
-        Restart needed for custom CSS to take effect!
-    </header>
-    <main>
-        <textarea id="output" readonly></textarea>
-        <section class="column">
-            <label>Custom colors</label>
-            <div class="container">
-                Background:
-                <input class="colorpicker" data-action="background" type="color">
-            </div>
-            <div class="container">
-                Foreground:
-                <input class="colorpicker" data-action="foreground" type="color">
-            </div>
-            <div class="container">
-                Background light:
-                <input class="colorpicker" data-action="backgroundLight" type="color">
-            </div>
-            <div class="container">
-                Accent primary:
-                <input class="colorpicker" data-action="accentPrimary" type="color">
-            </div>
-            <div class="container">
-                Accent secondary:
-                <input class="colorpicker" data-action="accentSecondary" type="color">
-            </div>
-        </section>
+    <div id="banner"></div>
+    <header>
+        <div class="spacer">
+            Pywalfox
+        </div>
         <section id="buttons">
             <div class="row">
                 <button id="update">Fetch pywal colors</button>
                 <button id="reset">Disable theme</button>
             </div>
-            <div class="row">
-                <button class="css-btn" data-action="enableCustomCss">Enable custom CSS</button>
-                <button class="css-btn" data-action="disableCustomCss">Disable custom CSS</button>
+        </section>
+        <div class="spacer align-left">
+            <span id="version"></span>
+        </div>
+    </header>
+    <main>
+        <section class="column">
+            <label>Custom colors</label>
+            <div class="container">
+                <p class="description">
+                    Background
+                    <span>Main color. Preferrably a dark color for best readability</span>
+                </p>
+                <input class="colorpicker" data-action="background" type="color">
             </div>
-            <div class="row">
-                <button class="css-btn" data-action="enableNoScrollbar">Enable no scrollbar</button>
-                <button class="css-btn" data-action="disableNoScrollbar">Disable no scrollbar</button>
+            <div class="container">
+                <p class="description">
+                    Foreground
+                    <span>Main text color</span>
+                </p>
+                <input class="colorpicker" data-action="foreground" type="color">
+            </div>
+            <div class="container">
+                <p class="description">
+                    Background light
+                    <span>Used in borders, hovers</span>
+                </p>
+                <input class="colorpicker" data-action="backgroundLight" type="color">
+            </div>
+            <div class="container">
+                <p class="description">
+                    Accent primary
+                    <span>Main accent color used for icons</span>
+                </p>
+                <input class="colorpicker" data-action="accentPrimary" type="color">
+            </div>
+            <div class="container">
+                <p class="description">
+                    Accent secondary
+                    <span>Mainly used for hovers and highlights</span>
+                </p>
+                <input class="colorpicker" data-action="accentSecondary" type="color">
             </div>
         </section>
+        <section class="column no-bottom-border">
+            <label>Optional settings</label>
+            <div class="container">
+                <p class="description">
+                    Use custom CSS?
+                    <span>Bold and smaller text, styled dropdowns and context menus</span>
+                </p>
+                <button class="toggle" data-action="customCssEnabled">Off</button>
+            </div>
+            <div class="container">
+                <p class="description">
+                    No scrollbar?
+                    <span>Hides the page scrollbar for a cleaner look</span>
+                </p>
+                <button class="toggle" data-action="noScrollbarEnabled">Off</button>
+            </div>
+            <div class="container">
+                <p class="description">
+                    Use DuckDuckGo theme?
+                    <span>Applies matching pywal theme to all DuckDuckGo-pages</span>
+                </p>
+                <button class="toggle" data-action="ddgThemeEnabled">Off</button>
+            </div>
+        </section>
+        <textarea id="output" readonly></textarea>
     </main>
     <script src="popup.js"></script>
 </body>

@@ -7,11 +7,34 @@ const THEME_COLOR_KEYS = [
     'themeText'
 ];
 
-console.log('ello');
+function resetTheme() {
+    const cookie = [
+        'aq=-1',
+        'ax=v188-4',
+        '5=2',
+        's=m',
+        'w=n',
+        'u=-1',
+        'y=44475a',
+        'ae=d'
+    ];
+
+    cookie.forEach((property) => {
+        document.cookie = property;
+    });
+}
+
+async function applyTheme() {
+    const colorscheme = await createColorscheme();
+    if (colorscheme) {
+        colorscheme.forEach((property) => {
+            document.cookie = property;
+        });
+    }
+}
 
 async function createColorscheme() {
     const savedColors = await browser.storage.local.get();
-    console.log(savedColors);
     if (Object.keys(savedColors).length > 0) {
         return [
             `7=${savedColors.themeBackground}`, // Background
@@ -40,16 +63,23 @@ async function createColorscheme() {
 }
 
 async function setTheme() {
-    const colorscheme = await createColorscheme();
-    console.log(colorscheme);
-    if (colorscheme) {
-        colorscheme.forEach((property) => {
-            console.log('asdasd');
-            document.cookie = property;
-        });
+    const state = await browser.storage.local.get('ddgThemeEnabled');
+    if (state.ddgThemeEnabled) {
+        applyTheme();
+    } else {
+        resetTheme();
     }
 }
 
+browser.runtime.onMessage.addListener(async (message) => {
+    console.log('Message recieved');
+    if (message.action == 'updateDDGTheme' || message.action == 'ddgThemeEnabled') {
+        await setTheme();
+        location.reload()
+    }
+});
+
 setTheme();
 
+console.log('Pywalfox content script loaded');
 
