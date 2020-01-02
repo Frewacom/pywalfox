@@ -3,7 +3,6 @@ const CUSTOM_COLOR_KEYS = [
     'background',
     'foreground',
     'backgroundLight',
-    'backgroundDark',
     'accentPrimary',
     'accentSecondary',
     'text'
@@ -68,6 +67,19 @@ function ifSet(value, fallback) {
     return fallback;
 }
 
+// Save the colors of the current pywal theme so that they can be
+// accessed from the duckduckgo script, for example
+function saveThemeColors(colorscheme) {
+    browser.storage.local.set({
+        themeBackground: colorscheme.background,
+        themeForeground: colorscheme.foreground,
+        themeBackgroundLight: colorscheme.backgroundLight,
+        themeAccentPrimary: colorscheme.accentPrimary,
+        themeAccentSecondary: colorscheme.accentSecondary,
+        themeText: colorscheme.text
+    });
+}
+
 function saveCustomColor(type, value) {
     browser.storage.local.set({ [type]: value });
     output(`Set custom color "${type}" to ${value}`);
@@ -87,7 +99,6 @@ async function createColorschemeFromPywal(colors) {
         accentSecondary: ifSet(savedColors.accentSecondary, colors.color2),
         text: ifSet(savedColors.text, colors.text),
         backgroundLight: ifSet(savedColors.backgroundLight, colors.backgroundLight),
-        backgroundDark: ifSet(savedColors.backgroundDark, colors.color0)
     };
 }
 
@@ -95,6 +106,8 @@ async function setTheme(colors) {
     pywalColors = colors;
     const colorscheme = await createColorschemeFromPywal(colors);
     const theme = createThemeFromColorscheme(colorscheme);
+    saveThemeColors(colorscheme);
+
     browser.theme.update(theme);
     browser.storage.local.set({ isApplied: true });
 }
@@ -118,10 +131,15 @@ function resetCustomColors() {
     browser.storage.local.remove(CUSTOM_COLOR_KEYS);
 }
 
+function resetThemeColors() {
+    browser.storage.local.remove(THEME_COLOR_KEYS);
+}
+
 function resetToDefaultTheme() {
     // https://bugzilla.mozilla.org/show_bug.cgi?id=1415267
     // It is a known bug that the reset doesnt respect default theme
     browser.theme.reset();
+    resetThemeColors();
     resetCustomColors();
     browser.storage.local.set({ isApplied: false });
     output('Reset to default theme');
