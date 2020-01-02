@@ -1,6 +1,8 @@
 const DEFAULT_BACKGROUND = '#000000';
 const DEFAULT_FOREGROUND = '#ffffff';
 const DEFAULT_BACKGROUND_LIGHT = '#222222';
+const DEFAULT_ACCENT_PRIMARY = '#193842';
+const DEFAULT_ACCENT_SECONDARY = '#293292';
 
 const restartBanner = document.getElementById('banner');
 const updateButton = document.getElementById('update');
@@ -16,7 +18,9 @@ function getExtensionColorsFromTheme(theme) {
     return {
         background: theme.colors ? theme.colors.frame : DEFAULT_BACKGROUND,
         foreground: theme.colors ? theme.colors.tab_selected : DEFAULT_FOREGROUND,
-        backgroundLight: theme.colors ? theme.colors.button_background_hover : DEFAULT_BACKGROUND_LIGHT
+        backgroundLight: theme.colors ? theme.colors.button_background_hover : DEFAULT_BACKGROUND_LIGHT,
+        accentPrimary: theme.colors ? theme.colors.tab_loading : DEFAULT_ACCENT_PRIMARY,
+        accentSecondary: theme.colors ? theme.colors.popup_highlight : DEFAULT_ACCENT_SECONDARY
     };
 }
 
@@ -24,6 +28,8 @@ function setExtensionTheme(extensionColors) {
     document.documentElement.style.setProperty('--background', extensionColors.background);
     document.documentElement.style.setProperty('--background-light', extensionColors.backgroundLight);
     document.documentElement.style.setProperty('--foreground', extensionColors.foreground);
+    document.documentElement.style.setProperty('--accent-primary', extensionColors.accentPrimary);
+    document.documentElement.style.setProperty('--accent-secondary', extensionColors.accentSecondary);
 }
 
 function showRestartBanner() {
@@ -38,7 +44,7 @@ function showRestartBanner() {
 
 function output(message) {
     outputArea.value += message + '\n';
-    outputArea.scrollTop = outputArea.scrollHeight; // Scrolls to bottom of textarea on append
+    outputArea.scrollTop = outputArea.scrollHeight; // Scrolls to bottom of textarea
 }
 
 // Sends action to background script to disable/enable custom CSS

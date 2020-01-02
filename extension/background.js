@@ -5,9 +5,7 @@ const CUSTOM_COLOR_KEYS = [
     'backgroundLight',
     'backgroundDark',
     'accentPrimary',
-    'accentPrimaryLight',
     'accentSecondary',
-    'accentSecondaryLight',
     'text'
 ];
 
@@ -21,11 +19,11 @@ var settingsPageTabListener = null;
 function createThemeFromColorscheme(colorscheme) {
     return {
         colors: {
-            icons: colorscheme.foreground,
-            icons_attention: colorscheme.accentSecondaryLight,
+            icons: colorscheme.accentPrimary,
+            icons_attention: colorscheme.accentSecondary,
             frame: colorscheme.background,
             tab_text: colorscheme.background,
-            tab_loading: colorscheme.accentPrimaryLight,
+            tab_loading: colorscheme.accentPrimary,
             tab_background_text: colorscheme.text,
             tab_selected: colorscheme.foreground,
             tab_line: colorscheme.foreground,
@@ -38,7 +36,7 @@ function createThemeFromColorscheme(colorscheme) {
             toolbar_field_border: colorscheme.background,
             toolbar_field_border_focus: colorscheme.background,
             toolbar_field_separator: colorscheme.background,
-            toolbar_field_highlight: colorscheme.accentSecondaryLight,
+            toolbar_field_highlight: colorscheme.accentPrimary,
             toolbar_field_highlight_text: colorscheme.text,
             toolbar_bottom_separator: colorscheme.background,
             toolbar_top_separator: colorscheme.background,
@@ -48,12 +46,12 @@ function createThemeFromColorscheme(colorscheme) {
             popup: colorscheme.background,
             popup_border: colorscheme.background,
             popup_text: colorscheme.foreground,
-            popup_highlight: colorscheme.accent_secondary,
+            popup_highlight: colorscheme.accentSecondary,
             popup_highlight_text: colorscheme.text,
             sidebar: colorscheme.background,
             sidebar_border: colorscheme.background,
             sidebar_text: colorscheme.foreground,
-            sidebar_highlight: colorscheme.accentPrimaryLight,
+            sidebar_highlight: colorscheme.accentPrimary,
             sidebar_highlight_text: colorscheme.text,
             bookmark_text: colorscheme.text,
             button_background_hover: colorscheme.backgroundLight,
@@ -87,8 +85,6 @@ async function createColorschemeFromPywal(colors) {
         foreground: ifSet(savedColors.foreground, colors.color15),
         accentPrimary: ifSet(savedColors.foreground, colors.color1),
         accentSecondary: ifSet(savedColors.accentSecondary, colors.color2),
-        accentPrimaryLight: ifSet(savedColors.accentPrimaryLight, colors.color4),
-        accentSecondaryLight: ifSet(savedColors.accentSecondaryLight, colors.color5),
         text: ifSet(savedColors.text, colors.text),
         backgroundLight: ifSet(savedColors.backgroundLight, colors.backgroundLight),
         backgroundDark: ifSet(savedColors.backgroundDark, colors.color0)
@@ -182,6 +178,7 @@ browser.runtime.onMessage.addListener((message) => {
         port.postMessage('disableNoScrollbar');
     } else if (message.action == 'customColor') {
         saveCustomColor(message.type, message.value);
+        if ()
         // Use the colors from pywal that we have already fetched and update the theme,
         // replacing the default value for 'message.type' with the custom color
         setTheme(pywalColors);
