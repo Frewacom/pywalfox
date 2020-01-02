@@ -35,7 +35,7 @@ function setExtensionTheme(extensionColors) {
 
 function showBanner(message) {
     if (restartBannerTimeout === null) {
-        banner.innerHTML = message;
+        banner.innerText = message;
         banner.classList.add('show');
         restartBannerTimeout = setTimeout(() => {
             banner.classList.remove('show');
@@ -73,7 +73,7 @@ async function toggleOption(e) {
 
     browser.storage.local.set({ [action]: updatedValue });
 
-    e.target.innerHTML = updatedValue ? 'On' : 'Off';
+    e.target.innerText = updatedValue ? 'On' : 'Off';
     e.target.classList.toggle('enabled');
 }
 
@@ -134,7 +134,7 @@ async function onExtensionLoad() {
         const state = await browser.storage.local.get(action);
         if (state[action] == true) {
             toggleButton.classList.add('enabled');
-            toggleButton.innerHTML = 'On';
+            toggleButton.innerText = 'On';
         }
     });
 }
@@ -142,7 +142,7 @@ async function onExtensionLoad() {
 // Updates extension colors, updates the current value of settings, etc
 onExtensionLoad();
 
-versionLabel.innerHTML = `v${browser.runtime.getManifest().version}`;
+versionLabel.innerText = `v${browser.runtime.getManifest().version}`;
 
 
 
