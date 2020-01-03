@@ -4,7 +4,7 @@
 
 # Pywalfox
 
-Pywalfox allows Firefox to be themed using Pywal. It also includes custom CSS that adds things such as a thin scrollbar, smaller and bold text, styled dropdowns, etc.
+Pywalfox allows Firefox to be themed using Pywal. There is an option to use a custom CSS-file that adds things such as a thin scrollbar, smaller and bold text, styled dropdowns, etc, as well as a theme for DuckDuckGo.
 
 The custom CSS is optional and can be enabled/disabled from within the extension (there may be some issues if you have multiple profiles in firefox). You also have to enable the support for custom CSS for it to work. How to do this is described down below.
 
