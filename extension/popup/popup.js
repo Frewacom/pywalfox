@@ -67,7 +67,6 @@ async function toggleOption(e) {
         showBanner('Restart needed for custom CSS to take effect!');
         browser.runtime.sendMessage({ action: action, enabled: updatedValue });
     } else if (action == 'ddgThemeEnabled') {
-        if (updatedValue == false) { showBanner('Select a random theme in DuckDuckGo settings to fully disable!'); }
         sendMessageToTabs({ action: action, enabled: updatedValue });
     }
 
