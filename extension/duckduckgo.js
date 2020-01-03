@@ -40,8 +40,8 @@ async function createColorscheme() {
             `7=${savedColors.themeBackground}`,         // Background
             `j=${savedColors.themeBackground}`,         // Header background
             `9=${savedColors.themeText}`,               // Result link title
-            `aa=${savedColors.themeAccentPrimary}`,     // Result visited link title
-            `x=${savedColors.themeAccentSecondary}`,    // Result link url
+            `aa=${changeColorBrightness(savedColors.themeAccentPrimary, 0.9)}`,     // Result visited link title
+            `x=${changeColorBrightness(savedColors.themeAccentSecondary, 0.7)}`,    // Result link url
             `8=f8f8f2`,                                 // Result description
             `21=${savedColors.themeBackgroundLight}`,    // Result hover, dropdown and module background
             //"a=p",        // Font, default is Proxima Nova
@@ -97,5 +97,4 @@ console.log('Pywalfox content script loaded');
 
 // Apply the theme, if enabled
 setTheme();
-
 
