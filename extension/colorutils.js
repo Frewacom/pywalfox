@@ -1,5 +1,5 @@
 // https://www.sitepoint.com/javascript-generate-lighter-darker-color/
-window.changeColorBrightness = function(hex, lum) {
+function changeColorBrightness(hex, lum) {
 	// validate hex string
 	hex = String(hex).replace(/[^0-9a-f]/gi, '');
 	if (hex.length < 6) {
