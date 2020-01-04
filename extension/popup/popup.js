@@ -58,7 +58,7 @@ function showBanner(message) {
 }
 
 function getPywalColorById(id) {
-    return pywalColors[`color${id}`];
+    return pywalColors[id];
 }
 
 function output(message) {

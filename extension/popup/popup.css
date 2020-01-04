@@ -288,6 +288,7 @@ input {
 .modal-content {
     flex: 1;
     width: 100%;
+    padding-top: 1.5em;
     border-top: 1px solid var(--background-light);
 }
 
@@ -297,6 +298,12 @@ input {
     justify-content: flex-start;
     align-items: flex-start;
     height: 100%;
+}
+
+.colorpicker-container {
+    position: relative;
+    margin: 1em;
+    margin-top: 3px;
 }
 
 #cp-modal-colorpicker {
@@ -309,8 +316,7 @@ input {
     overflow: hidden;
     box-shadow: 2px 2px 10px 2px #00000010;
     cursor: pointer;
-    margin: 0px 1em;
-    margin-top: 0.5em;
+    border: 2px solid white;
 }
 
 #cp-modal-colorpicker::-moz-focus-inner {
@@ -331,6 +337,26 @@ input {
     width: 100%;
     text-align: center;
     text-transform: uppercase;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    color:white;
+    background-color:rgba(0,0,0,0.3);
+    width: 100px;
+    height: 100px;
+    margin: 0px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-time);
+}
+
+.colorpicker-container:hover > .colorpicker-label {
+    opacity: 1;
 }
 
 .modal-button {
@@ -383,10 +409,10 @@ input {
 
 .pywal-color {
     flex: 1;
-    flex-basis: calc(25% - 0.4em);
+    flex-basis: calc(16.5% - 0.4em);
     border: none;
     height: 30px;
-    max-width: calc(25% - 0.4em);
+    max-width: calc(16.5% - 0.4em);
     margin: 0.2em;
     border: none;
     cursor: pointer;
@@ -397,6 +423,6 @@ input {
 }
 
 .pywal-color:hover {
-    opacity: 0.8;
+    border: 2px solid white;
 }
 
