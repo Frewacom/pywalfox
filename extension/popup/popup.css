@@ -125,7 +125,7 @@ input {
 }
 
 .description > span {
-    color: #ddd;
+    color: var(--text-color);
     font-weight: normal;
 }
 
