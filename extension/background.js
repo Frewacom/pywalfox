@@ -119,15 +119,17 @@ async function createColorschemeFromPywal(colors) {
     };
 }
 
-async function setTheme(colors) {
+async function setTheme(colors, ddgReload) {
     pywalColors = colors;
     const colorscheme = await createColorschemeFromPywal(colors);
     const theme = createThemeFromColorscheme(colorscheme);
     await saveThemeColors(colorscheme);
 
     browser.theme.update(theme);
-    sendMessageToTabs({ action: 'updateDDGTheme' });
-    browser.storage.local.set({ isApplied: true });
+    if (ddgReload) {
+        sendMessageToTabs({ action: 'updateDDGTheme' });
+    }
+    browser.storage.local.set({ isApplied: true, pywalColors });
 }
 
 function output(message) {
@@ -222,7 +224,7 @@ browser.runtime.onMessage.addListener((message) => {
         saveCustomColor(message.type, message.value);
         // Use the colors from pywal that we have already fetched and update the theme,
         // replacing the default value for 'message.type' with the custom color
-        setTheme(pywalColors);
+        setTheme(pywalColors, message.ddgReload);
     }
 });
 

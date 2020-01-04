@@ -29,13 +29,35 @@
             <div id="overlay"></div>
             <div class="modal" id="cp-modal">
                 <h4>Editing <span id="cp-modal-name"></span></h4>
-                <div class="modal-content">
-
-                    <input class="colorpicker" id="cp-modal-colorpicker" type="color">
+                <div class="row modal-content">
+                    <div class="modal-column margin-right">
+                        <input class="colorpicker" id="cp-modal-colorpicker" type="color">
+                        <p class="colorpicker-label">Click to edit</p>
+                    </div>
+                    <div class="modal-column expand">
+                        <div class="pywal-colorscheme">
+                            <button class="pywal-color" data-id="0"></button>
+                            <button class="pywal-color" data-id="1"></button>
+                            <button class="pywal-color" data-id="2"></button>
+                            <button class="pywal-color" data-id="3"></button>
+                            <button class="pywal-color" data-id="4"></button>
+                            <button class="pywal-color" data-id="5"></button>
+                            <button class="pywal-color" data-id="6"></button>
+                            <button class="pywal-color" data-id="7"></button>
+                            <button class="pywal-color" data-id="8"></button>
+                            <button class="pywal-color" data-id="9"></button>
+                            <button class="pywal-color" data-id="10"></button>
+                            <button class="pywal-color" data-id="11"></button>
+                            <button class="pywal-color" data-id="12"></button>
+                            <button class="pywal-color" data-id="13"></button>
+                            <button class="pywal-color" data-id="14"></button>
+                            <button class="pywal-color" data-id="15"></button>
+                        </div>
+                    </div>
                 </div>
                 <div class="row modal-buttons">
                     <button class="btn modal-button" id="cp-modal-save" data-action="save">Save</button>
-                    <button class="btn modal-button" id="cp-modal-cancel" data-action="cancel">Cancel</button>
+                    <button class="btn modal-button modal-button-invert" id="cp-modal-cancel" data-action="cancel">Cancel</button>
                 </div>
             </div>
         </div>

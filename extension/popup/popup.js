@@ -20,11 +20,13 @@ const colorpickerModalCancel = document.getElementById('cp-modal-cancel');
 
 const toggleButtons = Array.from(document.getElementsByClassName('toggle'));
 const colorPreviews = Array.from(document.getElementsByClassName('cp-modal-open'));
+const pywalColorPreviews = Array.from(document.getElementsByClassName('pywal-color'));
 
 var restartBannerTimeout = null;
 var currentModalEditColor = undefined;
 var currentModalResetColor = undefined;
 var currentExtensionColors = {};
+var pywalColors = {};
 
 function getExtensionColorsFromTheme(theme) {
     return {
@@ -53,6 +55,10 @@ function showBanner(message) {
             restartBannerTimeout = null;
         }, 3000);
     }
+}
+
+function getPywalColorById(id) {
+    return pywalColors[`color${id}`];
 }
 
 function output(message) {
@@ -87,11 +93,12 @@ async function toggleOption(e) {
     e.target.classList.toggle('enabled');
 }
 
-function setCustomColor(colorKey, color) {
+function setCustomColor(colorKey, color, ddgReload = true) {
     browser.runtime.sendMessage({
         action: 'customColor',
         type: colorKey,
-        value: color
+        value: color,
+        ddgReload: ddgReload
     });
 }
 
@@ -106,6 +113,7 @@ function closeModalOverlay() {
 function openColorpickerModal(e) {
     const targetColor = e.target.getAttribute('data-color-key');
     const currentColor = currentExtensionColors[targetColor];
+    console.log(currentColor);
     openModalOverlay();
 
     currentModalEditColor = targetColor;
@@ -124,16 +132,31 @@ function closeModal(modal) {
     modal.style.display = 'none';
 }
 
-function onCustomColorInputChanged(e) {
-    setCustomColor(currentModalEditColor, e.target.value);
+function updateColorPreviewInColorpickerModal(newColor) {
+    colorpickerModalCustom.value = newColor;
 }
 
-function onColorpickerModalSave(e) {
+function onSetPywalColorAsCustomColor(e) {
+    const newColor = getPywalColorById(e.target.getAttribute('data-id'));
+    setCustomColor(currentModalEditColor, newColor, false);
+    updateColorPreviewInColorpickerModal(newColor);
+}
+
+function onCustomColorInputChanged(e) {
+    const newColor = e.target.value;
+    setCustomColor(currentModalEditColor, newColor, false);
+    updateColorPreviewInColorpickerModal(newColor);
+}
+
+async function onColorpickerModalSave(e) {
+    const state = await browser.storage.local.get('pywalColors');
+    pywalColors = state.pywalColors;
+    sendMessageToTabs({ action: 'updateDDGTheme' });
     closeModal(colorpickerModal);
 }
 
 function onColorpickerModalCancel(e) {
-    setCustomColor(currentModalEditColor, currentModalResetColor);
+    setCustomColor(currentModalEditColor, currentModalResetColor, false);
     closeModal(colorpickerModal);
 }
 
@@ -178,8 +201,12 @@ browser.runtime.onMessage.addListener((response) => {
 async function onExtensionLoad() {
     const theme = await browser.theme.getCurrent();
     const colors = getExtensionColorsFromTheme(theme);
+    const gettingPywalColors = await browser.storage.local.get('pywalColors');
     setExtensionTheme(colors);
+
     currentExtensionColors = colors;
+    pywalColors = gettingPywalColors.pywalColors;
+    console.log(pywalColors);
 
     // Set the default values for the color pickers
     colorPreviews.forEach((preview) => {
@@ -197,7 +224,13 @@ async function onExtensionLoad() {
 }
 
 // Updates extension colors, updates the current value of settings, etc
-onExtensionLoad();
+onExtensionLoad().then(() => {
+    pywalColorPreviews.forEach((preview) => {
+        const id = preview.getAttribute('data-id');
+        preview.style.backgroundColor = getPywalColorById(id);
+        preview.addEventListener('click', onSetPywalColorAsCustomColor);
+    });
+});
 
 versionLabel.innerText = `v${browser.runtime.getManifest().version}`;
 

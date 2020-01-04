@@ -94,6 +94,10 @@ input {
     font-size: 0.9em;
 }
 
+.margin-right {
+    margin-right: 1em;
+}
+
 .align-left {
     justify-content: flex-end;
 }
@@ -122,6 +126,14 @@ input {
 .description > span {
     color: #ddd;
     font-weight: normal;
+}
+
+.description.description-dark {
+    color: var(--background);
+}
+
+.description.description-dark > span {
+    color: var(--background-light);
 }
 
 .btn {
@@ -181,9 +193,9 @@ input {
     max-width: var(--content-width);
     min-width: var(--content-width);
     height: 150px;
-    background: transparent;
+    background: var(--background-light);
     color: white;
-    border: 1px solid var(--accent-primary);
+    border: none;
     box-sizing: border-box;
     font-weight: bold;
 }
@@ -207,6 +219,10 @@ input {
     margin-top: 15px;
     padding-bottom: 15px;
     border-bottom: 1px solid var(--background-light);
+}
+
+.expand {
+    flex: 1;
 }
 
 .no-bottom-border {
@@ -234,7 +250,7 @@ input {
 
 #overlay {
     background-color: var(--background-light);
-    opacity: 0.4;
+    opacity: 0.7;
     height: 100%;
     width: 100%;
     position: absolute;
@@ -244,8 +260,8 @@ input {
 .modal {
     display: flex;
     width: var(--content-width);
-    height: 250px;
-    background-color: white;
+    height: auto;
+    background-color: var(--background);
     z-index: 2;
     border-radius: 3px;
     box-sizing: border-box;
@@ -261,7 +277,7 @@ input {
 
 .modal > h4 {
     font-size: 0.95em;
-    color: var(--background);
+    color: white;
     margin: 0px;
 }
 
@@ -272,7 +288,49 @@ input {
 .modal-content {
     flex: 1;
     width: 100%;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid var(--background-light);
+}
+
+.modal-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: 100%;
+}
+
+#cp-modal-colorpicker {
+    width: 100px;
+    height: 100px;
+    padding: 0px;
+    margin: 0px;
+    margin-left: 0px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 2px 2px 10px 2px #00000010;
+    cursor: pointer;
+    margin: 0px 1em;
+    margin-top: 0.5em;
+}
+
+#cp-modal-colorpicker::-moz-focus-inner {
+    border: none !important;
+}
+
+#cp-modal-colorpicker::-moz-color-swatch {
+    border: none !important;
+}
+
+.colorpicker-label {
+    color: var(--foreground);
+    font-weight: bold;
+    font-size: 0.75em;
+    padding: 0px;
+    margin: 0px;
+    margin-top: 1em;
+    width: 100%;
+    text-align: center;
+    text-transform: uppercase;
 }
 
 .modal-button {
@@ -284,8 +342,20 @@ input {
 }
 
 .modal-button:hover {
-    background-color: var(--background);
+    background-color: var(--background-light);
     color: white;
+    opacity: 0.8;
+}
+
+.modal-button-invert {
+    background-color: var(--foreground);
+    color: var(--background);
+}
+
+.modal-button-invert:hover {
+    background-color: var(--foreground);
+    color: var(--background);
+    opacity: 0.8;
 }
 
 .cp-modal-open {
@@ -301,5 +371,32 @@ input {
 
 .cp-modal-open::-moz-focus-inner {
     border: none !important;
+}
+
+.pywal-colorscheme {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: auto;
+    flex-wrap: wrap;
+}
+
+.pywal-color {
+    flex: 1;
+    flex-basis: calc(25% - 0.4em);
+    border: none;
+    height: 30px;
+    max-width: calc(25% - 0.4em);
+    margin: 0.2em;
+    border: none;
+    cursor: pointer;
+}
+
+.pywal-color::-moz-focus-inner {
+    border: none !important;
+}
+
+.pywal-color:hover {
+    opacity: 0.8;
 }
 
