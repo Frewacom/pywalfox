@@ -9,11 +9,22 @@ const restartBanner = document.getElementById('banner');
 const updateButton = document.getElementById('update');
 const resetButton = document.getElementById('reset');
 const outputArea = document.getElementById('output');
+const modalContainer = document.getElementById('modal-container');
+
+// Colorpicker modal
+const colorpickerModal = document.getElementById('cp-modal');
+const colorpickerModalTitle = document.getElementById('cp-modal-name');
+const colorpickerModalCustom = document.getElementById('cp-modal-colorpicker');
+const colorpickerModalSave = document.getElementById('cp-modal-save');
+const colorpickerModalCancel = document.getElementById('cp-modal-cancel');
 
 const toggleButtons = Array.from(document.getElementsByClassName('toggle'));
-const colorpickers = Array.from(document.getElementsByClassName('colorpicker'));
+const colorPreviews = Array.from(document.getElementsByClassName('cp-modal-open'));
 
 var restartBannerTimeout = null;
+var currentModalEditColor = undefined;
+var currentModalResetColor = undefined;
+var currentExtensionColors = {};
 
 function getExtensionColorsFromTheme(theme) {
     return {
@@ -76,12 +87,54 @@ async function toggleOption(e) {
     e.target.classList.toggle('enabled');
 }
 
-function onCustomColorChanged(e) {
+function setCustomColor(colorKey, color) {
     browser.runtime.sendMessage({
         action: 'customColor',
-        type: e.target.getAttribute('data-action'),
-        value: e.target.value
+        type: colorKey,
+        value: color
     });
+}
+
+function openModalOverlay() {
+    modalContainer.style.display = 'flex';
+}
+
+function closeModalOverlay() {
+    modalContainer.style.display = 'none';
+}
+
+function openColorpickerModal(e) {
+    const targetColor = e.target.getAttribute('data-color-key');
+    const currentColor = currentExtensionColors[targetColor];
+    openModalOverlay();
+
+    currentModalEditColor = targetColor;
+    currentModalResetColor = currentColor;
+
+    colorpickerModalTitle.innerText = targetColor;
+    colorpickerModalCustom.setAttribute('data-color', targetColor);
+    colorpickerModalCustom.value = currentColor;
+    colorpickerModal.style.display = 'flex';
+}
+
+function closeModal(modal) {
+    closeModalOverlay();
+    currentModalEditColor = undefined;
+    currentModalResetColor = undefined;
+    modal.style.display = 'none';
+}
+
+function onCustomColorInputChanged(e) {
+    setCustomColor(currentModalEditColor, e.target.value);
+}
+
+function onColorpickerModalSave(e) {
+    closeModal(colorpickerModal);
+}
+
+function onColorpickerModalCancel(e) {
+    setCustomColor(currentModalEditColor, currentModalResetColor);
+    closeModal(colorpickerModal);
 }
 
 updateButton.addEventListener('click', () => {
@@ -97,9 +150,13 @@ toggleButtons.forEach((toggleButton) => {
     toggleButton.addEventListener('click', toggleOption);
 });
 
-colorpickers.forEach((colorpicker) => {
-    colorpicker.addEventListener('change', onCustomColorChanged);
+colorPreviews.forEach((preview) => {
+    preview.addEventListener('click', openColorpickerModal);
 });
+
+colorpickerModalCustom.addEventListener('change', onCustomColorInputChanged);
+colorpickerModalSave.addEventListener('click', onColorpickerModalSave);
+colorpickerModalCancel.addEventListener('click', onColorpickerModalCancel);
 
 // Watch for theme updates
 browser.theme.onUpdated.addListener(async ({ theme, windowId }) => {
@@ -122,10 +179,11 @@ async function onExtensionLoad() {
     const theme = await browser.theme.getCurrent();
     const colors = getExtensionColorsFromTheme(theme);
     setExtensionTheme(colors);
+    currentExtensionColors = colors;
 
     // Set the default values for the color pickers
-    colorpickers.forEach((colorpicker) => {
-        colorpicker.value = colors[colorpicker.getAttribute('data-action')];
+    colorPreviews.forEach((preview) => {
+        preview.style.backgroundColor = colors[preview.getAttribute('data-color-key')];
     });
 
     toggleButtons.forEach(async (toggleButton) => {

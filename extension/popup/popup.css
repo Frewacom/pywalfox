@@ -32,14 +32,6 @@ header {
     align-items: center;
 }
 
-h4 {
-    font-size: var(--font-size);
-    color: white;
-    margin: 10px;
-    font-weight: bold;
-    font-family: sans-serif;
-}
-
 p {
     font-size: var(--font-size);
     color: var(--foreground);
@@ -132,6 +124,34 @@ input {
     font-weight: normal;
 }
 
+.btn {
+    flex: 1;
+    border-radius: 3px;
+    border: none;
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-right: 0px;
+    padding: 0.7em 0.9em;
+    background-color: var(--accent-primary);
+    color: white;
+    outline: none;
+    transition: color var(--transition-time), background-color var(--transition-time);
+    cursor: pointer;
+}
+
+.btn:hover {
+    color: var(--background);
+    background-color: var(--foreground);
+}
+
+.btn::-moz-focus-inner {
+  border: 0;
+}
+
+.btn:nth-of-type(2n-1) {
+    margin-right: 5px;
+}
+
 .toggle {
     flex: 0;
     width: 50px;
@@ -152,34 +172,6 @@ input {
     opacity: 0.8;
     background-color: var(--foreground);
     color: var(--background);
-}
-
-button {
-    flex: 1;
-    border-radius: 3px;
-    border: none;
-    font-size: 0.8em;
-    font-weight: bold;
-    margin-right: 0px;
-    padding: 0.7em 0.9em;
-    background-color: var(--accent-primary);
-    color: white;
-    outline: none;
-    transition: color var(--transition-time), background-color var(--transition-time);
-    cursor: pointer;
-}
-
-button:hover, .button-mimic:hover {
-    color: var(--background);
-    background-color: var(--foreground);
-}
-
-button::-moz-focus-inner {
-  border: 0;
-}
-
-button:nth-of-type(2n-1) {
-    margin-right: 5px;
 }
 
 #output {
@@ -226,13 +218,88 @@ button:nth-of-type(2n-1) {
     color: var(--background);
 }
 
-#cp-modal {
-    display: none;
-    position: absolute;
-    width: 100%;
+#modal-container {
+    position: fixed;
+    z-index: 50;
     height: 100%;
-    background-color: var(--background-light);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    left: 0px;
+    top: 0px;
+    display: none;
 }
 
+#overlay {
+    background-color: var(--background-light);
+    opacity: 0.4;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 1;
+}
 
+.modal {
+    display: flex;
+    width: var(--content-width);
+    height: 250px;
+    background-color: white;
+    z-index: 2;
+    border-radius: 3px;
+    box-sizing: border-box;
+    box-shadow: 2px 2px 10px 5px rgba(0,0,0,0.1);
+    display: none;
+    flex-direction: column;
+}
+
+.modal-buttons, .modal-content, .modal > h4 {
+    padding: 1em;
+    box-sizing: border-box;
+}
+
+.modal > h4 {
+    font-size: 0.95em;
+    color: var(--background);
+    margin: 0px;
+}
+
+.modal-buttons {
+    justify-content: flex-end;
+}
+
+.modal-content {
+    flex: 1;
+    width: 100%;
+    border-top: 1px solid #ccc;
+}
+
+.modal-button {
+    background-color: var(--background-light);
+    flex: 0;
+    padding-left: 0px;
+    padding-right: 0px;
+    min-width: 65px;
+}
+
+.modal-button:hover {
+    background-color: var(--background);
+    color: white;
+}
+
+.cp-modal-open {
+    min-width: 30px;
+    height: 30px;
+    flex: 0;
+    border-radius: 50%;
+    border: 1px solid white;
+    margin-right: 2px;
+    background-color: var(--background);
+    cursor: pointer;
+}
+
+.cp-modal-open::-moz-focus-inner {
+    border: none !important;
+}
 

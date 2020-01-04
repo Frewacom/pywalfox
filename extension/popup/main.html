@@ -9,10 +9,6 @@
 </head>
 
 <body>
-    <div id="cp-modal">
-        <h4>Changing color for <span id="cp-modal-name"></span></h4>
-
-    </div>
     <div id="banner"></div>
     <header>
         <div class="spacer">
@@ -20,8 +16,8 @@
         </div>
         <section id="buttons">
             <div class="row">
-                <button id="update">Fetch pywal colors</button>
-                <button id="reset">Disable theme</button>
+                <button id="update" class="btn">Fetch pywal colors</button>
+                <button id="reset" class="btn">Disable theme</button>
             </div>
         </section>
         <div class="spacer align-left">
@@ -29,6 +25,20 @@
         </div>
     </header>
     <main>
+        <div id="modal-container">
+            <div id="overlay"></div>
+            <div class="modal" id="cp-modal">
+                <h4>Editing <span id="cp-modal-name"></span></h4>
+                <div class="modal-content">
+
+                    <input class="colorpicker" id="cp-modal-colorpicker" type="color">
+                </div>
+                <div class="row modal-buttons">
+                    <button class="btn modal-button" id="cp-modal-save" data-action="save">Save</button>
+                    <button class="btn modal-button" id="cp-modal-cancel" data-action="cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
         <section class="column">
             <label>Custom colors</label>
             <div class="container">
@@ -36,35 +46,40 @@
                     Background
                     <span>Main color. Preferrably a dark color for best readability</span>
                 </p>
-                <input class="colorpicker" data-action="background" type="color">
+                <button class="cp-modal-open" data-color-key="background"></button>
+                <!-- <input class="colorpicker" data-action="background" type="color"> -->
             </div>
             <div class="container">
                 <p class="description">
                     Foreground
                     <span>Main text color</span>
                 </p>
-                <input class="colorpicker" data-action="foreground" type="color">
+                <button class="cp-modal-open" data-color-key="foreground"></button>
+                <!-- <input class="colorpicker" data-action="foreground" type="color"> -->
             </div>
             <div class="container">
                 <p class="description">
                     Background light
                     <span>Used in borders, hovers</span>
                 </p>
-                <input class="colorpicker" data-action="backgroundLight" type="color">
+                <button class="cp-modal-open" data-color-key="backgroundLight"></button>
+                <!-- <input class="colorpicker" data-action="backgroundLight" type="color"> -->
             </div>
             <div class="container">
                 <p class="description">
                     Accent primary
                     <span>Main accent color used for icons</span>
                 </p>
-                <input class="colorpicker" data-action="accentPrimary" type="color">
+                <button class="cp-modal-open" data-color-key="accentPrimary"></button>
+                <!-- <input class="colorpicker" data-action="accentPrimary" type="color"> -->
             </div>
             <div class="container">
                 <p class="description">
                     Accent secondary
                     <span>Mainly used for hovers and highlights</span>
                 </p>
-                <input class="colorpicker" data-action="accentSecondary" type="color">
+                <button class="cp-modal-open" data-color-key="accentSecondary"></button>
+                <!-- <input class="colorpicker" data-action="accentSecondary" type="color"> -->
             </div>
         </section>
         <section class="column no-bottom-border">
@@ -74,21 +89,21 @@
                     Use custom CSS?
                     <span>Bold and smaller text, styled dropdowns and context menus</span>
                 </p>
-                <button class="toggle" data-action="customCssEnabled">Off</button>
+                <button class="btn toggle" data-action="customCssEnabled">Off</button>
             </div>
             <div class="container">
                 <p class="description">
                     No scrollbar?
                     <span>Hides the page scrollbar for a cleaner look</span>
                 </p>
-                <button class="toggle" data-action="noScrollbarEnabled">Off</button>
+                <button class="btn toggle" data-action="noScrollbarEnabled">Off</button>
             </div>
             <div class="container">
                 <p class="description">
                     Use DuckDuckGo theme?
                     <span>Applies matching pywal theme to all DuckDuckGo-pages</span>
                 </p>
-                <button class="toggle" data-action="ddgThemeEnabled">Off</button>
+                <button class="btn toggle" data-action="ddgThemeEnabled">Off</button>
             </div>
         </section>
         <textarea id="output" readonly></textarea>
