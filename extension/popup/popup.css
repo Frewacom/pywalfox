@@ -33,7 +33,7 @@ header {
 }
 
 p {
-    font-size: var(--font-size);
+    font-size: 1em;
     color: var(--foreground);
     margin: 10px 10px;
 }
@@ -50,7 +50,7 @@ p {
     justify-content: center;
     align-items: center;
     font-weight: bold;
-    font-size: calc(var(--font-size) * 1.05);
+    font-size: 1.05em;
     transition: height 0.1s, color 0.2s;
 }
 
@@ -69,9 +69,9 @@ main {
 
 label {
     font-family: sans-serif;
-    color: white;
+    color: var(--text-color);
     font-weight: bold;
-    font-size: var(--font-size);
+    font-size: 1em;
     padding-left: 2px;
     margin-bottom: 5px;
 }
@@ -89,7 +89,7 @@ input {
     align-items: center;
     justify-content: flex-start;
     padding: 0px 15px;
-    color: white;
+    color: var(--text-color);
     font-weight: bold;
     font-size: 0.9em;
 }
@@ -119,7 +119,7 @@ input {
     flex-direction: column;
     margin: 0px;
     font-weight: bold;
-    color: white;
+    color: var(--text-color);
     font-size: 0.8em;
 }
 
@@ -145,7 +145,7 @@ input {
     margin-right: 0px;
     padding: 0.7em 0.9em;
     background-color: var(--accent-primary);
-    color: white;
+    color: var(--text-color);
     outline: none;
     transition: color var(--transition-time), background-color var(--transition-time);
     cursor: pointer;
@@ -194,7 +194,7 @@ input {
     min-width: var(--content-width);
     height: 150px;
     background: var(--background-light);
-    color: white;
+    color: var(--text-color);
     border: none;
     box-sizing: border-box;
     font-weight: bold;
@@ -250,7 +250,7 @@ input {
 
 #overlay {
     background-color: var(--background-light);
-    opacity: 0.7;
+    opacity: 0;
     height: 100%;
     width: 100%;
     position: absolute;
@@ -261,27 +261,23 @@ input {
     display: flex;
     width: var(--content-width);
     height: auto;
-    background-color: var(--background);
+    background-color: var(--background-light);
     z-index: 2;
     border-radius: 3px;
-    box-sizing: border-box;
-    box-shadow: 2px 2px 10px 5px rgba(0,0,0,0.1);
+    box-shadow: 2px 2px 20px 10px rgba(0,0,0,0.2);
     display: none;
     flex-direction: column;
-}
-
-.modal-buttons, .modal-content, .modal > h4 {
-    padding: 1em;
-    box-sizing: border-box;
+    padding: 1.3em 1.8em;
 }
 
 .modal > h4 {
     font-size: 0.95em;
-    color: white;
+    color: var(--text-color);
     margin: 0px;
 }
 
 .modal-buttons {
+    margin-top: 0.8em;
     justify-content: flex-end;
 }
 
@@ -289,7 +285,6 @@ input {
     flex: 1;
     width: 100%;
     padding-top: 1.5em;
-    border-top: 1px solid var(--background-light);
 }
 
 .modal-column {
@@ -360,7 +355,7 @@ input {
 }
 
 .modal-button {
-    background-color: var(--background-light);
+    background-color: var(--background);
     flex: 0;
     padding-left: 0px;
     padding-right: 0px;
@@ -368,8 +363,8 @@ input {
 }
 
 .modal-button:hover {
-    background-color: var(--background-light);
-    color: white;
+    background-color: var(--background);
+    color: var(--text-color);
     opacity: 0.8;
 }
 
@@ -416,6 +411,8 @@ input {
     margin: 0.2em;
     border: none;
     cursor: pointer;
+    border-radius: 3px;
+    box-shadow: 0px 1px 5px #0000003b;
 }
 
 .pywal-color::-moz-focus-inner {

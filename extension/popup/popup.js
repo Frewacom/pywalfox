@@ -3,6 +3,7 @@ const DEFAULT_FOREGROUND = '#ffffff';
 const DEFAULT_BACKGROUND_LIGHT = '#222222';
 const DEFAULT_ACCENT_PRIMARY = '#222222';
 const DEFAULT_ACCENT_SECONDARY = '#222222';
+const DEFAULT_TEXT = '#ffffff';
 
 const versionLabel = document.getElementById('version');
 const restartBanner = document.getElementById('banner');
@@ -34,7 +35,8 @@ function getExtensionColorsFromTheme(theme) {
         foreground: theme.colors ? theme.colors.tab_selected : DEFAULT_FOREGROUND,
         backgroundLight: theme.colors ? theme.colors.button_background_hover : DEFAULT_BACKGROUND_LIGHT,
         accentPrimary: theme.colors ? theme.colors.tab_loading : DEFAULT_ACCENT_PRIMARY,
-        accentSecondary: theme.colors ? theme.colors.popup_highlight : DEFAULT_ACCENT_SECONDARY
+        accentSecondary: theme.colors ? theme.colors.popup_highlight : DEFAULT_ACCENT_SECONDARY,
+        text: theme.colors ? theme.colors.toolbar_field_text : DEFAULT_TEXT
     };
 }
 
@@ -44,6 +46,7 @@ function setExtensionTheme(extensionColors) {
     document.documentElement.style.setProperty('--foreground', extensionColors.foreground);
     document.documentElement.style.setProperty('--accent-primary', extensionColors.accentPrimary);
     document.documentElement.style.setProperty('--accent-secondary', extensionColors.accentSecondary);
+    document.documentElement.style.setProperty('--text-color', extensionColors.text);
 }
 
 function showBanner(message) {
