@@ -406,10 +406,10 @@ input {
 
 .pywal-color {
     flex: 1;
-    flex-basis: calc(16.5% - 0.4em);
+    flex-basis: calc(25% - 0.4em);
     border: none;
     height: 30px;
-    max-width: calc(16.5% - 0.4em);
+    max-width: calc(25% - 0.4em);
     margin: 0.2em;
     border: none;
     cursor: pointer;

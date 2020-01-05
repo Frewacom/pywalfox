@@ -197,7 +197,7 @@ function output(message) {
 // Listen for errors with connection to native app
 port.onDisconnect.addListener((port) => {
     if (port.error) {
-        output(`Disconnected from native app: ${p}`);
+        output(`Disconnected from native app: ${port.error}`);
     }
 });
 
