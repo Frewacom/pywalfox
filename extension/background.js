@@ -68,6 +68,12 @@ function createThemeFromColorscheme(colorscheme) {
     };
 }
 
+function setState(storageKey, value) {
+    browser.storage.local.set({
+        [storageKey]: value
+    });
+}
+
 function ifSet(value, fallback) {
     if (value) {
         return value;
@@ -90,20 +96,20 @@ function saveThemeColors(colorscheme) {
 }
 
 async function saveCustomColor(type, value) {
-    await browser.storage.local.set({ [type]: value });
+    setState(type, value);
     output(`Set custom color "${type}" to ${value}`);
-}
-
-async function sendMessageToTabs(data) {
-    const tabs = await browser.tabs.query({});
-
-    for (const tab of tabs) {
-        browser.tabs.sendMessage(tab.id, data);
-    }
 }
 
 async function getSavedCustomColors() {
     return await browser.storage.local.get(CUSTOM_COLOR_KEYS);
+}
+
+function resetCustomColors() {
+    browser.storage.local.remove(CUSTOM_COLOR_KEYS);
+}
+
+function resetThemeColors() {
+    browser.storage.local.remove(THEME_COLOR_KEYS);
 }
 
 async function createColorschemeFromPywal(colors) {
@@ -120,62 +126,77 @@ async function createColorschemeFromPywal(colors) {
 }
 
 async function setTheme(colors, ddgReload) {
-    pywalColors = colors;
     const colorscheme = await createColorschemeFromPywal(colors);
     const theme = createThemeFromColorscheme(colorscheme);
+
     await saveThemeColors(colorscheme);
+    pywalColors = colors;
 
     browser.theme.update(theme);
+    browser.storage.local.set({ isApplied: true, pywalColors });
+
+    // We dont want to reload DuckDuckGo if we are just trying out different
+    // colors using the color picker
     if (ddgReload) {
         sendMessageToTabs({ action: 'updateDDGTheme' });
     }
-    browser.storage.local.set({ isApplied: true, pywalColors });
 }
 
-function output(message) {
-    browser.runtime.sendMessage({ action: 'output', message });
+async function sendMessageToTabs(data) {
+    const tabs = await browser.tabs.query({});
+
+    for (const tab of tabs) {
+        browser.tabs.sendMessage(tab.id, data);
+    }
 }
 
-function changeState(response, storageKey, value) {
+function setStateOnSuccess(response, storageKey, value) {
     if (response.success) {
-        browser.storage.local.set({
-            [storageKey]: value
-        });
+        setState(storageKey, value);
         output(response.data);
     } else {
         output(response.error);
     }
 }
 
-function resetCustomColors() {
-    browser.storage.local.remove(CUSTOM_COLOR_KEYS);
-}
-
-function resetThemeColors() {
-    browser.storage.local.remove(THEME_COLOR_KEYS);
-}
-
 function resetToDefaultTheme() {
     // https://bugzilla.mozilla.org/show_bug.cgi?id=1415267
-    // It is a known bug that the reset doesnt respect default theme
+    // It is a known bug that the reset doesnt always respect default theme
     browser.theme.reset();
     resetThemeColors();
     resetCustomColors();
-    browser.storage.local.set({ isApplied: false });
+    setState('isApplied', false);
     output('Reset to default theme');
 }
 
+function setSettingsPageClosed() {
+    browser.tabs.onRemoved.removeListener(onSettingsPageClosed);
+    browser.tabs.onUpdated.removeListener(onSettingsPageClosed);
+    settingsPageTabId = null;
+}
+
+// When the Settings tab is either closed
 function onSettingsPageClosed(tabId, removeInfo) {
     if (tabId == settingsPageTabId) {
-        browser.tabs.onRemoved.removeListener(onSettingsPageClosed);
-        settingsPageTabListener = null;
-        settingsPageTabId = null;
+        setSettingsPageClosed();
     }
 }
 
+// When the Settings tab changes title (URL has changed)
+function onSettingsPageUpdated(tabId, changeInfo, tab) {
+    if (changeInfo.title !== 'Pywalfox Settings') {
+        setSettingsPageClosed();
+    }
+}
+
+// Sends a message to be displayed in the Settings page
+function output(message) {
+    browser.runtime.sendMessage({ action: 'output', message });
+}
+
 // Listen for errors with connection to native app
-port.onDisconnect.addListener((p) => {
-    if (p.error) {
+port.onDisconnect.addListener((port) => {
+    if (port.error) {
         output(`Disconnected from native app: ${p}`);
     }
 });
@@ -189,13 +210,13 @@ port.onMessage.addListener(async (response) => {
             output(response.error);
         }
     } else if (response.key == 'enableCustomCss') {
-        changeState(response, 'customCssOn', true);
+        setStateOnSuccess(response, 'customCssOn', true);
     } else if (response.key == 'disableCustomCss') {
-        changeState(response, 'customCssOn', false);
+        setStateOnSuccess(response, 'customCssOn', false);
     } else if (response.key == 'enableNoScrollbar') {
-        changeState(response, 'noScrollbar', true);
+        setStateOnSuccess(response, 'noScrollbar', true);
     } else if (response.key == 'disableNoScrollbar') {
-        changeState(response, 'noScrollbar', false);
+        setStateOnSuccess(response, 'noScrollbar', false);
     }
 });
 
@@ -207,32 +228,24 @@ browser.runtime.onMessage.addListener((message) => {
     } else if (message.action == 'reset') {
         resetToDefaultTheme();
     } else if (message.action == 'customCssEnabled') {
-        if (message.enabled) {
-            port.postMessage('enableCustomCss');
-        } else {
-            port.postMessage('disableCustomCss');
-        }
+        port.postMessage(message.enabled ? 'enableCustomCss' : 'disableCustomCss');
     } else if (message.action == 'noScrollbarEnabled') {
-        if (message.enabled) {
-            port.postMessage('enableNoScrollbar');
-        } else {
-            port.postMessage('disableNoScrollbar');
-        }
+        port.postMessage(message.enabled ? 'enableNoScrollbar' : 'disableNoScrollbar');
     } else if (message.action == 'ddgThemeEnabled') {
-        browser.storage.local.set({ [message.action]: message.enabled });
+        setState(message.action, message.enabled);
     } else if (message.action == 'customColor') {
         saveCustomColor(message.type, message.value);
-        // Use the colors from pywal that we have already fetched and update the theme,
-        // replacing the default value for 'message.type' with the custom color
         setTheme(pywalColors, message.ddgReload);
     }
 });
 
+// When clicking the add-on icon
 browser.browserAction.onClicked.addListener(async () => {
     if (settingsPageTabId === null) {
         let tab = await browser.tabs.create({ url: 'popup/main.html' });
+        browser.tabs.onRemoved.addListener(onSettingsPageClosed);
+        browser.tabs.onUpdated.addListener(onSettingsPageUpdated, { tabId: tab.id, properties: ['title'] });
         settingsPageTabId = tab.id;
-        settingsPageTabListener = browser.tabs.onRemoved.addListener(onSettingsPageClosed);
     } else {
         let tab = await browser.tabs.get(settingsPageTabId);
         browser.windows.update(tab.windowId, { focused: true });

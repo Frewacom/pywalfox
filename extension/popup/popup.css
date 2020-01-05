@@ -16,7 +16,7 @@ body {
     align-items: center;
     margin: 0px;
     --header-height: 3.5em;
-    --content-width: 32em;
+    --content-width: 35em;
 }
 
 header {
@@ -92,7 +92,7 @@ input {
     padding: 0px 15px;
     color: var(--text-color);
     font-weight: bold;
-    font-size: 0.9em;
+    font-size: 0.95em;
 }
 
 .margin-right {
@@ -121,7 +121,7 @@ input {
     margin: 0px;
     font-weight: bold;
     color: var(--text-color);
-    font-size: 0.8em;
+    font-size: 0.85em;
 }
 
 .description > span {
@@ -141,7 +141,7 @@ input {
     flex: 1;
     border-radius: var(--border-radius);
     border: none;
-    font-size: 0.8em;
+    font-size: 0.85em;
     font-weight: bold;
     margin-right: 0px;
     padding: 0.7em 0.9em;
