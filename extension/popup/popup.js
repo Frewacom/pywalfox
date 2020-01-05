@@ -138,6 +138,7 @@ function openColorpickerDialog(e) {
 
     currentDialogTarget.classList.add('selected');
     colorpickerDialogInput.setAttribute('data-color', targetColor);
+    colorpickerDialogInput.value = currentColor;
 }
 
 function closeDialog(dialog) {
@@ -154,6 +155,7 @@ function closeDialog(dialog) {
 function onSetPywalColorAsCustomColor(e) {
     const newColor = getPywalColorById(e.target.getAttribute('data-id'));
     currentDialogSelectedColor = newColor;
+    colorpickerDialogInput.value = newColor;
     setCustomColor(currentDialogEditColor, newColor, false);
 }
 
