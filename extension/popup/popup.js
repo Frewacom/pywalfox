@@ -24,7 +24,7 @@ const colorPreviews = Array.from(document.getElementsByClassName('colorpicker-di
 const pywalColorPreviews = Array.from(document.getElementsByClassName('pywal-color'));
 
 var restartBannerTimeout = null;
-var currentDialogColorOpener = undefined;
+var currentDialogTarget = undefined;
 var currentDialogEditColor = undefined;
 var currentDialogSelectedColor = undefined;
 var currentDialogResetColor = undefined;
@@ -123,23 +123,28 @@ function openColorpickerDialog(e) {
     const targetColor = e.target.getAttribute('data-color-key');
     const currentColor = currentExtensionColors[targetColor];
 
-    showDialogOverlay();
+    if (currentDialogTarget === undefined) {
+        showDialogOverlay();
 
-    e.target.style.zIndex = '100';
-    currentDialogColorOpener = e.target;
+        document.body.classList.add('dialog-open');
+        colorpickerDialog.style.display = 'flex';
+    } else {
+        currentDialogTarget.classList.remove('selected');
+    }
+
+    currentDialogTarget = e.target;
     currentDialogEditColor = targetColor;
     currentDialogResetColor = currentColor;
 
+    currentDialogTarget.classList.add('selected');
     colorpickerDialogInput.setAttribute('data-color', targetColor);
-    colorpickerDialogInput.value = currentColor;
-    colorpickerDialogInput.style.border = currentColor;
-    colorpickerDialog.style.display = 'flex';
 }
 
 function closeDialog(dialog) {
     hideDialogOverlay();
-    currentDialogColorOpener.style.zIndex = '1';
-    currentDialogColorOpener = undefined;
+    document.body.classList.remove('dialog-open');
+    currentDialogTarget.classList.remove('selected');
+    currentDialogTarget = undefined;
     currentDialogEditColor = undefined;
     currentDialogResetColor = undefined;
     currentDialogSelectedColor = undefined;

@@ -1,6 +1,7 @@
 :root {
     --transition-time: 0s;
     --border-radius: 3px;
+    --arrow-size: 12px;
 }
 
 body {
@@ -95,14 +96,6 @@ input {
     font-size: 0.95em;
 }
 
-.margin-right {
-    margin-right: 1em;
-}
-
-.align-left {
-    justify-content: flex-end;
-}
-
 .container {
     width: 100%;
     font-size: 1em;
@@ -135,14 +128,6 @@ input {
     font-weight: normal;
 }
 
-.description.description-dark {
-    color: var(--background);
-}
-
-.description.description-dark > span {
-    color: var(--background-light);
-}
-
 .btn {
     height: 33px;
     flex: 1;
@@ -164,12 +149,11 @@ input {
     background-color: var(--foreground);
 }
 
-.btn::-moz-focus-inner {
-  border: 0;
-}
-
-.btn:nth-of-type(2n-1) {
-    margin-right: 5px;
+.btn::-moz-focus-inner,
+.pywal-color::-moz-focus-inner,
+.colorpicker-dialog-open::-moz-focus-inner,
+#colorpicker-dialog-input::-moz-color-swatch {
+    border: 0;
 }
 
 .toggle {
@@ -230,14 +214,6 @@ input {
     border-bottom: 1px solid var(--background-light);
 }
 
-.expand {
-    flex: 1;
-}
-
-.no-bottom-border {
-    border-bottom: none;
-}
-
 .enabled {
     background-color: var(--foreground);
     color: var(--background);
@@ -271,10 +247,23 @@ input {
     margin-right: 2px;
     background-color: var(--background);
     cursor: pointer;
+    position: relative;
 }
 
-.colorpicker-dialog-open::-moz-focus-inner {
-    border: none !important;
+.dialog-open .colorpicker-dialog-open {
+    z-index: 60;
+}
+
+.colorpicker-dialog-open.selected::after {
+    width: 0;
+    height: 0;
+    border-top: var(--arrow-size) solid transparent;
+    border-bottom: var(--arrow-size) solid transparent;
+    border-right: var(--arrow-size) solid var(--background-light);
+    position: absolute;
+    content: '';
+    top: 0px;
+    right: -20px;
 }
 
 .pywal-colorscheme {
@@ -297,10 +286,6 @@ input {
     border-radius: var(--border-radius);
     box-shadow: 0px 1px 5px #0000003b;
     border: 2px solid transparent;
-}
-
-.pywal-color::-moz-focus-inner {
-    border: none !important;
 }
 
 .pywal-color:hover {
@@ -351,10 +336,6 @@ input {
     cursor: pointer;
 }
 
-#colorpicker-dialog-input::-moz-color-swatch {
-    border: none !important;
-}
-
 .colorpicker-dialog-container:hover {
     opacity: 0.8;
 }
@@ -398,4 +379,24 @@ input {
     background-color: transparent;
     color: var(--text-color);
     opacity: 0.8;
+}
+
+.expand {
+    flex: 1;
+}
+
+.no-bottom-border {
+    border-bottom: none;
+}
+
+.margin-right {
+    margin-right: 1em;
+}
+
+.margin-right-sm {
+    margin-right: 0.4em;
+}
+
+.align-left {
+    justify-content: flex-end;
 }
