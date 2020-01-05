@@ -20,7 +20,7 @@ body {
 }
 
 header {
-    z-index: 99;
+    z-index: 200;
     top: 0px;
     position: fixed;
     width: 100%;
@@ -115,6 +115,12 @@ input {
     box-sizing: border-box;
 }
 
+.content-container {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
 .description {
     display: flex;
     flex-direction: column;
@@ -138,6 +144,7 @@ input {
 }
 
 .btn {
+    height: 33px;
     flex: 1;
     border-radius: var(--border-radius);
     border: none;
@@ -236,152 +243,26 @@ input {
     color: var(--background);
 }
 
-#modal-container {
-    position: fixed;
-    z-index: 50;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    left: 0px;
-    top: 0px;
-    display: none;
-}
-
 #overlay {
     background-color: var(--background-light);
-    opacity: 0;
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    z-index: 1;
-}
-
-.modal {
-    display: flex;
-    width: var(--content-width);
-    height: auto;
-    background-color: var(--background-light);
-    z-index: 2;
-    border-radius: var(--border-radius);
-    box-shadow: 2px 2px 20px 10px rgba(0,0,0,0.2);
-    display: none;
-    flex-direction: column;
-    padding: 1.3em 1.8em;
-}
-
-.modal > h4 {
-    font-size: 0.95em;
-    color: var(--text-color);
-    margin: 0px;
-}
-
-.modal-buttons {
-    margin-top: 0.8em;
-    justify-content: flex-end;
-}
-
-.modal-content {
-    flex: 1;
-    width: 100%;
-    padding-top: 1.5em;
-}
-
-.modal-column {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    height: 100%;
-}
-
-.colorpicker-container {
-    position: relative;
-    margin: 1em;
-    margin-top: 3px;
-}
-
-#cp-modal-colorpicker {
-    width: 100px;
-    height: 100px;
-    padding: 0px;
-    margin: 0px;
-    margin-left: 0px;
-    border-radius: 50%;
-    overflow: hidden;
-    box-shadow: 2px 2px 10px 2px #00000010;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    opacity: 0.85;
+    z-index: 50;
     cursor: pointer;
-    border: 2px solid white;
-}
-
-#cp-modal-colorpicker::-moz-focus-inner {
-    border: none !important;
-}
-
-#cp-modal-colorpicker::-moz-color-swatch {
-    border: none !important;
-}
-
-.colorpicker-label {
-    color: var(--foreground);
-    font-weight: bold;
-    font-size: 0.75em;
-    padding: 0px;
-    margin: 0px;
-    margin-top: 1em;
-    width: 100%;
-    text-align: center;
-    text-transform: uppercase;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    color:white;
-    background-color:rgba(0,0,0,0.3);
-    width: 100px;
-    height: 100px;
-    margin: 0px;
-    border-radius: 50%;
-    display: flex;
+    display: none;
     flex-direction: row;
     justify-content: center;
-    align-items: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity var(--transition-time);
+    left: 0px;
+    top: var(--header-height);
+    padding-top: 1.5em;
+    color: white;
+    font-weight: bold;
+    font-size: 0.9em;
 }
 
-.colorpicker-container:hover > .colorpicker-label {
-    opacity: 1;
-}
-
-.modal-button {
-    background-color: var(--background);
-    flex: 0;
-    padding-left: 0px;
-    padding-right: 0px;
-    min-width: 65px;
-}
-
-.modal-button:hover {
-    background-color: var(--background);
-    color: var(--text-color);
-    opacity: 0.8;
-}
-
-.modal-button-invert {
-    background-color: var(--foreground);
-    color: var(--background);
-}
-
-.modal-button-invert:hover {
-    background-color: var(--foreground);
-    color: var(--background);
-    opacity: 0.8;
-}
-
-.cp-modal-open {
+.colorpicker-dialog-open {
     min-width: 30px;
     height: 30px;
     flex: 0;
@@ -392,7 +273,7 @@ input {
     cursor: pointer;
 }
 
-.cp-modal-open::-moz-focus-inner {
+.colorpicker-dialog-open::-moz-focus-inner {
     border: none !important;
 }
 
@@ -406,15 +287,16 @@ input {
 
 .pywal-color {
     flex: 1;
-    flex-basis: calc(25% - 0.4em);
+    flex-basis: calc(50% - 0.4em);
     border: none;
-    height: 30px;
-    max-width: calc(25% - 0.4em);
+    height: 25px;
+    max-width: calc(50% - 0.4em);
     margin: 0.2em;
     border: none;
     cursor: pointer;
     border-radius: var(--border-radius);
     box-shadow: 0px 1px 5px #0000003b;
+    border: 2px solid transparent;
 }
 
 .pywal-color::-moz-focus-inner {
@@ -425,3 +307,95 @@ input {
     border: 2px solid white;
 }
 
+#colorpicker-dialog {
+    position: absolute;
+    background-color: var(--background-light);
+    width: 100px;
+    height: 100%;
+    border-radius: var(--border-radius);
+    right: -115px;
+    display: none;
+    flex-direction: column;
+    padding: 0.8em;
+    box-sizing: border-box;
+    z-index: 100;
+}
+
+.color-preview-grid {
+    height: 50%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.colorpicker-dialog-container {
+    flex-basis: 100%;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    border: 2px solid transparent;
+    border-radius: calc(var(--border-radius)*1.5);
+    overflow: hidden;
+    height: 33px;
+    box-sizing: border-box;
+    cursor: pointer;
+    margin: 0.2em;
+    background-color: var(--foreground);
+}
+
+#colorpicker-dialog-input {
+    flex: 1;
+    margin: 0px;
+    padding: 0px;
+    opacity: 0;
+    cursor: pointer;
+}
+
+#colorpicker-dialog-input::-moz-color-swatch {
+    border: none !important;
+}
+
+.colorpicker-dialog-container:hover {
+    opacity: 0.8;
+}
+
+#colorpicker-dialog-input-label {
+    position: absolute;
+    color: white;
+    font-size: 0.8em;
+    font-weight: bold;
+    z-index: 100;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    color: var(--background);
+}
+
+#overlay {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    background-color: var(--background);
+    opacity: 0.85;
+    z-index: 50;
+    display: none;
+}
+
+.dialog-btn {
+    background-color: transparent;
+    color: var(--text-color);
+    margin: 0px !important;
+}
+
+.dialog-btn:hover {
+    background-color: transparent;
+    color: var(--text-color);
+    opacity: 0.8;
+}

@@ -12,22 +12,22 @@ const restartBanner = document.getElementById('banner');
 const updateButton = document.getElementById('update');
 const resetButton = document.getElementById('reset');
 const outputArea = document.getElementById('output');
-const modalContainer = document.getElementById('modal-container');
 
-// Colorpicker modal
-const colorpickerModal = document.getElementById('cp-modal');
-const colorpickerModalTitle = document.getElementById('cp-modal-name');
-const colorpickerModalCustom = document.getElementById('cp-modal-colorpicker');
-const colorpickerModalSave = document.getElementById('cp-modal-save');
-const colorpickerModalCancel = document.getElementById('cp-modal-cancel');
+// Colorpicker dialog
+const colorpickerDialogOverlay = document.getElementById('overlay');
+const colorpickerDialog = document.getElementById('colorpicker-dialog');
+const colorpickerDialogInput = document.getElementById('colorpicker-dialog-input');
+const colorpickerDialogDiscard = document.getElementById('colorpicker-dialog-discard');
 
 const toggleButtons = Array.from(document.getElementsByClassName('toggle'));
-const colorPreviews = Array.from(document.getElementsByClassName('cp-modal-open'));
+const colorPreviews = Array.from(document.getElementsByClassName('colorpicker-dialog-open'));
 const pywalColorPreviews = Array.from(document.getElementsByClassName('pywal-color'));
 
 var restartBannerTimeout = null;
-var currentModalEditColor = undefined;
-var currentModalResetColor = undefined;
+var currentDialogColorOpener = undefined;
+var currentDialogEditColor = undefined;
+var currentDialogSelectedColor = undefined;
+var currentDialogResetColor = undefined;
 var currentExtensionColors = {};
 var pywalColors = {};
 
@@ -111,62 +111,68 @@ function setCustomColor(colorKey, color, ddgReload = true) {
     });
 }
 
-function openModalOverlay() {
-    modalContainer.style.display = 'flex';
+function showDialogOverlay() {
+    colorpickerDialogOverlay.style.display = 'flex';
 }
 
-function closeModalOverlay() {
-    modalContainer.style.display = 'none';
+function hideDialogOverlay() {
+    colorpickerDialogOverlay.style.display = 'none';
 }
 
-function openColorpickerModal(e) {
+function openColorpickerDialog(e) {
     const targetColor = e.target.getAttribute('data-color-key');
     const currentColor = currentExtensionColors[targetColor];
 
-    openModalOverlay();
+    showDialogOverlay();
 
-    currentModalEditColor = targetColor;
-    currentModalResetColor = currentColor;
+    e.target.style.zIndex = '100';
+    currentDialogColorOpener = e.target;
+    currentDialogEditColor = targetColor;
+    currentDialogResetColor = currentColor;
 
-    colorpickerModalTitle.innerText = targetColor;
-    colorpickerModalCustom.setAttribute('data-color', targetColor);
-    colorpickerModalCustom.value = currentColor;
-    colorpickerModal.style.display = 'flex';
+    colorpickerDialogInput.setAttribute('data-color', targetColor);
+    colorpickerDialogInput.value = currentColor;
+    colorpickerDialogInput.style.border = currentColor;
+    colorpickerDialog.style.display = 'flex';
 }
 
-function closeModal(modal) {
-    closeModalOverlay();
-    currentModalEditColor = undefined;
-    currentModalResetColor = undefined;
-    modal.style.display = 'none';
-}
-
-function updateColorPreviewInColorpickerModal(newColor) {
-    colorpickerModalCustom.value = newColor;
+function closeDialog(dialog) {
+    hideDialogOverlay();
+    currentDialogColorOpener.style.zIndex = '1';
+    currentDialogColorOpener = undefined;
+    currentDialogEditColor = undefined;
+    currentDialogResetColor = undefined;
+    currentDialogSelectedColor = undefined;
+    dialog.style.display = 'none';
 }
 
 function onSetPywalColorAsCustomColor(e) {
     const newColor = getPywalColorById(e.target.getAttribute('data-id'));
-    setCustomColor(currentModalEditColor, newColor, false);
-    updateColorPreviewInColorpickerModal(newColor);
+    currentDialogSelectedColor = newColor;
+    setCustomColor(currentDialogEditColor, newColor, false);
 }
 
 function onCustomColorInputChanged(e) {
     const newColor = e.target.value;
-    setCustomColor(currentModalEditColor, newColor, false);
-    updateColorPreviewInColorpickerModal(newColor);
+    currentDialogSelectedColor = newColor;
+    setCustomColor(currentDialogEditColor, newColor, false);
 }
 
-async function onColorpickerModalSave(e) {
-    const state = await browser.storage.local.get('pywalColors');
-    pywalColors = state.pywalColors;
-    sendMessageToTabs({ action: 'updateDDGTheme' });
-    closeModal(colorpickerModal);
+async function onColorpickerDialogClose(e) {
+    console.log(currentDialogSelectedColor);
+    console.log(currentDialogResetColor);
+    if (currentDialogSelectedColor !== undefined && currentDialogSelectedColor !== currentDialogResetColor) {
+        const state = await browser.storage.local.get('pywalColors');
+        pywalColors = state.pywalColors;
+        sendMessageToTabs({ action: 'updateDDGTheme' });
+    }
+
+    closeDialog(colorpickerDialog);
 }
 
-function onColorpickerModalCancel(e) {
-    setCustomColor(currentModalEditColor, currentModalResetColor, false);
-    closeModal(colorpickerModal);
+function onColorpickerDialogDiscard(e) {
+    setCustomColor(currentDialogEditColor, currentDialogResetColor, false);
+    closeDialog(colorpickerDialog);
 }
 
 updateButton.addEventListener('click', () => {
@@ -183,12 +189,12 @@ toggleButtons.forEach((toggleButton) => {
 });
 
 colorPreviews.forEach((preview) => {
-    preview.addEventListener('click', openColorpickerModal);
+    preview.addEventListener('click', openColorpickerDialog);
 });
 
-colorpickerModalCustom.addEventListener('change', onCustomColorInputChanged);
-colorpickerModalSave.addEventListener('click', onColorpickerModalSave);
-colorpickerModalCancel.addEventListener('click', onColorpickerModalCancel);
+colorpickerDialogInput.addEventListener('change', onCustomColorInputChanged);
+colorpickerDialogOverlay.addEventListener('click', onColorpickerDialogClose);
+colorpickerDialogDiscard.addEventListener('click', onColorpickerDialogDiscard);
 
 // Watch for theme updates
 browser.theme.onUpdated.addListener(async ({ theme, windowId }) => {

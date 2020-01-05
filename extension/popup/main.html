@@ -25,89 +25,73 @@
         </div>
     </header>
     <main>
-        <div id="modal-container">
-            <div id="overlay"></div>
-            <div class="modal" id="cp-modal">
-                <h4>Editing <span id="cp-modal-name"></span></h4>
-                <div class="row modal-content">
-                    <div class="modal-column margin-right">
-                        <div class="colorpicker-container">
-                            <input class="colorpicker" id="cp-modal-colorpicker" type="color">
-                            <p class="colorpicker-label">Click to edit</p>
-                        </div>
-                    </div>
-                    <div class="modal-column expand">
-                        <div class="pywal-colorscheme">
-                            <button class="pywal-color" data-id="color0"></button>
-                            <button class="pywal-color" data-id="background"></button>
-                            <button class="pywal-color" data-id="backgroundLight"></button>
-                            <button class="pywal-color" data-id="color1"></button>
-                            <button class="pywal-color" data-id="color2"></button>
-                            <button class="pywal-color" data-id="color3"></button>
-                            <button class="pywal-color" data-id="color4"></button>
-                            <button class="pywal-color" data-id="color5"></button>
-                            <button class="pywal-color" data-id="color6"></button>
-                            <button class="pywal-color" data-id="color7"></button>
-                            <button class="pywal-color" data-id="color8"></button>
-                            <!-- <button class="pywal-color" data-id="color9"></button> -->
-                            <!-- <button class="pywal-color" data-id="color10"></button> -->
-                            <!-- <button class="pywal-color" data-id="color11"></button> -->
-                            <!-- <button class="pywal-color" data-id="color12"></button> -->
-                            <!-- <button class="pywal-color" data-id="color13"></button> -->
-                            <!-- <button class="pywal-color" data-id="color14"></button> -->
-                            <!-- <button class="pywal-color" data-id="color15"></button> -->
-                        </div>
-                    </div>
-                </div>
-                <div class="row modal-buttons">
-                    <button class="btn modal-button" id="cp-modal-save" data-action="save">Save</button>
-                    <button class="btn modal-button modal-button-invert" id="cp-modal-cancel" data-action="cancel">Cancel</button>
-                </div>
-            </div>
+        <div id="overlay">
+            Click to close and save selection
         </div>
         <section class="column">
             <label>Style options</label>
-            <div class="container">
-                <p class="description">
-                    Background
-                    <span>Main color. Preferrably a dark color for best readability</span>
-                </p>
-                <button class="cp-modal-open" data-color-key="background"></button>
-            </div>
-            <div class="container">
-                <p class="description">
-                    Background light
-                    <span>Used in borders, hovers</span>
-                </p>
-                <button class="cp-modal-open" data-color-key="backgroundLight"></button>
-            </div>
-            <div class="container">
-                <p class="description">
-                    Text color
-                    <span>Main text color</span>
-                </p>
-                <button class="cp-modal-open" data-color-key="text"></button>
-            </div>
-            <div class="container">
-                <p class="description">
-                    Foreground
-                    <span>Used as text color in some menus, hovers</span>
-                </p>
-                <button class="cp-modal-open" data-color-key="foreground"></button>
-            </div>
-            <div class="container">
-                <p class="description">
-                    Accent primary
+            <div class="content-container">
+                <div id="colorpicker-dialog">
+                    <div class="color-preview-grid">
+                        <button class="pywal-color" data-id="background"></button>
+                        <button class="pywal-color" data-id="backgroundLight"></button>
+                        <button class="pywal-color" data-id="color7"></button>
+                        <button class="pywal-color" data-id="color0"></button>
+                        <button class="pywal-color" data-id="color1"></button>
+                        <button class="pywal-color" data-id="color2"></button>
+                        <button class="pywal-color" data-id="color3"></button>
+                        <button class="pywal-color" data-id="color4"></button>
+                        <button class="pywal-color" data-id="color5"></button>
+                        <button class="pywal-color" data-id="color6"></button>
+                        <div class="colorpicker-dialog-container">
+                            <p id="colorpicker-dialog-input-label">Custom</p>
+                            <input type="color" id="colorpicker-dialog-input">
+                        </div>
+                        <button class="btn dialog-btn" id="colorpicker-dialog-discard">Discard</button>
+                    </div>
+                </div>
+                <div class="container">
+                    <p class="description">
+                        Background
+                        <span>Main color. Preferrably a dark color for best readability</span>
+                    </p>
+                    <button class="colorpicker-dialog-open" data-color-key="background"></button>
+                </div>
+                <div class="container">
+                    <p class="description">
+                        Background light
+                        <span>Used in borders, hovers</span>
+                    </p>
+                    <button class="colorpicker-dialog-open" data-color-key="backgroundLight"></button>
+                </div>
+                <div class="container">
+                    <p class="description">
+                        Text color
+                        <span>Main text color</span>
+                    </p>
+                    <button class="colorpicker-dialog-open" data-color-key="text"></button>
+                </div>
+                <div class="container">
+                    <p class="description">
+                        Foreground
+                        <span>Used as text color in some menus, hovers</span>
+                    </p>
+                    <button class="colorpicker-dialog-open" data-color-key="foreground"></button>
+                </div>
+                <div class="container">
+                    <p class="description">
+                        Accent primary
                     <span>Main accent color used for icons</span>
                 </p>
-                <button class="cp-modal-open" data-color-key="accentPrimary"></button>
-            </div>
-            <div class="container">
-                <p class="description">
-                    Accent secondary
-                    <span>Mainly used for hovers and highlights</span>
-                </p>
-                <button class="cp-modal-open" data-color-key="accentSecondary"></button>
+                <button class="colorpicker-dialog-open" data-color-key="accentPrimary"></button>
+                </div>
+                <div class="container">
+                    <p class="description">
+                        Accent secondary
+                        <span>Mainly used for hovers and highlights</span>
+                    </p>
+                    <button class="colorpicker-dialog-open" data-color-key="accentSecondary"></button>
+                </div>
             </div>
         </section>
         <section class="column no-bottom-border">
