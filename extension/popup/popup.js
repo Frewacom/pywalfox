@@ -124,8 +124,6 @@ function openColorpickerDialog(e) {
     const currentColor = currentExtensionColors[targetColor];
 
     if (currentDialogTarget === undefined) {
-        showDialogOverlay();
-
         document.body.classList.add('dialog-open');
         colorpickerDialog.style.display = 'flex';
     } else {
@@ -142,7 +140,6 @@ function openColorpickerDialog(e) {
 }
 
 function closeDialog(dialog) {
-    hideDialogOverlay();
     document.body.classList.remove('dialog-open');
     currentDialogTarget.classList.remove('selected');
     currentDialogTarget = undefined;
