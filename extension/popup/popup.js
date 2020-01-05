@@ -187,8 +187,6 @@ function onColorpickerDialogDiscard(e) {
     if (hasADifferentColorBeenChosen()) {
         setCustomColor(currentDialogEditColor, currentDialogResetColor, false);
     }
-
-    closeDialog(colorpickerDialog);
 }
 
 updateButton.addEventListener('click', () => {
