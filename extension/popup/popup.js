@@ -158,10 +158,16 @@ function onCustomColorInputChanged(e) {
     setCustomColor(currentDialogEditColor, newColor, false);
 }
 
-async function onColorpickerDialogClose(e) {
-    console.log(currentDialogSelectedColor);
-    console.log(currentDialogResetColor);
+function hasADifferentColorBeenChosen() {
     if (currentDialogSelectedColor !== undefined && currentDialogSelectedColor !== currentDialogResetColor) {
+        return true;
+    }
+
+    return false;
+}
+
+async function onColorpickerDialogClose(e) {
+    if (hasADifferentColorBeenChosen()) {
         const state = await browser.storage.local.get('pywalColors');
         pywalColors = state.pywalColors;
         sendMessageToTabs({ action: 'updateDDGTheme' });
@@ -171,7 +177,10 @@ async function onColorpickerDialogClose(e) {
 }
 
 function onColorpickerDialogDiscard(e) {
-    setCustomColor(currentDialogEditColor, currentDialogResetColor, false);
+    if (hasADifferentColorBeenChosen()) {
+        setCustomColor(currentDialogEditColor, currentDialogResetColor, false);
+    }
+
     closeDialog(colorpickerDialog);
 }
 
