@@ -137,45 +137,49 @@ input {
     font-weight: bold;
     margin-right: 0px;
     padding: 0.7em 0.9em;
-    background-color: var(--accent-primary);
-    color: var(--text-color);
     outline: none;
     transition: color var(--transition-time), background-color var(--transition-time);
     cursor: pointer;
 }
 
-.btn:hover {
+.btn.primary {
+    background-color: var(--accent-primary);
+    color: var(--text-color);
+}
+
+.btn.primary:hover {
     color: var(--background);
     background-color: var(--foreground);
 }
+
+.btn.toggle {
+    flex: 0;
+    width: 50px;
+    background-color: var(--background-light);
+    color: var(--text-color);
+}
+
+.btn.toggle:hover {
+    opacity: 0.8;
+    background-color: var(--background-light);
+    color: var(--foreground);
+}
+
+.btn.toggle.enabled {
+    background-color: var(--foreground);
+}
+
+.btn.toggle.enabled:hover {
+    background-color: var(--foreground);
+    color: var(--background);
+}
+
 
 .btn::-moz-focus-inner,
 .pywal-color::-moz-focus-inner,
 .colorpicker-dialog-open::-moz-focus-inner,
 #colorpicker-dialog-input::-moz-color-swatch {
     border: 0;
-}
-
-.toggle {
-    flex: 0;
-    width: 50px;
-    background-color: var(--background-light);
-}
-
-.toggle:hover {
-    opacity: 0.8;
-    background-color: var(--background-light);
-    color: var(--foreground);
-}
-
-.toggle.enabled {
-    background-color: var(--foreground);
-}
-
-.toggle.enabled:hover {
-    opacity: 0.8;
-    background-color: var(--foreground);
-    color: var(--background);
 }
 
 #output {
@@ -225,7 +229,7 @@ input {
     height: 100vh;
     position: fixed;
     opacity: 0;
-    z-index: 50;
+    z-index: 25;
     cursor: pointer;
     display: none;
     flex-direction: row;
@@ -242,16 +246,13 @@ input {
     min-width: 30px;
     height: 30px;
     flex: 0;
+    z-index: 30;
     border-radius: 50%;
-    border: 1px solid white;
+    border: 2px solid white;
     margin-right: 2px;
     background-color: var(--background);
     cursor: pointer;
     position: relative;
-}
-
-.dialog-open .colorpicker-dialog-open {
-    z-index: 60;
 }
 
 .colorpicker-dialog-open.selected::after {
@@ -313,7 +314,7 @@ input {
     flex-wrap: wrap;
 }
 
-.colorpicker-dialog-container {
+#colorpicker-dialog-input-container {
     flex-basis: 100%;
     display: flex;
     flex-direction: row;
@@ -326,6 +327,11 @@ input {
     cursor: pointer;
     margin: 0.2em;
     background-color: var(--foreground);
+}
+
+#colorpicker-dialog-input-container.selected,
+.pywal-color.selected {
+    border: 2px solid white;
 }
 
 #colorpicker-dialog-input {
@@ -358,16 +364,6 @@ input {
     align-items: center;
     pointer-events: none;
     color: var(--background);
-}
-
-#overlay {
-    width: 100vw;
-    height: 100vh;
-    position: fixed;
-    background-color: var(--background);
-    opacity: 0.85;
-    z-index: 50;
-    display: none;
 }
 
 .dialog-btn {

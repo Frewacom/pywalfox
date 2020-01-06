@@ -16,8 +16,8 @@
         </div>
         <section id="buttons">
             <div class="row">
-                <button id="update" class="btn margin-right-sm">Fetch pywal colors</button>
-                <button id="reset" class="btn">Disable theme</button>
+                <button id="update" class="btn primary margin-right-sm">Fetch pywal colors</button>
+                <button id="reset" class="btn primary">Disable theme</button>
             </div>
         </section>
         <div class="spacer align-left">
@@ -41,7 +41,7 @@
                         <button class="pywal-color" data-id="color4"></button>
                         <button class="pywal-color" data-id="color5"></button>
                         <button class="pywal-color" data-id="color6"></button>
-                        <div class="colorpicker-dialog-container">
+                        <div id="colorpicker-dialog-input-container">
                             <p id="colorpicker-dialog-input-label">Custom</p>
                             <input type="color" id="colorpicker-dialog-input">
                         </div>
@@ -51,7 +51,7 @@
                 <div class="container">
                     <p class="description">
                         Background
-                        <span>Main color. Preferrably a dark color for best readability</span>
+                        <span>Main color</span>
                     </p>
                     <button class="colorpicker-dialog-open" data-color-key="background"></button>
                 </div>
@@ -79,7 +79,7 @@
                 <div class="container">
                     <p class="description">
                         Accent primary
-                    <span>Main accent color used for icons</span>
+                    <span>Main accent color, used for icons</span>
                 </p>
                 <button class="colorpicker-dialog-open" data-color-key="accentPrimary"></button>
                 </div>

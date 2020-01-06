@@ -17,6 +17,7 @@ const outputArea = document.getElementById('output');
 const colorpickerDialogOverlay = document.getElementById('overlay');
 const colorpickerDialog = document.getElementById('colorpicker-dialog');
 const colorpickerDialogInput = document.getElementById('colorpicker-dialog-input');
+const colorpickerDialogInputContainer = document.getElementById('colorpicker-dialog-input-container');
 const colorpickerDialogDiscard = document.getElementById('colorpicker-dialog-discard');
 
 const toggleButtons = Array.from(document.getElementsByClassName('toggle'));
@@ -27,6 +28,7 @@ var restartBannerTimeout = null;
 var currentDialogTarget = undefined;
 var currentDialogEditColor = undefined;
 var currentDialogSelectedColor = undefined;
+var currentDialogHighlightedColorPreview = undefined;
 var currentDialogResetColor = undefined;
 var currentExtensionColors = {};
 var pywalColors = {};
@@ -119,33 +121,81 @@ function hideDialogOverlay() {
     colorpickerDialogOverlay.style.display = 'none';
 }
 
+function highlightCurrentColorInDialog(currentColor) {
+    let foundKey = undefined;
+    const keysToSearch = [
+        'background',
+        'backgroundLight',
+        'color0',
+        'color1',
+        'color2',
+        'color3',
+        'color4',
+        'color5',
+        'color6',
+        'color7'
+    ];
+
+    for (const key of keysToSearch) {
+        if (pywalColors[key] === currentColor && key !== 'text') {
+            foundKey = key;
+        }
+    }
+
+    if (foundKey) {
+        const colorPreviewElement = document.querySelector(`.pywal-color[data-id=${foundKey}]`);
+        if (colorPreviewElement) {
+            colorPreviewElement.classList.add('selected');
+            currentDialogHighlightedColorPreview = colorPreviewElement;
+        } else {
+            console.log('Could not find and highlight current selected color preview');
+        }
+    } else {
+        colorpickerDialogInputContainer.classList.add('selected');
+        currentDialogHighlightedColorPreview = colorpickerDialogInputContainer;
+    }
+}
+
+function setCurrentHighlightedColorInDialog(newTarget) {
+    currentDialogHighlightedColorPreview.classList.remove('selected');
+    newTarget.classList.add('selected');
+    currentDialogHighlightedColorPreview = newTarget;
+}
+
 function openColorpickerDialog(e) {
     const targetColor = e.target.getAttribute('data-color-key');
     const currentColor = currentExtensionColors[targetColor];
 
     if (currentDialogTarget === undefined) {
-        document.body.classList.add('dialog-open');
         colorpickerDialog.style.display = 'flex';
     } else {
         currentDialogTarget.classList.remove('selected');
     }
 
+    showDialogOverlay();
+
     currentDialogTarget = e.target;
     currentDialogEditColor = targetColor;
     currentDialogResetColor = currentColor;
 
+    if (currentDialogHighlightedColorPreview) {
+        currentDialogHighlightedColorPreview.classList.remove('selected');
+    }
+
+    highlightCurrentColorInDialog(currentColor);
     currentDialogTarget.classList.add('selected');
     colorpickerDialogInput.setAttribute('data-color', targetColor);
     colorpickerDialogInput.value = currentColor;
 }
 
 function closeDialog(dialog) {
-    document.body.classList.remove('dialog-open');
+    currentDialogHighlightedColorPreview.classList.remove('selected');
     currentDialogTarget.classList.remove('selected');
     currentDialogTarget = undefined;
     currentDialogEditColor = undefined;
     currentDialogResetColor = undefined;
     currentDialogSelectedColor = undefined;
+    hideDialogOverlay();
     dialog.style.display = 'none';
 }
 
@@ -153,12 +203,14 @@ function onSetPywalColorAsCustomColor(e) {
     const newColor = getPywalColorById(e.target.getAttribute('data-id'));
     currentDialogSelectedColor = newColor;
     colorpickerDialogInput.value = newColor;
+    setCurrentHighlightedColorInDialog(e.target);
     setCustomColor(currentDialogEditColor, newColor, false);
 }
 
 function onCustomColorInputChanged(e) {
     const newColor = e.target.value;
     currentDialogSelectedColor = newColor;
+    setCurrentHighlightedColorInDialog(colorpickerDialogInputContainer);
     setCustomColor(currentDialogEditColor, newColor, false);
 }
 
@@ -182,6 +234,8 @@ async function onColorpickerDialogClose(e) {
 
 function onColorpickerDialogDiscard(e) {
     if (hasADifferentColorBeenChosen()) {
+        currentDialogHighlightedColorPreview.classList.remove('selected');
+        highlightCurrentColorInDialog(currentDialogResetColor);
         setCustomColor(currentDialogEditColor, currentDialogResetColor, false);
     }
 }
