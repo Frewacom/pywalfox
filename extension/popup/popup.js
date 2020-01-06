@@ -11,6 +11,7 @@ const versionLabel = document.getElementById('version');
 const restartBanner = document.getElementById('banner');
 const updateButton = document.getElementById('update');
 const resetButton = document.getElementById('reset');
+const outputToggle = document.getElementById('output-toggle');
 const outputArea = document.getElementById('output');
 
 // Colorpicker dialog
@@ -247,6 +248,15 @@ updateButton.addEventListener('click', () => {
 resetButton.addEventListener('click', () => {
     onExtensionLoad();
     browser.runtime.sendMessage({ action: 'reset' });
+});
+
+outputToggle.addEventListener('click', () => {
+    document.body.classList.toggle('output-open');
+    if (outputToggle.innerText === 'Show debugging output') {
+        outputToggle.innerText = 'Hide debugging output';
+    } else {
+        outputToggle.innerText = 'Show debugging output';
+    }
 });
 
 toggleButtons.forEach((toggleButton) => {

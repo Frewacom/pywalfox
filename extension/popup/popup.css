@@ -2,6 +2,7 @@
     --transition-time: 0s;
     --border-radius: 3px;
     --arrow-size: 12px;
+    --small-arrow-size: 6px;
 }
 
 body {
@@ -67,6 +68,8 @@ main {
     width: var(--content-width);
     margin-top: var(--header-height);
     margin-bottom: 5em;
+    justify-content: flex-start;
+    align-items: flex-start;
 }
 
 label {
@@ -76,12 +79,6 @@ label {
     font-size: 1em;
     padding-left: 2px;
     margin-bottom: 5px;
-}
-
-input {
-    height: 20px;
-    background-color: transparent;
-    border: none;
 }
 
 .spacer {
@@ -94,6 +91,23 @@ input {
     color: var(--text-color);
     font-weight: bold;
     font-size: 0.95em;
+}
+
+.row {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    margin-top: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--background-light);
 }
 
 .container {
@@ -130,7 +144,6 @@ input {
 
 .btn {
     height: 33px;
-    flex: 1;
     border-radius: var(--border-radius);
     border: none;
     font-size: 0.85em;
@@ -138,11 +151,15 @@ input {
     margin-right: 0px;
     padding: 0.7em 0.9em;
     outline: none;
+    position: relative;
+    background-color: transparent;
+    color: var(--text-color);
     transition: color var(--transition-time), background-color var(--transition-time);
     cursor: pointer;
 }
 
 .btn.primary {
+    flex: 1;
     background-color: var(--accent-primary);
     color: var(--text-color);
 }
@@ -153,7 +170,6 @@ input {
 }
 
 .btn.toggle {
-    flex: 0;
     width: 50px;
     background-color: var(--background-light);
     color: var(--text-color);
@@ -174,6 +190,52 @@ input {
     color: var(--background);
 }
 
+.btn.toggle.enabled {
+    background-color: var(--foreground);
+    color: var(--background);
+}
+
+.btn.dialog-btn {
+    flex: 1;
+    background-color: transparent;
+    color: var(--text-color);
+    margin: 0px !important;
+}
+
+.btn.dialog-btn:hover {
+    background-color: transparent;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+.btn.expander {
+    padding: 1em 0.2em;
+    margin-bottom: 0.5em;
+}
+
+.btn.expander::after {
+    width: 0;
+    height: 0;
+    border-bottom: var(--small-arrow-size) solid transparent;
+    border-left: var(--small-arrow-size) solid var(--text-color);
+    border-top: var(--small-arrow-size) solid transparent;
+    position: absolute;
+    content: '';
+    bottom: 0.5em;
+    right: -1.2em;
+}
+
+.output-open .btn.expander::after {
+    width: 0;
+    height: 0;
+    border-right: var(--small-arrow-size) solid transparent;
+    border-top: var(--small-arrow-size) solid var(--text-color);
+    border-left: var(--small-arrow-size) solid transparent;
+    position: absolute;
+    content: '';
+    bottom: 0.2em;
+    right: -1.5em;
+}
 
 .btn::-moz-focus-inner,
 .pywal-color::-moz-focus-inner,
@@ -195,32 +257,15 @@ input {
     font-weight: bold;
     font-size: 0.85em;
     border-radius: var(--border-radius);
+    display: none;
+}
+
+.output-open #output {
+    display: flex;
 }
 
 #buttons {
     width: var(--content-width);
-}
-
-.row {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
-
-.column {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    margin-top: 15px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid var(--background-light);
-}
-
-.enabled {
-    background-color: var(--foreground);
-    color: var(--background);
 }
 
 #overlay {
@@ -267,32 +312,6 @@ input {
     right: -20px;
 }
 
-.pywal-colorscheme {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: auto;
-    flex-wrap: wrap;
-}
-
-.pywal-color {
-    flex: 1;
-    flex-basis: calc(50% - 0.4em);
-    border: none;
-    height: 25px;
-    max-width: calc(50% - 0.4em);
-    margin: 0.2em;
-    border: none;
-    cursor: pointer;
-    border-radius: var(--border-radius);
-    box-shadow: 0px 1px 5px #0000003b;
-    border: 2px solid transparent;
-}
-
-.pywal-color:hover {
-    border: 2px solid white;
-}
-
 #colorpicker-dialog {
     position: absolute;
     background-color: var(--background-light);
@@ -314,6 +333,24 @@ input {
     flex-wrap: wrap;
 }
 
+.pywal-color {
+    flex: 1;
+    flex-basis: calc(50% - 0.4em);
+    max-width: calc(50% - 0.4em);
+    border: none;
+    height: 25px;
+    margin: 0.2em;
+    border: none;
+    cursor: pointer;
+    border-radius: var(--border-radius);
+    box-shadow: 0px 1px 5px #0000003b;
+    border: 2px solid transparent;
+}
+
+.pywal-color:hover {
+    border: 2px solid white;
+}
+
 #colorpicker-dialog-input-container {
     flex-basis: 100%;
     display: flex;
@@ -329,6 +366,10 @@ input {
     background-color: var(--foreground);
 }
 
+#colorpicker-dialog-input-container:hover {
+    opacity: 0.8;
+}
+
 #colorpicker-dialog-input-container.selected,
 .pywal-color.selected {
     border: 2px solid white;
@@ -341,10 +382,6 @@ input {
     padding: 0px;
     opacity: 0;
     cursor: pointer;
-}
-
-.colorpicker-dialog-container:hover {
-    opacity: 0.8;
 }
 
 #colorpicker-dialog-input-label {
@@ -366,20 +403,9 @@ input {
     color: var(--background);
 }
 
-.dialog-btn {
-    background-color: transparent;
-    color: var(--text-color);
-    margin: 0px !important;
-}
-
-.dialog-btn:hover {
-    background-color: transparent;
-    color: var(--text-color);
-    opacity: 0.8;
-}
-
 .expand {
     flex: 1;
+    width: 100%;
 }
 
 .no-bottom-border {

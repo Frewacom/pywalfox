@@ -26,7 +26,7 @@
     </header>
     <main>
         <div id="overlay"></div>
-        <section class="column">
+        <section class="column expand">
             <label>Style options</label>
             <div class="content-container">
                 <div id="colorpicker-dialog">
@@ -92,7 +92,7 @@
                 </div>
             </div>
         </section>
-        <section class="column no-bottom-border">
+        <section class="column expand">
             <label>Optional settings</label>
             <div class="container">
                 <p class="description">
@@ -116,6 +116,7 @@
                 <button class="btn toggle" data-action="ddgThemeEnabled">Off</button>
             </div>
         </section>
+        <button class="btn expander" id="output-toggle">Show debugging output</button>
         <textarea id="output" readonly></textarea>
     </main>
     <script src="popup.js"></script>
