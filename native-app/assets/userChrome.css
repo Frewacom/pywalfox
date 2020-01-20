@@ -11,6 +11,10 @@ html {
     --accent-primary: var(--lwt-toolbar-field-highlight);
 }
 
+.toolbarbutton-text, .tab-label {
+    font-size: var(--font-size) !important;
+}
+
 /* Remove underline from container tabs */
 .tabbrowser-tab[usercontextid] .tab-bottom-line {
     display: none !important;
