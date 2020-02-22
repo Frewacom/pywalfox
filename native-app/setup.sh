@@ -5,7 +5,7 @@ CURRENTPATH=$(pwd)
 echo "Creating 'native-messaging-hosts' folder in ~/.mozilla"
 sudo mkdir -p $NHPATH
 
-echo "Copying native application manifest to ~/.mozilla/native-messaging-hostst/pywalfox.json"
+echo "Copying native application manifest to ~/.mozilla/native-messaging-hosts/pywalfox.json"
 sudo cp ./assets/pywalfox-manifest.json $NHPATH/pywalfox.json
 
 echo "Setting path to pywal-fetcher.py in the native app manifest"
