@@ -48,4 +48,4 @@ If you want to use the custom CSS, you must do the following:
 * Take a look at the Browser console (`Tools > Web developer > Browser console`) for errors
 
 ### Roadmap
-Feel free to create issues/pull requests for features you want to be added. You can see what is currently planned/being worked on here: https://trello.com/b/1xkrD1GS/pywalfox
+Feel free to create issues/pull requests for features you want to be added. You can see what is currently planned/being worked on here: https://github.com/Frewacom/Pywalfox/projects/1
