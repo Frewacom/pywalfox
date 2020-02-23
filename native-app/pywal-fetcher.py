@@ -190,9 +190,12 @@ def generateDarkerShade(hexcolor, modifier):
     return rgb_to_hex(rgb)
 
 def getChromePath():
-    path = glob.glob('%s/*.default-release/chrome' % os.path.expanduser('~/.mozilla/firefox'))
-    if len(path) == 1:
-        return path[0]
+    profilePath = glob.glob('%s/*.default-release' % os.path.expanduser('~/.mozilla/firefox'))
+    if len(profilePath) == 1:
+        chromePath = os.path.join(profilePath[0], 'chrome')
+        if not os.path.exists(chromePath):
+            os.makedirs(chromePath)
+        return chromePath
 
     return False
 
