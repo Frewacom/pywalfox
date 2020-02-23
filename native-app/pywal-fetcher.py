@@ -212,7 +212,7 @@ def disableCustomCss(path, filename):
 
 customCssPath = getChromePath()
 if not customCssPath:
-    sendMessage(createMessage('enableCustomCss', False, 'Could not find the folder to put custom CSS in'))
+    sendMessage(createMessage('enableCustomCss', (False, 'Could not find the folder to put custom CSS in')))
 
 while True:
     receivedMessage = getMessage()
