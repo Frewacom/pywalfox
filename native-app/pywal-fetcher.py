@@ -8,53 +8,6 @@ import math
 import glob
 import shutil
 
-try:
-    # Python 3.x version
-    # Read a message from stdin and decode it.
-    def getMessage():
-        rawLength = sys.stdin.buffer.read(4)
-        if len(rawLength) == 0:
-            sys.exit(0)
-        messageLength = struct.unpack('@I', rawLength)[0]
-        message = sys.stdin.buffer.read(messageLength).decode('utf-8')
-        return json.loads(message)
-
-    # Encode a message for transmission,
-    # given its content.
-    def encodeMessage(messageContent):
-        encodedContent = json.dumps(messageContent).encode('utf-8')
-        encodedLength = struct.pack('@I', len(encodedContent))
-        return {'length': encodedLength, 'content': encodedContent}
-
-    # Send an encoded message to stdout
-    def sendMessage(encodedMessage):
-        sys.stdout.buffer.write(encodedMessage['length'])
-        sys.stdout.buffer.write(encodedMessage['content'])
-        sys.stdout.buffer.flush()
-except AttributeError:
-    # Python 2.x version (if sys.stdin.buffer is not defined)
-    # Read a message from stdin and decode it.
-    def getMessage():
-        rawLength = sys.stdin.read(4)
-        if len(rawLength) == 0:
-            sys.exit(0)
-        messageLength = struct.unpack('@I', rawLength)[0]
-        message = sys.stdin.read(messageLength)
-        return json.loads(message)
-
-    # Encode a message for transmission,
-   # given its content.
-    def encodeMessage(messageContent):
-        encodedContent = json.dumps(messageContent)
-        encodedLength = struct.pack('@I', len(encodedContent))
-        return {'length': encodedLength, 'content': encodedContent}
-
-    # Send an encoded message to stdout
-    def sendMessage(encodedMessage):
-        sys.stdout.write(encodedMessage['length'])
-        sys.stdout.write(encodedMessage['content'])
-        sys.stdout.flush()
-
 def createMessage(key, response):
     if response[0]:
         return encodeMessage({
@@ -213,15 +166,10 @@ def disableCustomCss(path, filename):
     except Exception as e:
         return (False, 'Could not remove custom CSS: %s' % str(e))
 
-customCssPath = getChromePath()
-if not customCssPath:
-    sendMessage(createMessage('enableCustomCss', (False, 'Could not find the folder to put custom CSS in')))
-
-while True:
-    receivedMessage = getMessage()
-    if receivedMessage == 'update':
+def handleReceivedMessage(message):
+    if message == 'update':
         sendMessage(createMessage('colors', fetchColors()))
-    elif receivedMessage == 'enableCustomCss':
+    elif message == 'enableCustomCss':
         (successChrome, dataChrome) = enableCustomCss(customCssPath, 'userChrome.css');
         (successContent, dataContent) = enableCustomCss(customCssPath, 'userContent.css');
         if successContent and successChrome:
@@ -229,7 +177,7 @@ while True:
         else:
             sendMessage(createMessage('enableCustomCss', (successChrome, dataChrome)))
             sendMessage(createMessage('enableCustomCss', (successContent, dataContent)))
-    elif receivedMessage == 'disableCustomCss':
+    elif message == 'disableCustomCss':
         (successChrome, dataChrome) = disableCustomCss(customCssPath, 'userChrome.css');
         (successContent, dataContent) = disableCustomCss(customCssPath, 'userContent.css');
         if successContent and successChrome:
@@ -237,7 +185,67 @@ while True:
         else:
             sendMessage(createMessage('disableCustomCss', (successChrome, dataChrome)))
             sendMessage(createMessage('disableCustomCss', (successContent, dataContent)))
-    elif receivedMessage == 'enableNoScrollbar':
+    elif message == 'enableNoScrollbar':
         sendMessage(createMessage('enableNoScrollbar', enableCustomCss(customCssPath, 'hide-scrollbar.as.css')))
-    elif receivedMessage == 'disableNoScrollbar':
+    elif message == 'disableNoScrollbar':
         sendMessage(createMessage('disableNoScrollbar', disableCustomCss(customCssPath, 'hide-scrollbar.as.css')))
+
+# This path is used when enabling/disabling the custom CSS
+customCssPath = getChromePath()
+if not customCssPath:
+    sendMessage(createMessage('enableCustomCss', (False, 'Could not find the folder to put custom CSS in')))
+
+try:
+    # Python 3.x version
+    # Read a message from stdin and decode it.
+    def getMessage():
+        rawLength = sys.stdin.buffer.read(4)
+        if len(rawLength) == 0:
+            sys.exit(0)
+        messageLength = struct.unpack('@I', rawLength)[0]
+        message = sys.stdin.buffer.read(messageLength).decode('utf-8')
+        return json.loads(message)
+
+    # Encode a message for transmission,
+    # given its content.
+    def encodeMessage(messageContent):
+        encodedContent = json.dumps(messageContent).encode('utf-8')
+        encodedLength = struct.pack('@I', len(encodedContent))
+        return {'length': encodedLength, 'content': encodedContent}
+
+    # Send an encoded message to stdout
+    def sendMessage(encodedMessage):
+        sys.stdout.buffer.write(encodedMessage['length'])
+        sys.stdout.buffer.write(encodedMessage['content'])
+        sys.stdout.buffer.flush()
+
+    while True:
+        message = getMessage()
+        handleReceivedMessage(message)
+except AttributeError:
+    # Python 2.x version (if sys.stdin.buffer is not defined)
+    # Read a message from stdin and decode it.
+    def getMessage():
+        rawLength = sys.stdin.read(4)
+        if len(rawLength) == 0:
+            sys.exit(0)
+        messageLength = struct.unpack('@I', rawLength)[0]
+        message = sys.stdin.read(messageLength)
+        return json.loads(message)
+
+    # Encode a message for transmission,
+   # given its content.
+    def encodeMessage(messageContent):
+        encodedContent = json.dumps(messageContent)
+        encodedLength = struct.pack('@I', len(encodedContent))
+        return {'length': encodedLength, 'content': encodedContent}
+
+    # Send an encoded message to stdout
+    def sendMessage(encodedMessage):
+        sys.stdout.write(encodedMessage['length'])
+        sys.stdout.write(encodedMessage['content'])
+        sys.stdout.flush()
+
+    while True:
+        message = getMessage()
+        handleReceivedMessage(message)
