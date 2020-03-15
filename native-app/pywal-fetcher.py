@@ -34,9 +34,8 @@ def fetchColors():
         return (False, 'Could not read colors from: %s' % colors_path)
 
     colorscheme = {
-        'background': generateDarkerShade(colors[2], 155),
-        'backgroundDark': colors[0],
-        'backgroundLight': generateDarkerShade(colors[2], 120),
+        'background': colors[0],
+        'backgroundLight': generateLighterShade(colors[0], 35),
         'foreground': colors[-1],
         'accentPrimary': colors[1],
         'accentSecondary': colors[2],
