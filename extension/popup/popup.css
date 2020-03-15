@@ -10,7 +10,7 @@ body {
     color: var(--foreground);
     width: 100%;
     font-family: sans-serif;
-    font-size: 1rem;
+    font-size: 0.98rem;
     color: var(--foreground);
     display: flex;
     flex-direction: column;
@@ -417,7 +417,7 @@ label {
 }
 
 .margin-right-sm {
-    margin-right: 0.4em;
+    margin-right: 0.6em;
 }
 
 .align-left {

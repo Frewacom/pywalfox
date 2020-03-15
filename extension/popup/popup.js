@@ -241,6 +241,14 @@ function onColorpickerDialogDiscard(e) {
     }
 }
 
+function setPywalColorPreviews() {
+    pywalColorPreviews.forEach((preview) => {
+        const id = preview.getAttribute('data-id');
+        preview.style.backgroundColor = getPywalColorById(id);
+        preview.addEventListener('click', onSetPywalColorAsCustomColor);
+    });
+}
+
 updateButton.addEventListener('click', () => {
     browser.runtime.sendMessage({ action: 'update' });
 });
@@ -302,6 +310,9 @@ async function onExtensionLoad() {
         preview.style.backgroundColor = colors[preview.getAttribute('data-color-key')];
     });
 
+    // Update the background color of previews in the color picker
+    setPywalColorPreviews();
+
     toggleButtons.forEach(async (toggleButton) => {
         const action = toggleButton.getAttribute('data-action');
         const state = await browser.storage.local.get(action);
@@ -314,11 +325,7 @@ async function onExtensionLoad() {
 
 // Updates extension colors, updates the current value of settings, etc
 onExtensionLoad().then(() => {
-    pywalColorPreviews.forEach((preview) => {
-        const id = preview.getAttribute('data-id');
-        preview.style.backgroundColor = getPywalColorById(id);
-        preview.addEventListener('click', onSetPywalColorAsCustomColor);
-    });
+    setPywalColorPreviews();
 });
 
 versionLabel.innerText = `v${browser.runtime.getManifest().version}`;
