@@ -1,15 +1,20 @@
 # Copy native app manifest to path read by Firefox
-NHPATH=~/.mozilla/native-messaging-hosts
+NHPATH="${HOME}/.mozilla/native-messaging-hosts"
+MANIFEST_PATH="$NHPATH/pywalfox.json"
 CURRENTPATH=$(pwd)
 
 echo "Creating 'native-messaging-hosts' folder in ~/.mozilla"
 sudo mkdir -p $NHPATH
 
-echo "Copying native application manifest to ~/.mozilla/native-messaging-hosts/pywalfox.json"
-sudo cp ./assets/pywalfox-manifest.json $NHPATH/pywalfox.json
+if [ -f "$MANIFEST_PATH" ]; then
+  sudo rm $MANIFEST_PATH
+fi
+
+echo "Copying native application manifest to $MANIFEST_PATH"
+sudo cp ./assets/pywalfox-manifest.json $MANIFEST_PATH
 
 echo "Setting path to pywal-fetcher.py in the native app manifest"
-sudo sed -i "s+<pwd>+$CURRENTPATH+g" $NHPATH/pywalfox.json
+sudo sed -i "s+<pwd>+$CURRENTPATH+g" $MANIFEST_PATH
 
 echo "Setting execution permissions on daemon (pywal-fetcher.py)"
 chmod +x pywal-fetcher.py

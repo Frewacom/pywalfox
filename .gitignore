@@ -1,1 +1,3 @@
 dist
+/native-app/*.pyc
+/native-app/__pycache__
