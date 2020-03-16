@@ -4,25 +4,24 @@
 
 # Pywalfox
 
-Pywalfox allows Firefox to be themed using Pywal. There is an option to use a custom CSS-file that adds things such as a thin scrollbar, smaller and bold text, styled dropdowns, etc, as well as a theme for DuckDuckGo.
-
-The custom CSS is optional and can be enabled/disabled from within the extension (there may be some issues if you have multiple profiles in firefox). You also have to enable the support for custom CSS for it to work. How to do this is described down below.
-
-The addon is using the new Theme API to dynamically change colors in a more efficient and future-proof way. However, some features still require custom CSS since they are not available from the Theme API. The goal is to move away completely from custom CSS and considering that you need to enable a flag to be able to use it in the first place, it is obvious that they want to drop support for it eventually. Using the new Theme API also helps with compatibility, since future UI updates to Firefox may change selectors, variables, etc. 
+Pywalfox allows Firefox to be themed using Pywal and includes many useful features:
+- Customizable colors
+- Uses the Firefox Theme API
+- Automatic theming for DuckDuckGo with your pywal colors (Optional) 
+- Custom CSS with bold text, styled dropdowns, etc. (Optional) 
+- Updating the browser theme to match your pywal colors using the addon and/or your terminal 
 
 You can download the Firefox Addon here: https://addons.mozilla.org/en-US/firefox/addon/pywalfox/
 
 ### Warning
-The layout presented in the screenshots with the bookmarks to the right of the URL-bar is simply my preferred layout. You are free to use whatever you like.
-
-Pywalfox is quite new and not fully polished, so there may be some issues with styling/readability in some cases. The extension and script has only been tested on two different machines running Arch Linux and very similiar setups, so things may not work as expected for you out of the box. Feel free to create an issue/pull request or reach out to me for any issues you may have.
+To use this addon, you must install a script on your computer. The script will be ran by Firefox upon launch and will handle fetching your pywal colors. Pywalfox supports only Linux.
 
 ### Installation
 1. `git clone git@github.com:Frewacom/Pywalfox.git`
 2. `cd Pywalfox/native-app`
 3. `bash setup.sh`
 
-The setup script will require sudo access, since the path in which we need to place the native app manifest is protected by default. Firefox requires said manifest to allow communication between the addon and the script running on your system.
+The setup script will require sudo access, since the path in which we need to place the manifest is protected by default. Firefox requires the manifest to allow communication between the addon and the script running on your computer.
 Make sure to run the script from within the `native-app` folder, or you will get errors.
 
 If everything goes as planned, it should look something like this:
@@ -34,9 +33,12 @@ Setting execution permissions on daemon (pywal-fetcher.py)
 Finished.
 ```
 
-When this is done, you should be able to apply the theme using the addon menu.
+When this is done, you should be able to fetch your pywal colors using the settings page of the addon.
 
-### Custom CSS (userChrome.css and userContent.css)
+### Updating the theme using the terminal
+If you are using some script for theming your system and do not want to manually refetch your pywal colors using the settings page, you can trigger an update of the browser theme by typing `./pywal-fetcher.py update`. Note that the script is not in your `PATH` by default.
+
+### Custom CSS
 If you want to use the custom CSS, you must do the following:
 1. Navigate to `about:config` in Firefox
 2. Set `toolkit.legacyUserProfileCustomizations.stylesheets` to `true`
