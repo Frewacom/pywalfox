@@ -78,7 +78,10 @@ async function setTheme() {
 // Listen to messages from the background script/settings page
 browser.runtime.onMessage.addListener(async (message) => {
     if (message.action == 'updateDDGTheme') {
-        applyTheme(true);
+        // We dont want to reload the page if the user has scrolled down the page more than 15%
+        if (window.pageYOffset <= (window.scrollMaxY * 0.15)) {
+          applyTheme(true);
+        }
     } else if (message.action == 'ddgThemeEnabled') {
         if (message.enabled) {
             const theme = getCurrentTheme();

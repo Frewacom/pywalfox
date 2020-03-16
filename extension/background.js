@@ -205,7 +205,7 @@ port.onDisconnect.addListener((port) => {
 port.onMessage.addListener(async (response) => {
     if (response.key == 'colors') {
         if (response.success) {
-            setTheme(response.data);
+            setTheme(response.data, true);
         } else {
             output(response.error);
         }
