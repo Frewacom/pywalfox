@@ -20,7 +20,7 @@ To use this addon, you must install a script on your computer. The script will b
 2. `cd Pywalfox/native-app`
 3. `bash setup.sh`
 
-The setup script will require sudo access, since the path in which we need to place the native messaging manifest is protected by default. Firefox requires the manifest to allow communication between the addon and the script running on your computer.
+The setup script will prompt you for your password since the path in which we need to place the native messaging manifest is protected by default. Firefox requires the manifest to allow communication between the addon and the script running on your computer.
 
 If the setup is successfull, it should look something like this:
 ```
