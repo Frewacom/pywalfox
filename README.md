@@ -1,6 +1,5 @@
-![Theme preview](https://i.imgur.com/Gw7lp2u.png "Theme preview Black")
-![Theme preview](https://i.imgur.com/lFaQAve.png "Theme preview Pink")
-![Theme preview](https://i.imgur.com/GQKzDff.png "Theme preview Blue")
+
+<img src="https://i.imgur.com/tZybQsU.gif"/>
 
 # Pywalfox
 
