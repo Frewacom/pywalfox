@@ -55,7 +55,4 @@ If you want to use the custom CSS, you must do the following:
    The path to the script in the manifest is (most likely) invalid. 
    
 If you encounter any other errors: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#Troubleshooting
-   
-
-### Roadmap
-Feel free to create issues/pull requests for features you want to be added. You can see what is currently planned/being worked on here: https://github.com/Frewacom/Pywalfox/projects/1
+  
