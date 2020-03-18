@@ -3,17 +3,21 @@
 
 # Pywalfox
 
-Pywalfox is an application used to theme Firefox using your pywal colors.
+Pywalfox is an addon used to theme Firefox using your pywal colors.
 - Customizable colors
 - Uses the Firefox Theme API
-- Automatic theming for DuckDuckGo with your pywal colors (Optional) 
+- Automatic theming for DuckDuckGo (Optional) 
 - Custom CSS with bold text, styled dropdowns, etc. (Optional) 
-- Updating the browser theme to match your pywal colors using the addon and/or your terminal 
+- Update the browser theme using the addon and/or your terminal
 
 You can download the Firefox Addon here: https://addons.mozilla.org/en-US/firefox/addon/pywalfox/
 
 ### Warning
-To use this addon, you must install a script on your computer. The script will be ran by Firefox upon launch and will handle fetching your pywal colors. Pywalfox supports only Linux.
+To use this addon, you must install a script on your computer. The script will be ran by Firefox upon launch and will handle fetching your pywal colors. As of now, Pywalfox supports only Linux. 
+
+### Requirements 
+- Python (both 2.x and 3.x versions are supported)
+- Linux
 
 ### Installation
 1. `git clone git@github.com:Frewacom/Pywalfox.git`
@@ -25,9 +29,9 @@ The setup script will prompt you for your password since the path in which we ne
 If the setup is successfull, it should look something like this:
 ```
 Creating 'native-messaging-hosts' folder in ~/.mozilla
-Setting path to pywal-fetcher.py in the native app manifest
-Copying native application manifest to ~/.mozilla/native-messaging-hosts/pywalfox.json
-Setting execution permissions on daemon (pywal-fetcher.py)
+Copying native messaging manifest to /home/<username>/.mozilla/native-messaging-hosts/pywalfox.json
+Setting path to pywal-fetcher.py in the manifest
+Setting execution permissions on pywal-fetcher.py
 Finished.
 ```
 
