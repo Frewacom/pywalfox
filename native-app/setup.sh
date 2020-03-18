@@ -10,13 +10,13 @@ if [ -f "$MANIFEST_PATH" ]; then
   sudo rm $MANIFEST_PATH
 fi
 
-echo "Copying native application manifest to $MANIFEST_PATH"
+echo "Copying native messaging manifest to $MANIFEST_PATH"
 sudo cp ./assets/pywalfox-manifest.json $MANIFEST_PATH
 
-echo "Setting path to pywal-fetcher.py in the native app manifest"
+echo "Setting path to pywal-fetcher.py in the manifest"
 sudo sed -i "s+<pwd>+$CURRENTPATH+g" $MANIFEST_PATH
 
-echo "Setting execution permissions on daemon (pywal-fetcher.py)"
+echo "Setting execution permissions on pywal-fetcher.py"
 chmod +x pywal-fetcher.py
 
 echo "Finished."
