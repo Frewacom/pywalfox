@@ -188,7 +188,6 @@ except AttributeError:
         sys.stdout.write(encodedMessage['content'])
         sys.stdout.flush()
 
-    getChromePath()
     while True:
         message = getMessage()
         handleReceivedMessage(message)
