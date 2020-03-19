@@ -128,11 +128,7 @@ def handleSocketMessage(socket):
         if data.decode('utf-8') == 'update':
             sendMessage(createMessage('colors', fetchColors()))
 
-
-# This path is used when enabling/disabling the custom CSS
 customCssPath = getChromePath()
-if not customCssPath:
-    sendMessage(createMessage('enableCustomCss', (False, 'Could not find the folder to put custom CSS in')))
 
 # Listen for messages via UDP-sockets
 socketServer = communication.UDPServer()
@@ -192,6 +188,7 @@ except AttributeError:
         sys.stdout.write(encodedMessage['content'])
         sys.stdout.flush()
 
+    getChromePath()
     while True:
         message = getMessage()
         handleReceivedMessage(message)
