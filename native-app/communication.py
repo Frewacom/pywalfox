@@ -2,29 +2,49 @@ import os
 import sys
 import socket
 
-HOST=''
-PORT=56652
+HOST='/tmp/pywalfox_uds_socket'
 
-class UDPServer:
+class UDSServer:
     def __init__(self):
-        self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        if os.path.exists(HOST):
+            os.remove(HOST)
+
+        # Create a datagram UNIX socket (connection-less)
+        self.s = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
+        print('Created UNIX socket')
 
     def start(self):
         try:
-            self.s.bind((HOST, PORT))
+            self.s.bind(HOST)
+            print('Bound UNIX socket to %s' % HOST)
             return True
         except:
             print('Failed to bind socket')
             return False
 
+    def shouldUpdate(self):
+        data = self.s.recv(1024)
+        if not data:
+            return False
+        else:
+            if data.decode('utf-8') == 'update':
+                return True
+            else:
+                return False
+
     def close(self):
         self.s.close()
+        os.remove(HOST)
 
-class UDPClient:
+class UDSClient:
     def __init__(self):
-        self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        if os.path.exists(HOST):
+            self.s = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
+            self.s.connect(HOST)
+        else:
+            print('Could not find socket: %s' % HOST)
+            sys.exit(1)
 
     def sendMessage(self, message):
-        self.s.sendto(message.encode('utf-8'), (HOST, PORT))
+        self.s.send(message.encode('utf-8'))
 

@@ -74,11 +74,13 @@ main {
 
 label {
     font-family: sans-serif;
-    color: var(--text-color);
+    color: var(--accent-primary);
     font-weight: bold;
-    font-size: 1em;
+    font-size: 0.9em;
     padding-left: 2px;
     margin-bottom: 5px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
 }
 
 .spacer {

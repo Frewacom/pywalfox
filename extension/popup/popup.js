@@ -283,7 +283,7 @@ colorpickerDialogDiscard.addEventListener('click', onColorpickerDialogDiscard);
 browser.theme.onUpdated.addListener(async ({ theme, windowId }) => {
     const sidebarWindow = await browser.windows.getCurrent();
     if (!windowId || windowId == sidebarWindow.id) {
-        output('Theme was updated');
+        output('Pywal colors was fetched and applied successfully');
         onExtensionLoad();
     }
 });

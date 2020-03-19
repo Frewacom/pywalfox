@@ -12,13 +12,21 @@ from threading import Thread
 import colorutils
 import communication
 
+COLORS_PATH='~/.cache/wal/colors'
+
 # If the script is passed "update" as an argument, we want to tell the extension to update.
 # This is useful if you want to automatically fetch new colors on a theme change
 if len(sys.argv) == 2:
     if sys.argv[1] == 'update':
-        socketClient = communication.UDPClient()
-        socketClient.sendMessage('update')
+        client = communication.UDSClient()
+        client.sendMessage('update')
         sys.exit(1)
+
+def sendOutput(message):
+    sendMessage(encodeMessage({
+        'key': 'output',
+        'data': message
+    }))
 
 def createMessage(key, response):
     if response[0]:
@@ -36,14 +44,13 @@ def createMessage(key, response):
 
 def fetchColors():
     colors = []
-    colors_path = '~/.cache/wal/colors'
 
     try:
-        with open(os.path.expanduser(colors_path), 'r') as f:
+        with open(os.path.expanduser(COLORS_PATH), 'r') as f:
             for line in f.readlines():
                 colors.append(line.rstrip('\n'))
     except IOError:
-        return (False, 'Could not read colors from: %s' % colors_path)
+        return (False, 'Could not read colors from: %s' % COLORS_PATH)
 
     colorscheme = {
         'background': colors[0],
@@ -122,19 +129,21 @@ def handleReceivedMessage(message):
     elif message == 'disableNoScrollbar':
         sendMessage(createMessage('disableNoScrollbar', disableCustomCss(customCssPath, 'hide-scrollbar.as.css')))
 
-def handleSocketMessage(socket):
+def handleSocketMessage(server):
     while True:
-        data, addr = socket.s.recvfrom(1024)
-        if data.decode('utf-8') == 'update':
+        update = server.shouldUpdate()
+        if update:
+            sendOutput('Update triggered from external script')
             sendMessage(createMessage('colors', fetchColors()))
 
+# Get the path for custom CSS (the chrome folder)
 customCssPath = getChromePath()
 
-# Listen for messages via UDP-sockets
-socketServer = communication.UDPServer()
-success = socketServer.start()
+# Listen for messages via UNIX-sockets
+server = communication.UDSServer()
+success = server.start()
 if success:
-    t = Thread(target=handleSocketMessage, args=(socketServer,))
+    t = Thread(target=handleSocketMessage, args=(server,))
     t.start()
 
 try:
@@ -148,8 +157,7 @@ try:
         message = sys.stdin.buffer.read(messageLength).decode('utf-8')
         return json.loads(message)
 
-    # Encode a message for transmission,
-    # given its content.
+    # Encode a message for transmission, given its content.
     def encodeMessage(messageContent):
         encodedContent = json.dumps(messageContent).encode('utf-8')
         encodedLength = struct.pack('@I', len(encodedContent))
@@ -175,8 +183,7 @@ except AttributeError:
         message = sys.stdin.read(messageLength)
         return json.loads(message)
 
-    # Encode a message for transmission,
-   # given its content.
+    # Encode a message for transmission, given its content.
     def encodeMessage(messageContent):
         encodedContent = json.dumps(messageContent)
         encodedLength = struct.pack('@I', len(encodedContent))
@@ -192,6 +199,7 @@ except AttributeError:
         message = getMessage()
         handleReceivedMessage(message)
 
-socketServer.close()
+# Cleanup
+server.close()
 t.exit()
 

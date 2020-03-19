@@ -217,6 +217,8 @@ port.onMessage.addListener(async (response) => {
         setStateOnSuccess(response, 'noScrollbar', true);
     } else if (response.key == 'disableNoScrollbar') {
         setStateOnSuccess(response, 'noScrollbar', false);
+    } else if (response.key == 'output') {
+      output(response.data);
     }
 });
 
