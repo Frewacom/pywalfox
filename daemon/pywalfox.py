@@ -9,8 +9,8 @@ import glob
 import shutil
 from threading import Thread
 
+import uds
 import colorutils
-import communication
 
 COLORS_PATH='~/.cache/wal/colors'
 
@@ -18,7 +18,7 @@ COLORS_PATH='~/.cache/wal/colors'
 # This is useful if you want to automatically fetch new colors on a theme change
 if len(sys.argv) == 2:
     if sys.argv[1] == 'update':
-        client = communication.UDSClient()
+        client = uds.UDSClient()
         client.sendMessage('update')
         sys.exit(1)
 
@@ -140,7 +140,7 @@ def handleSocketMessage(server):
 customCssPath = getChromePath()
 
 # Listen for messages via UNIX-sockets
-server = communication.UDSServer()
+server = uds.UDSServer()
 success = server.start()
 if success:
     t = Thread(target=handleSocketMessage, args=(server,))
