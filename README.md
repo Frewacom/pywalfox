@@ -35,6 +35,8 @@ Setting execution permissions on daemon/pywalfox.py
 Finished.
 ```
 
+Restart Firefox and you should be able to fetch the colors using the Settings page. If not, take a look in the Troubleshooting section below. 
+
 ### Updating the theme using the terminal
 If you are using some script for theming your system and do not want to manually refetch your pywal colors using the settings page, you can trigger an update of the browser theme by running `./daemon/pywalfox.py update` in your terminal (the script is not in your `PATH` by default).
 
