@@ -21,7 +21,7 @@ To use this addon, you must install a script on your computer. The script will b
 - Linux 
 
 ### Installation
-1. `git clone git@github.com:Frewacom/Pywalfox.git`
+1. `git clone https://github.com/Frewacom/Pywalfox.git`
 2. `cd Pywalfox`
 3. `bash setup.sh`
 
