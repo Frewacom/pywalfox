@@ -58,7 +58,9 @@ If you want to use the custom CSS, you must do the following:
 
 - `Unchecked lastError value: Error: Could not establish connection. Receiving end does not exist.`
 
-   The path to the script in the manifest is invalid or the script crashed on execution (try running it manually)
+   The path to the script in the manifest is invalid or the script crashed on execution (try running it manually). 
+   
+   The script runs in an infinite loop, so as long as the script does not crash when running it, we know that the issues lies somewhere else. 
 
 If you encounter any other errors: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#Troubleshooting
 
