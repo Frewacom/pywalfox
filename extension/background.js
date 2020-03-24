@@ -8,6 +8,7 @@ const CUSTOM_COLOR_KEYS = [
     'text'
 ];
 
+// The keys in which pywal colors will be stored
 const THEME_COLOR_KEYS = [
     'themeBackground',
     'themeForeground',
@@ -17,7 +18,7 @@ const THEME_COLOR_KEYS = [
     'themeText'
 ];
 
-// On startup, connect to the "ping_pong" app.
+// On startup, connect to the "pywalfox" app.
 const port = browser.runtime.connectNative("pywalfox");
 
 var pywalColors = {};
@@ -104,10 +105,12 @@ async function getSavedCustomColors() {
     return await browser.storage.local.get(CUSTOM_COLOR_KEYS);
 }
 
+// Clear the custom colors stored in local storage
 function resetCustomColors() {
     browser.storage.local.remove(CUSTOM_COLOR_KEYS);
 }
 
+// Clear the pywal colors stored in local storage
 function resetThemeColors() {
     browser.storage.local.remove(THEME_COLOR_KEYS);
 }
@@ -249,16 +252,28 @@ browser.browserAction.onClicked.addListener(async () => {
         browser.tabs.onUpdated.addListener(onSettingsPageUpdated, { tabId: tab.id, properties: ['title'] });
         settingsPageTabId = tab.id;
     } else {
+        // The settings page is already open, focus that tab rather than opening it again
         let tab = await browser.tabs.get(settingsPageTabId);
         browser.windows.update(tab.windowId, { focused: true });
         browser.tabs.update(tab.id, { active: true });
     }
 });
 
-// Make sure to apply the theme when starting Firefox, if it is enabled
+// Make sure to apply the theme when starting Firefox, if it is enabled.
+// Previously, we queried the daemon on startup which was unnecessary since the
+// colors are stored in local storage anyway.
 async function applyThemeOnStartup() {
     const state = await browser.storage.local.get('isApplied');
-    if (state.isApplied) {
+    const gettingPywalColors = await browser.storage.local.get('pywalColors');
+
+    if (gettingPywalColors.hasOwnProperty('pywalColors')) {
+        // Only apply the theme if the user has enabled it
+        if (state.isApplied) {
+            pywalColors = gettingPywalColors.pywalColors;
+            setTheme(pywalColors, false);
+        }
+    } else {
+        // If we for some reason can not fetch the colors from local storage, query the daemon
         port.postMessage('update');
     }
 }

@@ -79,7 +79,7 @@ label {
     font-size: 0.9em;
     padding-left: 2px;
     margin-bottom: 5px;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.02em;
     text-transform: uppercase;
 }
 
@@ -257,7 +257,7 @@ label {
     border: none;
     box-sizing: border-box;
     font-weight: bold;
-    font-size: 0.85em;
+    font-size: 0.8em;
     border-radius: var(--border-radius);
     display: none;
 }
