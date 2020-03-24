@@ -56,6 +56,8 @@ If you want to use the custom CSS, you must do the following:
 - `ExtensionError: No such native application pywalfox`
 
    The manifest is not installed properly. Follow the instructions here: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_manifests. The manifest is located at `daemon/assets/pywalfox-manifest.json`.
+   
+   If you still can not get it to work, you could try reinstalling Firefox: [#14](https://github.com/Frewacom/Pywalfox/issues/14)
 
 - `Unchecked lastError value: Error: Could not establish connection. Receiving end does not exist.`
 
