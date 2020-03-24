@@ -16,8 +16,7 @@ You can download the Firefox Addon here: https://addons.mozilla.org/en-US/firefo
 To use this addon, you must install a script on your computer. The script will be ran by Firefox upon launch and will handle fetching your pywal colors. As of now, Pywalfox supports only Linux.
 
 ### Requirements
-**There currently seems to be an issue in `daemon/pywalfox.py` for those running python 2.7.x and I will fix it as soon as possible.**
-- Python (both ~~2.7.x~~ and 3.x versions are supported) 
+- Python (both 2.7.x and 3.x versions are supported) 
 - Linux 
 
 ### Installation
