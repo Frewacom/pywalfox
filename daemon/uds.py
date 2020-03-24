@@ -9,17 +9,13 @@ class UDSServer:
         if os.path.exists(HOST):
             os.remove(HOST)
 
-        # Create a datagram UNIX socket (connection-less)
         self.s = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
-        print('Created UNIX socket')
 
     def start(self):
         try:
             self.s.bind(HOST)
-            print('Bound UNIX socket to %s' % HOST)
             return True
         except:
-            print('Failed to bind socket')
             return False
 
     def shouldUpdate(self):
@@ -39,8 +35,12 @@ class UDSServer:
 class UDSClient:
     def __init__(self):
         if os.path.exists(HOST):
-            self.s = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
-            self.s.connect(HOST)
+            try:
+                self.s = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
+                self.s.connect(HOST)
+            except:
+                print('Failed to connect to socket')
+                sys.exit(1)
         else:
             print('Could not find socket: %s' % HOST)
             sys.exit(1)
