@@ -44,9 +44,20 @@ header {
 }
 
 p {
-    font-size: 1em;
+    font-size: 0.95em;
     color: var(--foreground);
-    margin: 10px 10px;
+    margin: 0px;
+}
+
+label {
+    font-family: sans-serif;
+    color: var(--accent-primary);
+    font-weight: bold;
+    font-size: 0.9em;
+    padding-left: 2px;
+    margin-bottom: 5px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
 }
 
 main {
@@ -97,6 +108,21 @@ main {
 
 #buttons {
     width: var(--content-width);
+}
+
+.description {
+    display: flex;
+    flex-direction: column;
+    margin: 0px;
+    font-weight: bold;
+    color: var(--text-color);
+    font-size: 0.85em;
+}
+
+.description > span {
+    color: var(--text-color);
+    font-weight: normal;
+    letter-spacing: 0.03em;
 }
 
 .btn {
@@ -195,6 +221,16 @@ main {
     border: 0;
 }
 
+input[type="number"] {
+  -webkit-appearance: textfield;
+     -moz-appearance: textfield;
+          appearance: textfield;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
 .spacer {
     flex: 1;
     max-width: var(--content-width);
@@ -215,6 +251,10 @@ main {
 
 .no-bottom-border {
     border-bottom: none;
+}
+
+.border-bottom {
+    border-bottom: 1px solid var(--background-light);
 }
 
 .margin-top {

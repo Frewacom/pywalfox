@@ -22,9 +22,11 @@
           <span id="version"></span>
         </div>
       </div>
+    </header>
+    <div class="palette-container">
       <div class="content-container header-container">
         <div class="palette">
-          <div class="palette-row margin-bottom-sm">
+          <div class="palette-row">
             <div class="palette-color">
               <label>0</label>
               <div class="palette-color-preview" data-id="color0"></div>
@@ -94,10 +96,275 @@
           </div>
         </div>
       </div>
-    </header>
+    </div>
     <main>
-      <section class="column expand">
-        <label>Theme template</label>
+      <section class="column expand no-bottom-border">
+        <label>Custom theme template</label>
+        <div class="container border-bottom">
+          <p class="margin-bottom">
+            Updating these values will set the default color from the pywal palette (0-15) that should be used
+            for certain elements of the theme.
+          </p>
+        </div>
+        <div class="container margin-top">
+          <p class="description">
+            Frame
+            <span>The color of the header area background</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="frame">
+        </div>
+        <div class="container">
+          <p class="description">
+            Frame inactive
+            <span>The color of the header area background when the browser window is inactive</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="frame_inactive">
+        </div>
+        <div class="container">
+          <p class="description">
+            Bookmark text
+            <span>The color of text and icons in the bookmark and find bars</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="bookmark_text">
+        </div>
+        <div class="container">
+          <p class="description">
+            Button background active
+            <span>The color of the background of the pressed toolbar buttons</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="button_background_active">
+        </div>
+        <div class="container">
+          <p class="description">
+            Button background hover
+            <span>The color of the background of the toolbar buttons on hover</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="button_background_hover">
+        </div>
+        <div class="container">
+          <p class="description">
+            Icons
+            <span>The color of toolbar icons, excluding those in the find toolbar</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="icons">
+        </div>
+        <div class="container">
+          <p class="description">
+            Icons attention
+            <span>The color of toolbar icons in attention state such as the starred bookmark icon or finished download icon</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="icons_attention">
+        </div>
+        <div class="container">
+          <p class="description">
+            NTP background
+            <span>The new tab page background color</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="ntp_background">
+        </div>
+        <div class="container">
+          <p class="description">
+            NTP text
+            <span>The new tab page text color</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="ntp_text">
+        </div>
+        <div class="container">
+          <p class="description">
+            Popup
+            <span>The background color of popups (such as the url bar dropdown and the arrow panels)</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="popup">
+        </div>
+        <div class="container">
+          <p class="description">
+            Popup border
+            <span>The border color of popups</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="popup_border">
+        </div>
+        <div class="container">
+          <p class="description">
+            Popup highlight
+            <span>The background color of items highlighted using the keyboard inside popups (such as the selected url bar dropdown item)</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="popup_highlight">
+        </div>
+        <div class="container">
+          <p class="description">
+            Popup highlight text
+            <span>The text color of items highlighted inside popups</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="popup_highlight_text">
+        </div>
+        <div class="container">
+          <p class="description">
+            Popup text
+            <span>The text color of popups</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="popup_text">
+        </div>
+        <div class="container">
+          <p class="description">
+            Sidebar
+            <span>The background color of the sidebar</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="sidebar">
+        </div>
+        <div class="container">
+          <p class="description">
+            Sidebar border
+            <span>The border and splitter color of the browser sidebar</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="sidebar_border">
+        </div>
+        <div class="container">
+          <p class="description">
+            Sidebar highlight
+            <span>The background color of highlighted rows in built-in sidebars</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="sidebar_highlight">
+        </div>
+        <div class="container">
+          <p class="description">
+            Sidebar highlight text
+            <span>The text color of highlighted rows in sidebars</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="sidebar_highlight_text">
+        </div>
+        <div class="container">
+          <p class="description">
+            Sidebar text
+            <span>The text color of sidebars</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="sidebar_text">
+        </div>
+        <div class="container">
+          <p class="description">
+            Tab background separator
+            <span>The color of the vertical separator of the background tabs</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="tab_background_separator">
+        </div>
+        <div class="container">
+          <p class="description">
+            Tab background text
+            <span>The color of the text displayed in the inactive page tabs</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="tab_background_text">
+        </div>
+        <div class="container">
+          <p class="description">
+            Tab line
+            <span>The color of the selected tab line</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="tab_line">
+        </div>
+        <div class="container">
+          <p class="description">
+            Tab loading
+            <span>The color of the tab loading indicator and the tab loading burst</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="tab_loading">
+        </div>
+        <div class="container">
+          <p class="description">
+            Tab selected
+            <span>The background color of the selected tab</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="tab_selected">
+        </div>
+        <div class="container">
+          <p class="description">
+            Tab text
+            <span>The text color of the selected tab</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="tab_text">
+        </div>
+        <div class="container">
+          <p class="description">
+            Toolbar
+            <span>The background color for the navigation bar, the bookmarks bar, and the selected tab</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="toolbar">
+        </div>
+        <div class="container">
+          <p class="description">
+            Toolbar bottom separator
+            <span>The color of the line separating the bottom of the toolbar from the region below</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="toolbar_bottom_separator">
+        </div>
+        <div class="container">
+          <p class="description">
+            Toolbar field
+            <span>The background color for fields in the toolbar, such as the URL bar</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="toolbar_field">
+        </div>
+        <div class="container">
+          <p class="description">
+            Toolbar field border
+            <span>The border color for fields in the toolbar</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="toolbar_field_border">
+        </div>
+        <div class="container">
+          <p class="description">
+            Toolbar field border focus
+            <span>The focused border color for fields in the toolbar</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="toolbar_field_border_focus">
+        </div>
+        <div class="container">
+          <p class="description">
+            Toolbar field highlight
+            <span>The background color used to indicate the current selection of text in the URL bar</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="toolbar_field_highlight">
+        </div>
+        <div class="container">
+          <p class="description">
+            Toolbar field highlight text
+            <span>The color used to draw text that's currently selected in the URL bar</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="toolbar_field_highlight_text">
+        </div>
+        <div class="container">
+          <p class="description">
+            Toolbar field separator
+            <span>The color of separators inside the URL bar</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="toolbar_field_separator">
+        </div>
+        <div class="container">
+          <p class="description">
+            Toolbar field text
+            <span>The color of text in fields in the toolbar, such as the URL bar</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="toolbar_field_text">
+        </div>
+        <div class="container">
+          <p class="description">
+            Toolbar text
+            <span>The color of toolbar text</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="toolbar_text">
+        </div>
+        <div class="container">
+          <p class="description">
+            Toolbar top separator
+            <span>The color of the line separating the top of the toolbar from the region above</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="toolbar_top_separator">
+        </div>
+        <div class="container">
+          <p class="description">
+            Toolbar vertical separator
+            <span>The color of the separator next to the application menu icon.</span>
+          </p>
+          <input type="number" min=0 max=16 class="template-color" data-target="toolbar_vertical_separator">
+        </div>
       </section>
     </main>
     <script src="js/pywalfox.js"></script>

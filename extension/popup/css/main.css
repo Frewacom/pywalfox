@@ -21,33 +21,6 @@
     color: var(--background);
 }
 
-label {
-    font-family: sans-serif;
-    color: var(--accent-primary);
-    font-weight: bold;
-    font-size: 0.9em;
-    padding-left: 2px;
-    margin-bottom: 5px;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-}
-
-.description {
-    display: flex;
-    flex-direction: column;
-    margin: 0px;
-    font-weight: bold;
-    color: var(--text-color);
-    font-size: 0.85em;
-}
-
-.description > span {
-    color: var(--text-color);
-    font-weight: normal;
-    letter-spacing: 0.03em;
-}
-
-
 .output-open .btn.expander::after {
     width: 0;
     height: 0;
