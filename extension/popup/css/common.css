@@ -20,7 +20,8 @@ body {
     justify-content: center;
     align-items: center;
     margin: 0px;
-    --header-height: 3.5em; --content-width: 35em;
+    --header-height: 3.5em;
+    --content-width: 45em;
 }
 
 header {
