@@ -7,7 +7,7 @@ const outputToggle = document.getElementById('output-toggle');
 const outputArea = document.getElementById('output');
 
 // Custom theme template
-const customTemplateEditButton = document.getElementById('custom-template-edit-button')
+const customTemplateEditButton = document.getElementById('custom-template-edit-button');
 const customTemplateContainer = document.getElementById('custom-template-container');
 
 // Colorpicker dialog

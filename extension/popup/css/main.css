@@ -4,7 +4,7 @@
     position: fixed;
     bottom: 0px;
     left: 0px;
-    display: flexpaces
+    display: flex;
     background-color: var(--foreground);
     color: transparent;
     height: 0px;
