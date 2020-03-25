@@ -1,0 +1,19 @@
+@import url('common.css');
+
+header {
+  height: 300px;
+  width: 100%;
+  background: var(--background-light);
+  flex-direction: column;
+  align-items: center;
+}
+
+.top-bar {
+  position: relative;
+}
+
+.header-container {
+  width: var(--content-width);
+  flex: 1;
+  justify-content: center;
+}

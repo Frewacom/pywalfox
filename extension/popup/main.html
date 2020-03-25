@@ -5,12 +5,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <title>Pywalfox Settings</title>
-    <link type="text/css" rel="stylesheet" href="popup.css">
+    <link type="text/css" rel="stylesheet" href="css/main.css">
 </head>
 
 <body>
     <div id="banner"></div>
-    <header>
+    <header class="top-bar">
         <div class="spacer">
             Pywalfox
         </div>
@@ -93,6 +93,21 @@
             </div>
         </section>
         <section class="column expand">
+            <label>Theme template</label>
+            <div class="container">
+                <p class="description">
+                    Use custom template?
+                    <span>
+                        Select the default pywal colors for different areas of the theme
+                    </span>
+                </p>
+                <button class="btn toggle" data-action="customTemplateEnabled">No</button>
+            </div>
+            <div class="container" id="custom-template-container">
+                <button class="btn edit margin-top" id="custom-template-edit-button">Edit template</button>
+            </div>
+        </section>
+        <section class="column expand">
             <label>Optional settings</label>
             <div class="container">
                 <p class="description">
@@ -119,7 +134,8 @@
         <button class="btn expander" id="output-toggle">Show debugging output</button>
         <textarea id="output" readonly></textarea>
     </main>
-    <script src="popup.js"></script>
+    <script src="js/pywalfox.js"></script>
+    <script src="js/main.js"></script>
 </body>
 
 </html>
