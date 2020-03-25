@@ -199,8 +199,7 @@ function onColorpickerDialogDiscard(e) {
 
 function setPywalColorPreviews() {
     pywalColorPreviews.forEach((preview) => {
-        const id = preview.getAttribute('data-id');
-        preview.style.backgroundColor = getPywalColorById(id);
+        setColorPreviewBackground(preview);
         preview.addEventListener('click', onSetPywalColorAsCustomColor);
     });
 }
@@ -229,15 +228,6 @@ function updateInterface(colors) {
     });
 }
 
-
-updateButton.addEventListener('click', () => {
-    browser.runtime.sendMessage({ action: 'update' });
-});
-
-resetButton.addEventListener('click', async () => {
-    loadExtension().then(updateInterface);
-    browser.runtime.sendMessage({ action: 'reset' });
-});
 
 outputToggle.addEventListener('click', () => {
     document.body.classList.toggle('output-open');

@@ -3,6 +3,9 @@
     --border-radius: 3px;
     --arrow-size: 12px;
     --small-arrow-size: 6px;
+    --box-shadow: 0px 1px 5px #0000003b;
+    --margin: 1em;
+    --margin-sm: 0.5em;
 }
 
 body {
@@ -36,7 +39,7 @@ header {
     background-color: var(--background-light);
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
 }
 
@@ -90,6 +93,10 @@ main {
     display: flex;
     flex-direction: column;
     position: relative;
+}
+
+#buttons {
+    width: var(--content-width);
 }
 
 .btn {
@@ -190,6 +197,7 @@ main {
 
 .spacer {
     flex: 1;
+    max-width: var(--content-width);
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -210,21 +218,37 @@ main {
 }
 
 .margin-top {
-    margin-top: 1em;
+    margin-top: var(--margin);
 }
 
 .margin-top-sm {
-    margin-top: 0.6em;
+    margin-top: var(--margin-sm);
+}
+
+.margin-bottom {
+    margin-bottom: var(--margin);
+}
+
+.margin-bottom-sm {
+    margin-bottom: var(--margin-sm);
 }
 
 .margin-right {
-    margin-right: 1em;
+    margin-right: var(--margin);
 }
 
 .margin-right-sm {
-    margin-right: 0.6em;
+    margin-right: var(--margin-sm);
 }
 
-.align-left {
+.margin-left {
+    margin-left: var(--margin);
+}
+
+.margin-left-sm {
+    margin-left: var(--margin-sm);
+}
+
+.align-right {
     justify-content: flex-end;
 }

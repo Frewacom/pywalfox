@@ -9,11 +9,57 @@ header {
 }
 
 .top-bar {
-  position: relative;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
 }
 
 .header-container {
+  padding-top: var(--header-height);
   width: var(--content-width);
   flex: 1;
   justify-content: center;
+}
+
+.palette {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.palette-row {
+  width: 100%;
+  height: 5em;
+  display: flex;
+  flex-direction: row;
+}
+
+.palette-row.label-bottom > .palette-color {
+  flex-direction: column-reverse;
+}
+
+.palette-color {
+  flex: 1;
+  height: 100%;
+  margin-right: var(--margin-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.palette-color > label {
+  font-weight: bold;
+  margin-bottom: var(--margin-sm);
+  color: var(--foreground);
+}
+
+.palette-row.label-bottom > .palette-color > label {
+  margin-bottom: 0em;
+  margin-top: var(--margin-sm);
+}
+
+.palette-color-preview {
+  width: 100%;
+  height: 100%;
+  background-color: red;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
 }

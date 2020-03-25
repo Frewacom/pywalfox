@@ -21,11 +21,6 @@
     color: var(--background);
 }
 
-
-#settings-wrapper.hide {
-    display: none;
-}
-
 label {
     font-family: sans-serif;
     color: var(--accent-primary);
@@ -89,10 +84,6 @@ label {
 
 .output-open #output {
     display: flex;
-}
-
-#buttons {
-    width: var(--content-width);
 }
 
 #overlay {
@@ -170,7 +161,7 @@ label {
     border: none;
     cursor: pointer;
     border-radius: var(--border-radius);
-    box-shadow: 0px 1px 5px #0000003b;
+    box-shadow: var(--box-shadow);
     border: 2px solid transparent;
 }
 

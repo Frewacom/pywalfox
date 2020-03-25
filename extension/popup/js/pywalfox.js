@@ -40,6 +40,11 @@ function getPywalColorById(id) {
     }
 }
 
+function setColorPreviewBackground(preview) {
+    const id = preview.getAttribute('data-id');
+    preview.style.backgroundColor = getPywalColorById(id);
+}
+
 async function sendMessageToTabs(data) {
     const tabs = await browser.tabs.query({});
 
@@ -79,6 +84,11 @@ async function loadExtension() {
 }
 
 function setupListeners(updateFunction) {
+    loadExtension().then(updateFunction);
+
+    const updateButton = document.getElementById('update');
+    const resetButton = document.getElementById('reset');
+
     // Watch for theme updates
     browser.theme.onUpdated.addListener(async ({ theme, windowId }) => {
         const sidebarWindow = await browser.windows.getCurrent();
@@ -87,7 +97,27 @@ function setupListeners(updateFunction) {
         }
     });
 
-    loadExtension().then(updateFunction);
+    // If we use the "Go back" button, we want to update the interface again,
+    // since the user might have updated/reset the theme.
+    // https://stackoverflow.com/questions/2638292/after-travelling-back-in-firefox-history-javascript-wont-run
+    window.onpageshow = function(event) {
+        // The window was loaded from bfcache
+        if (event.persisted) {
+            loadExtension().then(updateFunction);
+        }
+    };
+
+    // Setup event listeners for the update and reset buttons, if they exist
+    if (updateButton !== undefined && resetButton !== undefined) {
+        updateButton.addEventListener('click', () => {
+            browser.runtime.sendMessage({ action: 'update' });
+        });
+
+        resetButton.addEventListener('click', async () => {
+            loadExtension().then(updateFunction);
+            browser.runtime.sendMessage({ action: 'reset' });
+        });
+    }
 }
 
 
