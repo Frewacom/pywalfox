@@ -5,6 +5,7 @@ var pywalColors = {};
 var settingsPageTabId = null;
 var settingsPageTabListener = null;
 var versionCheckTimeout = null;
+var updatePageId = null;
 
 function setState(storageKey, value) {
     browser.storage.local.set({
@@ -191,7 +192,8 @@ async function checkDaemonVersion(currentVersion) {
 
     if (currentVersion === null || parseFloat(currentVersion) < REQUIRED_DAEMON_VERSION) {
         if (state.updatePageMuted !== true) {
-          await browser.tabs.create({ url: 'popup/update.html' });
+          let tab = await browser.tabs.create({ url: 'popup/update.html' });
+          updatePageId = tab.id;
         }
     } else {
         if (state.updatePageMuted === true) {
@@ -255,6 +257,11 @@ browser.runtime.onMessage.addListener((message) => {
     } else if (message.action == 'customColor') {
         saveCustomColor(message.type, message.value);
         setTheme(pywalColors, message.ddgReload);
+    } else if (message.action == 'updatePageMuted') {
+        browser.storage.local.set({ updatePageMuted: true });
+        if (updatePageId !== null) {
+            browser.tabs.remove(updatePageId);
+        }
     }
 });
 
