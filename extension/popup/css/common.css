@@ -222,6 +222,12 @@ main {
     border: 0;
 }
 
+.btn[disabled] {
+    pointer-events: none;
+    opacity: 0.3;
+    background-color: var(--background-light);
+}
+
 input[type="number"] {
   -webkit-appearance: textfield;
      -moz-appearance: textfield;
@@ -230,6 +236,27 @@ input[type="number"] {
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
+}
+
+#banner {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    display: flex;
+    background-color: var(--foreground);
+    color: transparent;
+    height: 0px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.05em;
+    transition: height 0.1s, color 0.2s;
+}
+
+#banner.show {
+    height: 50px;
+    color: var(--background);
 }
 
 .spacer {

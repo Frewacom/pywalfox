@@ -18,6 +18,16 @@ const THEME_COLOR_KEYS = [
     'themeText'
 ];
 
+// The default theme template
+const DEFAULT_THEME_TEMPLATE = {
+    accentPrimary: 1,
+    accentSecondary: 2,
+    background: 0,
+    foreground: 15,
+    text: 16,
+    backgroundLight: 17
+};
+
 // On startup, connect to the "pywalfox" app.
 const port = browser.runtime.connectNative("pywalfox");
 
@@ -25,7 +35,69 @@ var pywalColors = {};
 var settingsPageTabId = null;
 var settingsPageTabListener = null;
 
-function createThemeFromColorscheme(colorscheme) {
+function setState(storageKey, value) {
+    browser.storage.local.set({
+        [storageKey]: value
+    });
+}
+
+function ifSet(value, fallback) {
+    if (value) {
+        return value;
+    }
+
+    return fallback;
+}
+
+// Save the colors of the current pywal theme so that they can be
+// accessed from the duckduckgo script, for example
+function saveThemeColors(colorscheme) {
+    browser.storage.local.set({
+        themeBackground: colorscheme.background,
+        themeForeground: colorscheme.foreground,
+        themeBackgroundLight: colorscheme.backgroundLight,
+        themeAccentPrimary: colorscheme.accentPrimary,
+        themeAccentSecondary: colorscheme.accentSecondary,
+        themeText: colorscheme.text
+    });
+}
+
+async function saveCustomColor(type, value) {
+    setState(type, value);
+    output(`Set custom color "${type}" to ${value}`);
+}
+
+// Clear the custom colors stored in local storage
+function resetCustomColors() {
+    browser.storage.local.remove(CUSTOM_COLOR_KEYS);
+}
+
+// Clear the pywal colors stored in local storage
+function resetThemeColors() {
+    browser.storage.local.remove(THEME_COLOR_KEYS);
+}
+
+async function createColorschemeFromPywal(colors) {
+    const state = await browser.storage.local.get([ 'customTemplateEnabled', 'customTemplate', ...CUSTOM_COLOR_KEYS ]);
+    let template = DEFAULT_THEME_TEMPLATE;
+
+    if (state.customTemplateEnabled) {
+        if (state.hasOwnProperty('customTemplate')) {
+            template = state.customTemplate;
+        }
+    }
+
+    return {
+        background: ifSet(state.background, colors[template.background]),
+        backgroundLight: ifSet(state.backgroundLight, colors[template.backgroundLight]),
+        foreground: ifSet(state.foreground, colors[template.foreground]),
+        accentPrimary: ifSet(state.accentPrimary, colors[template.accentPrimary]),
+        accentSecondary: ifSet(state.accentSecondary, colors[template.accentSecondary]),
+        text: ifSet(state.text, colors[template.text])
+    };
+}
+
+async function createThemeFromColorscheme(colorscheme) {
     return {
         colors: {
             icons: colorscheme.accentPrimary,
@@ -69,68 +141,10 @@ function createThemeFromColorscheme(colorscheme) {
     };
 }
 
-function setState(storageKey, value) {
-    browser.storage.local.set({
-        [storageKey]: value
-    });
-}
-
-function ifSet(value, fallback) {
-    if (value) {
-        return value;
-    }
-
-    return fallback;
-}
-
-// Save the colors of the current pywal theme so that they can be
-// accessed from the duckduckgo script, for example
-function saveThemeColors(colorscheme) {
-    browser.storage.local.set({
-        themeBackground: colorscheme.background,
-        themeForeground: colorscheme.foreground,
-        themeBackgroundLight: colorscheme.backgroundLight,
-        themeAccentPrimary: colorscheme.accentPrimary,
-        themeAccentSecondary: colorscheme.accentSecondary,
-        themeText: colorscheme.text
-    });
-}
-
-async function saveCustomColor(type, value) {
-    setState(type, value);
-    output(`Set custom color "${type}" to ${value}`);
-}
-
-async function getSavedCustomColors() {
-    return await browser.storage.local.get(CUSTOM_COLOR_KEYS);
-}
-
-// Clear the custom colors stored in local storage
-function resetCustomColors() {
-    browser.storage.local.remove(CUSTOM_COLOR_KEYS);
-}
-
-// Clear the pywal colors stored in local storage
-function resetThemeColors() {
-    browser.storage.local.remove(THEME_COLOR_KEYS);
-}
-
-async function createColorschemeFromPywal(colors) {
-    const savedColors = await getSavedCustomColors();
-
-    return {
-        background: ifSet(savedColors.background, colors.background),
-        foreground: ifSet(savedColors.foreground, colors.color15),
-        accentPrimary: ifSet(savedColors.accentPrimary, colors.color1),
-        accentSecondary: ifSet(savedColors.accentSecondary, colors.color2),
-        text: ifSet(savedColors.text, colors.text),
-        backgroundLight: ifSet(savedColors.backgroundLight, colors.backgroundLight),
-    };
-}
-
 async function setTheme(colors, ddgReload) {
     const colorscheme = await createColorschemeFromPywal(colors);
-    const theme = createThemeFromColorscheme(colorscheme);
+    console.log(colorscheme);
+    const theme = await createThemeFromColorscheme(colorscheme);
 
     await saveThemeColors(colorscheme);
     pywalColors = colors;
@@ -146,7 +160,8 @@ async function setTheme(colors, ddgReload) {
 }
 
 async function sendMessageToTabs(data) {
-    const tabs = await browser.tabs.query({});
+    // Send message to DuckDuckGo tabs telling it to update the theme
+    const tabs = await browser.tabs.query({ url: "*://*.duckduckgo.com/*" });
 
     for (const tab of tabs) {
         browser.tabs.sendMessage(tab.id, data);

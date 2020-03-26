@@ -7,6 +7,17 @@ const DEFAULT_COLORSCHEME = {
     TEXT: '#ffffff'
 };
 
+// The default theme template
+const DEFAULT_THEME_TEMPLATE = {
+    accentPrimary: 1,
+    accentSecondary: 2,
+    background: 0,
+    foreground: 15,
+    text: 16,
+    backgroundLight: 17
+};
+
+var restartBannerTimeout = null;
 var currentExtensionColors = {};
 var pywalColors = {};
 
@@ -40,9 +51,23 @@ function getPywalColorById(id) {
     }
 }
 
-function setColorPreviewBackground(preview) {
-    const id = preview.getAttribute('data-id');
-    preview.style.backgroundColor = getPywalColorById(id);
+async function isThemeApplied() {
+    const state = await browser.storage.local.get('isApplied');
+    if (state.isApplied) {
+        return true;
+    }
+
+    return false;
+}
+
+async function setColorPreviewBackground(preview) {
+    const isApplied = await isThemeApplied();
+    if (isApplied) {
+        const id = preview.getAttribute('data-id');
+        preview.style.backgroundColor = getPywalColorById(id);
+    } else {
+        preview.style.backgroundColor = currentExtensionColors.background;
+    }
 }
 
 async function sendMessageToTabs(data) {
@@ -64,6 +89,18 @@ function setCustomColor(colorKey, color, ddgReload = true) {
 
 function setVersionLabel(element) {
     element.innerText = `v${browser.runtime.getManifest().version}`;
+}
+
+// Notification-like message
+function showBanner(banner, message) {
+    if (restartBannerTimeout === null) {
+        banner.innerText = message;
+        banner.classList.add('show');
+        restartBannerTimeout = setTimeout(() => {
+            banner.classList.remove('show');
+            restartBannerTimeout = null;
+        }, 3000);
+    }
 }
 
 // Sets the theme of the extension to match the one in the browser

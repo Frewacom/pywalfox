@@ -1,26 +1,5 @@
 @import url('common.css');
 
-#banner {
-    position: fixed;
-    bottom: 0px;
-    left: 0px;
-    display: flex;
-    background-color: var(--foreground);
-    color: transparent;
-    height: 0px;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    font-size: 1.05em;
-    transition: height 0.1s, color 0.2s;
-}
-
-#banner.show {
-    height: 50px;
-    color: var(--background);
-}
-
 .output-open .btn.expander::after {
     width: 0;
     height: 0;

@@ -1,6 +1,6 @@
 // Main settings page
 const versionLabel = document.getElementById('version');
-const restartBanner = document.getElementById('banner');
+const banner = document.getElementById('banner');
 const updateButton = document.getElementById('update');
 const resetButton = document.getElementById('reset');
 const outputToggle = document.getElementById('output-toggle');
@@ -21,24 +21,11 @@ const toggleButtons = Array.from(document.getElementsByClassName('toggle'));
 const colorPreviews = Array.from(document.getElementsByClassName('colorpicker-dialog-open'));
 const pywalColorPreviews = Array.from(document.getElementsByClassName('pywal-color'));
 
-var restartBannerTimeout = null;
 var currentDialogTarget = undefined;
 var currentDialogEditColor = undefined;
 var currentDialogSelectedColor = undefined;
 var currentDialogHighlightedColorPreview = undefined;
 var currentDialogResetColor = undefined;
-
-// Notification-like message
-function showBanner(message) {
-    if (restartBannerTimeout === null) {
-        banner.innerText = message;
-        banner.classList.add('show');
-        restartBannerTimeout = setTimeout(() => {
-            banner.classList.remove('show');
-            restartBannerTimeout = null;
-        }, 3000);
-    }
-}
 
 // Print message to the debugging output
 function output(message) {
@@ -52,7 +39,7 @@ async function toggleOption(e) {
     let updatedValue = state[action] ? false : true;
 
     if (action === 'customCssEnabled' || action === 'noScrollbarEnabled') {
-        showBanner('Restart needed for custom CSS to take effect!');
+        showBanner(banner, 'Restart needed for custom CSS to take effect!');
         browser.runtime.sendMessage({ action: action, enabled: updatedValue });
     } else if (action === 'ddgThemeEnabled') {
         sendMessageToTabs({ action: action, enabled: updatedValue });
@@ -80,27 +67,16 @@ function hideDialogOverlay() {
 
 function highlightCurrentColorInDialog(currentColor) {
     let foundKey = undefined;
-    const keysToSearch = [
-        'background',
-        'backgroundLight',
-        'color0',
-        'color1',
-        'color2',
-        'color3',
-        'color4',
-        'color5',
-        'color6',
-        'color7'
-    ];
+    const keysToSearch = [ 0, 1, 2, 3, 4, 5, 6, 7, 16, 17 ];
 
     for (const key of keysToSearch) {
-        if (pywalColors[key] === currentColor && key !== 'text') {
+        if (pywalColors[key] === currentColor) {
             foundKey = key;
         }
     }
 
     if (foundKey) {
-        const colorPreviewElement = document.querySelector(`.pywal-color[data-id=${foundKey}]`);
+        const colorPreviewElement = document.querySelector(`.pywal-color[data-id="${foundKey}"]`);
         if (colorPreviewElement) {
             colorPreviewElement.classList.add('selected');
             currentDialogHighlightedColorPreview = colorPreviewElement;
@@ -156,12 +132,14 @@ function closeDialog(dialog) {
     dialog.style.display = 'none';
 }
 
-function onSetPywalColorAsCustomColor(e) {
-    const newColor = getPywalColorById(e.target.getAttribute('data-id'));
-    currentDialogSelectedColor = newColor;
-    colorpickerDialogInput.value = newColor;
-    setCurrentHighlightedColorInDialog(e.target);
-    setCustomColor(currentDialogEditColor, newColor, false);
+async function onSetPywalColorAsCustomColor(e) {
+    if (isThemeApplied()) {
+        const newColor = getPywalColorById(e.target.getAttribute('data-id'));
+        currentDialogSelectedColor = newColor;
+        colorpickerDialogInput.value = newColor;
+        setCurrentHighlightedColorInDialog(e.target);
+        setCustomColor(currentDialogEditColor, newColor, false);
+    }
 }
 
 function onCustomColorInputChanged(e) {
