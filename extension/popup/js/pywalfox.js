@@ -1,22 +1,3 @@
-const DEFAULT_COLORSCHEME = {
-    BACKGROUND: '#252525',
-    FOREGROUND: '#ffffff',
-    BACKGROUND_LIGHT: '#444444',
-    ACCENT_PRIMARY: '#0284f7',
-    ACCENT_SECONDARY: '#0284f7',
-    TEXT: '#ffffff'
-};
-
-// The default theme template
-const DEFAULT_THEME_TEMPLATE = {
-    accentPrimary: 1,
-    accentSecondary: 2,
-    background: 0,
-    foreground: 15,
-    text: 16,
-    backgroundLight: 17
-};
-
 var restartBannerTimeout = null;
 var currentExtensionColors = {};
 var pywalColors = {};

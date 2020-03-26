@@ -1,33 +1,3 @@
-// The keys in which custom colors will be stored
-const CUSTOM_COLOR_KEYS = [
-    'background',
-    'foreground',
-    'backgroundLight',
-    'accentPrimary',
-    'accentSecondary',
-    'text'
-];
-
-// The keys in which pywal colors will be stored
-const THEME_COLOR_KEYS = [
-    'themeBackground',
-    'themeForeground',
-    'themeBackgroundLight',
-    'themeAccentPrimary',
-    'themeAccentSecondary',
-    'themeText'
-];
-
-// The default theme template
-const DEFAULT_THEME_TEMPLATE = {
-    accentPrimary: 1,
-    accentSecondary: 2,
-    background: 0,
-    foreground: 15,
-    text: 16,
-    backgroundLight: 17
-};
-
 // On startup, connect to the "pywalfox" app.
 const port = browser.runtime.connectNative("pywalfox");
 

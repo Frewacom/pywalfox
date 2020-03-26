@@ -12,6 +12,7 @@
     },
     "background": {
         "scripts": [
+            "constants.js",
             "background.js"
         ]
     },
@@ -26,6 +27,11 @@
             "id": "pywalfox@frewacom.org",
             "strict_min_version": "58.0"
         }
+    },
+    "applications": {
+      "gecko": {
+        "id": "pywalfox@frewacom.org"
+      }
     },
     "permissions": [
         "nativeMessaging",
