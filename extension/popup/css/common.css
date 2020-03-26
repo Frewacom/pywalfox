@@ -6,6 +6,11 @@
     --box-shadow: 0px 1px 5px #0000003b;
     --margin: 1em;
     --margin-sm: 0.5em;
+
+    --header-height: 3.5em;
+    --content-width: 45em;
+    --content-min-width: 35em;
+    --window-min-width: 38em;
 }
 
 body {
@@ -20,8 +25,7 @@ body {
     justify-content: center;
     align-items: center;
     margin: 0px;
-    --header-height: 3.5em;
-    --content-width: 45em;
+    min-width: var(--window-min-width);
 }
 
 header {
@@ -29,6 +33,7 @@ header {
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-width: var(--content-min-width);
 }
 
 .top-bar {
@@ -109,6 +114,7 @@ main {
 
 #buttons {
     width: var(--content-width);
+    min-width: var(--content-min-width);
 }
 
 .description {
@@ -116,12 +122,12 @@ main {
     flex-direction: column;
     margin: 0px;
     font-weight: bold;
-    color: var(--text-color);
+    color: var(--foreground);
     font-size: 0.85em;
 }
 
 .description > span {
-    color: var(--text-color);
+    color: var(--foreground);
     font-weight: normal;
     letter-spacing: 0.03em;
 }
@@ -345,3 +351,28 @@ input[type=number]::-webkit-outer-spin-button {
     justify-content: flex-end;
 }
 
+@media (max-width: 1500px) {
+    #version {
+        position: fixed;
+        bottom: var(--margin);
+        width: 100vw;
+        text-align: center;
+        background-color: var(--background-light);
+        right: 0px;
+        bottom: 0px;
+        padding: var(--margin-sm);
+        min-width: var(--content-min-width);
+    }
+}
+
+@media (max-width: 950px) {
+    #logo {
+        display: none;
+    }
+}
+
+@media (max-width: 680px) {
+    body {
+        --content-width: var(--content-min-width);
+    }
+}
