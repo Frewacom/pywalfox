@@ -1,12 +1,3 @@
-const THEME_COLOR_KEYS = [
-    'themeBackground',
-    'themeForeground',
-    'themeBackgroundLight',
-    'themeAccentPrimary',
-    'themeAccentSecondary',
-    'themeText'
-];
-
 // Get the theme name of the current theme in DuckDuckGo
 function getCurrentTheme() {
     // DuckDuckGo stores the current theme in the variable/cookie 'ae'
@@ -20,6 +11,7 @@ async function resetTheme() {
     window.wrappedJSObject.DDG.settings.setTheme(state.ddgResetTheme);
 
     browser.storage.local.remove('ddgResetTheme');
+    location.reload();
 }
 
 async function applyTheme(reload=false) {
@@ -78,10 +70,9 @@ async function setTheme() {
 // Listen to messages from the background script/settings page
 browser.runtime.onMessage.addListener(async (message) => {
     if (message.action == 'updateDDGTheme') {
-        // We dont want to reload the page if the user has scrolled down the page more than 15%
-        if (window.pageYOffset <= (window.scrollMaxY * 0.15)) {
-          applyTheme(true);
-        }
+        applyTheme(true);
+    } else if (message.action == 'resetDDGTheme') {
+        resetTheme();
     } else if (message.action == 'ddgThemeEnabled') {
         if (message.enabled) {
             const theme = getCurrentTheme();

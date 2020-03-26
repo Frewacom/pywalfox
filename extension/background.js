@@ -155,6 +155,7 @@ function resetToDefaultTheme() {
     browser.theme.reset();
     resetThemeColors();
     resetCustomColors();
+    sendMessageToTabs({ action: 'resetDDGTheme' });
     setState('isApplied', false);
     output('Reset to default theme');
 }

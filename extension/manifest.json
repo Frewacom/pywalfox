@@ -19,7 +19,7 @@
     "content_scripts": [
         {
             "matches": ["*://*.duckduckgo.com/*"],
-            "js": ["colorutils.js", "duckduckgo.js"]
+            "js": ["colorutils.js", "constants.js", "duckduckgo.js"]
         }
     ],
     "browser_specific_settings": {
