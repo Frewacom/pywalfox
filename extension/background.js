@@ -5,6 +5,7 @@ var pywalColors = {};
 var settingsPageTabId = null;
 var settingsPageTabListener = null;
 var versionCheckTimeout = null;
+var daemonConnectionTimeout = null;
 var updatePageId = null;
 
 function setState(storageKey, value) {
@@ -135,7 +136,7 @@ async function setTheme(colors, ddgReload) {
 
 async function sendMessageToTabs(data) {
     // Send message to DuckDuckGo tabs telling it to update the theme
-    const tabs = await browser.tabs.query({ url: "*://*.duckduckgo.com/*" });
+    const tabs = await browser.tabs.query({ url: TAB_MESSAGE_URL_PATTERNS });
 
     for (const tab of tabs) {
         browser.tabs.sendMessage(tab.id, data);
@@ -209,7 +210,17 @@ async function checkDaemonVersion(currentVersion) {
 // Listen for errors with connection to native app
 port.onDisconnect.addListener((port) => {
     if (port.error) {
-        output(`Disconnected from native app: ${port.error}`);
+        if (versionCheckTimeout !== null) {
+            clearTimeout(versionCheckTimeout);
+            versionCheckTimeout = null;
+        }
+
+        if (daemonConnectionTimeout !== null) {
+            clearTimeout(daemonConnectionTimeout);
+            daemonConnectionTimeout = null;
+        }
+
+        browser.storage.local.set({ connectedToDaemon: false, daemonVersion: null });
     }
 });
 
@@ -304,3 +315,6 @@ applyThemeOnStartup();
 // Fetch the daemon version
 port.postMessage('version');
 versionCheckTimeout = setTimeout(() => checkDaemonVersion(null), 1000);
+daemonConnectionTimeout = setTimeout(() => {
+    browser.storage.local.set({ connectedToDaemon: true });
+}, 1000);

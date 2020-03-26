@@ -38,4 +38,7 @@ const THEME_COLOR_KEYS = [
     'themeText'
 ];
 
-const REQUIRED_DAEMON_VERSION=1.0
+const REQUIRED_DAEMON_VERSION = 1.0;
+
+// The tab URLs to target when sending out messages
+const TAB_MESSAGE_URL_PATTERNS = [ "*://*.duckduckgo.com/*" ];

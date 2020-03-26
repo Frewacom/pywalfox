@@ -52,7 +52,7 @@ async function setColorPreviewBackground(preview) {
 }
 
 async function sendMessageToTabs(data) {
-    const tabs = await browser.tabs.query({});
+    const tabs = await browser.tabs.query({ url: TAB_MESSAGE_URL_PATTERNS });
 
     for (const tab of tabs) {
         browser.tabs.sendMessage(tab.id, data);
@@ -69,13 +69,13 @@ function setCustomColor(colorKey, color, ddgReload = true) {
 }
 
 async function setVersionLabel(element) {
-    const state = await browser.storage.local.get('daemonVersion');
+    const state = await browser.storage.local.get(['daemonVersion', 'connectedToDaemon']);
     let daemonVersion = 'failed';
     if (state.hasOwnProperty('daemonVersion')) {
         daemonVersion = state.daemonVersion;
     }
 
-    element.innerText = `Addon: ${browser.runtime.getManifest().version} | Daemon: ${daemonVersion}`;
+    element.innerText = `Addon: ${browser.runtime.getManifest().version} | Daemon: ${daemonVersion} | Connected: ${state.connectedToDaemon}`;
 }
 
 // Notification-like message
