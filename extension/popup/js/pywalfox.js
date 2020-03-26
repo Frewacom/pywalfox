@@ -68,8 +68,14 @@ function setCustomColor(colorKey, color, ddgReload = true) {
     });
 }
 
-function setVersionLabel(element) {
-    element.innerText = `v${browser.runtime.getManifest().version}`;
+async function setVersionLabel(element) {
+    const state = await browser.storage.local.get('daemonVersion');
+    let daemonVersion = 'failed';
+    if (state.hasOwnProperty('daemonVersion')) {
+        daemonVersion = state.daemonVersion;
+    }
+
+    element.innerText = `Addon: ${browser.runtime.getManifest().version} | Daemon: ${daemonVersion}`;
 }
 
 // Notification-like message
@@ -126,7 +132,7 @@ function setupListeners(updateFunction) {
     };
 
     // Setup event listeners for the update and reset buttons, if they exist
-    if (updateButton !== undefined && resetButton !== undefined) {
+    if (updateButton !== null && resetButton !== null) {
         updateButton.addEventListener('click', () => {
             browser.runtime.sendMessage({ action: 'update' });
         });

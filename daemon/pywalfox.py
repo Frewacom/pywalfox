@@ -12,6 +12,7 @@ from threading import Thread
 import uds
 import colorutils
 
+VERSION='1.0'
 COLORS_PATH='~/.cache/wal/colors'
 
 # If the script is passed "update" as an argument, we want to tell the extension to update.
@@ -21,6 +22,18 @@ if len(sys.argv) == 2:
         client = uds.UDSClient()
         client.sendMessage('update')
         sys.exit(1)
+
+# Send the version of daemon to the addon
+def sendVersion():
+    sendMessage(encodeMessage({
+        'key': 'version',
+        'data': VERSION
+    }));
+
+def sendInvalidCommand():
+    sendMessage(encodeMessage({
+        'key': 'invalidMessage'
+    }))
 
 def sendOutput(message):
     sendMessage(encodeMessage({
@@ -122,6 +135,10 @@ def handleReceivedMessage(message):
         sendMessage(createMessage('enableNoScrollbar', enableCustomCss(customCssPath, 'hide-scrollbar.as.css')))
     elif message == 'disableNoScrollbar':
         sendMessage(createMessage('disableNoScrollbar', disableCustomCss(customCssPath, 'hide-scrollbar.as.css')))
+    elif message == 'version':
+        sendVersion()
+    else:
+        sendInvalidCommand()
 
 def handleSocketMessage(server):
     while True:

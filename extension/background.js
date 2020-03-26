@@ -11,9 +11,11 @@ function setState(storageKey, value) {
     });
 }
 
-function ifSet(value, fallback) {
-    if (value) {
-        return value;
+function ifSet(customColor, themeColor, fallback) {
+    if (customColor) {
+        return customColor;
+    } else if (themeColor) {
+        return themeColor;
     }
 
     return fallback;
@@ -57,13 +59,14 @@ async function createColorschemeFromPywal(colors) {
         }
     }
 
+    // Create a colorscheme with fallback values in case custom/pywal colors are not set
     return {
-        background: ifSet(state.background, colors[template.background]),
-        backgroundLight: ifSet(state.backgroundLight, colors[template.backgroundLight]),
-        foreground: ifSet(state.foreground, colors[template.foreground]),
-        accentPrimary: ifSet(state.accentPrimary, colors[template.accentPrimary]),
-        accentSecondary: ifSet(state.accentSecondary, colors[template.accentSecondary]),
-        text: ifSet(state.text, colors[template.text])
+        background: ifSet(state.background, colors[template.background], DEFAULT_COLORSCHEME.background),
+        backgroundLight: ifSet(state.backgroundLight, colors[template.backgroundLight], DEFAULT_COLORSCHEME.backgroundLight),
+        foreground: ifSet(state.foreground, colors[template.foreground], DEFAULT_COLORSCHEME.foreground),
+        accentPrimary: ifSet(state.accentPrimary, colors[template.accentPrimary], DEFAULT_COLORSCHEME.accentPrimary),
+        accentSecondary: ifSet(state.accentSecondary, colors[template.accentSecondary], DEFAULT_COLORSCHEME.accentSecondary),
+        text: ifSet(state.text, colors[template.text], DEFAULT_COLORSCHEME.text)
     };
 }
 
@@ -113,7 +116,6 @@ async function createThemeFromColorscheme(colorscheme) {
 
 async function setTheme(colors, ddgReload) {
     const colorscheme = await createColorschemeFromPywal(colors);
-    console.log(colorscheme);
     const theme = await createThemeFromColorscheme(colorscheme);
 
     await saveThemeColors(colorscheme);
@@ -182,6 +184,22 @@ function output(message) {
     browser.runtime.sendMessage({ action: 'output', message });
 }
 
+async function checkDaemonVersion(currentVersion) {
+    await browser.storage.local.set({ daemonVersion: currentVersion });
+    const state = await browser.storage.local.get('updatePageMuted');
+
+    if (parseFloat(currentVersion) < REQUIRED_DAEMON_VERSION) {
+        if (state.updatePageMuted !== true) {
+          await browser.tabs.create({ url: 'popup/update.html' });
+        }
+    } else {
+        if (state.updatePageMuted === true) {
+          // If the current version is up-to-date, reset the mute state
+          await browser.storage.local.remove('updatePageMuted');
+        }
+    }
+}
+
 // Listen for errors with connection to native app
 port.onDisconnect.addListener((port) => {
     if (port.error) {
@@ -189,7 +207,7 @@ port.onDisconnect.addListener((port) => {
     }
 });
 
-// Listen for messages from the app.
+// Listen for messages from the native app
 port.onMessage.addListener(async (response) => {
     if (response.key == 'colors') {
         if (response.success) {
@@ -207,7 +225,11 @@ port.onMessage.addListener(async (response) => {
     } else if (response.key == 'disableNoScrollbar') {
         setStateOnSuccess(response, 'noScrollbar', false);
     } else if (response.key == 'output') {
-      output(response.data);
+        output(response.data);
+    } else if (response.key == 'version') {
+        checkDaemonVersion(response.data);
+    } else if (response.key == 'invalidCommand') {
+        output(`Daemon received an invalid command. Are you using version ${REQUIRED_DAEMON_VERSION} of the daemon?`);
     }
 });
 
@@ -265,3 +287,6 @@ async function applyThemeOnStartup() {
 }
 
 applyThemeOnStartup();
+
+// Fetch the daemon version
+port.postMessage('version');

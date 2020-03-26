@@ -1,0 +1,53 @@
+@import url('common.css');
+
+body {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--background);
+  --content-width: 50em;
+}
+
+main {
+  background-color: var(--background-light);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 3em 5em;
+}
+
+h1 {
+  color: var(--foreground);
+  letter-spacing: 0.05em;
+  font-size: 2.5em;
+  margin-bottom: var(--margin-sm);
+}
+
+h1 > span {
+  color: var(--accent-secondary);
+}
+
+h3 {
+  font-size: 1.2em;
+  font-weight: normal;
+}
+
+code {
+  background-color: var(--background);
+  border-radius: var(--border-radius);
+  padding: 1.5em 1.5em;
+  width: 100%;
+  box-sizing: border-box;
+  color: var(--foreground);
+}
+
+#disable-button {
+  width: 100%;
+  padding: 1.2em;
+  font-size: 0.95em;
+}
+
+.footer-text {
+  font-size: 1.05em;
+}

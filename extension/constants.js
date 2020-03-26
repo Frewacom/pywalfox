@@ -38,4 +38,4 @@ const THEME_COLOR_KEYS = [
     'themeText'
 ];
 
-const MIN_DAEMON_VERSION=1.0
+const REQUIRED_DAEMON_VERSION=1.0

@@ -126,6 +126,18 @@ main {
     letter-spacing: 0.03em;
 }
 
+a {
+  color: var(--accent-primary);
+}
+
+a:visited {
+  color: var(--accent-secondary);
+}
+
+a:hover, a:focus {
+  color: var(--foreground);
+}
+
 .btn {
     height: 33px;
     border-radius: var(--border-radius);
@@ -259,6 +271,14 @@ input[type=number]::-webkit-outer-spin-button {
     color: var(--background);
 }
 
+#version {
+    text-transform: uppercase;
+    font-size: 0.9em;
+    opacity: 0.8;
+    font-family: monospace;
+    color: var(--foreground);
+}
+
 .spacer {
     flex: 1;
     max-width: var(--content-width);
@@ -317,6 +337,11 @@ input[type=number]::-webkit-outer-spin-button {
     margin-left: var(--margin-sm);
 }
 
+.margin-top-lg {
+    margin-top: calc(var(--margin) * 2);
+}
+
 .align-right {
     justify-content: flex-end;
 }
+

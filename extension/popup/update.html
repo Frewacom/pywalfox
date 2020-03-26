@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Pywalfox - Daemon update required</title>
+    <link type="text/css" rel="stylesheet" href="css/update.css">
+  </head>
+  <body>
+    <main>
+      <h1><span>Hello,</span> sorry to interrupt!</h1>
+      <h3>
+        You need to update the Pywalfox daemon or this addon will not work as expected.<br>
+        Luckily, this is (more often than not) very easy. Do the following and restart Firefox:
+      </h3>
+      <code>
+        cd &#60;path-to-pywalfox-directory&#62;<br>
+        git pull<br>
+      </code>
+
+      <button class="btn primary margin-top-lg" id="disable-button">Do not remind me again for this version</button>
+    </main>
+    <footer>
+      <p class="footer-text">Issues? <a href="https://github.com/Frewacom/Pywalfox/issues">Take a look at the GitHub page</a></p>
+    </footer>
+    <script src="../../constants.js"></script>
+    <script src="js/pywalfox.js"></script>
+    <script src="js/update.js"></script>
+  </body>
+</html>
