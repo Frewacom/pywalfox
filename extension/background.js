@@ -4,6 +4,7 @@ const port = browser.runtime.connectNative("pywalfox");
 var pywalColors = {};
 var settingsPageTabId = null;
 var settingsPageTabListener = null;
+var versionCheckTimeout = null;
 
 function setState(storageKey, value) {
     browser.storage.local.set({
@@ -186,10 +187,9 @@ function output(message) {
 }
 
 async function checkDaemonVersion(currentVersion) {
-    await browser.storage.local.set({ daemonVersion: currentVersion });
     const state = await browser.storage.local.get('updatePageMuted');
 
-    if (parseFloat(currentVersion) < REQUIRED_DAEMON_VERSION) {
+    if (currentVersion === null || parseFloat(currentVersion) < REQUIRED_DAEMON_VERSION) {
         if (state.updatePageMuted !== true) {
           await browser.tabs.create({ url: 'popup/update.html' });
         }
@@ -199,6 +199,9 @@ async function checkDaemonVersion(currentVersion) {
           await browser.storage.local.remove('updatePageMuted');
         }
     }
+
+    await browser.storage.local.set({ daemonVersion: currentVersion });
+    versionCheckTimeout = null;
 }
 
 // Listen for errors with connection to native app
@@ -228,6 +231,8 @@ port.onMessage.addListener(async (response) => {
     } else if (response.key == 'output') {
         output(response.data);
     } else if (response.key == 'version') {
+        clearTimeout(versionCheckTimeout);
+        versionCheckTimeout = null;
         checkDaemonVersion(response.data);
     } else if (response.key == 'invalidCommand') {
         output(`Daemon received an invalid command. Are you using version ${REQUIRED_DAEMON_VERSION} of the daemon?`);
@@ -291,3 +296,4 @@ applyThemeOnStartup();
 
 // Fetch the daemon version
 port.postMessage('version');
+versionCheckTimeout = setTimeout(() => checkDaemonVersion(null), 1000);
