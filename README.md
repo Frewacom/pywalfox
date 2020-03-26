@@ -16,8 +16,9 @@ You can download the Firefox Addon here: https://addons.mozilla.org/en-US/firefo
 To use this addon, you must install a script on your computer. The script will be ran by Firefox upon launch and will handle fetching your pywal colors. As of now, Pywalfox supports only Linux.
 
 ### Requirements
-- Python (both 2.7.x and 3.x versions are supported) 
-- Linux 
+- Python (both 2.7.x and 3.x versions are supported)
+- Firefox
+- Linux
 
 ### Installation
 1. `git clone https://github.com/Frewacom/Pywalfox.git`
@@ -35,7 +36,7 @@ Setting execution permissions on daemon/pywalfox.py
 Finished.
 ```
 
-Restart Firefox and you should be able to fetch the colors using the Settings page. If not, take a look in the Troubleshooting section below. 
+Restart Firefox and you should be able to fetch the colors using the Settings page. If not, take a look in the Troubleshooting section below.
 
 ### Updating the theme using the terminal
 If you are using some script for theming your system and do not want to manually refetch your pywal colors using the settings page, you can trigger an update of the browser theme by running `./daemon/pywalfox.py update` in your terminal (the script is not in your `PATH` by default).
@@ -46,6 +47,7 @@ If you want to use the custom CSS, you must do the following:
 2. Set `toolkit.legacyUserProfileCustomizations.stylesheets` to `true`
 
 ### Troubleshooting
+* If you updated Pywalfox and have issues, try re-running the setup script as described above.
 * Take a look at the Debugging output in the Settings page of the addon
 * Make sure that `path` in `~/.mozilla/native-messaging-hosts/pywalfox.json` points to the location of `daemon/pywalfox.py`
 * Make sure that `pywalfox.py` is executable (`chmod +x pywalfox.py`)
@@ -56,14 +58,14 @@ If you want to use the custom CSS, you must do the following:
 - `ExtensionError: No such native application pywalfox`
 
    The manifest is not installed properly. Follow the instructions here: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_manifests. The manifest is located at `daemon/assets/pywalfox-manifest.json`.
-   
+
    If you still can not get it to work, you could try reinstalling Firefox: [#14](https://github.com/Frewacom/Pywalfox/issues/14)
 
 - `Unchecked lastError value: Error: Could not establish connection. Receiving end does not exist.`
 
-   The path to the script in the manifest is invalid or the script crashed on execution (try running it manually). 
-   
-   The script runs in an infinite loop, so as long as the script does not crash when running it, we know that the issues lies somewhere else. 
+   The path to the script in the manifest is invalid or the script crashed on execution (try running it manually).
+
+   The script runs in an infinite loop, so as long as the script does not crash when running it, we know that the issues lies somewhere else.
 
 If you encounter any other errors: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#Troubleshooting
 
