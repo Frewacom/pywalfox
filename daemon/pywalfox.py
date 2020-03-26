@@ -52,32 +52,26 @@ def fetchColors():
     except IOError:
         return (False, 'Could not read colors from: %s' % COLORS_PATH)
 
-    colorscheme = {
-        'background': colors[0],
-        'backgroundLight': colorutils.generateLighterShade(colors[0], 35),
-        'foreground': colors[-1],
-        'accentPrimary': colors[1],
-        'accentSecondary': colors[2],
-        'accentPrimaryLight': colors[4],
-        'accentSecondaryLight': colors[5],
-        'text': '#ffffff',
-        'color0': colors[0],
-        'color1': colors[1],
-        'color2': colors[2],
-        'color3': colors[3],
-        'color4': colors[4],
-        'color5': colors[5],
-        'color6': colors[6],
-        'color7': colors[7],
-        'color8': colors[8],
-        'color9': colors[9],
-        'color10': colors[10],
-        'color11': colors[11],
-        'color12': colors[12],
-        'color13': colors[13],
-        'color14': colors[14],
-        'color15': colors[15]
-    }
+    colorscheme = [
+        colors[0],
+        colors[1],
+        colors[2],
+        colors[3],
+        colors[4],
+        colors[5],
+        colors[6],
+        colors[7],
+        colors[8],
+        colors[9],
+        colors[10],
+        colors[11],
+        colors[12],
+        colors[13],
+        colors[14],
+        colors[15],
+        '#ffffff',
+        colorutils.generateLighterShade(colors[0], 35)
+    ]
 
     return (True, colorscheme)
 
@@ -201,5 +195,4 @@ except AttributeError:
 
 # Cleanup
 server.close()
-t.exit()
 
