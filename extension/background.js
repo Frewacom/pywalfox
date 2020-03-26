@@ -223,6 +223,7 @@ port.onDisconnect.addListener((port) => {
 port.onMessage.addListener(async (response) => {
     if (response.key == 'colors') {
         if (response.success) {
+            output('Fetched colors from daemon successfully');
             setTheme(response.data, true);
         } else {
             output(response.error);

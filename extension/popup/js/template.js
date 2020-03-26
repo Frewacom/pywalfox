@@ -16,7 +16,7 @@ function setSelectedTemplateColors(template) {
   templateColors.forEach((element) => {
     const target = element.getAttribute('data-target');
     element.value = template[target];
-    element.addEventListener('change', handleTemplateColorChange);
+    element.addEventListener('input', handleTemplateColorChange);
   });
 }
 
