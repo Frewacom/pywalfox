@@ -269,6 +269,7 @@ input[type=number]::-webkit-outer-spin-button {
     align-items: center;
     font-weight: bold;
     font-size: 1.05em;
+    z-index: 201;
     transition: height 0.1s, color 0.2s;
 }
 
@@ -360,6 +361,7 @@ input[type=number]::-webkit-outer-spin-button {
         background-color: var(--background-light);
         right: 0px;
         bottom: 0px;
+        opacity:1;
         padding: var(--margin-sm);
         min-width: var(--content-min-width);
     }
