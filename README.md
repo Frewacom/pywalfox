@@ -5,7 +5,7 @@
 
 Pywalfox is an addon used to theme Firefox using your pywal colors.
 - Customizable colors
-- Uses the Firefox Theme API
+- Uses the Firefox Theme API (no CSS required!)
 - Automatic theming for DuckDuckGo (Optional)
 - Custom CSS with bold text, styled dropdowns, etc. (Optional)
 - Update the browser theme using the addon and/or your terminal
