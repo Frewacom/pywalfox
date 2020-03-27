@@ -51,7 +51,7 @@ header {
 
 p {
     font-size: 0.95em;
-    color: var(--foreground);
+    color: var(--text-color);
     margin: 0px;
 }
 
@@ -122,12 +122,12 @@ main {
     flex-direction: column;
     margin: 0px;
     font-weight: bold;
-    color: var(--foreground);
+    color: var(--text-color);
     font-size: 0.85em;
 }
 
 .description > span {
-    color: var(--foreground);
+    color: var(--text-color);
     font-weight: normal;
     letter-spacing: 0.03em;
 }
@@ -283,7 +283,7 @@ input[type=number]::-webkit-outer-spin-button {
     font-size: 0.9em;
     opacity: 0.8;
     font-family: monospace;
-    color: var(--foreground);
+    color: var(--text-color);
 }
 
 .spacer {

@@ -57,7 +57,7 @@ main {
 .palette-color > label {
   font-weight: bold;
   margin-bottom: var(--margin-sm);
-  color: var(--foreground);
+  color: var(--text-color);
 }
 
 .palette-row.label-bottom > .palette-color > label {
@@ -79,7 +79,7 @@ main {
   background-color: var(--background-light);
   border-radius: var(--border-radius);
   border: none;
-  color: white;
+  color: var(--text-color);
   font-weight: bold;
   text-align: center;
 }
