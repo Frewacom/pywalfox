@@ -17,6 +17,7 @@ To use this addon, you must install a script on your computer. The script will b
 
 ### Requirements
 - Python (both 2.7.x and 3.x versions are supported)
+- pywal
 - Firefox
 - Linux
 

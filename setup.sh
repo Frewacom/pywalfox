@@ -15,17 +15,17 @@ if [ $(id -u) -eq 0 ]; then
 fi
 
 echo "Creating 'native-messaging-hosts' folder in ~/.mozilla"
-sudo mkdir -p $NHPATH
+mkdir -p $NHPATH
 
 if [ -f "$MANIFEST_PATH" ]; then
-  sudo rm $MANIFEST_PATH
+  rm $MANIFEST_PATH
 fi
 
 echo "Copying native messaging manifest to $MANIFEST_PATH"
-sudo cp ./daemon/assets/pywalfox-manifest.json $MANIFEST_PATH
+cp ./daemon/assets/pywalfox-manifest.json $MANIFEST_PATH
 
 echo "Setting path to $EXECUTABLE_PATH in the manifest"
-sudo sed -i "s+<path>+$CURRENTPATH/$EXECUTABLE_PATH+g" $MANIFEST_PATH
+sed -i "s+<path>+$CURRENTPATH/$EXECUTABLE_PATH+g" $MANIFEST_PATH
 
 echo "Setting execution permissions on $EXECUTABLE_PATH"
 chmod +x ./$EXECUTABLE_PATH
