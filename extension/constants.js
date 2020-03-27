@@ -20,6 +20,16 @@ const DEFAULT_THEME_TEMPLATE = {
 
 // The keys in which custom colors will be stored
 const CUSTOM_COLOR_KEYS = [
+    'customBackground',
+    'customForeground',
+    'customBackgroundLight',
+    'customAccentPrimary',
+    'customAccentSecondary',
+    'customText'
+];
+
+// The keys in which pywal colors will be stored
+const THEME_COLOR_KEYS = [
     'background',
     'foreground',
     'backgroundLight',
@@ -28,15 +38,7 @@ const CUSTOM_COLOR_KEYS = [
     'text'
 ];
 
-// The keys in which pywal colors will be stored
-const THEME_COLOR_KEYS = [
-    'themeBackground',
-    'themeForeground',
-    'themeBackgroundLight',
-    'themeAccentPrimary',
-    'themeAccentSecondary',
-    'themeText'
-];
+const PYWAL_COLORS_LENGTH = 18;
 
 const REQUIRED_DAEMON_VERSION = 1.0;
 

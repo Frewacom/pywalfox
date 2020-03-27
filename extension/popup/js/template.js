@@ -21,12 +21,11 @@ function setSelectedTemplateColors(template) {
 }
 
 async function updateInterface(colors) {
-  const isApplied = await isThemeApplied();
-  if (isApplied) {
+  if (isThemeApplied) {
     palette.style.display = 'flex';
     noPalette.style.display = 'none';
     colorPreviews.forEach((preview) => {
-      setColorPreviewBackground(preview);
+      setPaletteColor(preview);
     });
   } else {
     palette.style.display = 'none';
@@ -36,7 +35,6 @@ async function updateInterface(colors) {
 
 async function fetchSelectedTemplateColors() {
   const state = await browser.storage.local.get('customTemplate');
-  console.log(state);
   let template = DEFAULT_THEME_TEMPLATE;
 
   if (state.hasOwnProperty('customTemplate')) {
@@ -46,28 +44,34 @@ async function fetchSelectedTemplateColors() {
   setSelectedTemplateColors(template);
 }
 
-templateSaveButton.addEventListener('click', () => {
-  let template = {};
-  templateColors.forEach((element) => {
-    if (element.checkValidity()) {
-      template[element.getAttribute('data-target')] = Number(element.value);
-      showBanner(banner, 'Template was saved successfully');
-    } else {
-      // Should never happen, since we check this in setSelectedTemplateColors
-      showBanner(banner, 'The template contains invalid indexes. Template was not saved')
-      return;
-    }
+function initialize() {
+  templateSaveButton.addEventListener('click', () => {
+    let template = {};
+    templateColors.forEach((element) => {
+      if (element.checkValidity()) {
+        template[element.getAttribute('data-target')] = Number(element.value);
+        showBanner(banner, 'Template was saved successfully');
+      } else {
+        // Should never happen, since we check this in setSelectedTemplateColors
+        showBanner(banner, 'The template contains invalid indexes. Template was not saved')
+        return;
+      }
+    });
+
+    browser.storage.local.set({ customTemplate: template });
   });
 
-  browser.storage.local.set({ customTemplate: template });
-});
+  templateResetButton.addEventListener('click', () => {
+    browser.storage.local.remove('customTemplate');
+    setSelectedTemplateColors(DEFAULT_THEME_TEMPLATE);
+    showBanner(banner, 'Template was reset');
+  });
 
-templateResetButton.addEventListener('click', () => {
-  browser.storage.local.remove('customTemplate');
-  setSelectedTemplateColors(DEFAULT_THEME_TEMPLATE);
-  showBanner(banner, 'Template was reset');
-});
+  setVersionLabel(versionLabel);
+  setupListeners(updateInterface);
+  fetchSelectedTemplateColors();
+}
 
-setVersionLabel(versionLabel);
-setupListeners(updateInterface);
-fetchSelectedTemplateColors();
+initialize();
+
+

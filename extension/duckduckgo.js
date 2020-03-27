@@ -27,18 +27,18 @@ async function applyTheme(reload=false) {
 
 // Creates the colorscheme that can be applied to DuckDuckGo
 async function createColorscheme() {
-    const savedColors = await browser.storage.local.get();
+    const savedColors = await browser.storage.local.get(THEME_COLOR_KEYS);
     if (Object.keys(savedColors).length > 0) {
         // We only want to override the colors, no other settings like font size, etc
         return [
-            `7=${savedColors.themeBackground}`,                                     // Background
-            `j=${savedColors.themeBackground}`,                                     // Header background
-            `9=${savedColors.themeText}`,                                           // Result link title
-            `aa=${changeColorBrightness(savedColors.themeAccentPrimary, 0.8)}`,     // Result visited link title
-            `x=${changeColorBrightness(savedColors.themeAccentSecondary, 0.7)}`,    // Result link url
-            `8=f8f8f2`,                                                             // Result description
-            `21=${savedColors.themeBackgroundLight}`,                               // Result hover, dropdown and module background
-            'ae=pywalfox',                                                          // What theme to use/theme name
+            `7=${savedColors.background}`,                                     // Background
+            `j=${savedColors.background}`,                                     // Header background
+            `9=${savedColors.text}`,                                           // Result link title
+            `aa=${changeColorBrightness(savedColors.accentPrimary, 0.8)}`,     // Result visited link title
+            `x=${changeColorBrightness(savedColors.accentSecondary, 0.7)}`,    // Result link url
+            `8=f8f8f2`,                                                        // Result description
+            `21=${savedColors.backgroundLight}`,                               // Result hover, dropdown and module background
+            'ae=pywalfox',                                                     // What theme to use/theme name
             //"a=p",        // Font, default is Proxima Nova
             //"s=m",        // Font size, default is Large
             //"w=n",        // Page width, default is Normal

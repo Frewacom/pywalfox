@@ -86,7 +86,7 @@
     position: absolute;
     background-color: var(--background-light);
     width: 100px;
-    height: 100%;
+    height: auto;
     border-radius: var(--border-radius);
     right: -115px;
     display: none;
@@ -108,13 +108,14 @@
     flex-basis: calc(50% - 0.4em);
     max-width: calc(50% - 0.4em);
     border: none;
-    height: 25px;
+    height: 31px;
     margin: 0.2em;
     border: none;
     cursor: pointer;
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
     border: 2px solid transparent;
+    transition: transform 0.1s, box-shadow 0.1s;;
 }
 
 .pywal-color:hover {
@@ -143,6 +144,8 @@
 #colorpicker-dialog-input-container.selected,
 .pywal-color.selected {
     border: 2px solid white;
+    box-shadow: -0px 0px 10px 10px rgba(0,0,0,0.2);
+    transform: translateY(-1px);
 }
 
 #colorpicker-dialog-input {

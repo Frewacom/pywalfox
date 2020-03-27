@@ -28,12 +28,12 @@ function ifSet(customColor, themeColor, fallback) {
 // accessed from the duckduckgo script, for example
 function saveThemeColors(colorscheme) {
     browser.storage.local.set({
-        themeBackground: colorscheme.background,
-        themeForeground: colorscheme.foreground,
-        themeBackgroundLight: colorscheme.backgroundLight,
-        themeAccentPrimary: colorscheme.accentPrimary,
-        themeAccentSecondary: colorscheme.accentSecondary,
-        themeText: colorscheme.text
+        background: colorscheme.background,
+        foreground: colorscheme.foreground,
+        backgroundLight: colorscheme.backgroundLight,
+        accentPrimary: colorscheme.accentPrimary,
+        accentSecondary: colorscheme.accentSecondary,
+        text: colorscheme.text
     });
 }
 
@@ -64,12 +64,12 @@ async function createColorschemeFromPywal(colors) {
 
     // Create a colorscheme with fallback values in case custom/pywal colors are not set
     return {
-        background: ifSet(state.background, colors[template.background], DEFAULT_COLORSCHEME.background),
-        backgroundLight: ifSet(state.backgroundLight, colors[template.backgroundLight], DEFAULT_COLORSCHEME.backgroundLight),
-        foreground: ifSet(state.foreground, colors[template.foreground], DEFAULT_COLORSCHEME.foreground),
-        accentPrimary: ifSet(state.accentPrimary, colors[template.accentPrimary], DEFAULT_COLORSCHEME.accentPrimary),
-        accentSecondary: ifSet(state.accentSecondary, colors[template.accentSecondary], DEFAULT_COLORSCHEME.accentSecondary),
-        text: ifSet(state.text, colors[template.text], DEFAULT_COLORSCHEME.text)
+        background: ifSet(state.customBackground, colors[template.background], DEFAULT_COLORSCHEME.background),
+        backgroundLight: ifSet(state.customBackgroundLight, colors[template.backgroundLight], DEFAULT_COLORSCHEME.backgroundLight),
+        foreground: ifSet(state.customForeground, colors[template.foreground], DEFAULT_COLORSCHEME.foreground),
+        accentPrimary: ifSet(state.customAccentPrimary, colors[template.accentPrimary], DEFAULT_COLORSCHEME.accentPrimary),
+        accentSecondary: ifSet(state.customAccentSecondary, colors[template.accentSecondary], DEFAULT_COLORSCHEME.accentSecondary),
+        text: ifSet(state.customText, colors[template.text], DEFAULT_COLORSCHEME.text)
     };
 }
 
@@ -191,6 +191,9 @@ function output(message) {
 async function checkDaemonVersion(currentVersion) {
     const state = await browser.storage.local.get('updatePageMuted');
 
+    // Check if the version is unset or below the required version.
+    // If currentVersion is null, this means that the connection to the daemon failed,
+    // or it still uses a very old version.
     if (currentVersion === null || parseFloat(currentVersion) < REQUIRED_DAEMON_VERSION) {
         if (state.updatePageMuted !== true) {
           let tab = await browser.tabs.create({ url: 'popup/update.html' });
@@ -291,9 +294,25 @@ browser.browserAction.onClicked.addListener(async () => {
     }
 });
 
+// Listen for external connections from other exetensions
+browser.runtime.onConnectExternal.addListener((port) => {
+  console.log(`[${port.sender.id}] Connection opened`);
+
+  // Listen for messages from the extension
+  port.onMessage.addListener(async (message) => {
+    console.log(`[${port.sender.id}] Recieved action: "${message.action}"`);
+    if (message.action == 'colors') {
+      const colors = await browser.storage.local.get(THEME_COLOR_KEYS);
+      if (Object.keys(colors).length === THEME_COLOR_KEYS.length) {
+        port.postMessage({ success: true, data: colors });
+      } else {
+        port.postMessage({ success: false, error: 'Failed to fetch colors from local storage' });
+      }
+    }
+  });
+});
+
 // Make sure to apply the theme when starting Firefox, if it is enabled.
-// Previously, we queried the daemon on startup which was unnecessary since the
-// colors are stored in local storage anyway.
 async function applyThemeOnStartup() {
     const state = await browser.storage.local.get('isApplied');
     const gettingPywalColors = await browser.storage.local.get('pywalColors');
