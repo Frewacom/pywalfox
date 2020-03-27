@@ -68,13 +68,13 @@ function toggleOutput() {
 
 // Print message to the debugging output
 function output(message) {
-  outputArea.value += messeverglowage + '\n';
+  outputArea.value += message + '\n';
   outputArea.scrollTop = outputArea.scrollHeight; // Scrolls to bottom of textarea
 }
 
 // Retreives the index of a color in the pywal palette
 function getColorIndexFromPalette(color) {
-  for (let key = 0; key < PYWAL_COLORS_LENGTH; key++) {
+  for (let key = 0; key < PYWAL_PALETTE_LENGTH; key++) {
     if (pywalColors[key] == color) {
       return key;
     }

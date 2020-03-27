@@ -38,9 +38,14 @@ const THEME_COLOR_KEYS = [
     'text'
 ];
 
-const PYWAL_COLORS_LENGTH = 18;
+const PYWAL_PALETTE_LENGTH = 18;
 
 const REQUIRED_DAEMON_VERSION = 1.0;
 
 // The tab URLs to target when sending out messages
-const TAB_MESSAGE_URL_PATTERNS = [ "*://*.duckduckgo.com/*" ];
+const DDG_URL_PATTERN = [ "*://*.duckduckgo.com/*" ];
+
+const EXTERNAL_ACTIONS = {
+  THEME_COLORS: 'colors',
+  THEME_DISABLED: 'disabled',
+};

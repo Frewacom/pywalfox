@@ -43,7 +43,7 @@ async function setPaletteColor(preview) {
 }
 
 async function sendMessageToTabs(data) {
-  const tabs = await browser.tabs.query({ url: TAB_MESSAGE_URL_PATTERNS });
+  const tabs = await browser.tabs.query({ url: DDG_URL_PATTERN });
 
   for (const tab of tabs) {
     browser.tabs.sendMessage(tab.id, data);
