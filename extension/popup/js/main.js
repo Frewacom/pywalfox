@@ -152,33 +152,34 @@ async function onPaletteColorChanged(e) {
   if (isThemeApplied) {
     const newId = e.target.getAttribute('data-id');
     const newColor = getPaletteColorById(newId);
-    const colorKey = selectedPreviewButton.getAttribute('data-target-key');
+    const targetKey = selectedPreviewButton.getAttribute('data-target-key');
 
     colorpickerCustomInput.value = newColor;
     selectedPreviewButton.setAttribute('data-selected-id', newId);
 
     setSelectedPaletteColor(e.target);
     setPreviewBackground(newColor);
-    setCustomColor(colorKey, newColor, false);
+    setCustomColor(targetKey, newColor, false);
   }
 }
 
 function onCustomColorChanged(e) {
   const newColor = e.target.value;
-  const colorKey = selectedPreviewButton.getAttribute('data-target-key');
+  const targetKey = selectedPreviewButton.getAttribute('data-target-key');
   setSelectedPaletteColor(colorpickerCustomContainer);
   setPreviewBackground(newColor);
-  setCustomColor(colorKey, newColor, false);
+  setCustomColor(targetKey, newColor, false);
 }
 
 function onColorpickerUndo(e) {
   if (colorHasChanged()) {
-    const colorKey = selectedPreviewButton.getAttribute('data-color-key');
-    const resetColor = selectedPreviewButton.getAttribute('data-reset-id');
+    const targetKey = selectedPreviewButton.getAttribute('data-target-key');
+    const resetId = selectedPreviewButton.getAttribute('data-reset-id');
+    const color = getPaletteColorById(resetId);
 
+    setCustomColor(targetKey, color, false);
     selectedPaletteColor.classList.remove('selected');
-    setInitialPaletteColor(resetColor);
-    setCustomColor(colorKey, resetColor, false);
+    setInitialPaletteColor(resetId);
   }
 }
 
