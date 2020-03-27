@@ -26,8 +26,6 @@ To use this addon, you must install a script on your computer. The script will b
 2. `cd Pywalfox`
 3. `bash setup.sh`
 
-The setup script will prompt you for your password since the path in which we need to place the native messaging manifest is protected by default. Firefox requires the manifest to allow communication between the addon and the script running on your computer.
-
 If the setup is successfull, it should look something like this:
 ```
 Creating 'native-messaging-hosts' folder in ~/.mozilla
@@ -49,6 +47,8 @@ If you want to use the custom CSS, you must do the following:
 
 ### Troubleshooting
 * If you updated Pywalfox and have issues, try re-running the setup script as described above.
+* If you do not have permission to copy files to `.mozilla/native-messaging-hosts`, you can either run \
+`chown <username> ~/.mozilla/native-messaging-host` or (if the folder is empty) simply remove it and the setup script will recreate it with the correct permissions.
 * Take a look at the Debugging output in the Settings page of the addon
 * Make sure that `path` in `~/.mozilla/native-messaging-hosts/pywalfox.json` points to the location of `daemon/pywalfox.py`
 * Make sure that `pywalfox.py` is executable (`chmod +x pywalfox.py`)
