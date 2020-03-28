@@ -109,7 +109,7 @@
                         Select the default pywal colors for different areas of the theme
                     </span>
                 </p>
-                <button class="btn toggle" data-action="customTemplateEnabled">No</button>
+                <button class="btn toggle" data-action="toggleCustomTemplate" data-target=customTemplateEnabled>No</button>
             </div>
             <div class="container" id="custom-template-container">
                 <button class="btn edit margin-top" id="custom-template-edit-button">Edit template</button>
@@ -119,24 +119,24 @@
             <label>Optional settings</label>
             <div class="container">
                 <p class="description">
-                    Use the included custom CSS?
-                    <span>Bold and smaller text, styled dropdowns and context menus</span>
-                </p>
-                <button class="btn toggle" data-action="customCssEnabled">No</button>
-            </div>
-            <div class="container">
-                <p class="description">
-                    No scrollbar?
-                    <span>Hides the page scrollbar for a cleaner look</span>
-                </p>
-                <button class="btn toggle" data-action="noScrollbarEnabled">No</button>
-            </div>
-            <div class="container">
-                <p class="description">
                     Use DuckDuckGo theme?
                     <span>Applies matching pywal theme to all DuckDuckGo-pages</span>
                 </p>
-                <button class="btn toggle" data-action="ddgThemeEnabled">No</button>
+                <button class="btn toggle" data-action="toggleDDGTheme" data-target="ddgThemeEnabled">No</button>
+            </div>
+            <div class="container">
+                <p class="description">
+                    Use the included userChrome.css?
+                    <span>Bold and smaller text, styled dropdowns and context menus</span>
+                </p>
+                <button class="btn toggle" data-action="toggleCustomCss" data-target="userChrome">No</button>
+            </div>
+            <div class="container">
+                <p class="description">
+                    Use the included userContent.css?
+                    <span>Globally hides the page scrollbar and styles the new tab page a bit further</span>
+                </p>
+                <button class="btn toggle" data-action="toggleCustomCss" data-target="userContent">No</button>
             </div>
         </section>
         <button class="btn expander" id="output-toggle">Show debugging output</button>

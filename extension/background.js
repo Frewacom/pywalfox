@@ -9,6 +9,33 @@ var versionCheckTimeout = null;
 var daemonConnectionTimeout = null;
 var updatePageId = null;
 
+function fetchColorscheme() {
+  port.postMessage({
+    action: ACTIONS.UPDATE
+  });
+}
+
+function fetchDaemonVersion() {
+  port.postMessage({
+    action: ACTIONS.VERSION
+  });
+}
+
+function toggleCustomCss(target, enabled) {
+  console.log(target);
+  if (enabled === true) {
+    port.postMessage({
+      action: ACTIONS.ENABLE_CUSTOM_CSS,
+      target: target
+    });
+  } else {
+    port.postMessage({
+      action: ACTIONS.DISABLE_CUSTOM_CSS,
+      target: target
+    });
+  }
+}
+
 function setState(storageKey, value) {
   browser.storage.local.set({
     [storageKey]: value
@@ -133,7 +160,14 @@ async function setTheme(colors, ddgReload) {
   // We dont want to reload DuckDuckGo if we are just trying out different
   // colors using the color picker
   if (ddgReload) {
-    sendMessageToTabs({ action: 'updateDDGTheme' });
+    sendMessageToDDGIfEnabled('updateDDGTheme');
+  }
+}
+
+async function sendMessageToDDGIfEnabled(action) {
+  const state = await browser.storage.local.get('ddgThemeEnabled');
+  if (state.ddgThemeEnabled) {
+    sendMessageToTabs({ action });
   }
 }
 
@@ -146,13 +180,9 @@ async function sendMessageToTabs(data) {
   }
 }
 
-function setStateOnSuccess(response, storageKey, value) {
-  if (response.success) {
-    setState(storageKey, value);
-    output(response.data);
-  } else {
-    output(response.error);
-  }
+function setStateOnCustomCssToggled(storageKey, value) {
+  setState(storageKey, value);
+  output(response.data);
 }
 
 function resetToDefaultTheme() {
@@ -162,7 +192,7 @@ function resetToDefaultTheme() {
   resetThemeColors();
   resetCustomColors();
   sendMessageToExternalConnections({ action: EXTERNAL_ACTIONS.THEME_DISABLED });
-  sendMessageToTabs({ action: 'resetDDGTheme' });
+  sendMessageToDDGIfEnabled('resetDDGTheme');
   setState('isApplied', false);
   output('Reset to default theme');
 }
@@ -189,6 +219,7 @@ function onSettingsPageUpdated(tabId, changeInfo, tab) {
 
 // Sends a message to be displayed in the Settings page
 function output(message) {
+  console.log(message);
   browser.runtime.sendMessage({ action: 'output', message });
 }
 
@@ -239,28 +270,24 @@ port.onDisconnect.addListener((port) => {
 
 // Listen for messages from the native app
 port.onMessage.addListener(async (response) => {
-  if (response.key == 'colors') {
+  if (response.action == RECEIVED_ACTIONS.COLORSCHEME) {
     if (response.success) {
       output('Fetched colors from daemon successfully');
       setTheme(response.data, true);
     } else {
       output(response.error);
     }
-  } else if (response.key == 'enableCustomCss') {
-    setStateOnSuccess(response, 'customCssOn', true);
-  } else if (response.key == 'disableCustomCss') {
-    setStateOnSuccess(response, 'customCssOn', false);
-  } else if (response.key == 'enableNoScrollbar') {
-    setStateOnSuccess(response, 'noScrollbar', true);
-  } else if (response.key == 'disableNoScrollbar') {
-    setStateOnSuccess(response, 'noScrollbar', false);
-  } else if (response.key == 'output') {
+  } else if (response.action == RECEIVED_ACTIONS.CUSTOM_CSS_APPLY) {
+    setStateOnCustomCssToggled(response.target, true);
+  } else if (response.action == RECEIVED_ACTIONS.CUSTOM_CSS.REMOVE) {
+    setStateOnCustomCssToggled(response.target, false);
+  } else if (response.action == RECEIVED_ACTIONS.OUTPUT) {
     output(response.data);
-  } else if (response.key == 'version') {
+  } else if (response.action == RECEIVED_ACTIONS.VERSION) {
     clearTimeout(versionCheckTimeout);
     versionCheckTimeout = null;
     checkDaemonVersion(response.data);
-  } else if (response.key == 'invalidCommand') {
+  } else if (response.action == RECEIVED_ACTIONS.INVALID_MESSAGE) {
     output(`Daemon received an invalid command. Are you using version ${REQUIRED_DAEMON_VERSION} of the daemon?`);
   }
 });
@@ -269,15 +296,11 @@ port.onMessage.addListener(async (response) => {
 browser.runtime.onMessage.addListener((message) => {
   if (message.action == 'update') {
     resetCustomColors();
-    port.postMessage('update');
+    fetchColorscheme();
   } else if (message.action == 'reset') {
     resetToDefaultTheme();
-  } else if (message.action == 'customCssEnabled') {
-    port.postMessage(message.enabled ? 'enableCustomCss' : 'disableCustomCss');
-  } else if (message.action == 'noScrollbarEnabled') {
-    port.postMessage(message.enabled ? 'enableNoScrollbar' : 'disableNoScrollbar');
-  } else if (message.action == 'ddgThemeEnabled') {
-    setState(message.action, message.enabled);
+  } else if (message.action == 'toggleCustomCss') {
+    toggleCustomCss(message.target, message.enabled);
   } else if (message.action == 'customColor') {
     saveCustomColor(message.type, message.value);
     setTheme(pywalColors, message.ddgReload);
@@ -341,13 +364,13 @@ async function applyThemeOnStartup() {
     }
   } else {
     // If we for some reason can not fetch the colors from local storage, query the daemon
-    port.postMessage('update');
+    fetchColorscheme();
   }
 }
 
 applyThemeOnStartup();
 
 // Fetch the daemon version
-port.postMessage('version');
+fetchDaemonVersion();
 versionCheckTimeout = setTimeout(() => checkDaemonVersion(null), 1000);
 daemonConnectionTimeout = setTimeout(() => { browser.storage.local.set({ connectedToDaemon: true }) }, 1000);

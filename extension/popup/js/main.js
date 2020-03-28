@@ -31,15 +31,16 @@ browser.runtime.onMessage.addListener((response) => {
 // Toggles options like custom CSS, DuckDuckGo-theme, etc and saves it to local storage
 async function toggleOption(e) {
   const action = e.target.getAttribute('data-action');
-  const state = await browser.storage.local.get(action);
-  const updatedValue = state[action] ? false : true;
+  const target = e.target.getAttribute('data-target');
+  const state = await browser.storage.local.get(target);
+  const updatedValue = state[target] ? false : true;
 
-  if (action === 'customCssEnabled' || action === 'noScrollbarEnabled') {
+  if (action === 'toggleCustomCss') {
     showBanner(banner, 'Restart needed for custom CSS to take effect!');
-    browser.runtime.sendMessage({ action: action, enabled: updatedValue });
-  } else if (action === 'ddgThemeEnabled') {
-    sendMessageToTabs({ action: action, enabled: updatedValue });
-  } else if (action === 'customTemplateEnabled') {
+    browser.runtime.sendMessage({ action, target, enabled: updatedValue });
+  } else if (action === 'toggleDDGTheme') {
+    sendMessageToTabs({ action: target, enabled: updatedValue });
+  } else if (action === 'toggleCustomTemplate') {
     if (updatedValue) {
       customTemplateContainer.classList.add('show');
     } else {
@@ -47,7 +48,7 @@ async function toggleOption(e) {
     }
   }
 
-  browser.storage.local.set({ [action]: updatedValue });
+  browser.storage.local.set({ [target]: updatedValue });
 
   e.target.innerText = updatedValue ? 'Yes' : 'No';
   e.target.classList.toggle('enabled');
@@ -231,14 +232,14 @@ async function updateInterface(colors) {
   });
 
   toggleButtons.forEach(async (toggleButton) => {
-    const action = toggleButton.getAttribute('data-action');
-    const state = await browser.storage.local.get(action);
-    if (state[action] === true) {
+    const target = toggleButton.getAttribute('data-target');
+    const state = await browser.storage.local.get(target);
+    if (state[target] === true) {
       toggleButton.classList.add('enabled');
       toggleButton.innerText = 'Yes';
 
       // Show the Edit template button
-      if (action === 'customTemplateEnabled') {
+      if (target === 'customTemplateEnabled') {
         customTemplateContainer.classList.add('show')
       }
     }

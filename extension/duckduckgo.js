@@ -11,7 +11,6 @@ async function resetTheme() {
     window.wrappedJSObject.DDG.settings.setTheme(state.ddgResetTheme);
 
     browser.storage.local.remove('ddgResetTheme');
-    location.reload();
 }
 
 async function applyTheme(reload=false) {
@@ -58,7 +57,7 @@ async function createColorscheme() {
 
 async function setTheme() {
     const state = await browser.storage.local.get(['ddgThemeEnabled', 'ddgResetTheme']);
-    if (state.ddgThemeEnabled) {
+    if (state.ddgThemeEnabled === true) {
         applyTheme();
     } else {
         if (state.ddgResetTheme !== undefined) {

@@ -12,48 +12,68 @@ from threading import Thread
 import uds
 import colorutils
 
-VERSION='1.0'
+VERSION='1.1'
 COLORS_PATH='~/.cache/wal/colors'
+
+ACTIONS = {
+    'VERSION': 'version',
+    'COLORSCHEME': 'colors',
+    'INVALID_MESSAGE': 'invalidMessage',
+    'OUTPUT': 'output',
+    'CUSTOM_CSS_APPLY': 'customCssApply',
+    'CUSTOM_CSS_REMOVE': 'customCssRemove',
+}
+
+RECEIVED_ACTIONS = {
+    'VERSION': 'version',
+    'UPDATE': 'update',
+    'ENABLE_CUSTOM_CSS': 'enableCustomCss',
+    'DISABLE_CUSTOM_CSS': 'disableCustomCss'
+}
 
 # If the script is passed "update" as an argument, we want to tell the extension to update.
 # This is useful if you want to automatically fetch new colors on a theme change
 if len(sys.argv) == 2:
     if sys.argv[1] == 'update':
         client = uds.UDSClient()
+
+        # Send a message to the UNIX-socket, telling it to send the new colorscheme to the addon
         client.sendMessage('update')
         sys.exit(1)
 
 # Send the version of daemon to the addon
 def sendVersion():
     sendMessage(encodeMessage({
-        'key': 'version',
+        'action': ACTIONS['VERSION'],
         'data': VERSION
+    }));
+
+def sendColorscheme():
+    response = fetchColors()
+    sendMessage(encodeMessage({
+        'action': ACTIONS['COLORSCHEME'],
+        'success': response[0],
+        'data': response[1]
     }));
 
 def sendInvalidCommand():
     sendMessage(encodeMessage({
-        'key': 'invalidMessage'
+        'action': ACTIONS['INVALID_MESSAGE']
     }))
 
 def sendOutput(message):
     sendMessage(encodeMessage({
-        'key': 'output',
+        'action': ACTIONS['OUTPUT'],
         'data': message
     }))
 
-def createMessage(key, response):
-    if response[0]:
-        return encodeMessage({
-            'key': key,
-            'success': True,
-            'data': response[1]
-        })
-
-    return encodeMessage({
-        'key': key,
-        'success': False,
-        'error': response[1]
-    })
+def sendCustomCssResponse(action, target, response):
+    sendMessage(encodeMessage({
+        'action': action,
+        'target': target,
+        'success': response[0],
+        'data': response[1]
+    }))
 
 def fetchColors():
     colors = []
@@ -98,54 +118,54 @@ def getChromePath():
 
     return False
 
-def enableCustomCss(path, filename):
+def applyCustomCss(filename):
     try:
-        shutil.copy('./assets/%s' % filename, '%s/%s' % (path, filename))
+        shutil.copy('./assets/%s' % filename, '%s/%s' % (customCssPath, filename))
         return (True, 'Custom CSS: "%s" has been enabled' % filename)
     except Exception as e:
         return (False, 'Could not copy custom CSS to folder: %s' % str(e))
 
-def disableCustomCss(path, filename):
+def removeCustomCss(filename):
     try:
-        os.remove('%s/%s' % (path, filename))
+        os.remove('%s/%s' % (customCssPath, filename))
         return (True, 'Custom CSS: "%s" has been disabled' % filename)
     except Exception as e:
         return (False, 'Could not remove custom CSS: %s' % str(e))
 
-def handleReceivedMessage(message):
-    if message == 'update':
-        sendMessage(createMessage('colors', fetchColors()))
-    elif message == 'enableCustomCss':
-        (successChrome, dataChrome) = enableCustomCss(customCssPath, 'userChrome.css');
-        (successContent, dataContent) = enableCustomCss(customCssPath, 'userContent.css');
-        if successContent and successChrome:
-            sendMessage(createMessage('enableCustomCss', (True, 'Custom CSS: "userChrome.css" and "userContent.css" has been enabled')))
-        else:
-            sendMessage(createMessage('enableCustomCss', (successChrome, dataChrome)))
-            sendMessage(createMessage('enableCustomCss', (successContent, dataContent)))
-    elif message == 'disableCustomCss':
-        (successChrome, dataChrome) = disableCustomCss(customCssPath, 'userChrome.css');
-        (successContent, dataContent) = disableCustomCss(customCssPath, 'userContent.css');
-        if successContent and successChrome:
-            sendMessage(createMessage('disableCustomCss', (False, 'Custom CSS: "userChrome.css" and "userContent.css" has been disabled')))
-        else:
-            sendMessage(createMessage('disableCustomCss', (successChrome, dataChrome)))
-            sendMessage(createMessage('disableCustomCss', (successContent, dataContent)))
-    elif message == 'enableNoScrollbar':
-        sendMessage(createMessage('enableNoScrollbar', enableCustomCss(customCssPath, 'hide-scrollbar.as.css')))
-    elif message == 'disableNoScrollbar':
-        sendMessage(createMessage('disableNoScrollbar', disableCustomCss(customCssPath, 'hide-scrollbar.as.css')))
-    elif message == 'version':
-        sendVersion()
-    else:
-        sendInvalidCommand()
+def setCustomCss(action, target):
+    response = ()
+    filename = '%s.css' % target
 
+    if action == ACTIONS['CUSTOM_CSS_APPLY']:
+        response = applyCustomCss(filename)
+    else:
+        response = removeCustomCss(filename)
+
+    sendCustomCssResponse(action, target, response)
+
+def handleReceivedMessage(message):
+    try:
+        action = message['action']
+        if action == RECEIVED_ACTIONS['VERSION']:
+            sendVersion()
+        elif action == RECEIVED_ACTIONS['UPDATE']:
+            sendColorscheme()
+        elif action == RECEIVED_ACTIONS['ENABLE_CUSTOM_CSS']:
+            setCustomCss(ACTIONS['CUSTOM_CSS_APPLY'], message['target']);
+        elif action == RECEIVED_ACTIONS['DISABLE_CUSTOM_CSS']:
+            setCustomCss(ACTIONS['CUSTOM_CSS_REMOVE'], message['target']);
+        else:
+            sendInvalidCommand()
+    except:
+        sendOutput('Daemon received a message with an invalid format. Do you need to update?')
+
+# Handles messages from the UNIX socket, e.g when the user calls this script with the "update" argument
 def handleSocketMessage(server):
     while True:
         update = server.shouldUpdate()
         if update:
             sendOutput('Update triggered from external script')
-            sendMessage(createMessage('colors', fetchColors()))
+            sendColorscheme()
 
 # Get the path for custom CSS (the chrome folder)
 customCssPath = getChromePath()

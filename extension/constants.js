@@ -40,12 +40,31 @@ const THEME_COLOR_KEYS = [
 
 const PYWAL_PALETTE_LENGTH = 18;
 
-const REQUIRED_DAEMON_VERSION = 1.0;
+const REQUIRED_DAEMON_VERSION = 1.1;
 
-// The tab URLs to target when sending out messages
+// The URL pattern to be used when sending messages to DuckDuckGo
 const DDG_URL_PATTERN = [ "*://*.duckduckgo.com/*" ];
 
 const EXTERNAL_ACTIONS = {
   THEME_COLORS: 'colors',
-  THEME_DISABLED: 'disabled',
+  THEME_DISABLED: 'disabled'
 };
+
+const ACTIONS = {
+  ENABLE_CUSTOM_CSS: 'enableCustomCss',
+  DISABLE_CUSTOM_CSS: 'disableCustomCss',
+  UPDATE: 'update',
+  VERSION: 'version'
+};
+
+const RECEIVED_ACTIONS = {
+  VERSION: 'version',
+  COLORSCHEME: 'colors',
+  INVALID_MESSAGE: 'invalidMessage',
+  OUTPUT: 'output',
+  CUSTOM_CSS: {
+    APPLY: 'customCssApply',
+    REMOVE: 'customCssRemove'
+  }
+}
+
