@@ -1,3 +1,8 @@
+// Hides the
+html {
+  scrollbar-width: none !important;
+}
+
 @-moz-document url(about:blank), url(about:newtab), url(about:home) {
     .top-site-outer .title span {
         font-weight: bold !important;
