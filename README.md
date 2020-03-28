@@ -40,10 +40,11 @@ Restart Firefox and you should be able to fetch the colors using the Settings pa
 ### Updating the theme using the terminal
 If you are using some script for theming your system and do not want to manually refetch your pywal colors using the settings page, you can trigger an update of the browser theme by running `./daemon/pywalfox.py update` in your terminal (the script is not in your `PATH` by default).
 
-### Custom CSS
-If you want to use the custom CSS, you must do the following:
+### Using the included userChrome.css and userContent.css
+Pywalfox comes with custom CSS that you can enable if you want to. It applies your pywal colors to context-menus and other elements of the browser that are not available using the Theme API. If you want to use this feature, you must do the following:
 1. Navigate to `about:config` in Firefox
 2. Set `toolkit.legacyUserProfileCustomizations.stylesheets` to `true`
+3. Enable the `Custom CSS` option in the Settings page of the addon
 
 ### Troubleshooting
 * If you updated Pywalfox and have issues, try re-running the setup script as described above.
