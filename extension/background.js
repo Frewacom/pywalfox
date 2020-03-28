@@ -279,7 +279,7 @@ port.onMessage.addListener(async (response) => {
     }
   } else if (response.action == RECEIVED_ACTIONS.CUSTOM_CSS_APPLY) {
     setStateOnCustomCssToggled(response.target, true);
-  } else if (response.action == RECEIVED_ACTIONS.CUSTOM_CSS.REMOVE) {
+  } else if (response.action == RECEIVED_ACTIONS.CUSTOM_CSS_REMOVE) {
     setStateOnCustomCssToggled(response.target, false);
   } else if (response.action == RECEIVED_ACTIONS.OUTPUT) {
     output(response.data);

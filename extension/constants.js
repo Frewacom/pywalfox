@@ -62,9 +62,7 @@ const RECEIVED_ACTIONS = {
   COLORSCHEME: 'colors',
   INVALID_MESSAGE: 'invalidMessage',
   OUTPUT: 'output',
-  CUSTOM_CSS: {
-    APPLY: 'customCssApply',
-    REMOVE: 'customCssRemove'
-  }
+  CUSTOM_CSS_APPLY: 'customCssApply',
+  CUSTOM_CSS_REMOVE: 'customCssRemove'
 }
 
