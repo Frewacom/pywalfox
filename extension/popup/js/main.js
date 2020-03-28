@@ -1,4 +1,3 @@
-// Main settings page
 const versionLabel = document.getElementById('version');
 const banner = document.getElementById('banner');
 const updateButton = document.getElementById('update');
@@ -6,11 +5,9 @@ const resetButton = document.getElementById('reset');
 const outputToggle = document.getElementById('output-toggle');
 const outputArea = document.getElementById('output');
 
-// Custom theme template
 const customTemplateEditButton = document.getElementById('custom-template-edit-button');
 const customTemplateContainer = document.getElementById('custom-template-container');
 
-// Colorpicker dialog
 const colorpicker = document.getElementById('colorpicker-dialog');
 const colorpickerOverlay = document.getElementById('overlay');
 const colorpickerCustomInput = document.getElementById('colorpicker-dialog-input');
@@ -21,7 +18,7 @@ const toggleButtons = Array.from(document.getElementsByClassName('toggle'));
 const colorPreviews = Array.from(document.getElementsByClassName('colorpicker-dialog-open'));
 const paletteColors = Array.from(document.getElementsByClassName('pywal-color'));
 
-var selectedPreviewButton = undefined;
+var selectedColorButton = undefined;
 var selectedPaletteColor = undefined;
 
 // Listen for messages from background script
@@ -86,8 +83,8 @@ function getColorIndexFromPalette(color) {
 // Checks if the selected color in the colorpicker is different from the current color
 // We need to check this because we don't want to update the theme for no reason
 function colorHasChanged() {
-  const selectedId = selectedPreviewButton.getAttribute('data-selected-id');
-  const resetId = selectedPreviewButton.getAttribute('data-reset-id');
+  const selectedId = selectedColorButton.getAttribute('data-selected-id');
+  const resetId = selectedColorButton.getAttribute('data-reset-id');
   return (selectedId !== null && selectedId !== resetId);
 }
 
@@ -115,7 +112,7 @@ function setSelectedPaletteColor(element) {
 }
 
 function setPreviewBackground(newColor) {
-  selectedPreviewButton.style.background = newColor;
+  selectedColorButton.style.background = newColor;
 }
 
 // When one of the color preview buttons are pressed
@@ -125,22 +122,27 @@ function openColorpicker(e) {
   const selectedId = e.target.getAttribute('data-selected-id');
   const currentColor = currentExtensionColors[colorKey];
 
-  if (selectedPreviewButton === undefined) {
+  if (selectedColorButton === undefined) {
     // The colorpicker is not open, so show it
     colorpicker.style.display = 'flex';
     colorpickerOverlay.style.display = 'flex';
   } else {
     // The colorpicker is already open, unselect the previous preview button
-    selectedPreviewButton.classList.remove('selected');
+    selectedColorButton.classList.remove('selected');
   }
+
+  selectedColorButton = e.target;
 
   if (selectedPaletteColor !== undefined) {
     selectedPaletteColor.classList.remove('selected');
   }
 
-  e.target.setAttribute('data-reset-id', selectedId);
-  e.target.classList.add('selected');
-  selectedPreviewButton = e.target;
+  selectedColorButton.setAttribute('data-reset-id', selectedId);
+  selectedColorButton.classList.add('selected');
+
+  if (selectedId == 'custom') {
+    selectedColorButton.setAttribute('data-reset-custom-color', selectedColorButton.style.backgroundColor);
+  }
 
   colorpickerCustomInput.value = currentColor;
   colorpickerCustomInput.setAttribute('data-color', currentColor);
@@ -152,10 +154,10 @@ async function onPaletteColorChanged(e) {
   if (isThemeApplied) {
     const newId = e.target.getAttribute('data-id');
     const newColor = getPaletteColorById(newId);
-    const targetKey = selectedPreviewButton.getAttribute('data-target-key');
+    const targetKey = selectedColorButton.getAttribute('data-target-key');
 
     colorpickerCustomInput.value = newColor;
-    selectedPreviewButton.setAttribute('data-selected-id', newId);
+    selectedColorButton.setAttribute('data-selected-id', newId);
 
     setSelectedPaletteColor(e.target);
     setPreviewBackground(newColor);
@@ -165,7 +167,7 @@ async function onPaletteColorChanged(e) {
 
 function onCustomColorChanged(e) {
   const newColor = e.target.value;
-  const targetKey = selectedPreviewButton.getAttribute('data-target-key');
+  const targetKey = selectedColorButton.getAttribute('data-target-key');
   setSelectedPaletteColor(colorpickerCustomContainer);
   setPreviewBackground(newColor);
   setCustomColor(targetKey, newColor, false);
@@ -173,9 +175,16 @@ function onCustomColorChanged(e) {
 
 function onColorpickerUndo(e) {
   if (colorHasChanged()) {
-    const targetKey = selectedPreviewButton.getAttribute('data-target-key');
-    const resetId = selectedPreviewButton.getAttribute('data-reset-id');
-    const color = getPaletteColorById(resetId);
+    const targetKey = selectedColorButton.getAttribute('data-target-key');
+    const resetId = selectedColorButton.getAttribute('data-reset-id');
+    let color;
+
+    // We store custom colors differently than colors from the palette
+    if (resetId == 'custom') {
+      color = selectedColorButton.getAttribute('data-reset-custom-color');
+    } else {
+      color = getPaletteColorById(resetId);
+    }
 
     setCustomColor(targetKey, color, false);
     selectedPaletteColor.classList.remove('selected');
@@ -187,10 +196,10 @@ function closeColorpicker(colorpicker) {
   colorpicker.style.display = 'none';
   colorpickerOverlay.style.display = 'none';
 
-  selectedPreviewButton.classList.remove('selected');
+  selectedColorButton.classList.remove('selected');
   selectedPaletteColor.classList.remove('selected');
 
-  selectedPreviewButton = undefined;
+  selectedColorButton = undefined;
   resetColor = undefined;
 }
 
@@ -216,7 +225,7 @@ async function updateInterface(colors) {
     preview.setAttribute('data-selected-id', id);
     preview.style.backgroundColor = colors[preview.getAttribute('data-color-key')];
 
-    if (selectedPreviewButton !== undefined && !colorHasChanged()) {
+    if (selectedColorButton !== undefined && !colorHasChanged()) {
       preview.setAttribute('data-reset-id', id);
     }
   });
@@ -240,9 +249,9 @@ async function updateInterface(colors) {
     color.addEventListener('click', onPaletteColorChanged);
   });
 
-  if (selectedPreviewButton !== undefined) {
+  if (selectedColorButton !== undefined) {
     selectedPaletteColor.classList.remove('selected');
-    setInitialPaletteColor(selectedPreviewButton.getAttribute('data-selected-id'));
+    setInitialPaletteColor(selectedColorButton.getAttribute('data-selected-id'));
   }
 }
 
