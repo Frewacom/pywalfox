@@ -40,7 +40,7 @@ const THEME_COLOR_KEYS = [
 
 const PYWAL_PALETTE_LENGTH = 18;
 
-const REQUIRED_DAEMON_VERSION = 1.1;
+const REQUIRED_DAEMON_VERSION = 2.0;
 
 // The URL pattern to be used when sending messages to DuckDuckGo
 const DDG_URL_PATTERN = [ "*://*.duckduckgo.com/*" ];
