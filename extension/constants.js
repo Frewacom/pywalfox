@@ -51,18 +51,11 @@ const EXTERNAL_ACTIONS = {
 };
 
 const ACTIONS = {
-  ENABLE_CUSTOM_CSS: 'enableCustomCss',
-  DISABLE_CUSTOM_CSS: 'disableCustomCss',
-  UPDATE: 'update',
-  VERSION: 'version'
+  VERSION: 'debug:version',
+  OUTPUT: 'debug:output',
+  COLORS: 'action:colors',
+  INVALID_ACTION: 'action:invalid',
+  CSS_ENABLE: 'css:enable',
+  CSS_DISABLE: 'css:disable',
 };
-
-const RECEIVED_ACTIONS = {
-  VERSION: 'version',
-  COLORSCHEME: 'colors',
-  INVALID_MESSAGE: 'invalidMessage',
-  OUTPUT: 'output',
-  CUSTOM_CSS_APPLY: 'customCssApply',
-  CUSTOM_CSS_REMOVE: 'customCssRemove'
-}
 

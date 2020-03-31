@@ -11,7 +11,7 @@ var updatePageId = null;
 
 function fetchColorscheme() {
   port.postMessage({
-    action: ACTIONS.UPDATE
+    action: ACTIONS.COLORS
   });
 }
 
@@ -25,12 +25,12 @@ function toggleCustomCss(target, enabled) {
   console.log(target);
   if (enabled === true) {
     port.postMessage({
-      action: ACTIONS.ENABLE_CUSTOM_CSS,
+      action: ACTIONS.CSS_ENABLE,
       target: target
     });
   } else {
     port.postMessage({
-      action: ACTIONS.DISABLE_CUSTOM_CSS,
+      action: ACTIONS.CSS_DISABLE,
       target: target
     });
   }
@@ -270,24 +270,24 @@ port.onDisconnect.addListener((port) => {
 
 // Listen for messages from the native app
 port.onMessage.addListener(async (response) => {
-  if (response.action == RECEIVED_ACTIONS.COLORSCHEME) {
+  if (response.action == ACTIONS.COLORS) {
     if (response.success) {
       output('Fetched colors from daemon successfully');
       setTheme(response.data, true);
     } else {
       output(response.error);
     }
-  } else if (response.action == RECEIVED_ACTIONS.CUSTOM_CSS_APPLY) {
+  } else if (response.action == ACTIONS.CSS_ENABLE) {
     setStateOnCustomCssToggled(response.target, true);
-  } else if (response.action == RECEIVED_ACTIONS.CUSTOM_CSS_REMOVE) {
+  } else if (response.action == ACTIONS.CSS_DISABLE) {
     setStateOnCustomCssToggled(response.target, false);
-  } else if (response.action == RECEIVED_ACTIONS.OUTPUT) {
+  } else if (response.action == ACTIONS.OUTPUT) {
     output(response.data);
-  } else if (response.action == RECEIVED_ACTIONS.VERSION) {
+  } else if (response.action == ACTIONS.VERSION) {
     clearTimeout(versionCheckTimeout);
     versionCheckTimeout = null;
     checkDaemonVersion(response.data);
-  } else if (response.action == RECEIVED_ACTIONS.INVALID_MESSAGE) {
+  } else if (response.action == ACTIONS.INVALID_ACTION) {
     output(`Daemon received an invalid command. Are you using version ${REQUIRED_DAEMON_VERSION} of the daemon?`);
   }
 });
