@@ -1,0 +1,33 @@
+{
+  "name": "pywalfox",
+  "version": "2.0.0",
+  "description": "Extension for dyanmic theming of your browser using your pywal colors ",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Frewacom/Pywalfox"
+  },
+  "bugs": {
+    "url": "https://github.com/Frewacom/Pywalfox/issues"
+  },
+  "author": "Fredrik Engstrand <fredrik@engstrand.nu> (https://github.com/Frewacom)",
+  "license": "MIT",
+  "devDependencies": {
+    "ts-loader": "^6.2.2",
+    "typescript": "^3.8.3",
+    "web-ext": "^4.1.0",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
+  },
+  "WebExt": {
+    "verbose": false,
+    "sourceDir": "./dist",
+    "build": {
+      "overwriteDest": true
+    },
+    "run": {
+      "startUrl": [
+        "about:debugging"
+      ]
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "requiredDaemonVersion": 2.0,
+  "pywalPaletteLength": 18,
+  "injectURLPattern": [ "*://*.duckduckgo.com/*" ],
+  "defaultColorscheme": {
+      "background": "#252525",
+      "foreground": "#ffffff",
+      "backgroundLight": "#444444",
+      "accentPrimary": "#0284f7",
+      "accentSecondary": "#0284f7",
+      "text": "#ffffff"
+  },
+  "defaultThemeTemplate": {
+      "accentPrimary": 1,
+      "accentSecondary": 2,
+      "background": 0,
+      "foreground": 15,
+      "text": 16,
+      "backgroundLight": 17
+  },
+  "themeColorKeys": [
+      "background",
+      "foreground",
+      "backgroundLight",
+      "accentPrimary",
+      "accentSecondary",
+      "text"
+  ],
+  "externalMessages": {
+    "theme:colors": "colors",
+    "theme:disabled": "disabled"
+  },
+  "messages": {
+    "debug:version": "debug:version",
+    "debug:output": "debug:output",
+    "action:colors": "action:colors",
+    "action:invalid": "action:invalid",
+    "css:enable": "css:enable",
+    "css:disable": "css:disable"
+  }
+}

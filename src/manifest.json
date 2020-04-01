@@ -1,27 +1,9 @@
 {
     "manifest_version": 2,
     "name": "Pywalfox",
-    "version": "1.5.3",
-    "description": "Fetches pywal colors from system and applies them to Firefox",
-    "icons": {
-        "48": "icons/icon-48.png"
-    },
-    "browser_action": {
-        "default_icon": "icons/icon-48.png",
-        "default_title": "Pywalfox"
-    },
-    "background": {
-        "scripts": [
-            "constants.js",
-            "background.js"
-        ]
-    },
-    "content_scripts": [
-        {
-            "matches": ["*://*.duckduckgo.com/*"],
-            "js": ["colorutils.js", "constants.js", "duckduckgo.js"]
-        }
-    ],
+    "version": "2.0.0",
+    "description": "Dyanmic theming of the browser using your pywal colors",
+    "default_locale": "en",
     "browser_specific_settings": {
         "gecko": {
             "id": "pywalfox@frewacom.org",
@@ -33,6 +15,24 @@
         "id": "pywalfox@frewacom.org"
       }
     },
+    "icons": {
+        "48": "icons/icon-48.png"
+    },
+    "browser_action": {
+        "default_icon": "icons/icon-48.png",
+        "default_title": "Pywalfox"
+    },
+    "background": {
+        "scripts": [
+            "background/index.js"
+        ]
+    },
+    "content_scripts": [
+        {
+            "matches": ["*://*.duckduckgo.com/*"],
+            "js": ["inject/duckduckgo.js"]
+        }
+    ],
     "permissions": [
         "nativeMessaging",
         "theme",
