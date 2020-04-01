@@ -3,7 +3,6 @@
     "name": "Pywalfox",
     "version": "2.0.0",
     "description": "Dyanmic theming of the browser using your pywal colors",
-    "default_locale": "en",
     "browser_specific_settings": {
         "gecko": {
             "id": "pywalfox@frewacom.org",
@@ -24,13 +23,13 @@
     },
     "background": {
         "scripts": [
-            "background/index.js"
+            "dist/background.js"
         ]
     },
     "content_scripts": [
         {
             "matches": ["*://*.duckduckgo.com/*"],
-            "js": ["inject/duckduckgo.js"]
+            "js": ["dist/inject.js"]
         }
     ],
     "permissions": [
