@@ -182,7 +182,6 @@ async function sendMessageToTabs(data) {
 
 function setStateOnCustomCssToggled(storageKey, value) {
   setState(storageKey, value);
-  output(response.data);
 }
 
 function resetToDefaultTheme() {
