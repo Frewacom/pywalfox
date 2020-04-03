@@ -1,4 +1,6 @@
 /node_modules
 /extension/dist
 /artifacts
+/daemon/
+/dist
 
