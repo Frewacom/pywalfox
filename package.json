@@ -22,6 +22,7 @@
     "lint": "web-ext lint"
   },
   "devDependencies": {
+    "@types/firefox-webext-browser": "^70.0.1",
     "bestzip": "^2.1.5",
     "cross-env": "^7.0.2",
     "css-loader": "^3.4.2",

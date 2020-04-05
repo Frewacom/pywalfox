@@ -4,6 +4,8 @@
     "noImplicitAny": true,
     "module": "es6",
     "target": "es5",
-    "allowJs": true
+    "allowJs": true,
+    "lib": ["dom"],
+    "removeComments": true
   }
 }
