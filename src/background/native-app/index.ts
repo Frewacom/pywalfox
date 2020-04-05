@@ -1,16 +1,33 @@
+import { IPywalColors } from '../../colorscheme';
+
 /**
  * Interface for the messages used for communication between the browser extension
  * and the native messaging host.
- *
- * @public
  */
-interface INativeAppMessage {
+export interface INativeAppMessage {
   action: string;
   success: boolean;
   data?: object;
   error?: string;
   target?: string;
   [propName: string]: any;
+}
+
+/**
+ * Interface for the callbacks used by the NativeApp class whenever a message is received.
+ *
+ * @remarks
+ * The messaged received from the native messaging host will be parsed and
+ * the appropriate callback defined in the interface will be called.
+ *
+ * @internal
+ */
+export interface INativeAppMessageCallbacks {
+  version: (version: string) => void,
+  output: (message: string) => void,
+  colorscheme: (colorscheme: IPywalColors) => void,
+  toggleCss: (target: string, enabled: boolean) => void,
+  invalidAction: (action: string) => void
 }
 
 /**
@@ -21,15 +38,18 @@ interface INativeAppMessage {
  * user's computer and share resources that are otherwise inaccessible by the browser.
  * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging
  *
+ * @param callbacks - the callbacks to be used when a message is received
+ *
  * @internal
  */
 export class NativeApp {
-  private port;
+  private port: browser.runtime.Port;
   private isConnected: boolean;
-  private adapter: ;
+  private callbacks: INativeAppMessageCallbacks;
 
-  constructor() {
-
+  constructor(callbacks: INativeAppMessageCallbacks) {
+    this.callbacks = callbacks;
+    this.connect();
   }
 
   /**
@@ -39,7 +59,7 @@ export class NativeApp {
    * @param message - the message recieved from stdin of the connection
    */
   private async onMessage(message: INativeAppMessage) {
-    switch(response.action) {
+    switch(message.action) {
       default:
         break;
     }
