@@ -1,5 +1,6 @@
 import { Colorscheme, IColorscheme, IPywalColors } from '../colorscheme';
 import { NativeApp, INativeAppMessageCallbacks } from './native-app'
+import { Messenger } from './messenger';
 
 
 /**
@@ -18,24 +19,26 @@ declare global {
 
 /**
  * Main entry point of the background process of the extension.
+ *
+ * @internal
  */
 export class Extension {
-  private version: string;
-  private nativeApp : NativeApp;
+  private nativeApp: NativeApp;
+  private messenger: Messenger;
   private currentColorscheme: Colorscheme;
 
   constructor() {
+    this.messenger = new Messenger('ui');
     this.nativeApp = new NativeApp({
       version: this.setVersion,
       output: this.printDebuggingOutput,
       colorscheme: this.setColorscheme,
-      toggleCss: this.toggleCustomCss,
-      invalidAction: this.invalidAction
+      toggleCss: this.toggleCustomCss
     });
   }
 
   private setVersion(version: string) {
-    this.version = version;
+
   }
 
   private printDebuggingOutput(message: string) {
@@ -47,10 +50,6 @@ export class Extension {
   }
 
   private toggleCustomCss(target: string, enabled: boolean) {
-
-  }
-
-  private invalidAction(action: string) {
 
   }
 

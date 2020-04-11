@@ -1,16 +1,24 @@
 import { IPywalColors } from '../../colorscheme';
 
 /**
- * Interface for the messages used for communication between the browser extension
- * and the native messaging host.
+ * Interface for the messages received from the native messaging host.
  */
 export interface INativeAppMessage {
   action: string;
   success: boolean;
-  data?: object;
   error?: string;
+  version?: string;
   target?: string;
-  [propName: string]: any;
+  colorscheme?: IPywalColors;
+  [key: string]: any;
+}
+
+/**
+ * Interface for the messages sent to the native messaging host.
+ */
+interface INativeAppRequest {
+  action: string;
+  target?: string;
 }
 
 /**
@@ -26,8 +34,7 @@ export interface INativeAppMessageCallbacks {
   version: (version: string) => void,
   output: (message: string) => void,
   colorscheme: (colorscheme: IPywalColors) => void,
-  toggleCss: (target: string, enabled: boolean) => void,
-  invalidAction: (action: string) => void
+  toggleCss: (target: string, enabled: boolean) => void
 }
 
 /**
@@ -47,9 +54,40 @@ export class NativeApp {
   private isConnected: boolean;
   private callbacks: INativeAppMessageCallbacks;
 
+  private versionCheckTimeout: NodeJS.Timer;
+
   constructor(callbacks: INativeAppMessageCallbacks) {
     this.callbacks = callbacks;
     this.connect();
+    this.requestVersion();
+  }
+
+  /**
+   * Sends an error to be printed in the console and
+   * in the debugging output of the settings page.
+   *
+   * @param error - the error message to print
+   */
+  private logError(error: string) {
+    this.callbacks.output(error);
+    console.error(error);
+  }
+
+  /**
+   * Get value of a message recieved from the native messaging host.
+   *
+   * @param message - the message recieved from the native messaging host
+   * @param key - the key to get the value of
+   *
+   * @returns the value stored in key of message, or false if key is not present in message
+   */
+  private getValue(message: INativeAppMessage, key: string) {
+    if (message.hasOwnProperty(key)) {
+      return message[key];
+    }
+
+    this.logError(`Recieved invalid message from native app. Missing required key: ${key}`);
+    return false;
   }
 
   /**
@@ -59,9 +97,48 @@ export class NativeApp {
    * @param message - the message recieved from stdin of the connection
    */
   private async onMessage(message: INativeAppMessage) {
-    switch(message.action) {
-      default:
-        break;
+    if (message.success === true) {
+      switch(message.action) {
+        case 'debug:version':
+          const version = this.getValue(message, 'version');
+          if (version) {
+            clearTimeout(this.versionCheckTimeout);
+            this.callbacks.version(version);
+          }
+          break;
+        case 'debug:output':
+          const output = this.getValue(message, 'output');
+          if (output) {
+            this.callbacks.output(output);
+          }
+          break;
+        case 'action:colorscheme':
+          const colorscheme = this.getValue(message, 'colorscheme');
+          if (colorscheme) {
+            this.callbacks.colorscheme(colorscheme);
+          }
+          break;
+        case 'css:enable':
+          const enableTarget = this.getValue(message, 'target');
+          if (enableTarget) {
+            this.callbacks.toggleCss(enableTarget, true);
+          }
+          break;
+        case 'css:disable':
+          const disableTarget = this.getValue(message, 'target');
+          if (disableTarget) {
+            this.callbacks.toggleCss(disableTarget, false);
+          }
+          break;
+        case 'action:invalid':
+          this.logError(`Native app recieved unhandled message action: ${message.action}`);
+          break;
+        default:
+          this.logError(`Received unhandled message action: ${message.action}`);
+          break;
+      }
+    } else {
+      this.logError(`Native app returned an error on action ${message.action}:\n${message.error}`);
     }
   }
 
@@ -88,8 +165,24 @@ export class NativeApp {
    * Connects to the native messaging host.
    */
   public connect() {
-    this.port = browser.runtime.connectNative("pywalfox");
+    this.port = browser.runtime.connectNative('pywalfox');
     this.isConnected = true;
     this.setupListeners()
+  }
+
+  /**
+   * Sends a message to the native messaging host.
+   *
+   * @param message - the message to send
+   */
+  private sendMessage(message: INativeAppRequest) {
+    this.port.postMessage(message);
+  }
+
+  /**
+   * Sends a message to the native messaging host, requesting the current version.
+   */
+  public requestVersion() {
+    this.sendMessage({ action: 'debug:version' });
   }
 }
