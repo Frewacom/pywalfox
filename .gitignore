@@ -3,3 +3,4 @@ dist
 /*/__pycache__
 Session.vim
 TODO
+/node_modules
