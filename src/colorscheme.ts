@@ -1,51 +1,4 @@
 /**
- * Implements the interface for a browser theme.
- *
- * @remarks
- * The structure of this interface is based on the Firefox Theming API:
- * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/theme
- */
-export interface IBrowserTheme {
-  icons: string;
-  icons_attention: string;
-  frame: string;
-  tab_text: string;
-  tab_loading: string;
-  tab_background_text: string;
-  tab_selected: string;
-  tab_line: string;
-  tab_background_separator: string;
-  toolbar: string;
-  toolbar_field: string;
-  toolbar_field_focus: string;
-  toolbar_field_text: string;
-  toolbar_field_text_focus: string;
-  toolbar_field_border: string;
-  toolbar_field_border_focus: string;
-  toolbar_field_separator: string;
-  toolbar_field_highlight: string;
-  toolbar_field_highlight_text: string;
-  toolbar_bottom_separator: string;
-  toolbar_top_separator: string;
-  toolbar_vertical_separator: string;
-  ntp_background: string;
-  ntp_text: string;
-  popup: string;
-  popup_border: string;
-  popup_text: string;
-  popup_highlight: string;
-  popup_highlight_text: string;
-  sidebar: string;
-  sidebar_border: string;
-  sidebar_text: string;
-  sidebar_highlight: string;
-  sidebar_highlight_text: string;
-  bookmark_text: string;
-  button_background_hover: string;
-  button_background_active: string;
-}
-
-/**
  * Implements an interface for the pywal colors fetched from the users computer by the native messaging host.
  *
  * @remarks
@@ -76,7 +29,7 @@ export class Colorscheme {
   private pywalColors: IPywalColors;
 
   private colorscheme: IColorscheme;
-  private browserTheme: IBrowserTheme;
+  private browserTheme: browser._manifest.ThemeType;
 
   constructor(pywalColors: IPywalColors) {
     this.pywalColors = pywalColors;
@@ -103,43 +56,45 @@ export class Colorscheme {
 
   private generateBrowserTheme() {
     this.browserTheme = {
-      icons: this.colorscheme.accentPrimary,
-      icons_attention: this.colorscheme.accentSecondary,
-      frame: this.colorscheme.background,
-      tab_text: this.colorscheme.background,
-      tab_loading: this.colorscheme.accentPrimary,
-      tab_background_text: this.colorscheme.text,
-      tab_selected: this.colorscheme.foreground,
-      tab_line: this.colorscheme.foreground,
-      tab_background_separator: this.colorscheme.background,
-      toolbar: this.colorscheme.background,
-      toolbar_field: this.colorscheme.background,
-      toolbar_field_focus: this.colorscheme.background,
-      toolbar_field_text: this.colorscheme.text,
-      toolbar_field_text_focus: this.colorscheme.text,
-      toolbar_field_border: this.colorscheme.background,
-      toolbar_field_border_focus: this.colorscheme.background,
-      toolbar_field_separator: this.colorscheme.background,
-      toolbar_field_highlight: this.colorscheme.accentPrimary,
-      toolbar_field_highlight_text: this.colorscheme.text,
-      toolbar_bottom_separator: this.colorscheme.background,
-      toolbar_top_separator: this.colorscheme.background,
-      toolbar_vertical_separator: this.colorscheme.backgroundLight,
-      ntp_background: this.colorscheme.background,
-      ntp_text: this.colorscheme.foreground,
-      popup: this.colorscheme.background,
-      popup_border: this.colorscheme.backgroundLight,
-      popup_text: this.colorscheme.foreground,
-      popup_highlight: this.colorscheme.accentSecondary,
-      popup_highlight_text: this.colorscheme.text,
-      sidebar: this.colorscheme.background,
-      sidebar_border: this.colorscheme.backgroundLight,
-      sidebar_text: this.colorscheme.foreground,
-      sidebar_highlight: this.colorscheme.accentPrimary,
-      sidebar_highlight_text: this.colorscheme.text,
-      bookmark_text: this.colorscheme.text,
-      button_background_hover: this.colorscheme.backgroundLight,
-      button_background_active: this.colorscheme.backgroundLight,
+      colors: {
+        icons: this.colorscheme.accentPrimary,
+        icons_attention: this.colorscheme.accentSecondary,
+        frame: this.colorscheme.background,
+        tab_text: this.colorscheme.background,
+        tab_loading: this.colorscheme.accentPrimary,
+        tab_background_text: this.colorscheme.text,
+        tab_selected: this.colorscheme.foreground,
+        tab_line: this.colorscheme.foreground,
+        tab_background_separator: this.colorscheme.background,
+        toolbar: this.colorscheme.background,
+        toolbar_field: this.colorscheme.background,
+        toolbar_field_focus: this.colorscheme.background,
+        toolbar_field_text: this.colorscheme.text,
+        toolbar_field_text_focus: this.colorscheme.text,
+        toolbar_field_border: this.colorscheme.background,
+        toolbar_field_border_focus: this.colorscheme.background,
+        toolbar_field_separator: this.colorscheme.background,
+        toolbar_field_highlight: this.colorscheme.accentPrimary,
+        toolbar_field_highlight_text: this.colorscheme.text,
+        toolbar_bottom_separator: this.colorscheme.background,
+        toolbar_top_separator: this.colorscheme.background,
+        toolbar_vertical_separator: this.colorscheme.backgroundLight,
+        ntp_background: this.colorscheme.background,
+        ntp_text: this.colorscheme.foreground,
+        popup: this.colorscheme.background,
+        popup_border: this.colorscheme.backgroundLight,
+        popup_text: this.colorscheme.foreground,
+        popup_highlight: this.colorscheme.accentSecondary,
+        popup_highlight_text: this.colorscheme.text,
+        sidebar: this.colorscheme.background,
+        sidebar_border: this.colorscheme.backgroundLight,
+        sidebar_text: this.colorscheme.foreground,
+        sidebar_highlight: this.colorscheme.accentPrimary,
+        sidebar_highlight_text: this.colorscheme.text,
+        bookmark_text: this.colorscheme.text,
+        button_background_hover: this.colorscheme.backgroundLight,
+        button_background_active: this.colorscheme.backgroundLight,
+      }
     };
   }
 }

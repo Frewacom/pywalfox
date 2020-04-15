@@ -3,7 +3,7 @@ const webpack = require('webpack');
 
 module.exports = {
   mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
-  devtool: this.mode === 'development' ? 'source-map' : 'none',
+  devtool: process.env.NODE_ENV === 'development' ? 'source-map' : false,
   entry: {
     background: path.resolve(__dirname, 'src/background/index.ts'),
     inject: path.resolve(__dirname, 'src/inject/index.ts')

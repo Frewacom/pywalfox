@@ -1,8 +1,8 @@
-import { Colorscheme, IColorscheme, IPywalColors } from '../colorscheme';
-import { NativeApp, INativeAppMessageCallbacks } from './native-app'
-import { Messenger } from '../messenger';
 import { State } from '../state';
-
+import { Messenger } from '../messenger';
+import { MIN_REQUIRED_DAEMON_VERSION } from '../config';
+import { NativeApp } from './native-app'
+import { Colorscheme, IColorscheme, IPywalColors } from '../colorscheme';
 
 /**
  * Expose 'wrappedJSObject' from the 'window' namespace.
@@ -28,25 +28,54 @@ export class Extension {
     this.state = new State();
     this.messenger = new Messenger('ui');
     this.nativeApp = new NativeApp({
-      version: this.setVersion,
-      output: this.printDebuggingOutput,
-      colorscheme: this.setColorscheme,
-      toggleCss: this.toggleCustomCss,
-      updateNeeded: this.updateNeeded,
-      nativeAppDisconnected: this.nativeAppDisconnected,
+      connected: this.nativeAppConnected.bind(this),
+      updateNeeded: this.updateNeeded.bind(this),
+      disconnected: this.nativeAppDisconnected.bind(this),
+      version: this.validateVersion.bind(this),
+      output: this.printDebuggingOutput.bind(this),
+      colorscheme: this.setColorscheme.bind(this),
+      toggleCss: this.toggleCustomCss.bind(this),
     });
   }
 
-  private setVersion(version: string) {
+  private setTheme(theme: browser._manifest.ThemeType) {
+    browser.theme.update(theme);
+  }
 
+  private applySavedTheme() {
+    const theme = this.state.getBrowserTheme();
+    if (theme) {
+      this.setTheme(theme);
+      this.state.setApplied(true);
+    } else {
+      this.state.setApplied(false);
+    }
+  }
+
+  private validateVersion(version: string) {
+    const versionNumber = parseFloat(version);
+    if (versionNumber < MIN_REQUIRED_DAEMON_VERSION) {
+      this.updateNeeded();
+    }
+
+    this.state.setVersion(versionNumber);
   }
 
   private updateNeeded() {
+    console.log('Update needed');
+  }
 
+  private nativeAppConnected() {
+    if (!this.state.getApplied()) {
+      this.nativeApp.requestColorscheme();
+    }
+
+    this.state.setConnected(true);
   }
 
   private nativeAppDisconnected() {
-
+    console.error('Disconnected from native app');
+    this.state.setConnected(false);
   }
 
   private printDebuggingOutput(message: string) {
@@ -62,8 +91,10 @@ export class Extension {
   }
 
   public async start() {
-    console.log('Hello world');
-    this.state.load();
+    browser.storage.local.clear(); // debugging
+    await this.state.load();
+
+    this.applySavedTheme();
     this.nativeApp.connect();
   }
 }

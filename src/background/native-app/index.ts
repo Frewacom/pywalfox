@@ -1,3 +1,4 @@
+import { MESSAGES } from '../../config';
 import { IPywalColors } from '../../colorscheme';
 
 /* Interface for the messages sent to the native messaging host. */
@@ -16,12 +17,13 @@ export interface INativeAppMessage {
 }
 
 export interface INativeAppMessageCallbacks {
+  connected: () => void,
+  updateNeeded: () => void,
+  disconnected: () => void,
   version: (version: string) => void,
   output: (message: string) => void,
   colorscheme: (colorscheme: IPywalColors) => void,
   toggleCss: (target: string, enabled: boolean) => void,
-  updateNeeded: () => void,
-  nativeAppDisconnected: () => void,
 }
 
 /**
@@ -40,6 +42,7 @@ export class NativeApp {
   private callbacks: INativeAppMessageCallbacks;
 
   private versionCheckTimeout: number;
+  private connectedCheckTimeout: number;
 
   constructor(callbacks: INativeAppMessageCallbacks) {
     this.callbacks = callbacks;
@@ -60,9 +63,10 @@ export class NativeApp {
   }
 
   private async onMessage(message: INativeAppMessage) {
+    console.debug(message);
     if (message.success === true) {
       switch(message.action) {
-        case 'debug:version':
+        case MESSAGES.VERSION:
           const version = this.getData(message);
           if (version) {
             this.callbacks.version(version);
@@ -71,31 +75,31 @@ export class NativeApp {
           }
           clearTimeout(this.versionCheckTimeout);
           break;
-        case 'debug:output':
+        case MESSAGES.OUTPUT:
           const output = this.getData(message);
           if (output) {
             this.callbacks.output(output);
           }
           break;
-        case 'action:colors':
+        case MESSAGES.COLORSCHEME:
           const colorscheme = this.getData(message);
           if (colorscheme) {
             this.callbacks.colorscheme(colorscheme);
           }
           break;
-        case 'css:enable':
+        case MESSAGES.CSS_ENABLE:
           const enableTarget = this.getData(message);
           if (enableTarget) {
             this.callbacks.toggleCss(enableTarget, true);
           }
           break;
-        case 'css:disable':
+        case MESSAGES.CSS_DISABLE:
           const disableTarget = this.getData(message);
           if (disableTarget) {
             this.callbacks.toggleCss(disableTarget, false);
           }
           break;
-        case 'action:invalid':
+        case MESSAGES.INVALID_ACTION:
           this.logError(`Native app recieved unhandled message action: ${message.action}`);
           break;
         default:
@@ -110,7 +114,8 @@ export class NativeApp {
   private async onDisconnect(port: browser.runtime.Port) {
     if (port.error) {
       clearTimeout(this.versionCheckTimeout);
-      this.callbacks.nativeAppDisconnected();
+      clearTimeout(this.connectedCheckTimeout);
+      this.callbacks.disconnected();
       console.log('Disconnected from native messaging host');
     }
   }
@@ -123,7 +128,8 @@ export class NativeApp {
   public async connect() {
     this.port = await browser.runtime.connectNative('pywalfox');
     this.isConnected = true;
-    this.versionCheckTimeout = setTimeout(this.callbacks.updateNeeded);
+    this.versionCheckTimeout = window.setTimeout(this.callbacks.updateNeeded, 1000);
+    this.connectedCheckTimeout = window.setTimeout(this.callbacks.connected, 1000);
     this.setupListeners();
     this.requestVersion();
   }
@@ -133,18 +139,14 @@ export class NativeApp {
   }
 
   public requestVersion() {
-    this.sendMessage({ action: 'debug:version' });
+    this.sendMessage({ action: MESSAGES.VERSION });
   }
 
   public requestColorscheme() {
-    this.sendMessage({ action: 'action:colors' });
+    this.sendMessage({ action: MESSAGES.COLORSCHEME });
   }
 
   public requestCssEnabled(target: string, enabled: boolean) {
-    if (enabled) {
-      this.sendMessage({ action: 'css:enable', target });
-    } else {
-      this.sendMessage({ action: 'css:disable', target });
-    }
+    this.sendMessage({ action: enabled ? MESSAGES.CSS_ENABLE : MESSAGES.CSS_DISABLE, target });
   }
 }
