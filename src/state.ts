@@ -1,4 +1,4 @@
-import { IColorscheme } from './colorscheme';
+import { IBrowserTheme, IExtensionTheme, IColorscheme } from './colorscheme';
 
 export enum ThemeTypes {
   Dark,
@@ -10,12 +10,12 @@ export interface IExtensionState {
   version: number,
   enabled: boolean;
   connected: boolean;
-  colorscheme: IColorscheme;
   theme: {
     isApplied: boolean;
     type: ThemeTypes;
-    extension: IColorscheme;
-    browser: browser._manifest.ThemeType;
+    colorscheme: IColorscheme,
+    extension: IExtensionTheme;
+    browser: IBrowserTheme;
     template: {
       enabled: boolean;
       keys: {};
@@ -40,10 +40,10 @@ export class State {
       version: 0.0,
       enabled: false,
       connected: false,
-      colorscheme: null,
       theme: {
         isApplied: false,
         type: ThemeTypes.Dark,
+        colorscheme: null,
         extension: null,
         browser: null,
         template: {
@@ -72,11 +72,15 @@ export class State {
   }
 
   public getColorscheme() {
-    return this.currentState.theme.colorscheme;
+    return this.currentState.theme.generated;
   }
 
   public getBrowserTheme() {
     return this.currentState.theme.browser;
+  }
+
+  public getExtensionTheme() {
+    return this.currentState.theme.extension;
   }
 
   public setVersion(version: number) {
@@ -91,8 +95,14 @@ export class State {
     return this.set({ theme: { isApplied } });
   }
 
-  public setColorscheme(colorscheme: IColorscheme) {
-    return this.set({ theme: { colorscheme } });
+  public setTheme(colorscheme: IColorscheme, browserTheme: IBrowserTheme, extensionTheme: IExtensionTheme) {
+    return this.set({
+      theme: {
+        colorscheme: colorscheme,
+        browser: browserTheme,
+        extension: extensionTheme
+      }
+    });
   }
 
   public async load() {

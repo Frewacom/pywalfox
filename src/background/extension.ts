@@ -1,8 +1,16 @@
 import { State } from '../state';
 import { Messenger } from '../messenger';
 import { MIN_REQUIRED_DAEMON_VERSION } from '../config';
-import { NativeApp } from './native-app'
-import { Colorscheme, IColorscheme, IPywalColors } from '../colorscheme';
+import { NativeApp } from './native-app';
+import {
+  IPywalColors,
+  IExtensionTheme,
+  IBrowserTheme,
+  IColorscheme,
+  IColorschemeTemplate,
+  generateBrowserTheme,
+  generateExtensionTheme,
+} from '../colorscheme';
 
 /**
  * Expose 'wrappedJSObject' from the 'window' namespace.
@@ -22,7 +30,6 @@ export class Extension {
   private state: State;
   private nativeApp: NativeApp;
   private messenger: Messenger;
-  private currentColorscheme: Colorscheme;
 
   constructor() {
     this.state = new State();
@@ -38,17 +45,36 @@ export class Extension {
     });
   }
 
-  private setTheme(theme: browser._manifest.ThemeType) {
-    browser.theme.update(theme);
+  private setTheme(browserTheme: IBrowserTheme, extensionTheme: IExtensionTheme) {
+    browser.theme.update({ colors: browserTheme });
+    // TODO: Send the updated extension colorscheme to the UI
+    this.state.setApplied(true);
   }
 
+
+  /**
+   * Fetches the browser- and extension theme from state and applies it, if set.
+   * This is used when launching the background script to increase the speed
+   * at which the theme is applied.
+   *
+   * When colors are fetched or updated by the user, use 'applyUpdatedTheme'
+   */
   private applySavedTheme() {
-    const theme = this.state.getBrowserTheme();
-    if (theme) {
-      this.setTheme(theme);
-      this.state.setApplied(true);
+    const browserTheme = this.state.getBrowserTheme();
+    const extensionTheme = this.state.getExtensionTheme();
+
+    if (browserTheme) {
+      this.setTheme(browserTheme, extensionTheme);
+      // TODO: Send external message
     } else {
       this.state.setApplied(false);
+    }
+  }
+
+  private applyUpdatedTheme(browserTheme: IBrowserTheme, extensionTheme: IExtensionTheme, refresh: boolean) {
+    this.setTheme(browserTheme, extensionTheme);
+    if (refresh) {
+      // TODO: Refresh DuckDuckGo, etc
     }
   }
 
@@ -83,7 +109,7 @@ export class Extension {
   }
 
   private setColorscheme(pywalColors: IPywalColors) {
-    this.currentColorscheme = new Colorscheme(pywalColors);
+    // TODO: Generate colorscheme and browser- and extension theme
   }
 
   private toggleCustomCss(target: string, enabled: boolean) {
