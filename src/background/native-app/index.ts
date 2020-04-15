@@ -1,40 +1,27 @@
 import { IPywalColors } from '../../colorscheme';
 
-/**
- * Interface for the messages received from the native messaging host.
- */
-export interface INativeAppMessage {
-  action: string;
-  success: boolean;
-  error?: string;
-  version?: string;
-  target?: string;
-  colorscheme?: IPywalColors;
-  [key: string]: any;
-}
-
-/**
- * Interface for the messages sent to the native messaging host.
- */
+/* Interface for the messages sent to the native messaging host. */
 interface INativeAppRequest {
   action: string;
   target?: string;
 }
 
-/**
- * Interface for the callbacks used by the NativeApp class whenever a message is received.
- *
- * @remarks
- * The messaged received from the native messaging host will be parsed and
- * the appropriate callback defined in the interface will be called.
- *
- * @internal
- */
+/* Interface for the messages received from the native messaging host. */
+export interface INativeAppMessage {
+  action: string;
+  success: boolean;
+  error?: string;
+  data?: string;
+  [key: string]: any;
+}
+
 export interface INativeAppMessageCallbacks {
   version: (version: string) => void,
   output: (message: string) => void,
   colorscheme: (colorscheme: IPywalColors) => void,
-  toggleCss: (target: string, enabled: boolean) => void
+  toggleCss: (target: string, enabled: boolean) => void,
+  updateNeeded: () => void,
+  nativeAppDisconnected: () => void,
 }
 
 /**
@@ -46,86 +33,64 @@ export interface INativeAppMessageCallbacks {
  * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging
  *
  * @param callbacks - the callbacks to be used when a message is received
- *
- * @internal
  */
 export class NativeApp {
   private port: browser.runtime.Port;
   private isConnected: boolean;
   private callbacks: INativeAppMessageCallbacks;
 
-  private versionCheckTimeout: NodeJS.Timer;
+  private versionCheckTimeout: number;
 
   constructor(callbacks: INativeAppMessageCallbacks) {
     this.callbacks = callbacks;
-    this.connect();
-    this.requestVersion();
   }
 
-  /**
-   * Sends an error to be printed in the console and
-   * in the debugging output of the settings page.
-   *
-   * @param error - the error message to print
-   */
   private logError(error: string) {
     this.callbacks.output(error);
     console.error(error);
   }
 
-  /**
-   * Get value of a message recieved from the native messaging host.
-   *
-   * @param message - the message recieved from the native messaging host
-   * @param key - the key to get the value of
-   *
-   * @returns the value stored in key of message, or false if key is not present in message
-   */
-  private getValue(message: INativeAppMessage, key: string) {
-    if (message.hasOwnProperty(key)) {
-      return message[key];
+  private getData(message: INativeAppMessage) {
+    if (message.hasOwnProperty('data')) {
+      return message.data;
     }
 
-    this.logError(`Recieved invalid message from native app. Missing required key: ${key}`);
+    this.logError(`Recieved invalid message from native app. The 'data' field is undefined.`);
     return false;
   }
 
-  /**
-   * Handles an incoming message from the native messaging host and
-   * runs the appropriate action based on the message content.
-   *
-   * @param message - the message recieved from stdin of the connection
-   */
   private async onMessage(message: INativeAppMessage) {
     if (message.success === true) {
       switch(message.action) {
         case 'debug:version':
-          const version = this.getValue(message, 'version');
+          const version = this.getData(message);
           if (version) {
-            clearTimeout(this.versionCheckTimeout);
             this.callbacks.version(version);
+          } else {
+            this.callbacks.updateNeeded();
           }
+          clearTimeout(this.versionCheckTimeout);
           break;
         case 'debug:output':
-          const output = this.getValue(message, 'output');
+          const output = this.getData(message);
           if (output) {
             this.callbacks.output(output);
           }
           break;
-        case 'action:colorscheme':
-          const colorscheme = this.getValue(message, 'colorscheme');
+        case 'action:colors':
+          const colorscheme = this.getData(message);
           if (colorscheme) {
             this.callbacks.colorscheme(colorscheme);
           }
           break;
         case 'css:enable':
-          const enableTarget = this.getValue(message, 'target');
+          const enableTarget = this.getData(message);
           if (enableTarget) {
             this.callbacks.toggleCss(enableTarget, true);
           }
           break;
         case 'css:disable':
-          const disableTarget = this.getValue(message, 'target');
+          const disableTarget = this.getData(message);
           if (disableTarget) {
             this.callbacks.toggleCss(disableTarget, false);
           }
@@ -142,47 +107,44 @@ export class NativeApp {
     }
   }
 
-  /**
-   * Handles the disconnection from the native messaging host
-   *
-   * @param port - the connection port that was disconnected
-   */
   private async onDisconnect(port: browser.runtime.Port) {
     if (port.error) {
+      clearTimeout(this.versionCheckTimeout);
+      this.callbacks.nativeAppDisconnected();
       console.log('Disconnected from native messaging host');
     }
   }
 
-  /**
-   * Sets up event listeners for the native messaging host connection.
-   */
   private setupListeners() {
-    this.port.onMessage.addListener(this.onMessage)
-    this.port.onDisconnect.addListener(this.onDisconnect)
+    this.port.onMessage.addListener(this.onMessage.bind(this));
+    this.port.onDisconnect.addListener(this.onDisconnect.bind(this));
   }
 
-  /**
-   * Connects to the native messaging host.
-   */
-  public connect() {
-    this.port = browser.runtime.connectNative('pywalfox');
+  public async connect() {
+    this.port = await browser.runtime.connectNative('pywalfox');
     this.isConnected = true;
-    this.setupListeners()
+    this.versionCheckTimeout = setTimeout(this.callbacks.updateNeeded);
+    this.setupListeners();
+    this.requestVersion();
   }
 
-  /**
-   * Sends a message to the native messaging host.
-   *
-   * @param message - the message to send
-   */
   private sendMessage(message: INativeAppRequest) {
     this.port.postMessage(message);
   }
 
-  /**
-   * Sends a message to the native messaging host, requesting the current version.
-   */
   public requestVersion() {
     this.sendMessage({ action: 'debug:version' });
+  }
+
+  public requestColorscheme() {
+    this.sendMessage({ action: 'action:colors' });
+  }
+
+  public requestCssEnabled(target: string, enabled: boolean) {
+    if (enabled) {
+      this.sendMessage({ action: 'css:enable', target });
+    } else {
+      this.sendMessage({ action: 'css:disable', target });
+    }
   }
 }
