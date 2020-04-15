@@ -105,6 +105,16 @@ export class State {
     });
   }
 
+  public setCssEnabled(target: string, enabled: boolean) {
+    this.set({
+      options: {
+        css: {
+          [target]: enabled
+        }
+      }
+    });
+  }
+
   public async load() {
     this.currentState = await browser.storage.local.get(this.initialState);
   }

@@ -23,7 +23,8 @@ export interface INativeAppMessageCallbacks {
   version: (version: string) => void,
   output: (message: string) => void,
   colorscheme: (colorscheme: IPywalColors) => void,
-  toggleCss: (target: string, enabled: boolean) => void,
+  cssToggleSuccess: (target: string, enabled: boolean) => void,
+  cssToggleFailed: (error: string) => void,
 }
 
 /**
@@ -62,52 +63,57 @@ export class NativeApp {
     return false;
   }
 
+  private handleCssToggleResponse(message: INativeAppMessage, enabled: boolean) {
+    const target = this.getData(message);
+
+    if (!target) {
+      this.logError(`Custom CSS was applied successfully, but no target was specified`);
+      return;
+    }
+
+    if (message.success) {
+      this.callbacks.cssToggleSuccess(target, enabled);
+    } else {
+      this.callbacks.cssToggleFailed(message.error);
+    }
+  }
+
   private async onMessage(message: INativeAppMessage) {
     console.debug(message);
-    if (message.success === true) {
-      switch(message.action) {
-        case MESSAGES.VERSION:
-          const version = this.getData(message);
-          if (version) {
-            this.callbacks.version(version);
-          } else {
-            this.callbacks.updateNeeded();
-          }
-          clearTimeout(this.versionCheckTimeout);
-          break;
-        case MESSAGES.OUTPUT:
-          const output = this.getData(message);
-          if (output) {
-            this.callbacks.output(output);
-          }
-          break;
-        case MESSAGES.COLORSCHEME:
-          const colorscheme = this.getData(message);
-          if (colorscheme) {
-            this.callbacks.colorscheme(colorscheme);
-          }
-          break;
-        case MESSAGES.CSS_ENABLE:
-          const enableTarget = this.getData(message);
-          if (enableTarget) {
-            this.callbacks.toggleCss(enableTarget, true);
-          }
-          break;
-        case MESSAGES.CSS_DISABLE:
-          const disableTarget = this.getData(message);
-          if (disableTarget) {
-            this.callbacks.toggleCss(disableTarget, false);
-          }
-          break;
-        case MESSAGES.INVALID_ACTION:
-          this.logError(`Native app recieved unhandled message action: ${message.action}`);
-          break;
-        default:
-          this.logError(`Received unhandled message action: ${message.action}`);
-          break;
-      }
-    } else {
-      this.logError(`Native app returned an error on action ${message.action}:\n${message.error}`);
+    switch(message.action) {
+      case MESSAGES.VERSION:
+        const version = this.getData(message);
+        if (version) {
+          this.callbacks.version(version);
+        } else {
+          this.callbacks.updateNeeded();
+        }
+        clearTimeout(this.versionCheckTimeout);
+        break;
+      case MESSAGES.OUTPUT:
+        const output = this.getData(message);
+        if (output) {
+          this.callbacks.output(output);
+        }
+        break;
+      case MESSAGES.COLORSCHEME:
+        const colorscheme = this.getData(message);
+        if (colorscheme) {
+          this.callbacks.colorscheme(colorscheme);
+        }
+        break;
+      case MESSAGES.CSS_ENABLE:
+        this.handleCssToggleResponse(message, true);
+        break;
+      case MESSAGES.CSS_DISABLE:
+        this.handleCssToggleResponse(message, false);
+        break;
+      case MESSAGES.INVALID_ACTION:
+        this.logError(`Native app recieved unhandled message action: ${message.action}`);
+        break;
+      default:
+        this.logError(`Received unhandled message action: ${message.action}`);
+        break;
     }
   }
 

@@ -33,15 +33,16 @@ export class Extension {
 
   constructor() {
     this.state = new State();
-    this.messenger = new Messenger('ui');
+    this.messenger = new Messenger();
     this.nativeApp = new NativeApp({
       connected: this.nativeAppConnected.bind(this),
       updateNeeded: this.updateNeeded.bind(this),
       disconnected: this.nativeAppDisconnected.bind(this),
       version: this.validateVersion.bind(this),
-      output: this.printDebuggingOutput.bind(this),
-      colorscheme: this.setColorscheme.bind(this),
-      toggleCss: this.toggleCustomCss.bind(this),
+      output: this.messenger.printDebuggingOutput.bind(this.messenger),
+      colorscheme: this.updateColorscheme.bind(this),
+      cssToggleSuccess: this.cssToggleSuccess.bind(this),
+      cssToggleFailed: this.cssToggleFailed.bind(this),
     });
   }
 
@@ -104,16 +105,18 @@ export class Extension {
     this.state.setConnected(false);
   }
 
-  private printDebuggingOutput(message: string) {
-
-  }
-
-  private setColorscheme(pywalColors: IPywalColors) {
+  private updateColorscheme(pywalColors: IPywalColors) {
     // TODO: Generate colorscheme and browser- and extension theme
+
+    /* this.applyUpdatedTheme(); */
   }
 
-  private toggleCustomCss(target: string, enabled: boolean) {
+  private cssToggleSuccess(target: string, enabled: boolean) {
+    this.state.setCssEnabled(target, enabled);
+  }
 
+  private cssToggleFailed(error: string) {
+    this.messenger.displayNotification(error);
   }
 
   public async start() {

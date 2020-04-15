@@ -25,6 +25,18 @@ export const EXTERNAL_MESSAGES = {
   DISABLED: "disabled"
 };
 
+export const EXTENSION_MESSAGES = {
+  OUTPUT: "output",
+  THEME: "theme",
+  NOTIFCATION: "notification",
+  CSS_ENABLE: "css:enable",
+  CSS_DISABLE: "css:disable",
+  CSS_ENABLE_SUCCESS: "css:enable:success",
+  CSS_ENABLE_FAILED: "css:enable:failed",
+  CSS_DISABLE_SUCCESS: "css:disable:success",
+  CSS_DISABLE_FAILED: "css:disable:failed",
+};
+
 export const MESSAGES = {
   VERSION: "debug:version",
   OUTPUT: "debug:output",
