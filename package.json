@@ -16,6 +16,7 @@
     "browser": "web-ext run",
     "debug": "npm-run-all --parallel watch browser",
     "build": "npm-run-all build:*",
+    "build:clean": "rm extension/dist/*.js.map",
     "build:compile": "webpack",
     "build:dist": "web-ext build",
     "build:source": "bestzip artifacts/source.zip extension src package.json webpack.config.js",
