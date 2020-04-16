@@ -1,5 +1,5 @@
 import { MESSAGES } from '../../config';
-import { IPywalColors } from '../../colorscheme';
+import { IPywalColors } from '../../definitions';
 
 /* Interface for the messages sent to the native messaging host. */
 interface INativeAppRequest {

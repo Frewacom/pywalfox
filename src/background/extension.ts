@@ -1,16 +1,26 @@
-import { State } from '../state';
-import { setupExtensionMessageListener, IExtensionMessage, UI, DDG } from '../messenger';
-import { MIN_REQUIRED_DAEMON_VERSION, EXTENSION_MESSAGES } from '../config';
-import { NativeApp } from './native-app';
 import {
   IPywalColors,
-  IExtensionTheme,
-  IBrowserTheme,
   IColorscheme,
+  IBrowserTheme,
+  IExtensionTheme,
+  IExtensionMessage,
   IColorschemeTemplate,
+} from '../definitions';
+
+import {
+  generateColorscheme,
   generateBrowserTheme,
   generateExtensionTheme,
-} from '../colorscheme';
+  generateDefaultExtensionTheme,
+  generateDDGTheme,
+} from './colorscheme';
+
+import { State } from './state';
+import { NativeApp } from './native-app';
+import { MIN_REQUIRED_DAEMON_VERSION, EXTENSION_MESSAGES } from '../config';
+
+import * as UI from '../communication/ui';
+import * as DDG from '../communication/duckduckgo';
 
 /**
  * Expose 'wrappedJSObject' from the 'window' namespace.
@@ -43,7 +53,7 @@ export class Extension {
       cssToggleFailed: this.cssToggleFailed.bind(this),
     });
 
-    setupExtensionMessageListener(this.onMessage.bind(this));
+    browser.runtime.onMessage.addListener(this.onMessage.bind(this));
   }
 
   /* Handles incoming messages from the UI and other content scripts. */

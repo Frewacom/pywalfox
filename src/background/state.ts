@@ -1,4 +1,4 @@
-import { IBrowserTheme, IExtensionTheme, IDuckDuckGoTheme, IColorscheme } from './colorscheme';
+import { IBrowserTheme, IExtensionTheme, IDuckDuckGoTheme, IColorscheme } from '../definitions';
 
 export enum ThemeTypes {
   Dark,
