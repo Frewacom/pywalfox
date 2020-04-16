@@ -35,6 +35,9 @@ export const EXTENSION_MESSAGES = {
   CSS_ENABLE_FAILED: "css:enable:failed",
   CSS_DISABLE_SUCCESS: "css:disable:success",
   CSS_DISABLE_FAILED: "css:disable:failed",
+  DDG_THEME_GET: "ddg:theme:get",
+  DDG_THEME_ENABLED: "ddg:theme:enabled",
+  DDG_THEME_DISABLED: "ddg:theme:disabled"
 };
 
 export const MESSAGES = {
