@@ -1,6 +1,6 @@
 import { State } from '../state';
-import { Messenger } from '../messenger';
-import { MIN_REQUIRED_DAEMON_VERSION } from '../config';
+import { setupExtensionMessageListener, IExtensionMessage, UI, DDG } from '../messenger';
+import { MIN_REQUIRED_DAEMON_VERSION, EXTENSION_MESSAGES } from '../config';
 import { NativeApp } from './native-app';
 import {
   IPywalColors,
@@ -29,21 +29,31 @@ declare global {
 export class Extension {
   private state: State;
   private nativeApp: NativeApp;
-  private messenger: Messenger;
 
   constructor() {
     this.state = new State();
-    this.messenger = new Messenger();
     this.nativeApp = new NativeApp({
       connected: this.nativeAppConnected.bind(this),
       updateNeeded: this.updateNeeded.bind(this),
       disconnected: this.nativeAppDisconnected.bind(this),
       version: this.validateVersion.bind(this),
-      output: this.messenger.printDebuggingOutput.bind(this.messenger),
+      output: UI.sendDebuggingOutput,
       colorscheme: this.updateColorscheme.bind(this),
       cssToggleSuccess: this.cssToggleSuccess.bind(this),
       cssToggleFailed: this.cssToggleFailed.bind(this),
     });
+
+    setupExtensionMessageListener(this.onMessage.bind(this));
+  }
+
+  /* Handles incoming messages from the UI and other content scripts. */
+  private onMessage(message: IExtensionMessage) {
+    switch (message.action) {
+      case EXTENSION_MESSAGES.DDG_THEME_GET:
+        const theme = this.state.getDuckDuckGoTheme();
+        theme ? DDG.setTheme(theme) : DDG.resetTheme();
+        break;
+    }
   }
 
   private setTheme(browserTheme: IBrowserTheme, extensionTheme: IExtensionTheme) {
@@ -51,7 +61,6 @@ export class Extension {
     // TODO: Send the updated extension colorscheme to the UI
     this.state.setApplied(true);
   }
-
 
   /**
    * Fetches the browser- and extension theme from state and applies it, if set.
@@ -116,7 +125,7 @@ export class Extension {
   }
 
   private cssToggleFailed(error: string) {
-    this.messenger.displayNotification(error);
+    UI.sendNotification(error);
   }
 
   public async start() {

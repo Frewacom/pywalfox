@@ -1,27 +1,41 @@
 import { EXTENSION_MESSAGES } from './config';
+import { IDuckDuckGoTheme } from './colorscheme';
 
 export interface IExtensionMessage {
   action: string;
   data?: any;
 };
 
-/* Implements the communcation between the background- and content scripts. */
-export class Messenger {
-  constructor() {
-    this.setupListeners();
+type MessageCallback = (message: IExtensionMessage) => void;
+
+function sendMessage(action: string, data?: any) {
+  browser.runtime.sendMessage({ action, data });
+}
+
+export function setupExtensionMessageListener(messageCallback: MessageCallback) {
+  browser.runtime.onMessage.addListener(messageCallback);
+}
+
+export namespace UI {
+  export function sendDebuggingOutput(message: string) {
+    sendMessage(EXTENSION_MESSAGES.OUTPUT, message);
   }
 
-  private setupListeners() {
-    browser.runtime.onMessage.addListener((message: IExtensionMessage) => {
+  export function sendNotification(message: string) {
+    sendMessage(EXTENSION_MESSAGES.NOTIFCATION, message);
+  }
+}
 
-    });
+export namespace DDG {
+  export function requestTheme() {
+    sendMessage(EXTENSION_MESSAGES.DDG_THEME_GET);
   }
 
-  public printDebuggingOutput(message: string) {
-    browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.OUTPUT, data: message });
+  export function setTheme(theme: IDuckDuckGoTheme) {
+    sendMessage(EXTENSION_MESSAGES.DDG_THEME_ENABLED, theme);
   }
 
-  public displayNotification(message: string) {
-    browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.NOTIFCATION, data: message });
+  export function resetTheme() {
+    sendMessage(EXTENSION_MESSAGES.DDG_THEME_DISABLED);
   }
 }

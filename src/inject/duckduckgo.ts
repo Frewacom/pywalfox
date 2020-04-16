@@ -1,5 +1,10 @@
 import { EXTENSION_MESSAGES } from '../config';
 import { IDuckDuckGoTheme } from '../colorscheme';
+import { setupExtensionMessageListener, DDG, IExtensionMessage } from '../messenger';
+
+function getCurrentTheme() {
+  return window.wrappedJSObject.DDG.settings.get('kae');
+}
 
 function resetTheme() {
   console.debug('Resetting theme');
@@ -13,19 +18,25 @@ function applyTheme(theme: IDuckDuckGoTheme) {
   }
 }
 
+function onMessage(message: IExtensionMessage) {
+  switch (message.action) {
+    case EXTENSION_MESSAGES.DDG_THEME_ENABLED:
+      const theme = message.data;
+      theme && applyTheme(theme);
+      break;
+    case EXTENSION_MESSAGES.DDG_THEME_DISABLED:
+      if (getCurrentTheme() === 'pywalfox') {
+        resetTheme();
+      }
+    default:
+      console.error(`Received unhandled action: ${message.action}`);
+  }
+}
+
 function load() {
   console.debug('Pywalfox content script loaded');
-  browser.runtime.onMessage.addListener((message) => {
-    switch (message.action) {
-      case EXTENSION_MESSAGES.DDG_THEME_ENABLED:
-        const theme = message.data;
-        theme && applyTheme(theme);
-        break;
-      case EXTENSION_MESSAGES.DDG_THEME_DISABLED:
-        resetTheme();
-    }
-  });
-  browser.runtime.sendMessage(EXTENSION_MESSAGES.DDG_THEME_GET);
+  setupExtensionMessageListener(onMessage);
+  DDG.requestTheme();
 }
 
 load();

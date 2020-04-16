@@ -1,4 +1,4 @@
-import { IBrowserTheme, IExtensionTheme, IColorscheme } from './colorscheme';
+import { IBrowserTheme, IExtensionTheme, IDuckDuckGoTheme, IColorscheme } from './colorscheme';
 
 export enum ThemeTypes {
   Dark,
@@ -16,6 +16,7 @@ export interface IExtensionState {
     colorscheme: IColorscheme,
     extension: IExtensionTheme;
     browser: IBrowserTheme;
+    ddg: IDuckDuckGoTheme;
     template: {
       enabled: boolean;
       keys: {};
@@ -27,7 +28,7 @@ export interface IExtensionState {
       userContent: boolean;
       fontSize: number;
     },
-    duckDuckGoTheme: boolean;
+    ddgEnabled: boolean;
   };
 }
 
@@ -46,6 +47,7 @@ export class State {
         colorscheme: null,
         extension: null,
         browser: null,
+        ddg: null,
         template: {
           enabled: false,
           keys: null,
@@ -57,7 +59,7 @@ export class State {
           userContent: false,
           fontSize: 11,
         },
-        duckDuckGoTheme: false,
+        ddgEnabled: false,
       }
     };
   }
@@ -81,6 +83,14 @@ export class State {
 
   public getExtensionTheme() {
     return this.currentState.theme.extension;
+  }
+
+  public getDuckDuckGoTheme() {
+    if (this.currentState.options.ddgEnabled) {
+      return this.currentState.theme.ddg;
+    }
+
+    return null;
   }
 
   public setVersion(version: number) {
