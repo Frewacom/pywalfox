@@ -1,12 +1,13 @@
 const path = require('path');
 const webpack = require('webpack');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
   devtool: process.env.NODE_ENV === 'development' ? 'source-map' : false,
   entry: {
     background: path.resolve(__dirname, 'src/background/index.ts'),
-    inject: path.resolve(__dirname, 'src/inject/index.ts')
+    duckduckgo: path.resolve(__dirname, 'src/inject/duckduckgo.ts')
   },
   output: {
     path: path.resolve(__dirname, 'extension/dist'),
@@ -41,5 +42,8 @@ module.exports = {
   },
   resolve: {
     extensions: [ '.tsx', '.ts', '.js' ],
-  }
+  },
+  plugins: [
+    new CleanWebpackPlugin(),
+  ]
 }
