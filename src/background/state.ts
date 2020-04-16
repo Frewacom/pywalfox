@@ -1,26 +1,24 @@
-import { IBrowserTheme, IExtensionTheme, IDuckDuckGoTheme, IColorscheme } from '../definitions';
-
-export enum ThemeTypes {
-  Dark,
-  Light,
-  Auto
-}
+import { DEFAULT_THEME_TEMPLATE_DARK } from '../config';
+import {
+  IExtensionTheme,
+  IDuckDuckGoTheme,
+  IColorscheme,
+  IColorschemeTemplate,
+  ThemeTypes
+} from '../definitions';
 
 export interface IExtensionState {
   version: number,
   enabled: boolean;
   connected: boolean;
   theme: {
-    isApplied: boolean;
     type: ThemeTypes;
+    isApplied: boolean;
+    customTemplateEnabled: boolean;
     colorscheme: IColorscheme,
     extension: IExtensionTheme;
-    browser: IBrowserTheme;
     ddg: IDuckDuckGoTheme;
-    template: {
-      enabled: boolean;
-      keys: {};
-    };
+    template: IColorschemeTemplate;
   };
   options: {
     css: {
@@ -42,16 +40,13 @@ export class State {
       enabled: false,
       connected: false,
       theme: {
-        isApplied: false,
         type: ThemeTypes.Dark,
+        isApplied: false,
+        customTemplateEnabled: false,
         colorscheme: null,
         extension: null,
-        browser: null,
         ddg: null,
-        template: {
-          enabled: false,
-          keys: null,
-        },
+        template: DEFAULT_THEME_TEMPLATE_DARK,
       },
       options: {
         css: {
@@ -73,12 +68,16 @@ export class State {
     return this.currentState.isApplied;
   }
 
-  public getColorscheme() {
-    return this.currentState.theme.generated;
+  public getTemplateEnabled() {
+    return this.currentState.theme.customTemplateEnabled;
   }
 
-  public getBrowserTheme() {
-    return this.currentState.theme.browser;
+  public getTemplate() {
+    return this.currentState.theme.template;
+  }
+
+  public getColorscheme() {
+    return this.currentState.theme.generated;
   }
 
   public getExtensionTheme() {
@@ -86,11 +85,11 @@ export class State {
   }
 
   public getDuckDuckGoTheme() {
-    if (this.currentState.options.ddgEnabled) {
-      return this.currentState.theme.ddg;
-    }
+    return this.currentState.theme.ddg;
+  }
 
-    return null;
+  public getDuckDuckGoThemeEnabled() {
+    return this.currentState.options.ddgTheme;
   }
 
   public setVersion(version: number) {
@@ -105,12 +104,16 @@ export class State {
     return this.set({ theme: { isApplied } });
   }
 
-  public setTheme(colorscheme: IColorscheme, browserTheme: IBrowserTheme, extensionTheme: IExtensionTheme) {
+  public setThemes(
+    colorscheme: IColorscheme,
+    extensionTheme: IExtensionTheme,
+    ddgTheme: IDuckDuckGoTheme
+  ) {
     return this.set({
       theme: {
         colorscheme: colorscheme,
-        browser: browserTheme,
-        extension: extensionTheme
+        extension: extensionTheme,
+        ddg: ddgTheme,
       }
     });
   }

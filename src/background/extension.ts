@@ -1,15 +1,16 @@
 import {
+  IPalette,
   IPywalColors,
   IColorscheme,
   IBrowserTheme,
   IExtensionTheme,
+  IDuckDuckGoTheme,
   IExtensionMessage,
   IColorschemeTemplate,
 } from '../definitions';
 
 import {
   generateColorscheme,
-  generateBrowserTheme,
   generateExtensionTheme,
   generateDefaultExtensionTheme,
   generateDDGTheme,
@@ -39,6 +40,7 @@ declare global {
 export class Extension {
   private state: State;
   private nativeApp: NativeApp;
+  private settingsPage: browser.tabs.Tab;
 
   constructor() {
     this.state = new State();
@@ -48,7 +50,7 @@ export class Extension {
       disconnected: this.nativeAppDisconnected.bind(this),
       version: this.validateVersion.bind(this),
       output: UI.sendDebuggingOutput,
-      colorscheme: this.updateColorscheme.bind(this),
+      colorscheme: this.updateThemes.bind(this),
       cssToggleSuccess: this.cssToggleSuccess.bind(this),
       cssToggleFailed: this.cssToggleFailed.bind(this),
     });
@@ -66,10 +68,48 @@ export class Extension {
     }
   }
 
-  private setTheme(browserTheme: IBrowserTheme, extensionTheme: IExtensionTheme) {
-    browser.theme.update({ colors: browserTheme });
-    // TODO: Send the updated extension colorscheme to the UI
+  private resetThemes() {
+    const defaultExtensionTheme = generateDefaultExtensionTheme();
+
+    browser.theme.reset();
+    this.setExtensionTheme(defaultExtensionTheme);
+
+    if (this.state.getDuckDuckGoThemeEnabled()) {
+      DDG.resetTheme();
+    }
+
+    this.state.setThemes(null, null, null);;
+    this.state.setApplied(false);
+  }
+
+  private updateThemes(pywalColors: IPywalColors, customColors?: IPalette) {
+    const template = this.state.getTemplate();
+    const colorscheme = generateColorscheme(pywalColors, customColors, template);
+    const extensionTheme = generateExtensionTheme(colorscheme);
+
+    this.setBrowserTheme(colorscheme.browser);
+    this.setExtensionTheme(extensionTheme);
+
+    let ddgTheme: IDuckDuckGoTheme = null;
+    if (this.state.getDuckDuckGoThemeEnabled()) {
+      ddgTheme = generateDDGTheme(colorscheme);
+      DDG.setTheme(ddgTheme);
+    }
+
+    this.state.setThemes(colorscheme, extensionTheme, ddgTheme);
     this.state.setApplied(true);
+  }
+
+  private setBrowserTheme(browserTheme: IBrowserTheme) {
+    browser.theme.update({ colors: browserTheme });
+  }
+
+  private setExtensionTheme(extensionTheme: IExtensionTheme) {
+    if (!this.settingsPage) {
+      return;
+    }
+
+    browser.tabs.insertCSS(this.settingsPage.id, { code: extensionTheme });
   }
 
   /**
@@ -77,24 +117,15 @@ export class Extension {
    * This is used when launching the background script to increase the speed
    * at which the theme is applied.
    *
-   * When colors are fetched or updated by the user, use 'applyUpdatedTheme'
+   * In all other cases, use 'updateThemes'.
    */
-  private applySavedTheme() {
-    const browserTheme = this.state.getBrowserTheme();
-    const extensionTheme = this.state.getExtensionTheme();
-
-    if (browserTheme) {
-      this.setTheme(browserTheme, extensionTheme);
-      // TODO: Send external message
+  private setSavedBrowserTheme() {
+    const colorscheme = this.state.getColorscheme();
+    if (colorscheme) {
+      this.setBrowserTheme(colorscheme);
+      this.state.setApplied(true);
     } else {
       this.state.setApplied(false);
-    }
-  }
-
-  private applyUpdatedTheme(browserTheme: IBrowserTheme, extensionTheme: IExtensionTheme, refresh: boolean) {
-    this.setTheme(browserTheme, extensionTheme);
-    if (refresh) {
-      // TODO: Refresh DuckDuckGo, etc
     }
   }
 
@@ -124,12 +155,6 @@ export class Extension {
     this.state.setConnected(false);
   }
 
-  private updateColorscheme(pywalColors: IPywalColors) {
-    // TODO: Generate colorscheme and browser- and extension theme
-
-    /* this.applyUpdatedTheme(); */
-  }
-
   private cssToggleSuccess(target: string, enabled: boolean) {
     this.state.setCssEnabled(target, enabled);
   }
@@ -142,7 +167,7 @@ export class Extension {
     browser.storage.local.clear(); // debugging
     await this.state.load();
 
-    this.applySavedTheme();
+    this.setSavedBrowserTheme();
     this.nativeApp.connect();
   }
 }

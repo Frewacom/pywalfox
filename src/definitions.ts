@@ -10,7 +10,7 @@ export interface IPywalColors  {
   [index: number]: string;
 }
 
-export interface IExtensionTheme {
+export interface IPalette {
   background: string;
   foreground: string;
   backgroundLight: string;
@@ -66,21 +66,32 @@ export interface IBrowserTheme {
   button_background_active: string;
 }
 
-export interface IDuckDuckGoThemeColor {
+export interface IColorObject {
   id: string;
   value: string;
 }
 
-export type IDuckDuckGoTheme = IDuckDuckGoThemeColor[];
+export type IExtensionTheme = string;
+export type IDuckDuckGoTheme = IColorObject[];
 
-export type IColorscheme = IBrowserTheme & IExtensionTheme;
+export interface IColorscheme {
+  palette: IPalette;
+  browser: IBrowserTheme;
+}
 
 export interface IColorschemeTemplate {
-  // TODO: Implement the real template interface
-  [key: string]: number;
+  palette: {
+    [key: string]: number;
+  };
 }
 
 export interface IExtensionMessage {
   action: string;
   data?: any;
 };
+
+export enum ThemeTypes {
+  Dark,
+  Light,
+  Auto
+}
