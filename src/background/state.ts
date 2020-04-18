@@ -64,6 +64,10 @@ export class State {
     await browser.storage.local.set(newState);
   }
 
+  public getEnabled() {
+    return this.currentState.enabled;
+  }
+
   public getApplied() {
     return this.currentState.isApplied;
   }
@@ -100,8 +104,17 @@ export class State {
     return this.set({ connected });
   }
 
+  public setEnabled(enabled: boolean) {
+    return this.set({ enabled });
+  }
+
   public setApplied(isApplied: boolean) {
-    return this.set({ theme: { isApplied } });
+    return this.set({
+      theme: {
+        isApplied,
+        ...this.currentState.theme,
+      }
+    });
   }
 
   public setThemes(
@@ -114,6 +127,7 @@ export class State {
         colorscheme: colorscheme,
         extension: extensionTheme,
         ddg: ddgTheme,
+        ...this.currentState.theme,
       }
     });
   }
@@ -122,7 +136,8 @@ export class State {
     this.set({
       options: {
         css: {
-          [target]: enabled
+          ...this.currentState.css,
+          [target]: enabled,
         }
       }
     });
@@ -130,5 +145,10 @@ export class State {
 
   public async load() {
     this.currentState = await browser.storage.local.get(this.initialState);
+}
+
+  /* Used for debugging. */
+  public dump() {
+    console.log(this.currentState);
   }
 }

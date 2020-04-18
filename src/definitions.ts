@@ -95,3 +95,17 @@ export enum ThemeTypes {
   Light,
   Auto
 }
+
+/**
+ * Expose 'wrappedJSObject' from the 'window' namespace.
+ *
+ * @remarks
+ * The object is used by the DuckDuckGo content script to interface
+ * with the DuckDuckGo scripts. It allows us to get and set settings
+ * using the built-in functions.
+ */
+declare global {
+  interface Window {
+    wrappedJSObject: { DDG: any; };
+  }
+}

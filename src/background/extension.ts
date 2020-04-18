@@ -17,33 +17,21 @@ import {
 } from './colorscheme';
 
 import { State } from './state';
+import { Settings } from './settings';
 import { NativeApp } from './native-app';
 import { MIN_REQUIRED_DAEMON_VERSION, EXTENSION_MESSAGES } from '../config';
 
 import * as UI from '../communication/ui';
 import * as DDG from '../communication/duckduckgo';
 
-/**
- * Expose 'wrappedJSObject' from the 'window' namespace.
- *
- * @remarks
- * The object is used by the DuckDuckGo content script to interface
- * with the DuckDuckGo scripts. It allows us to get and set settings
- * using the built-in functions.
- */
-declare global {
-  interface Window {
-    wrappedJSObject: { DDG: any; };
-  }
-}
-
 export class Extension {
   private state: State;
   private nativeApp: NativeApp;
-  private settingsPage: browser.tabs.Tab;
+  private settings: Settings;
 
   constructor() {
     this.state = new State();
+    this.settings = new Settings();
     this.nativeApp = new NativeApp({
       connected: this.nativeAppConnected.bind(this),
       updateNeeded: this.updateNeeded.bind(this),
@@ -56,6 +44,16 @@ export class Extension {
     });
 
     browser.runtime.onMessage.addListener(this.onMessage.bind(this));
+    browser.browserAction.onClicked.addListener(this.onIconClicked.bind(this));
+  }
+
+  private onIconClicked(tab: browser.tabs.Tab, clickData: browser.contextMenus.OnClickData) {
+    if (this.settings.isOpen()) {
+      this.settings.focus();
+    } else {
+      const extensionTheme = this.state.getExtensionTheme();
+      this.settings.open(extensionTheme);
+    }
   }
 
   /* Handles incoming messages from the UI and other content scripts. */
@@ -80,6 +78,7 @@ export class Extension {
 
     this.state.setThemes(null, null, null);;
     this.state.setApplied(false);
+    this.state.setEnabled(false);
   }
 
   private updateThemes(pywalColors: IPywalColors, customColors?: IPalette) {
@@ -98,6 +97,8 @@ export class Extension {
 
     this.state.setThemes(colorscheme, extensionTheme, ddgTheme);
     this.state.setApplied(true);
+
+    !this.state.getEnabled() && this.state.setEnabled(true);
   }
 
   private setBrowserTheme(browserTheme: IBrowserTheme) {
@@ -105,11 +106,7 @@ export class Extension {
   }
 
   private setExtensionTheme(extensionTheme: IExtensionTheme) {
-    if (!this.settingsPage) {
-      return;
-    }
-
-    browser.tabs.insertCSS(this.settingsPage.id, { code: extensionTheme });
+    this.settings.setTheme(extensionTheme);
   }
 
   /**
@@ -143,7 +140,7 @@ export class Extension {
   }
 
   private nativeAppConnected() {
-    if (!this.state.getApplied()) {
+    if (!this.state.getApplied() && this.state.getEnabled()) {
       this.nativeApp.requestColorscheme();
     }
 
@@ -167,7 +164,11 @@ export class Extension {
     browser.storage.local.clear(); // debugging
     await this.state.load();
 
-    this.setSavedBrowserTheme();
+    if (this.state.getEnabled()) {
+      this.setSavedBrowserTheme();
+    }
+
     this.nativeApp.connect();
+    this.state.dump();
   }
 }
