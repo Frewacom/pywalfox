@@ -14,7 +14,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, 'extension/dist'),
-    filename: '[name].js'
+    filename: '[name].js',
   },
   module: {
     rules: [
@@ -29,10 +29,11 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: 'css-loader',
-        options: {
-          modules: true
-        }
+        use: [
+          'file-loader',
+          'extract-loader',
+          'css-loader'
+        ],
       },
       {
         test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
@@ -60,5 +61,5 @@ module.exports = {
       inject: true,
       chunks: [ 'updatePage' ],
     }),
-  ]
+  ],
 }
