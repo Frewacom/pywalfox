@@ -7,5 +7,11 @@
     "allowJs": true,
     "lib": ["dom"],
     "removeComments": true
-  }
+  },
+  "include": [
+    "src/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

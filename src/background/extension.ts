@@ -51,7 +51,11 @@ export class Extension {
     if (this.settings.isOpen()) {
       this.settings.focus();
     } else {
-      const extensionTheme = this.state.getExtensionTheme();
+      let extensionTheme = this.state.getExtensionTheme();
+      if (extensionTheme === null) {
+        extensionTheme = generateDefaultExtensionTheme();
+      }
+
       this.settings.open(extensionTheme);
     }
   }
@@ -169,6 +173,5 @@ export class Extension {
     }
 
     this.nativeApp.connect();
-    this.state.dump();
   }
 }

@@ -1,7 +1,8 @@
 export const MIN_REQUIRED_DAEMON_VERSION = 2.0;
 export const PYWAL_PALETTE_LENGTH = 18;
 export const INJECT_URL_PATTERN = [ "*://*.duckduckgo.com/*" ];
-export const SETTINGS_PAGE_URL = 'ui/index.html';
+export const SETTINGS_PAGE_URL = 'dist/settings.html';
+export const UPDATE_PAGE_URL = 'update.html';
 
 export const DEFAULT_PALETTE = {
   background: "#252525",
