@@ -7,11 +7,33 @@ export class SettingsPage {
   private defaultTheme: IExtensionTheme;
   private url: string;
 
-  constructor(defaultTheme: IExtensionTheme) {
+  constructor(defaultTheme: IExtensionTheme, currentTheme: IExtensionTheme) {
     this.tab = null;
     this.currentTheme = null;
     this.defaultTheme = defaultTheme;
     this.url = browser.runtime.getURL(SETTINGS_PAGE_URL);
+    this.findDetached();
+  }
+
+  private async findDetached() {
+    const tabs = await browser.tabs.query({ url: this.url });
+    if (tabs.length > 0) {
+      const tail = tabs.slice(1);
+      this.deleteDetached(tail);
+      this.attach(tabs[0]);
+    }
+  }
+
+  private deleteDetached(tabs: browser.tabs.Tab[]) {
+    for (const tab of tabs) {
+      browser.tabs.remove(tab.id);
+    }
+  }
+
+  private attach(tab: browser.tabs.Tab) {
+    this.tab = tab;
+    this.setupListeners();
+    this.setTheme(this.currentTheme);
   }
 
   /**
@@ -26,7 +48,6 @@ export class SettingsPage {
         browser.tabs.onRemoved.removeListener(this.onClosed);
         browser.tabs.onUpdated.removeListener(this.onUpdated);
         this.tab = null;
-        this.currentTheme = null;
       }
     }
   }
@@ -85,17 +106,14 @@ export class SettingsPage {
       return;
     }
 
-    let selectedTheme = this.defaultTheme;
     if (extensionTheme) {
-      if (this.currentTheme !== extensionTheme) {
-        this.currentTheme = extensionTheme;
-      }
-
-      selectedTheme = extensionTheme;
+      this.currentTheme = extensionTheme;
+    } else {
+      this.currentTheme = this.defaultTheme;
     }
 
     browser.tabs.insertCSS(this.tab.id, {
-      code: selectedTheme,
+      code: this.currentTheme,
       runAt: 'document_start'
     });
   }

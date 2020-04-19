@@ -31,7 +31,6 @@ export class Extension {
 
   constructor() {
     this.state = new State();
-    this.settingsPage = new SettingsPage(generateDefaultExtensionTheme());
     this.nativeApp = new NativeApp({
       connected: this.nativeAppConnected.bind(this),
       updateNeeded: this.updateNeeded.bind(this),
@@ -68,6 +67,17 @@ export class Extension {
         theme ? DDG.setTheme(theme) : DDG.resetTheme();
         break;
     }
+  }
+
+  private createSettingsPage() {
+    const defaultExtensionTheme = generateDefaultExtensionTheme();
+    let currentTheme = defaultExtensionTheme;
+
+    if (this.state.getEnabled()) {
+      currentTheme = this.state.getExtensionTheme();
+    }
+
+    this.settingsPage = new SettingsPage(defaultExtensionTheme, currentTheme);
   }
 
   private resetThemes() {
@@ -166,6 +176,7 @@ export class Extension {
       this.setSavedBrowserTheme();
     }
 
+    this.createSettingsPage();
     this.nativeApp.connect();
   }
 }
