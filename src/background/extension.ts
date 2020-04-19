@@ -17,8 +17,8 @@ import {
 } from './colorscheme';
 
 import { State } from './state';
-import { Settings } from './settings';
 import { NativeApp } from './native-app';
+import { SettingsPage } from './settings-page';
 import { MIN_REQUIRED_DAEMON_VERSION, EXTENSION_MESSAGES } from '../config';
 
 import * as UI from '../communication/ui';
@@ -27,11 +27,11 @@ import * as DDG from '../communication/duckduckgo';
 export class Extension {
   private state: State;
   private nativeApp: NativeApp;
-  private settings: Settings;
+  private settingsPage: SettingsPage;
 
   constructor() {
     this.state = new State();
-    this.settings = new Settings();
+    this.settingsPage = new SettingsPage(generateDefaultExtensionTheme());
     this.nativeApp = new NativeApp({
       connected: this.nativeAppConnected.bind(this),
       updateNeeded: this.updateNeeded.bind(this),
@@ -48,15 +48,15 @@ export class Extension {
   }
 
   private onIconClicked(tab: browser.tabs.Tab, clickData: browser.contextMenus.OnClickData) {
-    if (this.settings.isOpen()) {
-      this.settings.focus();
+    if (this.settingsPage.isOpen()) {
+      this.settingsPage.focus();
     } else {
       let extensionTheme = this.state.getExtensionTheme();
-      if (extensionTheme === null) {
-        extensionTheme = generateDefaultExtensionTheme();
+      if (extensionTheme) {
+        this.settingsPage.open(extensionTheme);
+      } else {
+        this.settingsPage.open();
       }
-
-      this.settings.open(extensionTheme);
     }
   }
 
@@ -71,16 +71,14 @@ export class Extension {
   }
 
   private resetThemes() {
-    const defaultExtensionTheme = generateDefaultExtensionTheme();
-
     browser.theme.reset();
-    this.setExtensionTheme(defaultExtensionTheme);
+    this.settingsPage.setTheme();
 
     if (this.state.getDuckDuckGoThemeEnabled()) {
       DDG.resetTheme();
     }
 
-    this.state.setThemes(null, null, null);;
+    this.state.setThemes(null, null, null); // TODO: Could probably save the generated themes
     this.state.setApplied(false);
     this.state.setEnabled(false);
   }
@@ -91,7 +89,7 @@ export class Extension {
     const extensionTheme = generateExtensionTheme(colorscheme);
 
     this.setBrowserTheme(colorscheme.browser);
-    this.setExtensionTheme(extensionTheme);
+    this.settingsPage.setTheme(extensionTheme);
 
     let ddgTheme: IDuckDuckGoTheme = null;
     if (this.state.getDuckDuckGoThemeEnabled()) {
@@ -107,10 +105,6 @@ export class Extension {
 
   private setBrowserTheme(browserTheme: IBrowserTheme) {
     browser.theme.update({ colors: browserTheme });
-  }
-
-  private setExtensionTheme(extensionTheme: IExtensionTheme) {
-    this.settings.setTheme(extensionTheme);
   }
 
   /**

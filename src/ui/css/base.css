@@ -1,5 +1,9 @@
 @import url('./font.css');
+@import url('./variables.css');
 
 body {
   font-family: 'Manrope';
+  background-color: var(--background);
+  font-size: var(--font-size);
+  color: var(--accent-primary)
 }

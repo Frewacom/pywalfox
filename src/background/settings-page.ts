@@ -1,11 +1,17 @@
 import { SETTINGS_PAGE_URL } from '../config';
 import { IExtensionTheme } from '../definitions';
 
-export class Settings {
+export class SettingsPage {
   private tab: browser.tabs.Tab;
+  private currentTheme: IExtensionTheme;
+  private defaultTheme: IExtensionTheme;
+  private url: string;
 
-  constructor() {
+  constructor(defaultTheme: IExtensionTheme) {
     this.tab = null;
+    this.currentTheme = null;
+    this.defaultTheme = defaultTheme;
+    this.url = browser.runtime.getURL(SETTINGS_PAGE_URL);
   }
 
   /**
@@ -20,13 +26,24 @@ export class Settings {
         browser.tabs.onRemoved.removeListener(this.onClosed);
         browser.tabs.onUpdated.removeListener(this.onUpdated);
         this.tab = null;
+        this.currentTheme = null;
       }
     }
   }
 
+  /**
+   * This function will be called whenever the Settings tab is reloaded or
+   * the user navigates to a different URL.
+   */
   private onUpdated(tabId: number, changeInfo: any, tab?: any) {
-    if (changeInfo.title != 'Pywalfox - Settings') {
-      this.onClosed(tabId);
+    if (changeInfo.status === 'loading') {
+      // The 'url' attribute is only available on loading
+      if (changeInfo.url === this.url || changeInfo.url === undefined) {
+        this.setTheme(this.currentTheme);
+        return;
+      } else {
+        this.onClosed(tabId);
+      }
     }
   }
 
@@ -38,13 +55,13 @@ export class Settings {
     browser.tabs.onRemoved.addListener(this.onClosed.bind(this));
     browser.tabs.onUpdated.addListener(this.onUpdated.bind(this), {
       tabId: this.tab.id,
-      properties: [ 'title' ],
+      properties: [ 'status' ],
     });
   }
 
   private async create() {
     try {
-      this.tab = await browser.tabs.create({ url: SETTINGS_PAGE_URL });
+      this.tab = await browser.tabs.create({ url: this.url });
     } catch (error) {
       console.error('Could not open Settings page:', error);
       return;
@@ -53,7 +70,7 @@ export class Settings {
     this.setupListeners();
   }
 
-  public async open(extensionTheme: IExtensionTheme) {
+  public async open(extensionTheme?: IExtensionTheme) {
     await this.create();
     this.setTheme(extensionTheme);
   }
@@ -63,15 +80,22 @@ export class Settings {
     browser.tabs.update(this.tab.id, { active: true });
   }
 
-  public async setTheme(extensionTheme: IExtensionTheme) {
+  public async setTheme(extensionTheme?: IExtensionTheme) {
     if (this.tab === null) {
       return;
     }
 
-    /* browser.tabs.removeCSS(this.tab.id, {}); */
+    let selectedTheme = this.defaultTheme;
+    if (extensionTheme) {
+      if (this.currentTheme !== extensionTheme) {
+        this.currentTheme = extensionTheme;
+      }
+
+      selectedTheme = extensionTheme;
+    }
+
     browser.tabs.insertCSS(this.tab.id, {
-      code: extensionTheme,
-      cssOrigin: 'user',
+      code: selectedTheme,
       runAt: 'document_start'
     });
   }

@@ -70,23 +70,27 @@ export function generateColorscheme(
 
 export function generateExtensionTheme(colorscheme: IColorscheme) {
   return `
-    --background: ${colorscheme.palette.background};
-    --background-light: ${colorscheme.palette.backgroundLight};
-    --foreground: ${colorscheme.palette.foreground};
-    --accent-primary: ${colorscheme.palette.accentPrimary};
-    --accent-secondary: ${colorscheme.palette.accentSecondary};
-    --text: ${colorscheme.palette.text};
+    body {
+      --background: ${colorscheme.palette.background};
+      --background-light: ${colorscheme.palette.backgroundLight};
+      --foreground: ${colorscheme.palette.foreground};
+      --accent-primary: ${colorscheme.palette.accentPrimary};
+      --accent-secondary: ${colorscheme.palette.accentSecondary};
+      --text: ${colorscheme.palette.text};
+    }
   `;
 }
 
 export function generateDefaultExtensionTheme() {
   return `
-    --background: ${DEFAULT_PALETTE.background};
-    --background-light: ${DEFAULT_PALETTE.backgroundLight};
-    --foreground: ${DEFAULT_PALETTE.foreground};
-    --accent-primary: ${DEFAULT_PALETTE.accentPrimary};
-    --accent-secondary: ${DEFAULT_PALETTE.accentSecondary};
-    --text: ${DEFAULT_PALETTE.text};
+    body {
+      --background: ${DEFAULT_PALETTE.background};
+      --background-light: ${DEFAULT_PALETTE.backgroundLight};
+      --foreground: ${DEFAULT_PALETTE.foreground};
+      --accent-primary: ${DEFAULT_PALETTE.accentPrimary};
+      --accent-secondary: ${DEFAULT_PALETTE.accentSecondary};
+      --text: ${DEFAULT_PALETTE.text};
+    }
   `;
 }
 
