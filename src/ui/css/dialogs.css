@@ -1,0 +1,20 @@
+.dialog {
+  position: absolute;
+  top: 0;
+  left: calc(var(--content-width) + var(--spacing));
+  width: var(--dialog-width);
+  background-color: var(--background-light);
+  border-radius: var(--border-radius);
+  padding: 0;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dialog[open] {
+  display: flex;
+}
+
+#colorpicker {
+}
+

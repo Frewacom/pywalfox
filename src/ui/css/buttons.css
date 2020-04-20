@@ -83,3 +83,11 @@ button[data-color="accentPrimary"] {
 button[data-color="accentSecondary"] {
   background: var(--accent-secondary);
 }
+
+button[dialog] {
+  background-color: transparent;
+  color: white;
+  border-radius: 0;
+  padding-left: 0;
+  padding-right: 0;
+}

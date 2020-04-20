@@ -8,7 +8,7 @@
   </head>
   <body>
     <div class="wrapper">
-      <header class="container row v-center space-between padding-v-lg">
+      <header class="container row v-center space-between margin-v-lg">
         <div class="box">
           <h1 id="logo">Pywalfox<span id="version">v2.0.0</span></h1>
         </div>
@@ -20,10 +20,18 @@
             <i icon="moon"></i>
             Dark mode
           </button>
+          <!-- <aside class="dialog" id="theme"> -->
+          <!--   <button dialog data-theme="dark">Dark mode</button> -->
+          <!--   <button dialog data-theme="light">Light mode</button> -->
+          <!--   <button dialog data-theme="auto">Auto</button> -->
+          <!-- </aside> -->
         </div>
       </header>
       <main class="container">
         <section class="setting-card card expand space-between margin-bottom-lg" open>
+          <aside class="dialog" id="colorpicker">
+            <p>Colorpicker</p>
+          </aside>
           <div class="setting-card-header card-header expand row v-center space-between clickable">
             <div class="box">
               <i icon="pen"></i>

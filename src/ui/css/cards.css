@@ -2,13 +2,14 @@
   background-color: var(--background-light);
   border-radius: var(--border-radius);
   box-sizing: border-box;
-  overflow: hidden;
+  position: relative;
 }
 
 .card-header {
   padding: var(--spacing) var(--spacing-lg);
   box-sizing: border-box;
   transition: background-color var(--transition-time);
+  border-radius: var(--border-radius);
 }
 
 .card-header:hover {
@@ -44,4 +45,9 @@
   padding-top: var(--spacing);
   opacity: 1;
   height: auto;
+}
+
+.card[open] .card-header:hover {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }

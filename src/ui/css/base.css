@@ -5,6 +5,7 @@
 @import url('settings.css');
 @import url('notifications.css');
 @import url('icons.css');
+@import url('dialogs.css');
 
 body {
   font-family: var(--font);
@@ -23,6 +24,7 @@ p {
   position: relative;
   font-size: var(--font-size-lg);
   font-weight: 900;
+  margin: 0;
 }
 
 #logo > span {

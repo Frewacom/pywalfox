@@ -13,6 +13,7 @@
   justify-content: flex-start;
   align-items: flex-start;
   flex-direction: column;
+  position: relative;
 }
 
 .expand {
@@ -86,4 +87,9 @@
 .padding-v-lg {
   padding-top: var(--spacing-lg);
   padding-bottom: var(--spacing-lg);
+}
+
+.margin-v-lg {
+  margin-top: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
 }
