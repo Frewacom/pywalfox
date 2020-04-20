@@ -1,0 +1,45 @@
+i {
+  margin-right: var(--spacing-sm);
+}
+
+i[icon="pen"] {
+  content: url('../icons/pen-tool.svg');
+}
+
+i[icon="bell"] {
+  content: url('../icons/bell.svg');
+}
+
+i[icon="chevron"] {
+  content: url('../icons/chevron.svg');
+  transform: scale(1.3);
+  margin: 0em;
+}
+
+i[icon="message"] {
+  content: url('../icons/message-circle.svg');
+}
+
+i[icon="settings"] {
+  content: url('../icons/settings.svg');
+}
+
+i[icon="template"] {
+  content: url('../icons/layout.svg');
+}
+
+i[icon="error"] {
+  content: url('../icons/alert-circle.svg');
+}
+
+i[icon="sun"] {
+  content: url('../icons/sun.svg');
+}
+
+i[icon="moon"] {
+  content: url('../icons/moon.svg');
+}
+
+i[icon="auto"] {
+  content: url('../icons/eye.svg');
+}

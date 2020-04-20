@@ -8,7 +8,7 @@
   </head>
   <body>
     <div class="wrapper">
-      <header class="container row v-center space-between padding-v">
+      <header class="container row v-center space-between padding-v-lg">
         <div class="box">
           <h1 id="logo">Pywalfox<span id="version">v2.0.0</span></h1>
         </div>
@@ -16,21 +16,73 @@
           <button secondary class="margin-right">Disable theme</button>
           <button primary>Fetch pywal colors</button>
           <div class="separator"></div>
-          <button secondary>Dark mode</button>
+          <button secondary>
+            <i icon="moon"></i>
+            Dark mode
+          </button>
         </div>
       </header>
       <main class="container">
-        <section class="setting-section card expand row space-between">
-          <div class="card-header expand row v-center space-between">
-            <p class="card-title">Color settings</p>
+        <section class="setting-card card expand space-between margin-bottom-lg" open>
+          <div class="setting-card-header card-header expand row v-center space-between clickable">
+            <div class="box">
+              <i icon="pen"></i>
+              <p class="card-title">Color settings</p>
+            </div>
+            <button dropdown><i icon="chevron"></i></button>
           </div>
           <div class="card-content expand">
-            some content
+            <div class="setting expand space-between">
+              <div class="box column">
+                <p class="setting-title">Background</p>
+                <p class="setting-description">Main background color</p>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="setting-card card expand space-between margin-bottom-lg" open>
+          <div class="setting-card-header card-header expand row v-center space-between clickable">
+            <div class="box">
+              <i icon="settings"></i>
+              <p class="card-title">General settings</p>
+            </div>
+            <button dropdown><i icon="chevron"></i></button>
+          </div>
+          <div class="card-content expand">
+
+          </div>
+        </section>
+        <section class="setting-card card expand space-between margin-bottom-lg">
+          <div class="setting-card-header card-header expand row v-center space-between clickable">
+            <div class="box">
+              <i icon="template"></i>
+              <p class="card-title">Custom theme template</p>
+            </div>
+            <button dropdown><i icon="chevron"></i></button>
+          </div>
+          <div class="card-content expand">
+
+          </div>
+        </section>
+        <section class="setting-card card expand space-between">
+          <div class="setting-card-header card-header expand row v-center space-between clickable">
+            <div class="box">
+              <i icon="message"></i>
+              <p class="card-title">Debugging output</p>
+            </div>
+            <button dropdown><i icon="chevron"></i></button>
+          </div>
+          <div class="card-content expand">
+
           </div>
         </section>
       </main>
       <div class="notification">
-        <p class="notification-content">Restart needed:<span>Custom CSS requires a restart to be applied</span></p>
+        <p class="notification-content">
+        <i icon="bell"></i>
+          Restart needed:
+          <span>Custom CSS requires a restart to be applied</span>
+        </p>
       </div>
     </div>
   </body>

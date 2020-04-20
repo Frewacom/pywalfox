@@ -5,6 +5,7 @@
 @import url('cards.css');
 @import url('settings.css');
 @import url('notifications.css');
+@import url('icons.css');
 
 body {
   font-family: var(--font);
@@ -37,4 +38,8 @@ p {
   width: 2px;
   background-color: var(--background-light);
   margin: 0em var(--spacing);
+}
+
+.clickable {
+  cursor: pointer;
 }

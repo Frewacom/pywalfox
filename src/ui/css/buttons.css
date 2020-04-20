@@ -1,12 +1,20 @@
 button {
   border-radius: 15px;
-  padding: var(--spacing-md) var(--spacing-xl);
+  padding: var(--spacing-md) var(--spacing-xlg);
   border: none;
   font-family: var(--font);
   font-weight: 900;
   font-size: var(--font-size-sm);
   cursor: pointer;
   outline: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+button > i {
+  margin-right: var(--spacing-xsm);
 }
 
 button::-moz-focus-inner {
@@ -29,4 +37,14 @@ button[secondary] {
 
 button[secondary]:hover {
   filter: var(--brightness-filter);
+}
+
+button[dropdown] {
+  background-color: transparent;
+  color: var(--text);
+  padding: 0em;
+}
+
+button[dropdown]:hover {
+  color: var(--accent-primary);
 }

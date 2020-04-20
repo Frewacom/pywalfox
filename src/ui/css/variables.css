@@ -7,10 +7,12 @@
   --font-size-lg: calc(var(--font-size) * 1.15);
   --font-size-md: calc(var(--font-size) * 0.92);
   --spacing: 1em;
+  --spacing-xsm: 0.4em;
   --spacing-sm: 0.65em;
   --spacing-md: 0.75em;
   --spacing-lg: 1.5em;
-  --spacing-xl: 1.8em;
+  --spacing-xlg: 1.8em;
   --brightness-filter: brightness(120%);
   --box-shadow: 0px 2px 20px #0000007a;
+  --transition-time: 0.1s;
 }

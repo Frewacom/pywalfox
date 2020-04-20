@@ -9,11 +9,6 @@
   box-shadow: var(--box-shadow);
 }
 
-.notification-content::before {
-  content: url('../icons/bell.svg');
-  margin-right: var(--spacing-sm);
-}
-
 .notification-content {
   font-weight: 900;
   display: flex;

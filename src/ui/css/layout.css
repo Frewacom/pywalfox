@@ -40,7 +40,13 @@
   align-items: center;
 }
 
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
 .row {
+  display: flex;
   flex-direction: row;
 }
 
@@ -58,6 +64,10 @@
 
 .margin-bottom {
   margin-bottom: var(--spacing);
+}
+
+.margin-bottom-lg {
+  margin-bottom: var(--spacing-lg);
 }
 
 .padding-v {
