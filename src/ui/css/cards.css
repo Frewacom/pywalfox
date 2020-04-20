@@ -17,6 +17,6 @@
 
 .card-content {
   border-top: 1px solid rgba(255, 255, 255, 0.25);
-  padding: var(--spacing) var(--spacing-lg);
+  padding: var(--spacing-lg) var(--spacing-lg);
   box-sizing: border-box;
 }

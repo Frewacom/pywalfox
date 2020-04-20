@@ -1,9 +1,25 @@
 .notification {
   background-color: var(--accent-secondary);
-  padding: var(--spacing-sm) var(--spacing-lg);
+  padding: var(--spacing) var(--spacing-lg);
   width: var(--content-width);
   position: fixed;
   bottom: var(--spacing-lg);
   box-sizing: border-box;
   border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+.notification-content::before {
+  content: url('../icons/bell.svg');
+  margin-right: var(--spacing-sm);
+}
+
+.notification-content {
+  font-weight: 900;
+  display: flex;
+}
+
+.notification-content > span {
+  font-weight: 700;
+  margin-left: 0.3em;
 }

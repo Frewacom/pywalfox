@@ -1,6 +1,6 @@
 button {
   border-radius: 15px;
-  padding: var(--spacing-sm) var(--spacing-lg);
+  padding: var(--spacing-md) var(--spacing-xl);
   border: none;
   font-family: var(--font);
   font-weight: 900;
