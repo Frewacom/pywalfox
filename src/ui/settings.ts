@@ -3,7 +3,7 @@ const settingCardHeaders = Array.from(document.getElementsByClassName('setting-c
 function onSettingCardClick(header) {
   const card = header.parentNode;
   const isOpen = card.getAttribute('open');
-  isOpen ? card.removeAttribute('open') : card.setAttribute('open', true);
+  isOpen === '' ? card.removeAttribute('open') : card.setAttribute('open', '');
 }
 
 settingCardHeaders.forEach((header) => {
