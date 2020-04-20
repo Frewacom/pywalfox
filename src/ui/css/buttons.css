@@ -1,0 +1,32 @@
+button {
+  border-radius: 15px;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border: none;
+  font-family: var(--font);
+  font-weight: 900;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  outline: none;
+}
+
+button::-moz-focus-inner {
+  border: 0;
+}
+
+button[primary] {
+  background-color: var(--accent-primary);
+  color: var(--text);
+}
+
+button[primary]:hover {
+  filter: var(--brightness-filter);
+}
+
+button[secondary] {
+  background-color: var(--background-light);
+  color: var(--text);
+}
+
+button[secondary]:hover {
+  filter: var(--brightness-filter);
+}

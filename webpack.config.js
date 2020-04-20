@@ -9,8 +9,8 @@ module.exports = {
   entry: {
     background: path.resolve(__dirname, 'src/background/index.ts'),
     duckduckgo: path.resolve(__dirname, 'src/inject/duckduckgo.ts'),
-    settingsPage: path.resolve(__dirname, 'src/ui/settings/page.ts'),
-    updatePage: path.resolve(__dirname, 'src/ui/update/page.ts'),
+    settingsPage: path.resolve(__dirname, 'src/ui/settings.ts'),
+    updatePage: path.resolve(__dirname, 'src/ui/update.ts'),
   },
   output: {
     path: path.resolve(__dirname, 'extension/dist'),
@@ -50,13 +50,13 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'src/ui/settings/index.html'),
+      template: path.resolve(__dirname, 'src/ui/settings.html'),
       filename: './settings.html',
       inject: true,
       chunks: [ 'settingsPage' ],
     }),
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'src/ui/update/index.html'),
+      template: path.resolve(__dirname, 'src/ui/update.html'),
       filename: './update.html',
       inject: true,
       chunks: [ 'updatePage' ],

@@ -1,0 +1,9 @@
+.notification {
+  background-color: var(--accent-secondary);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  width: var(--content-width);
+  position: fixed;
+  bottom: var(--spacing-lg);
+  box-sizing: border-box;
+  border-radius: var(--border-radius);
+}

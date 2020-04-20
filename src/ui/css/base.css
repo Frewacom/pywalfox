@@ -1,9 +1,40 @@
-@import url('./font.css');
-@import url('./variables.css');
+@import url('font.css');
+@import url('variables.css');
+@import url('layout.css');
+@import url('buttons.css');
+@import url('cards.css');
+@import url('settings.css');
+@import url('notifications.css');
 
 body {
-  font-family: 'Manrope';
+  font-family: var(--font);
   background-color: var(--background);
   font-size: var(--font-size);
-  color: var(--accent-primary)
+  color: var(--text);
+  font-weight: bold;
+  margin: 0em;
+}
+
+p {
+  margin: 0.5em 0em 0.5em 0em;
+}
+
+#logo {
+  position: relative;
+  font-size: var(--font-size-lg);
+  font-weight: 900;
+}
+
+#logo > span {
+  position: absolute;
+  color: var(--accent-primary);
+  bottom: 0.5em;
+  font-size: calc(var(--font-size-lg) * 0.8);
+}
+
+.separator {
+  height: 2em;
+  width: 2px;
+  background-color: var(--background-light);
+  margin: 0em var(--spacing);
 }
