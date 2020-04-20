@@ -1,7 +1,7 @@
 const settingCardHeaders = Array.from(document.getElementsByClassName('setting-card-header'));
 
-function onSettingCardClick(header) {
-  const card = header.parentNode;
+function onSettingCardClick(header: Element) {
+  const card = <HTMLElement>header.parentNode;
   const isOpen = card.getAttribute('open');
   isOpen === '' ? card.removeAttribute('open') : card.setAttribute('open', '');
 }

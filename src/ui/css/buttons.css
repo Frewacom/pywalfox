@@ -1,9 +1,10 @@
 button {
+  height: 3.2em;
   border-radius: 15px;
-  padding: var(--spacing-md) var(--spacing-xlg);
+  padding: 0em var(--spacing-xlg);
   border: none;
   font-family: var(--font);
-  font-weight: 900;
+  font-weight: 700;
   font-size: var(--font-size-sm);
   cursor: pointer;
   outline: none;
@@ -43,6 +44,7 @@ button[dropdown] {
   background-color: transparent;
   color: var(--text);
   padding: 0em;
+  height: auto;
 }
 
 button[dropdown]:hover {

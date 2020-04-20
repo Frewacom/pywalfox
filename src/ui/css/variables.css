@@ -1,8 +1,8 @@
 :root {
-  --content-width: 900px;
+  --content-width: 62em;
   --border-radius: 15px;
-  --font: 'Lato', sans-serif;
-  --font-size: 0.95em;
+  --font: sans-serif;
+  --font-size: 0.9em;
   --font-size-sm: calc(var(--font-size) * 0.9);
   --font-size-lg: calc(var(--font-size) * 1.15);
   --font-size-md: calc(var(--font-size) * 0.92);
