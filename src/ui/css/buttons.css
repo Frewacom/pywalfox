@@ -1,5 +1,5 @@
 button {
-  height: 3.2em;
+  height: var(--button-height);
   border-radius: 15px;
   padding: 0em var(--spacing-xlg);
   border: none;
@@ -12,6 +12,7 @@ button {
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  padding-bottom: 0.05em;
 }
 
 button > i {
@@ -49,4 +50,36 @@ button[dropdown] {
 
 button[dropdown]:hover {
   color: var(--accent-primary);
+}
+
+button[data-color] {
+  width: 3em;
+  height: 3em;
+  border: 2px solid var(--text);
+  border-radius: 50%;
+  padding: 0;
+}
+
+button[data-color="background"] {
+  background: var(--background);
+}
+
+button[data-color="backgroundLight"] {
+  background: var(--background-light);
+}
+
+button[data-color="text"] {
+  background: var(--text);
+}
+
+button[data-color="foreground"] {
+  background: var(--foreground);
+}
+
+button[data-color="accentPrimary"] {
+  background: var(--accent-primary);
+}
+
+button[data-color="accentSecondary"] {
+  background: var(--accent-secondary);
 }

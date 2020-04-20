@@ -36,6 +36,14 @@
   justify-content: center;
 }
 
+.align-left:not(.row) {
+  align-items: flex-start;
+}
+
+.row.align-left {
+  justify-items: flex-start;
+}
+
 .row.v-center {
   align-items: center;
 }

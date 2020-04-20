@@ -2,12 +2,13 @@
   --content-width: 62em;
   --border-radius: 15px;
   --font: sans-serif;
-  --font-size: 0.9em;
+  --font-size: 0.92em;
   --font-size-sm: calc(var(--font-size) * 0.9);
   --font-size-lg: calc(var(--font-size) * 1.15);
   --font-size-md: calc(var(--font-size) * 0.92);
   --spacing: 1em;
-  --spacing-xsm: 0.4em;
+  --spacing-xxsm: 0.1em;
+  --spacing-xsm: 0.3em;
   --spacing-sm: 0.65em;
   --spacing-md: 0.75em;
   --spacing-lg: 1.5em;
@@ -15,4 +16,5 @@
   --brightness-filter: brightness(120%);
   --box-shadow: 0px 2px 20px #0000007a;
   --transition-time: 0.1s;
+  --button-height: 3.2em;
 }

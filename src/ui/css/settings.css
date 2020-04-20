@@ -1,3 +1,16 @@
-.settings {
-  width: 100%;
+.setting {
+
+}
+
+.setting-title {
+  font-weight: bold;
+  font-size: var(--font-size);
+  margin: 0;
+}
+
+.setting-description {
+  font-weight: normal;
+  font-size: var(--font-size);
+  margin: 0;
+  margin-top: var(--spacing-xxsm);
 }
