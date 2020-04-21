@@ -1,7 +1,9 @@
-const settingCardHeaders = document.querySelectorAll('.setting-card-header');
-const colorButtons = document.querySelectorAll('button[data-color]');
+import './colorpicker';
 
-const colorpicker = document.getElementById('colorpicker');
+const colorButtons: NodeListOf<Element> = document.querySelectorAll('button[data-color]');
+const settingCardHeaders: NodeListOf<Element> = document.querySelectorAll('.setting-card-header');
+
+let selectedColor: Element = null;
 
 function isOpen(element: Element) {
   const attr = element.getAttribute('open');
@@ -21,22 +23,25 @@ function toggleOpen(element: Element) {
 }
 
 function onSettingCardClicked(header: Element) {
-  toggleOpen(<HTMLElement>header.parentNode);
+  toggleOpen(<Element>header.parentNode);
 }
 
 function onColorClicked(e: Event) {
-  const target = e.target;
+  const target = <Element>e.target;
   const dialogOpen = isOpen(colorpicker);
-  if (dialogOpen) {
-  } else {
+
+  if (!dialogOpen) {
     open(colorpicker);
   }
+
+  if (selectedColor !== null) {
+    close(selectedColor);
+  }
+
+  open(target);
+  selectedColor = target;
 }
 
-settingCardHeaders.forEach((header) => {
-  header.addEventListener('click', () => onSettingCardClicked(header));
-});
+colorButtons.forEach((button: Element) => button.addEventListener('click', onColorClicked));
+settingCardHeaders.forEach((header: Element) => header.addEventListener('click', () => onSettingCardClicked(header)));
 
-colorButtons.forEach((button) => {
-  button.addEventListener('click', onColorClicked);
-});

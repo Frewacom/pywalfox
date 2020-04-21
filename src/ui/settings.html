@@ -8,15 +8,16 @@
   </head>
   <body>
     <div class="wrapper">
+      <div id="overlay" class="clickable"></div>
       <header class="container row v-center space-between margin-v-lg">
         <div class="box">
           <h1 id="logo">Pywalfox<span id="version">v2.0.0</span></h1>
         </div>
         <div class="box">
-          <button secondary class="margin-right">Disable theme</button>
-          <button primary>Fetch pywal colors</button>
+          <button type="secondary" class="margin-right">Disable theme</button>
+          <button type="primary">Fetch pywal colors</button>
           <div class="separator"></div>
-          <button secondary>
+          <button type="secondary">
             <i icon="moon"></i>
             Dark mode
           </button>
@@ -30,14 +31,16 @@
       <main class="container">
         <section class="setting-card card expand space-between margin-bottom-lg" open>
           <aside class="dialog" id="colorpicker">
-            <p>Colorpicker</p>
+            <div id="colorpicker-grid"></div>
+            <button id="colorpicker-custom">Custom</button>
+            <button id="colorpicker-undo">Undo</button>
           </aside>
           <div class="setting-card-header card-header expand row v-center space-between clickable">
             <div class="box">
               <i icon="pen"></i>
               <p class="card-title">Color settings</p>
             </div>
-            <button dropdown><i icon="chevron"></i></button>
+            <button type="dropdown"><i icon="chevron"></i></button>
           </div>
           <div class="card-content column expand">
             <div class="row expand space-between v-center margin-bottom">
@@ -90,7 +93,7 @@
               <i icon="settings"></i>
               <p class="card-title">General settings</p>
             </div>
-            <button dropdown><i icon="chevron"></i></button>
+            <button type="dropdown"><i icon="chevron"></i></button>
           </div>
           <div class="card-content column expand">
 
@@ -102,7 +105,7 @@
               <i icon="template"></i>
               <p class="card-title">Custom theme template</p>
             </div>
-            <button dropdown><i icon="chevron"></i></button>
+            <button type="dropdown"><i icon="chevron"></i></button>
           </div>
           <div class="card-content column expand">
 
@@ -114,7 +117,7 @@
               <i icon="message"></i>
               <p class="card-title">Debugging output</p>
             </div>
-            <button dropdown><i icon="chevron"></i></button>
+            <button type="dropdown"><i icon="chevron"></i></button>
           </div>
           <div class="card-content column expand">
 

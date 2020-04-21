@@ -1,7 +1,7 @@
 .dialog {
   position: absolute;
   top: 0;
-  left: calc(var(--content-width) + var(--spacing));
+  left: var(--dialog-offset);
   width: var(--dialog-width);
   background-color: var(--background-light);
   border-radius: var(--border-radius);
@@ -9,6 +9,7 @@
   display: none;
   flex-direction: column;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .dialog[open] {
@@ -16,5 +17,14 @@
 }
 
 #colorpicker {
+  padding: var(--spacing);
 }
 
+#colorpicker-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  row-gap: var(--spacing-xsm);
+  margin-bottom: var(--spacing-sm);
+}
