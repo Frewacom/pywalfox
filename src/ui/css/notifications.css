@@ -7,7 +7,7 @@
   box-sizing: border-box;
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
-  z-index: 10;
+  z-index: var(--z-index-notification);
 }
 
 .notification-content {

@@ -1,47 +1,53 @@
-import './colorpicker';
+import { IDialog } from './dialog';
+import { Colorpicker } from './colorpicker';
+import { toggleOpen, open, close, isOpen } from './utils';
 
-const colorButtons: NodeListOf<Element> = document.querySelectorAll('button[data-color]');
-const settingCardHeaders: NodeListOf<Element> = document.querySelectorAll('.setting-card-header');
+const colorButtons: NodeListOf<HTMLElement> = document.querySelectorAll('button[data-color]');
+const settingCardHeaders: NodeListOf<HTMLElement> = document.querySelectorAll('.setting-card-header');
+const overlay: HTMLElement = document.getElementById('overlay');
 
-let selectedColor: Element = null;
+const colorpicker = new Colorpicker();
+let currentDialog: IDialog = null;
 
-function isOpen(element: Element) {
-  const attr = element.getAttribute('open');
-  return attr === '';
+function openDialog(dialog: IDialog, target: HTMLElement) {
+  const overlayOpen = isOpen(overlay);
+
+  if (!overlayOpen) {
+    open(overlay);
+  }
+
+  if (currentDialog !== null && currentDialog !== dialog) {
+    currentDialog.close();
+  }
+
+  dialog.open(target);
+  currentDialog = dialog;
 }
 
-function open(element: Element) {
-  element.setAttribute('open', '');
+function closeDialog() {
+  if (currentDialog !== null) {
+    currentDialog.close();
+    currentDialog = null;
+  }
+
+  if (isOpen(overlay)) {
+    close(overlay);
+  }
 }
 
-function close(element: Element) {
-  element.removeAttribute('open');
-}
-
-function toggleOpen(element: Element) {
-  isOpen(element) ? close(element) : open(element);
-}
-
-function onSettingCardClicked(header: Element) {
-  toggleOpen(<Element>header.parentNode);
+function onSettingCardClicked(header: HTMLElement) {
+  toggleOpen(<HTMLElement>header.parentNode);
 }
 
 function onColorClicked(e: Event) {
-  const target = <Element>e.target;
-  const dialogOpen = isOpen(colorpicker);
-
-  if (!dialogOpen) {
-    open(colorpicker);
-  }
-
-  if (selectedColor !== null) {
-    close(selectedColor);
-  }
-
-  open(target);
-  selectedColor = target;
+  openDialog(colorpicker, <HTMLElement>e.target);
 }
 
-colorButtons.forEach((button: Element) => button.addEventListener('click', onColorClicked));
-settingCardHeaders.forEach((header: Element) => header.addEventListener('click', () => onSettingCardClicked(header)));
+function onOverlayClicked(e: Event) {
+  closeDialog();
+}
+
+colorButtons.forEach((button: HTMLElement) => button.addEventListener('click', onColorClicked));
+settingCardHeaders.forEach((header: HTMLElement) => header.addEventListener('click', () => onSettingCardClicked(header)));
+overlay.addEventListener('click', onOverlayClicked);
 

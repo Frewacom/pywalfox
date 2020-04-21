@@ -1,48 +1,96 @@
-const colorpicker: Element = document.getElementById('colorpicker');
-const colorpickerGrid: Element = document.getElementById('colorpicker-grid');
-const customColorButton: Element = document.getElementById('colorpicker-custom');
-const undoButton: Element = document.getElementById('colorpicker-undo');
+import { IDialog } from './dialog';
+import { IPywalColors } from '../definitions';
+import { PYWAL_PALETTE_LENGTH } from '../config';
+import * as Utils from './utils';
 
-let selectedColor: Element = null;
+export class Colorpicker implements IDialog {
+  private dialog: HTMLElement;
+  private grid: HTMLElement;
+  private customColorButton: HTMLElement;
+  private undoButton: HTMLElement;
 
-function select(element: Element) {
-  element.setAttribute('selected', '');
-}
+  private target: HTMLElement;
+  private selected: HTMLElement;
 
-function deselect(element: Element) {
-  element.removeAttribute('selected');
-}
+  constructor() {
+    this.dialog = document.getElementById('colorpicker');
+    this.grid = document.getElementById('colorpicker-grid');
+    this.customColorButton = document.getElementById('colorpicker-custom');
+    this.undoButton = document.getElementById('colorpicker-undo');
 
-function onSetColor(e: Event) {
-  const element = <Element>e.target;
-  if (selectedColor !== null) {
-    deselect(selectedColor);
+    this.target = null;
+    this.selected = null;
+
+    this.setupListeners();
+    this.populateColorGrid();
   }
 
-  select(element);
-  selectedColor = element;
+  private setupListeners() {
+    this.customColorButton.addEventListener('click', this.onSetCustomColor.bind(this));
+    this.undoButton.addEventListener('click', this.onUndo.bind(this));
+  }
+
+  private populateColorGrid() {
+    // debugging
+    for (let i = 0; i < 18; i++) {
+      this.addColorElement(i);
+    }
+  }
+
+  private addColorElement(index: number) {
+    const button = <HTMLElement>document.createElement('button');
+    button.setAttribute('type', 'colorpicker-color');
+    button.addEventListener('click', this.onSetColor.bind(this));
+    this.grid.appendChild(button);
+  }
+
+  public updatePalette(pywalColors: IPywalColors) {
+    this.grid.childNodes.forEach((element: HTMLElement, index: number) => {
+      element.style.backgroundColor = pywalColors[index];
+    });
+  }
+
+  private onSetColor(e: Event) {
+    const element = <HTMLElement>e.target;
+    if (this.selected !== null) {
+      Utils.deselect(this.selected);
+    }
+
+    Utils.select(element);
+    this.selected = element;
+  }
+
+  private onSetCustomColor(e: Event) {
+    console.log('Custom color');
+  }
+
+  private onUndo(e: Event) {
+    console.log('Undo');
+  }
+
+  public open(target: HTMLElement) {
+    Utils.open(this.dialog);
+    Utils.select(target);
+
+    if (this.selected !== null) {
+      Utils.deselect(this.selected);
+    }
+
+    if (this.target !== null){
+      Utils.deselect(this.target);
+    }
+
+    // TODO: Find the color in the palette corresponding to 'target'
+
+    this.target = target;
+  }
+
+  public close() {
+    Utils.close(this.dialog);
+    Utils.deselect(this.target);
+
+    this.target = null;
+  }
 }
 
-function onSetCustomColor(e: Event) {
-  console.log('Custom color');
-}
-
-function onUndo(e: Event) {
-  console.log('Undo');
-}
-
-function addColor() {
-  const button = <Element>document.createElement('button');
-  button.setAttribute('type', 'colorpicker-color');
-  button.addEventListener('click', onSetColor);
-  colorpickerGrid.appendChild(button);
-}
-
-// debugging
-for (let i = 0; i < 18; i++) {
-  addColor();
-}
-
-customColorButton.addEventListener('click', onSetCustomColor);
-undoButton.addEventListener('click', onUndo);
 

@@ -10,6 +10,7 @@
   flex-direction: column;
   overflow: hidden;
   box-sizing: border-box;
+  z-index: var(--z-index-dialog);
 }
 
 .dialog[open] {

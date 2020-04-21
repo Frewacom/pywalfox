@@ -26,7 +26,7 @@ p {
   top: 0px;
   left: 0px;
   position: fixed;
-  z-index: 8;
+  z-index: var(--z-index-overlay);
   background-color: var(--background);
   opacity: 0;
   display: none;
