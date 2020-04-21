@@ -44,12 +44,6 @@ export class Colorpicker implements IDialog {
     this.grid.appendChild(button);
   }
 
-  public updatePalette(pywalColors: IPywalColors) {
-    this.grid.childNodes.forEach((element: HTMLElement, index: number) => {
-      element.style.backgroundColor = pywalColors[index];
-    });
-  }
-
   private onSetColor(e: Event) {
     const element = <HTMLElement>e.target;
     if (this.selected !== null) {
@@ -83,6 +77,12 @@ export class Colorpicker implements IDialog {
     // TODO: Find the color in the palette corresponding to 'target'
 
     this.target = target;
+  }
+
+  public setPalette(pywalColors: IPywalColors) {
+    this.grid.childNodes.forEach((element: HTMLElement, index: number) => {
+      element.style.backgroundColor = pywalColors[index];
+    });
   }
 
   public close() {

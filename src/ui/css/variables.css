@@ -22,8 +22,10 @@
 
   --arrow-size: 1em;
   --button-height: 3.2em;
+  --button-height-sm: 2.5em;
+  --button-height-md: 2.8em;
   --content-width: 55em;
-  --dialog-width: 8em;
+  --dialog-width: 7em;
   --dialog-offset: calc(var(--content-width) + var(--spacing-lg));
 
   --z-index-dialog: 25;

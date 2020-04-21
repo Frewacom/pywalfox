@@ -14,8 +14,8 @@
           <h1 id="logo">Pywalfox<span id="version">v2.0.0</span></h1>
         </div>
         <div class="box">
-          <button type="secondary" class="margin-right">Disable theme</button>
-          <button type="primary">Fetch pywal colors</button>
+          <button type="secondary" id="disable" class="margin-right">Disable theme</button>
+          <button type="primary" id="fetch">Fetch pywal colors</button>
           <div class="separator"></div>
           <button type="secondary">
             <i icon="moon"></i>
@@ -120,7 +120,7 @@
             <button type="dropdown"><i icon="chevron"></i></button>
           </div>
           <div class="card-content column expand">
-
+            <textarea id="debugging-output" readonly></textarea>
           </div>
         </section>
       </main>

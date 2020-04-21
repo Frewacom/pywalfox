@@ -60,3 +60,18 @@ p {
 .clickable {
   cursor: pointer;
 }
+
+#debugging-output {
+    padding: 10px;
+    width: 100%;
+    min-width: var(--content-width);
+    height: 150px;
+    background: var(--background-light);
+    color: var(--text);
+    border: none;
+    box-sizing: border-box;
+    font-weight: bold;
+    font-size: var(--font-size-md);
+    border-radius: var(--border-radius);
+    resize: none;
+}
