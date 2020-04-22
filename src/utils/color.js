@@ -1,3 +1,6 @@
+// Used by DuckDuckGo inject-script
+// TODO: Move to duckduckgo.ts
+
 // https://www.sitepoint.com/javascript-generate-lighter-darker-color/
 function changeColorBrightness(hex, lum) {
 	// validate hex string
