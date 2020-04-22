@@ -1,5 +1,6 @@
 import { DEFAULT_THEME_TEMPLATE_DARK } from '../config';
 import {
+  IPywalColors,
   IExtensionTheme,
   IDuckDuckGoTheme,
   IColorscheme,
@@ -15,7 +16,8 @@ export interface IExtensionState {
     type: ThemeTypes;
     isApplied: boolean;
     customTemplateEnabled: boolean;
-    colorscheme: IColorscheme,
+    pywalColors: IPywalColors;
+    colorscheme: IColorscheme;
     extension: IExtensionTheme;
     ddg: IDuckDuckGoTheme;
     template: IColorschemeTemplate;
@@ -43,6 +45,7 @@ export class State {
         type: ThemeTypes.Dark,
         isApplied: false,
         customTemplateEnabled: false,
+        pywalColors: null,
         colorscheme: null,
         extension: null,
         ddg: null,
@@ -78,6 +81,10 @@ export class State {
 
   public getTemplate() {
     return this.currentState.theme.template;
+  }
+
+  public getPywalColors() {
+    return this.currentState.theme.pywalColors;
   }
 
   public getColorscheme() {
@@ -118,12 +125,14 @@ export class State {
   }
 
   public setThemes(
+    pywalColors: IPywalColors,
     colorscheme: IColorscheme,
     extensionTheme: IExtensionTheme,
     ddgTheme: IDuckDuckGoTheme
   ) {
     return this.set({
       theme: {
+        pywalColors: pywalColors,
         colorscheme: colorscheme,
         extension: extensionTheme,
         ddg: ddgTheme,

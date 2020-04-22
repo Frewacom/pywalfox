@@ -81,19 +81,6 @@ export function generateExtensionTheme(colorscheme: IColorscheme) {
   `;
 }
 
-export function generateDefaultExtensionTheme() {
-  return `
-    body {
-      --background: ${DEFAULT_PALETTE.background};
-      --background-light: ${DEFAULT_PALETTE.backgroundLight};
-      --foreground: ${DEFAULT_PALETTE.foreground};
-      --accent-primary: ${DEFAULT_PALETTE.accentPrimary};
-      --accent-secondary: ${DEFAULT_PALETTE.accentSecondary};
-      --text: ${DEFAULT_PALETTE.text};
-    }
-  `;
-}
-
 /**
  * Generates the DuckDuckGo theme.
  *

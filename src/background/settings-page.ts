@@ -4,13 +4,11 @@ import { IExtensionTheme } from '../definitions';
 export class SettingsPage {
   private tab: browser.tabs.Tab;
   private currentTheme: IExtensionTheme;
-  private defaultTheme: IExtensionTheme;
   private url: string;
 
-  constructor(defaultTheme: IExtensionTheme, currentTheme: IExtensionTheme) {
+  constructor(currentTheme: IExtensionTheme) {
     this.tab = null;
     this.currentTheme = null;
-    this.defaultTheme = defaultTheme;
     this.url = browser.runtime.getURL(SETTINGS_PAGE_URL);
     this.findDetached();
   }
@@ -93,7 +91,7 @@ export class SettingsPage {
 
   public async open(extensionTheme?: IExtensionTheme) {
     await this.create();
-    this.setTheme(extensionTheme);
+    extensionTheme && this.setTheme(extensionTheme);
   }
 
   public focus() {
@@ -101,21 +99,24 @@ export class SettingsPage {
     browser.tabs.update(this.tab.id, { active: true });
   }
 
-  public async setTheme(extensionTheme?: IExtensionTheme) {
+  public async resetTheme() {
+    if (this.currentTheme !== null) {
+      browser.tabs.removeCSS(this.tab.id, { code: this.currentTheme });
+      this.currentTheme = null;
+    }
+  }
+
+  public async setTheme(extensionTheme: IExtensionTheme) {
     if (this.tab === null) {
       return;
     }
 
-    if (extensionTheme) {
-      this.currentTheme = extensionTheme;
-    } else {
-      this.currentTheme = this.defaultTheme;
-    }
-
     browser.tabs.insertCSS(this.tab.id, {
-      code: this.currentTheme,
+      code: extensionTheme,
       runAt: 'document_start'
     });
+
+    this.currentTheme = extensionTheme;
   }
 
   public isOpen() {

@@ -79,7 +79,11 @@ export const EXTERNAL_MESSAGES = {
 
 export const EXTENSION_MESSAGES = {
   OUTPUT: "output",
-  THEME: "theme",
+  THEME_FETCH: "theme:fetch",
+  THEME_DISABLE: "theme:disable",
+  THEME_SET: "theme:set",
+  PYWAL_COLORS_GET: "pywal:colors:get",
+  PYWAL_COLORS_SET: "pywal:colors:set",
   NOTIFCATION: "notification",
   CSS_ENABLE: "css:enable",
   CSS_DISABLE: "css:disable",

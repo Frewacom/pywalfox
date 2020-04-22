@@ -12,7 +12,6 @@ import {
 import {
   generateColorscheme,
   generateExtensionTheme,
-  generateDefaultExtensionTheme,
   generateDDGTheme,
 } from './colorscheme';
 
@@ -66,29 +65,37 @@ export class Extension {
         const theme = this.state.getDuckDuckGoTheme();
         theme ? DDG.setTheme(theme) : DDG.resetTheme();
         break;
+      case EXTENSION_MESSAGES.PYWAL_COLORS_GET:
+        const pywalColors = this.state.getPywalColors();
+        pywalColors && UI.sendPywalColors(pywalColors);
+        break;
+      case EXTENSION_MESSAGES.THEME_FETCH:
+        this.nativeApp.requestColorscheme();
+        break;
+      case EXTENSION_MESSAGES.THEME_DISABLE:
+        this.resetThemes();
+        break;
     }
   }
 
   private createSettingsPage() {
-    const defaultExtensionTheme = generateDefaultExtensionTheme();
-    let currentTheme = defaultExtensionTheme;
-
+    let currentTheme = null;
     if (this.state.getEnabled()) {
       currentTheme = this.state.getExtensionTheme();
     }
 
-    this.settingsPage = new SettingsPage(defaultExtensionTheme, currentTheme);
+    this.settingsPage = new SettingsPage(currentTheme);
   }
 
   private resetThemes() {
     browser.theme.reset();
-    this.settingsPage.setTheme();
+    this.settingsPage.resetTheme();
 
     if (this.state.getDuckDuckGoThemeEnabled()) {
       DDG.resetTheme();
     }
 
-    this.state.setThemes(null, null, null); // TODO: Could probably save the generated themes
+    this.state.setThemes(null, null, null, null); // TODO: Could probably save the generated themes
     this.state.setApplied(false);
     this.state.setEnabled(false);
   }
@@ -107,7 +114,7 @@ export class Extension {
       DDG.setTheme(ddgTheme);
     }
 
-    this.state.setThemes(colorscheme, extensionTheme, ddgTheme);
+    this.state.setThemes(pywalColors, colorscheme, extensionTheme, ddgTheme);
     this.state.setApplied(true);
 
     !this.state.getEnabled() && this.state.setEnabled(true);

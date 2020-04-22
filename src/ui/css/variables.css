@@ -32,4 +32,11 @@
   --z-index-notification: 20;
   --z-index-color-button: 15;
   --z-index-overlay: 10;
+
+  --background: #252525;
+  --background-light: #444444;
+  --foreground: #ffffff;
+  --accent-primary: #0284f7;
+  --accent-secondary: #0284f7;
+  --text: #ffffff;
 }
