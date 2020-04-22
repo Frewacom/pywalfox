@@ -43,3 +43,19 @@ i[icon="moon"] {
 i[icon="auto"] {
   content: url('../icons/eye.svg');
 }
+
+i[icon="external-link"] {
+  content: url('../icons/external-link.svg');
+}
+
+i[icon="activity"] {
+  content: url('../icons/activity.svg');
+}
+
+.icon-sm {
+  transform: scale(0.9);
+}
+
+.icon-lg {
+  transform: scale(1.1);
+}

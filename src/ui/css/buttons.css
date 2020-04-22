@@ -108,7 +108,7 @@ button[type=dialog] {
 
 button[type=colorpicker-color] {
   height: var(--button-height-sm);
-  border-radius: var(--border-radius-small);
+  border-radius: var(--border-radius-sm);
   background-color: var(--background);
   flex-basis: calc(50% - var(--spacing-xsm) + 1px);
   padding: 0;
@@ -128,7 +128,7 @@ button[type=colorpicker-color][selected] {
 }
 
 #colorpicker-custom, #colorpicker-undo {
-  border-radius: var(--border-radius-small);
+  border-radius: var(--border-radius-sm);
   height: var(--button-height-sm);
 }
 

@@ -3,10 +3,10 @@
   --font-size: 0.93em;
   --font-size-sm: calc(var(--font-size) * 0.9);
   --font-size-lg: calc(var(--font-size) * 1.25);
-  --font-size-md: calc(var(--font-size) * 0.92);
+  --font-size-md: calc(var(--font-size) * 0.95);
 
   --border-radius: 15px;
-  --border-radius-small: 6px;
+  --border-radius-sm: 6px;
 
   --spacing: 1em;
   --spacing-xxsm: 0.1em;
@@ -21,7 +21,7 @@
   --transition-time: 0.1s;
 
   --arrow-size: 1em;
-  --button-height: 3.2em;
+  --button-height: 3em;
   --button-height-sm: 2.5em;
   --button-height-md: 2.8em;
   --content-width: 55em;

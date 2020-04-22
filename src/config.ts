@@ -78,7 +78,9 @@ export const EXTERNAL_MESSAGES = {
 };
 
 export const EXTENSION_MESSAGES = {
-  OUTPUT: "output",
+  DEBUGGING_INFO_GET: "debugging:info:get",
+  DEBUGGING_INFO_SET: "debugging:info:set",
+  DEBUGGING_OUTPUT: "debugging:output",
   THEME_FETCH: "theme:fetch",
   THEME_DISABLE: "theme:disable",
   THEME_SET: "theme:set",

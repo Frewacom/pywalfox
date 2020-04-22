@@ -28,12 +28,11 @@
 }
 
 .card-content {
-  display: flex;
-  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  display: none;
   box-sizing: border-box;
-  height: 0;
-  opacity: 0;
-  padding: 0;
+  height: auto;
+  padding: var(--spacing-lg) var(--spacing-lg);
+  padding-top: var(--spacing);
 }
 
 .card[open] i[icon="chevron"] {
@@ -41,13 +40,16 @@
 }
 
 .card[open] .card-content {
-  padding: var(--spacing-lg) var(--spacing-lg);
-  padding-top: var(--spacing);
-  opacity: 1;
-  height: auto;
+  display: flex;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .card[open] .card-header:hover {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+}
+
+.card[open] #debugging-info {
+  font-size: calc(var(--font-size) * 0.97);
+  padding: var(--spacing-sm) var(--spacing-lg);
 }

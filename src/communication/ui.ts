@@ -2,7 +2,11 @@ import { IPywalColors, IColorschemeTemplate } from '../definitions';
 import { EXTENSION_MESSAGES } from '../config';
 
 export function sendDebuggingOutput(message: string) {
-  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.OUTPUT, data: message });
+  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.DEBUGGING_OUTPUT, data: message });
+}
+
+export function sendDebuggingInfo(info: { connected: boolean, version: number }) {
+  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.DEBUGGING_INFO_SET, data: info });
 }
 
 export function sendNotification(message: string) {

@@ -63,6 +63,10 @@
   margin-right: var(--spacing);
 }
 
+.margin-right-sm {
+  margin-right: var(--spacing-sm);
+}
+
 .margin-left {
   margin-left: var(--spacing);
 }

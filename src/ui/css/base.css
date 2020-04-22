@@ -20,6 +20,16 @@ p {
   margin: 0.5em 0em 0.5em 0em;
 }
 
+a {
+  color: var(--text);
+  text-decoration: none;
+  outline: none;
+}
+
+a:hover {
+  filter: brightness(80%);
+}
+
 header {
   z-index: var(--z-index-header);
 }
@@ -65,17 +75,25 @@ header {
   cursor: pointer;
 }
 
+#debugging-version {
+  padding: var(--spacing-xsm) var(--spacing-md);
+  color: var(--text);
+  background-color: var(--accent-secondary);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-md);
+}
+
 #debugging-output {
     padding: 10px;
     width: 100%;
     min-width: var(--content-width);
     height: 150px;
-    background: var(--background-light);
+    background: rgba(0,0,0,0.3);
     color: var(--text);
     border: none;
     box-sizing: border-box;
     font-weight: bold;
     font-size: var(--font-size-md);
-    border-radius: var(--border-radius);
+    border-radius: var(--border-radius-sm);
     resize: none;
 }

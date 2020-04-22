@@ -79,6 +79,9 @@ export class Extension {
       case EXTENSION_MESSAGES.THEME_DISABLE:
         this.resetThemes();
         break;
+      case EXTENSION_MESSAGES.DEBUGGING_INFO_GET:
+        const info = this.state.getDebuggingInfo();
+        UI.sendDebuggingInfo(info);
     }
   }
 
@@ -94,6 +97,7 @@ export class Extension {
   private resetThemes() {
     browser.theme.reset();
     this.settingsPage.resetTheme();
+    UI.sendDebuggingOutput('Theme was disabled');
 
     if (this.state.getDuckDuckGoThemeEnabled()) {
       DDG.resetTheme();
@@ -113,6 +117,7 @@ export class Extension {
     this.settingsPage.setTheme(extensionTheme);
     UI.sendPywalColors(pywalColors);
     UI.sendTemplate(template);
+    UI.sendDebuggingOutput('Pywal colors was fetched from daemon and applied successfully');
 
     let ddgTheme: IDuckDuckGoTheme = null;
     if (this.state.getDuckDuckGoThemeEnabled()) {

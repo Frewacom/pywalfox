@@ -75,6 +75,13 @@ export class State {
     return this.currentState.isApplied;
   }
 
+  public getDebuggingInfo() {
+    return {
+      connected: this.currentState.connected,
+      version: this.currentState.version
+    };
+  }
+
   public getTemplateEnabled() {
     return this.currentState.theme.customTemplateEnabled;
   }

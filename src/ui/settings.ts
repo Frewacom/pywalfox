@@ -10,6 +10,8 @@ const disableButton: HTMLElement = document.getElementById('disable');
 const colorButtons: NodeListOf<HTMLElement> = document.querySelectorAll('button[data-color]');
 const settingCardHeaders: NodeListOf<HTMLElement> = document.querySelectorAll('.setting-card-header');
 const debuggingOutput: HTMLTextAreaElement = <HTMLTextAreaElement>document.getElementById('debugging-output');
+const debuggingConnected: HTMLElement = document.getElementById('debugging-connected');
+const debuggingVersion: HTMLElement = document.getElementById('debugging-version');
 const overlay: HTMLElement = document.getElementById('overlay');
 
 const colorpicker = new Colorpicker();
@@ -40,6 +42,11 @@ function closeDialog() {
   if (isOpen(overlay)) {
     close(overlay);
   }
+}
+
+function setDebuggingInfo(info: { connected: boolean, version: number }) {
+  debuggingConnected.innerText = info.connected ? 'Connected' : 'Disconnected';
+  debuggingVersion.innerText = `version ${info.version}`;
 }
 
 function writeOutput(message: string) {
@@ -86,11 +93,15 @@ browser.runtime.onMessage.addListener((message: IExtensionMessage) => {
       template = message.data;
       colorpicker.setSelectedColorForTarget(template);
       break;
-    case EXTENSION_MESSAGES.OUTPUT:
+    case EXTENSION_MESSAGES.DEBUGGING_OUTPUT:
       writeOutput(message.data);
+      break;
+    case EXTENSION_MESSAGES.DEBUGGING_INFO_SET:
+      setDebuggingInfo(message.data);
       break;
   }
 });
 
 Messenger.requestPywalColors();
 Messenger.requestTemplate();
+Messenger.requestDebuggingInfo();
