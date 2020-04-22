@@ -69,6 +69,10 @@ export class Extension {
         const pywalColors = this.state.getPywalColors();
         pywalColors && UI.sendPywalColors(pywalColors);
         break;
+      case EXTENSION_MESSAGES.TEMPLATE_GET:
+        const template = this.state.getTemplate();
+        template && UI.sendTemplate(template);
+        break;
       case EXTENSION_MESSAGES.THEME_FETCH:
         this.nativeApp.requestColorscheme();
         break;
@@ -108,6 +112,7 @@ export class Extension {
     this.setBrowserTheme(colorscheme.browser);
     this.settingsPage.setTheme(extensionTheme);
     UI.sendPywalColors(pywalColors);
+    UI.sendTemplate(template);
 
     let ddgTheme: IDuckDuckGoTheme = null;
     if (this.state.getDuckDuckGoThemeEnabled()) {

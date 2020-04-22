@@ -1,5 +1,5 @@
 import { IDialog } from './dialog';
-import { IPywalColors } from '../definitions';
+import { IPywalColors, IColorschemeTemplate } from '../definitions';
 import { PYWAL_PALETTE_LENGTH } from '../config';
 import * as Utils from './utils';
 
@@ -11,6 +11,7 @@ export class Colorpicker implements IDialog {
 
   private target: HTMLElement;
   private selected: HTMLElement;
+  private pywalColors: IPywalColors;
 
   constructor() {
     this.dialog = document.getElementById('colorpicker');
@@ -20,6 +21,7 @@ export class Colorpicker implements IDialog {
 
     this.target = null;
     this.selected = null;
+    this.pywalColors = null;
 
     this.setupListeners();
     this.populateColorGrid();
@@ -31,7 +33,7 @@ export class Colorpicker implements IDialog {
   }
 
   private populateColorGrid() {
-    for (let i = 0; i < 18; i++) {
+    for (let i = 0; i < PYWAL_PALETTE_LENGTH; i++) {
       this.addColorElement(i);
     }
   }
@@ -39,18 +41,30 @@ export class Colorpicker implements IDialog {
   private addColorElement(index: number) {
     const button = <HTMLElement>document.createElement('button');
     button.setAttribute('type', 'colorpicker-color');
+    button.setAttribute('data-color-index', index.toString());
     button.addEventListener('click', this.onSetColor.bind(this));
     this.grid.appendChild(button);
   }
 
-  private onSetColor(e: Event) {
-    const element = <HTMLElement>e.target;
+  private setSelectedColor(element: HTMLElement) {
+    if (element === null) {
+      if (this.selected !== null) {
+        Utils.deselect(this.selected);
+      }
+      return;
+    }
+
     if (this.selected !== null) {
       Utils.deselect(this.selected);
     }
 
     Utils.select(element);
     this.selected = element;
+  }
+
+  private onSetColor(e: Event) {
+    const element = <HTMLElement>e.target;
+    this.setSelectedColor(element);
   }
 
   private onSetCustomColor(e: Event) {
@@ -73,8 +87,6 @@ export class Colorpicker implements IDialog {
       Utils.deselect(this.target);
     }
 
-    // TODO: Find the color in the palette corresponding to 'target'
-
     this.target = target;
   }
 
@@ -87,6 +99,28 @@ export class Colorpicker implements IDialog {
       this.grid.childNodes.forEach((element: HTMLElement) => {
         element.style.backgroundColor = "";
       })
+    }
+
+    this.pywalColors = pywalColors;
+  }
+
+  public setSelectedColorForTarget(template: IColorschemeTemplate) {
+    if (this.target === null) {
+      return;
+    }
+
+    if (template === null || this.pywalColors === null) {
+      this.setSelectedColor(null);
+      return;
+    }
+
+    const targetColor = this.target.getAttribute('data-color');
+    const colorIndex = template.palette[targetColor];
+    const element: HTMLElement = document.querySelector(`button[data-color-index="${colorIndex}"]`);
+    if (element) {
+      this.setSelectedColor(element);
+    } else {
+      console.error(`Could not find color element with index: ${colorIndex}`);
     }
   }
 

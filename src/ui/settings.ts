@@ -2,7 +2,7 @@ import { IDialog } from './dialog';
 import * as Messenger from './messenger';
 import { Colorpicker } from './colorpicker';
 import { toggleOpen, open, close, isOpen } from './utils';
-import { IPywalColors, IExtensionMessage } from '../definitions';
+import { IPywalColors, IExtensionMessage, IColorschemeTemplate } from '../definitions';
 import { EXTENSION_MESSAGES } from '../config';
 
 const fetchButton: HTMLElement = document.getElementById('fetch');
@@ -14,6 +14,7 @@ const overlay: HTMLElement = document.getElementById('overlay');
 
 const colorpicker = new Colorpicker();
 let currentDialog: IDialog = null;
+let template: IColorschemeTemplate = null;
 
 function openDialog(dialog: IDialog, target: HTMLElement) {
   const overlayOpen = isOpen(overlay);
@@ -51,7 +52,9 @@ function onSettingCardClicked(header: HTMLElement) {
 }
 
 function onColorClicked(e: Event) {
-  openDialog(colorpicker, <HTMLElement>e.target);
+  const element = <HTMLElement>e.target;
+  openDialog(colorpicker, element);
+  colorpicker.setSelectedColorForTarget(template);
 }
 
 function onOverlayClicked(e: Event) {
@@ -65,6 +68,7 @@ function onFetchClicked(e: Event) {
 function onDisableClicked(e: Event) {
   Messenger.requestDisable();
   colorpicker.setPalette(null);
+  colorpicker.setSelectedColorForTarget(null);
 }
 
 fetchButton.addEventListener('click', onFetchClicked);
@@ -78,6 +82,10 @@ browser.runtime.onMessage.addListener((message: IExtensionMessage) => {
     case EXTENSION_MESSAGES.PYWAL_COLORS_SET:
       colorpicker.setPalette(message.data);
       break;
+    case EXTENSION_MESSAGES.TEMPLATE_SET:
+      template = message.data;
+      colorpicker.setSelectedColorForTarget(template);
+      break;
     case EXTENSION_MESSAGES.OUTPUT:
       writeOutput(message.data);
       break;
@@ -85,3 +93,4 @@ browser.runtime.onMessage.addListener((message: IExtensionMessage) => {
 });
 
 Messenger.requestPywalColors();
+Messenger.requestTemplate();

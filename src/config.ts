@@ -82,6 +82,8 @@ export const EXTENSION_MESSAGES = {
   THEME_FETCH: "theme:fetch",
   THEME_DISABLE: "theme:disable",
   THEME_SET: "theme:set",
+  TEMPLATE_SET: "template:set",
+  TEMPLATE_GET: "template:get",
   PYWAL_COLORS_GET: "pywal:colors:get",
   PYWAL_COLORS_SET: "pywal:colors:set",
   NOTIFCATION: "notification",

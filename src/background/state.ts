@@ -1,4 +1,4 @@
-import { DEFAULT_THEME_TEMPLATE_DARK } from '../config';
+import { DEFAULT_THEME_TEMPLATE_DARK, DEFAULT_THEME_TEMPLATE_LIGHT } from '../config';
 import {
   IPywalColors,
   IExtensionTheme,
@@ -80,7 +80,15 @@ export class State {
   }
 
   public getTemplate() {
-    return this.currentState.theme.template;
+    const userTemplate = this.currentState.theme.template;
+
+    if (userTemplate) {
+      return userTemplate;
+    }
+
+    // TODO: Add case for Auto theme type
+    const themeType = this.currentState.theme.type;
+    return themeType === ThemeTypes.Dark ? DEFAULT_THEME_TEMPLATE_DARK : DEFAULT_THEME_TEMPLATE_LIGHT;
   }
 
   public getPywalColors() {
