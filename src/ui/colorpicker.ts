@@ -31,7 +31,6 @@ export class Colorpicker implements IDialog {
   }
 
   private populateColorGrid() {
-    // debugging
     for (let i = 0; i < 18; i++) {
       this.addColorElement(i);
     }
@@ -80,9 +79,15 @@ export class Colorpicker implements IDialog {
   }
 
   public setPalette(pywalColors: IPywalColors) {
-    this.grid.childNodes.forEach((element: HTMLElement, index: number) => {
-      element.style.backgroundColor = pywalColors[index];
-    });
+    if (pywalColors !== null) {
+      this.grid.childNodes.forEach((element: HTMLElement, index: number) => {
+        element.style.backgroundColor = pywalColors[index];
+      });
+    } else {
+      this.grid.childNodes.forEach((element: HTMLElement) => {
+        element.style.backgroundColor = "";
+      })
+    }
   }
 
   public close() {

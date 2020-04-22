@@ -20,6 +20,10 @@ p {
   margin: 0.5em 0em 0.5em 0em;
 }
 
+header {
+  z-index: var(--z-index-header);
+}
+
 #overlay {
   width: 100%;
   height: 100%;

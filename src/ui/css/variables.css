@@ -28,9 +28,10 @@
   --dialog-width: 7em;
   --dialog-offset: calc(var(--content-width) + var(--spacing-lg));
 
-  --z-index-dialog: 25;
-  --z-index-notification: 20;
-  --z-index-color-button: 15;
+  --z-index-dialog: 50;
+  --z-index-notification: 30;
+  --z-index-color-button: 20;
+  --z-index-header: 15;
   --z-index-overlay: 10;
 
   --background: #252525;

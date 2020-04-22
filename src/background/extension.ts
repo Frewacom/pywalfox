@@ -107,6 +107,7 @@ export class Extension {
 
     this.setBrowserTheme(colorscheme.browser);
     this.settingsPage.setTheme(extensionTheme);
+    UI.sendPywalColors(pywalColors);
 
     let ddgTheme: IDuckDuckGoTheme = null;
     if (this.state.getDuckDuckGoThemeEnabled()) {

@@ -58,8 +58,17 @@ function onOverlayClicked(e: Event) {
   closeDialog();
 }
 
-fetchButton.addEventListener('click', Messenger.requestFetch);
-disableButton.addEventListener('click', Messenger.requestDisable);
+function onFetchClicked(e: Event) {
+  Messenger.requestFetch();
+}
+
+function onDisableClicked(e: Event) {
+  Messenger.requestDisable();
+  colorpicker.setPalette(null);
+}
+
+fetchButton.addEventListener('click', onFetchClicked);
+disableButton.addEventListener('click', onDisableClicked);
 colorButtons.forEach((button: HTMLElement) => button.addEventListener('click', onColorClicked));
 settingCardHeaders.forEach((header: HTMLElement) => header.addEventListener('click', () => onSettingCardClicked(header)));
 overlay.addEventListener('click', onOverlayClicked);
