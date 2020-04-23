@@ -137,8 +137,8 @@ export class State {
   public setApplied(isApplied: boolean) {
     return this.set({
       theme: {
-        isApplied,
         ...this.currentState.theme,
+        isApplied,
       }
     });
   }
@@ -151,11 +151,11 @@ export class State {
   ) {
     return this.set({
       theme: {
+        ...this.currentState.theme,
         pywalColors: pywalColors,
         colorscheme: colorscheme,
         extension: extensionTheme,
         ddg: ddgTheme,
-        ...this.currentState.theme,
       }
     });
   }
@@ -167,6 +167,15 @@ export class State {
           ...this.currentState.css,
           [target]: enabled,
         }
+      }
+    });
+  }
+
+  public setThemeMode(mode: ThemeModes) {
+    this.set({
+      theme: {
+        ...this.currentState.theme,
+        mode: mode,
       }
     });
   }

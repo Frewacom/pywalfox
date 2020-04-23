@@ -17,10 +17,7 @@
           <button type="secondary" id="disable" class="margin-right">Disable theme</button>
           <button type="primary" id="fetch">Fetch pywal colors</button>
           <div class="separator"></div>
-          <button type="secondary" id="theme-select">
-            <i icon="moon"></i>
-            Dark mode
-          </button>
+          <button type="secondary" id="theme-select"></button>
           <aside class="dialog" id="themepicker">
             <button dialog data-theme="dark"><i icon="moon"></i>Dark</button>
             <button dialog data-theme="light"><i icon="sun"></i>Light</button>
@@ -135,12 +132,10 @@
           </div>
         </section>
       </main>
-      <div class="notification">
-        <p class="notification-content">
-        <i icon="bell"></i>
-          Restart needed:
-          <span>Custom CSS requires a restart to be applied</span>
-        </p>
+      <div class="notification box row v-center">
+          <i icon="bell"></i>
+          <span id="notification-title"></span>
+          <span id="notification-content"></span>
       </div>
     </div>
   </body>

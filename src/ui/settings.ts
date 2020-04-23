@@ -43,7 +43,6 @@ function openDialog(dialog: Dialog, target: HTMLElement) {
 }
 
 function closeDialog() {
-  console.log(currentDialog);
   if (currentDialog !== null) {
     currentDialog.close();
     currentDialog = null;
@@ -109,7 +108,6 @@ browser.runtime.onMessage.addListener((message: IExtensionMessage) => {
       colorpicker.setSelectedColorForTarget(template);
       break;
     case EXTENSION_MESSAGES.THEME_MODE_SET:
-      console.log(message);
       themepicker.setSelectedMode(message.data);
       break;
     case EXTENSION_MESSAGES.DEBUGGING_OUTPUT:

@@ -77,6 +77,9 @@ export class Extension {
         const mode = this.state.getThemeMode();
         UI.sendThemeMode(mode);
         break;
+      case EXTENSION_MESSAGES.THEME_MODE_SET:
+        this.state.setThemeMode(message.data);
+        break;
       case EXTENSION_MESSAGES.THEME_FETCH:
         this.nativeApp.requestColorscheme();
         break;

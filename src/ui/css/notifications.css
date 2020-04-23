@@ -1,6 +1,7 @@
 .notification {
+  display: none;
   background-color: var(--accent-secondary);
-  padding: var(--spacing) var(--spacing-lg);
+  padding: var(--spacing-lg);
   width: var(--content-width);
   position: fixed;
   bottom: var(--spacing-lg);
@@ -10,12 +11,16 @@
   z-index: var(--z-index-notification);
 }
 
-.notification-content {
+.notification[open] {
+  display: flex;
+}
+
+.notification-title {
   font-weight: 900;
   display: flex;
 }
 
-.notification-content > span {
+.notification-content {
   font-weight: 700;
   margin-left: 0.3em;
 }

@@ -4,18 +4,20 @@ import { requestThemeModeSet } from './messenger';
 import * as Utils from './utils';
 
 export class Themepicker extends Dialog {
+  private themeSelectButton: HTMLElement;
   private modeButtons: NodeListOf<HTMLElement>;
 
   constructor() {
     super('themepicker');
 
+    this.themeSelectButton = document.getElementById('theme-select');
     this.modeButtons = document.querySelectorAll('button[data-theme]');
     this.setupListeners();
   }
 
   private setupListeners() {
-    this.modeButtons.forEach((button) => {
-      button.addEventListener('click', this.onSetMode.bind(this));
+    this.modeButtons.forEach((themeButton) => {
+      themeButton.addEventListener('click', this.onSetMode.bind(this));
     });
   }
 
@@ -24,16 +26,16 @@ export class Themepicker extends Dialog {
       Utils.deselect(this.selected);
     }
 
-    if (this.target !== null) {
+    if (this.themeSelectButton !== null) {
       switch (mode) {
         case 'dark':
-          this.target.innerHTML = `<i icon="moon"></i>Dark mode`;
+          this.themeSelectButton.innerHTML = `<i icon="moon"></i>Dark mode`;
           break;
         case 'light':
-          this.target.innerHTML = `<i icon="sun"></i>Light mode`;
+          this.themeSelectButton.innerHTML = `<i icon="sun"></i>Light mode`;
           break;
         case 'auto':
-          this.target.innerHTML = `<i icon="auto"></i>Auto mode`;
+          this.themeSelectButton.innerHTML = `<i icon="auto"></i>Auto mode`;
           break;
         default:
           console.error('Invalid theme type');
