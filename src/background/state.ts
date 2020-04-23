@@ -5,7 +5,7 @@ import {
   IDuckDuckGoTheme,
   IColorscheme,
   IColorschemeTemplate,
-  ThemeTypes
+  ThemeModes
 } from '../definitions';
 
 export interface IExtensionState {
@@ -13,7 +13,7 @@ export interface IExtensionState {
   enabled: boolean;
   connected: boolean;
   theme: {
-    type: ThemeTypes;
+    mode: ThemeModes;
     isApplied: boolean;
     customTemplateEnabled: boolean;
     pywalColors: IPywalColors;
@@ -42,7 +42,7 @@ export class State {
       enabled: false,
       connected: false,
       theme: {
-        type: ThemeTypes.Dark,
+        mode: ThemeModes.Dark,
         isApplied: false,
         customTemplateEnabled: false,
         pywalColors: null,
@@ -94,8 +94,12 @@ export class State {
     }
 
     // TODO: Add case for Auto theme type
-    const themeType = this.currentState.theme.type;
-    return themeType === ThemeTypes.Dark ? DEFAULT_THEME_TEMPLATE_DARK : DEFAULT_THEME_TEMPLATE_LIGHT;
+    const themeMode = this.currentState.theme.mode;
+    return themeMode === ThemeModes.Dark ? DEFAULT_THEME_TEMPLATE_DARK : DEFAULT_THEME_TEMPLATE_LIGHT;
+  }
+
+  public getThemeMode() {
+    return this.currentState.theme.mode;
   }
 
   public getPywalColors() {

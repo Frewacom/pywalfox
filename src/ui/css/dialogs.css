@@ -5,7 +5,7 @@
   width: var(--dialog-width);
   background-color: var(--background-light);
   border-radius: var(--border-radius);
-  padding: 0;
+  padding: var(--spacing);
   display: none;
   flex-direction: column;
   overflow: hidden;
@@ -17,8 +17,8 @@
   display: flex;
 }
 
-#colorpicker {
-  padding: var(--spacing);
+#themepicker {
+  padding: var(--spacing-sm) var(--spacing-md);
 }
 
 #colorpicker-grid {

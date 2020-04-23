@@ -1,30 +1,25 @@
-import { IDialog } from './dialog';
+import { Dialog } from './dialog';
 import { IPywalColors, IColorschemeTemplate } from '../definitions';
 import { PYWAL_PALETTE_LENGTH } from '../config';
 import * as Utils from './utils';
 
-export class Colorpicker implements IDialog {
-  private dialog: HTMLElement;
+export class Colorpicker extends Dialog {
   private grid: HTMLElement;
   private customColorButton: HTMLElement;
   private undoButton: HTMLElement;
-
-  private target: HTMLElement;
-  private selected: HTMLElement;
   private pywalColors: IPywalColors;
 
   constructor() {
-    this.dialog = document.getElementById('colorpicker');
+    super('colorpicker');
+
     this.grid = document.getElementById('colorpicker-grid');
     this.customColorButton = document.getElementById('colorpicker-custom');
     this.undoButton = document.getElementById('colorpicker-undo');
 
-    this.target = null;
-    this.selected = null;
     this.pywalColors = null;
 
-    this.setupListeners();
     this.populateColorGrid();
+    this.setupListeners();
   }
 
   private setupListeners() {
@@ -75,21 +70,6 @@ export class Colorpicker implements IDialog {
     console.log('Undo');
   }
 
-  public open(target: HTMLElement) {
-    Utils.open(this.dialog);
-    Utils.select(target);
-
-    if (this.selected !== null) {
-      Utils.deselect(this.selected);
-    }
-
-    if (this.target !== null){
-      Utils.deselect(this.target);
-    }
-
-    this.target = target;
-  }
-
   public setPalette(pywalColors: IPywalColors) {
     if (pywalColors !== null) {
       this.grid.childNodes.forEach((element: HTMLElement, index: number) => {
@@ -122,13 +102,6 @@ export class Colorpicker implements IDialog {
     } else {
       console.error(`Could not find color element with index: ${colorIndex}`);
     }
-  }
-
-  public close() {
-    Utils.close(this.dialog);
-    Utils.deselect(this.target);
-
-    this.target = null;
   }
 }
 

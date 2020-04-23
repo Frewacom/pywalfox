@@ -150,4 +150,33 @@ button[type=colorpicker-color][selected] {
   margin-top: var(--spacing-sm);
 }
 
+#theme-select {
+  width: 12em; /* Fixed width to prevent flickering when changing themes */
+}
 
+button[dialog] {
+  border-radius: var(--border-radius-sm);
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: var(--font-size-md);
+  padding: 0;
+  height: var(--button-height-md);
+}
+
+button[dialog][selected] {
+  background-color: var(--accent-secondary);
+}
+
+button[dialog][selected]:hover {
+  background-color: var(--accent-secondary);
+  opacity: 1;
+}
+
+button[dialog]:hover {
+ opacity: 0.8;
+}
+
+button[dialog] > i {
+  transform: scale(0.8);
+}

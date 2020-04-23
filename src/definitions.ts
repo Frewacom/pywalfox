@@ -90,10 +90,10 @@ export interface IExtensionMessage {
   data?: any;
 };
 
-export enum ThemeTypes {
-  Dark,
-  Light,
-  Auto
+export enum ThemeModes {
+  Dark = 'dark',
+  Light = 'light',
+  Auto = 'auto'
 }
 
 /**

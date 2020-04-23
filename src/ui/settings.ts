@@ -1,12 +1,14 @@
-import { IDialog } from './dialog';
+import { Dialog } from './dialog';
 import * as Messenger from './messenger';
 import { Colorpicker } from './colorpicker';
+import { Themepicker } from './themepicker';
 import { toggleOpen, open, close, isOpen } from './utils';
-import { IPywalColors, IExtensionMessage, IColorschemeTemplate } from '../definitions';
+import { IExtensionMessage, IColorschemeTemplate } from '../definitions';
 import { EXTENSION_MESSAGES } from '../config';
 
 const fetchButton: HTMLElement = document.getElementById('fetch');
 const disableButton: HTMLElement = document.getElementById('disable');
+const themeButton: HTMLElement = document.getElementById('theme-select');
 const colorButtons: NodeListOf<HTMLElement> = document.querySelectorAll('button[data-color]');
 const settingCardHeaders: NodeListOf<HTMLElement> = document.querySelectorAll('.setting-card-header');
 const debuggingOutput: HTMLTextAreaElement = <HTMLTextAreaElement>document.getElementById('debugging-output');
@@ -15,10 +17,17 @@ const debuggingVersion: HTMLElement = document.getElementById('debugging-version
 const overlay: HTMLElement = document.getElementById('overlay');
 
 const colorpicker = new Colorpicker();
-let currentDialog: IDialog = null;
+const themepicker = new Themepicker();
+let currentDialog: Dialog = null;
 let template: IColorschemeTemplate = null;
 
-function openDialog(dialog: IDialog, target: HTMLElement) {
+/**
+ * Opens a dialog on the right hand side of the UI.
+ *
+ * @param {IDialog} dialog - the dialog to open
+ * @param {HTMLElement} target - the element that triggered the opening of the dialog
+ */
+function openDialog(dialog: Dialog, target: HTMLElement) {
   const overlayOpen = isOpen(overlay);
 
   if (!overlayOpen) {
@@ -34,6 +43,7 @@ function openDialog(dialog: IDialog, target: HTMLElement) {
 }
 
 function closeDialog() {
+  console.log(currentDialog);
   if (currentDialog !== null) {
     currentDialog.close();
     currentDialog = null;
@@ -78,8 +88,13 @@ function onDisableClicked(e: Event) {
   colorpicker.setSelectedColorForTarget(null);
 }
 
+function onThemeClicked(e: Event) {
+  openDialog(themepicker, <HTMLElement>e.target);
+}
+
 fetchButton.addEventListener('click', onFetchClicked);
 disableButton.addEventListener('click', onDisableClicked);
+themeButton.addEventListener('click', onThemeClicked);
 colorButtons.forEach((button: HTMLElement) => button.addEventListener('click', onColorClicked));
 settingCardHeaders.forEach((header: HTMLElement) => header.addEventListener('click', () => onSettingCardClicked(header)));
 overlay.addEventListener('click', onOverlayClicked);
@@ -93,6 +108,10 @@ browser.runtime.onMessage.addListener((message: IExtensionMessage) => {
       template = message.data;
       colorpicker.setSelectedColorForTarget(template);
       break;
+    case EXTENSION_MESSAGES.THEME_MODE_SET:
+      console.log(message);
+      themepicker.setSelectedMode(message.data);
+      break;
     case EXTENSION_MESSAGES.DEBUGGING_OUTPUT:
       writeOutput(message.data);
       break;
@@ -102,6 +121,8 @@ browser.runtime.onMessage.addListener((message: IExtensionMessage) => {
   }
 });
 
+// TODO: Combine into one call
 Messenger.requestPywalColors();
 Messenger.requestTemplate();
+Messenger.requestThemeMode();
 Messenger.requestDebuggingInfo();

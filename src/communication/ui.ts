@@ -1,4 +1,4 @@
-import { IPywalColors, IColorschemeTemplate } from '../definitions';
+import { IPywalColors, IColorschemeTemplate, ThemeModes } from '../definitions';
 import { EXTENSION_MESSAGES } from '../config';
 
 export function sendDebuggingOutput(message: string) {
@@ -19,4 +19,8 @@ export function sendPywalColors(pywalColors: IPywalColors) {
 
 export function sendTemplate(template: IColorschemeTemplate) {
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.TEMPLATE_SET, data: template });
+}
+
+export function sendThemeMode(mode: ThemeModes) {
+  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.THEME_MODE_SET, data: mode });
 }

@@ -73,6 +73,10 @@ export class Extension {
         const template = this.state.getTemplate();
         template && UI.sendTemplate(template);
         break;
+      case EXTENSION_MESSAGES.THEME_MODE_GET:
+        const mode = this.state.getThemeMode();
+        UI.sendThemeMode(mode);
+        break;
       case EXTENSION_MESSAGES.THEME_FETCH:
         this.nativeApp.requestColorscheme();
         break;

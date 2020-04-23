@@ -79,6 +79,10 @@
   margin-bottom: var(--spacing);
 }
 
+.margin-bottom-sm {
+  margin-bottom: var(--spacing-sm);
+}
+
 .margin-bottom-lg {
   margin-bottom: var(--spacing-lg);
 }
