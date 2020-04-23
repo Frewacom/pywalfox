@@ -172,10 +172,12 @@ export class State {
   }
 
   public setThemeMode(mode: ThemeModes) {
+    // TODO: Apply the correct template based on the current mode
     this.set({
       theme: {
         ...this.currentState.theme,
         mode: mode,
+        template: mode === ThemeModes.Dark ? DEFAULT_THEME_TEMPLATE_DARK : DEFAULT_THEME_TEMPLATE_LIGHT
       }
     });
   }

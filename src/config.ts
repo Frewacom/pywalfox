@@ -63,12 +63,12 @@ export const DEFAULT_THEME_TEMPLATE_DARK = {
 
 export const DEFAULT_THEME_TEMPLATE_LIGHT = {
   palette: {
-    background: 0,
-    backgroundLight: 17,
-    foreground: 15,
+    background: 16,
+    backgroundLight: 15,
+    foreground: 17,
     accentPrimary: 1,
     accentSecondary: 2,
-    text: 16,
+    text: 0,
   }
 }
 

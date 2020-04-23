@@ -62,7 +62,7 @@ button[data-color] {
   z-index: var(--z-index-color-button);
 }
 
-button[data-color][selected]::after {
+.dialog-arrow[selected]::after {
   width: 0;
   height: 0;
   border-top: var(--arrow-size) solid transparent;
@@ -72,6 +72,16 @@ button[data-color][selected]::after {
   content: '';
   top: calc(50% - var(--arrow-size));
   left: calc(100% + var(--spacing-lg) * 1.9);
+}
+
+#theme-select.dialog-arrow[selected]::after {
+  right: calc(-1 * (var(--spacing) + var(--arrow-size)));
+  left: unset;
+}
+
+#theme-select.dialog-arrow[selected]:hover::after {
+  /* The filter on the button changes the brightness of the arrow as well */
+  filter: brightness(85%);
 }
 
 button[data-color="background"] {
@@ -100,7 +110,7 @@ button[data-color="accentSecondary"] {
 
 button[type=dialog] {
   background-color: transparent;
-  color: white;
+  color: var(--text);
   border-radius: 0;
   padding-left: 0;
   padding-right: 0;
@@ -146,7 +156,7 @@ button[type=colorpicker-color][selected] {
 
 #colorpicker-undo {
   background-color: var(--accent-primary);
-  color: white;
+  color: var(--text);
   margin-top: var(--spacing-sm);
 }
 
@@ -158,7 +168,7 @@ button[dialog] {
   border-radius: var(--border-radius-sm);
   background-color: transparent;
   border: none;
-  color: white;
+  color: var(--text);
   font-size: var(--font-size-md);
   padding: 0;
   height: var(--button-height-md);

@@ -16,8 +16,8 @@ export class Themepicker extends Dialog {
   }
 
   private setupListeners() {
-    this.modeButtons.forEach((themeButton) => {
-      themeButton.addEventListener('click', this.onSetMode.bind(this));
+    this.modeButtons.forEach((button: HTMLElement) => {
+      button.addEventListener('click', () => this.onSetMode(button));
     });
   }
 
@@ -46,18 +46,16 @@ export class Themepicker extends Dialog {
     this.selected = target;
   }
 
-  private onSetMode(e: Event) {
-    const target = <HTMLElement>e.target;
+  private onSetMode(target: HTMLElement) {
     const mode = <ThemeModes>target.getAttribute('data-theme');
-
     this.selectMode(target, mode);
     requestThemeModeSet(mode);
   }
 
   public setSelectedMode(mode: ThemeModes) {
     for (let i = 0; i < this.modeButtons.length; i++) {
-      const button = this.modeButtons[i];
-      const buttonMode= button.getAttribute('data-theme');
+      const button: HTMLElement = this.modeButtons[i];
+      const buttonMode: string = button.getAttribute('data-theme');
       if (buttonMode === mode) {
         this.selectMode(button, mode);
         break;

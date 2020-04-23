@@ -66,7 +66,7 @@ export class Extension {
         theme ? DDG.setTheme(theme) : DDG.resetTheme();
         break;
       case EXTENSION_MESSAGES.PYWAL_COLORS_GET:
-        const pywalColors = this.state.getPywalColors();
+        var pywalColors = this.state.getPywalColors();
         pywalColors && UI.sendPywalColors(pywalColors);
         break;
       case EXTENSION_MESSAGES.TEMPLATE_GET:
@@ -79,6 +79,8 @@ export class Extension {
         break;
       case EXTENSION_MESSAGES.THEME_MODE_SET:
         this.state.setThemeMode(message.data);
+        var pywalColors = this.state.getPywalColors();
+        pywalColors && this.updateThemes(pywalColors);
         break;
       case EXTENSION_MESSAGES.THEME_FETCH:
         this.nativeApp.requestColorscheme();

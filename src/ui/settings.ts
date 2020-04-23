@@ -88,7 +88,7 @@ function onDisableClicked(e: Event) {
 }
 
 function onThemeClicked(e: Event) {
-  openDialog(themepicker, <HTMLElement>e.target);
+  openDialog(themepicker, themeButton);
 }
 
 fetchButton.addEventListener('click', onFetchClicked);

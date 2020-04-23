@@ -89,6 +89,10 @@ export class SettingsPage {
     this.setupListeners();
   }
 
+  private async removeInsertedCss() {
+    return browser.tabs.removeCSS(this.tab.id, { code: this.currentTheme });
+  }
+
   public async open(extensionTheme?: IExtensionTheme) {
     await this.create();
     extensionTheme && this.setTheme(extensionTheme);
@@ -101,7 +105,7 @@ export class SettingsPage {
 
   public async resetTheme() {
     if (this.currentTheme !== null) {
-      browser.tabs.removeCSS(this.tab.id, { code: this.currentTheme });
+      this.removeInsertedCss();
       this.currentTheme = null;
     }
   }
@@ -109,6 +113,10 @@ export class SettingsPage {
   public async setTheme(extensionTheme: IExtensionTheme) {
     if (this.tab === null) {
       return;
+    }
+
+    if (this.currentTheme !== null) {
+      await this.removeInsertedCss();
     }
 
     browser.tabs.insertCSS(this.tab.id, {
