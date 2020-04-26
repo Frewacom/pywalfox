@@ -39,7 +39,7 @@ if len(sys.argv) == 2:
 
         # Send a message to the UNIX-socket, telling it to send the new colorscheme to the addon
         client.sendMessage('update')
-        sys.exit(1)
+        sys.exit(0)
 
 # Send the version of daemon to the addon
 def sendVersion():
