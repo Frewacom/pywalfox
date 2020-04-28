@@ -122,6 +122,11 @@ function onThemeClicked(e: Event) {
   openDialog(themepicker, themeButton);
 }
 
+async function setCurrentTheme(themeInfo?: browser.theme.ThemeUpdateInfo) {
+  const selectedMode = await Utils.setInitialThemeClass(themeInfo);
+  themepicker.setSelectedMode(selectedMode);
+}
+
 fetchButton.addEventListener('click', onFetchClicked);
 disableButton.addEventListener('click', onDisableClicked);
 themeButton.addEventListener('click', onThemeClicked);
@@ -129,6 +134,7 @@ colorButtons.forEach((button: HTMLElement) => button.addEventListener('click', o
 optionButtons.forEach((button: HTMLElement) => button.addEventListener('click', onOptionClicked));
 settingCardHeaders.forEach((header: HTMLElement) => header.addEventListener('click', () => onSettingCardClicked(header)));
 overlay.addEventListener('click', onOverlayClicked);
+browser.theme.onUpdated.addListener(setCurrentTheme);
 
 browser.runtime.onMessage.addListener((message: IExtensionMessage) => {
   switch (message.action) {
@@ -140,6 +146,11 @@ browser.runtime.onMessage.addListener((message: IExtensionMessage) => {
       colorpicker.setSelectedColorForTarget(template);
       break;
     case EXTENSION_MESSAGES.THEME_MODE_SET:
+      /**
+       * TODO: When these have been combined into one single call,
+       *       we want to check if the pywalfox theme is enabled.
+       *       Currently, the mode from 'setCurrentTheme' will be overridden.
+       */
       themepicker.setSelectedMode(message.data);
       break;
     case EXTENSION_MESSAGES.DEBUGGING_OUTPUT:
@@ -150,6 +161,8 @@ browser.runtime.onMessage.addListener((message: IExtensionMessage) => {
       break;
   }
 });
+
+setCurrentTheme();
 
 // TODO: Combine into one call
 Messenger.requestPywalColors();

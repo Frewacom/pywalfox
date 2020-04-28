@@ -1,3 +1,5 @@
+import { ThemeModes } from '../definitions';
+
 export function isSet(attr: string, element: HTMLElement) {
   const value = element.getAttribute(attr);
   return value === '';
@@ -29,4 +31,26 @@ export function deselect(element: HTMLElement) {
 
 export function toggleSelected(element: HTMLElement) {
   isSet('selected', element) ? deselect(element) : select(element);
+}
+
+export async function setInitialThemeClass(themeInfo?: browser.theme.ThemeUpdateInfo) {
+  let theme: any;
+  if (themeInfo) {
+    theme = themeInfo.theme;
+  } else {
+    theme = await browser.theme.getCurrent();
+  }
+
+  if (Object.keys(theme).length > 0) {
+    // Seems like there is no better way of identifying themes
+    if (theme.colors.toolbar_field === '#fff' || theme.colors.toolbar_field === '#ffffff') {
+      document.body.classList.add('light');
+      document.body.classList.remove('dark');
+      return ThemeModes.Light;
+    }
+  }
+
+  document.body.classList.add('dark');
+  document.body.classList.remove('light');
+  return ThemeModes.Dark;
 }

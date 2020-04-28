@@ -43,6 +43,7 @@ export class Extension {
 
     browser.runtime.onMessage.addListener(this.onMessage.bind(this));
     browser.browserAction.onClicked.addListener(this.onIconClicked.bind(this));
+    // TODO: Setup listener for theme updates and update 'isApplied'
   }
 
   private onIconClicked(tab: browser.tabs.Tab, clickData: browser.contextMenus.OnClickData) {

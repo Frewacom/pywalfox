@@ -19,6 +19,7 @@ export class Themepicker extends Dialog {
     this.themeSelectButton = document.getElementById('theme-select');
     this.modeButtons = document.querySelectorAll('button[data-theme]');
     this.modeLookup = {};
+    this.currentClassName = null;
     this.setupListeners();
   }
 
@@ -62,7 +63,10 @@ export class Themepicker extends Dialog {
       className = ThemeModes.Dark;
     }
 
-    document.body.classList.remove(this.currentClassName);
+    if (this.currentClassName) {
+      document.body.classList.remove(this.currentClassName);
+    }
+
     document.body.classList.add(className);
     this.currentClassName = className;
   }
