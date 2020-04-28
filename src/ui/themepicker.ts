@@ -11,6 +11,7 @@ export class Themepicker extends Dialog {
   private themeSelectButton: HTMLElement;
   private modeButtons: NodeListOf<HTMLElement>;
   private modeLookup: ModeLookup;
+  private currentClassName: ThemeModes;
 
   constructor() {
     super('themepicker');
@@ -60,7 +61,9 @@ export class Themepicker extends Dialog {
       // TODO: If auto, we need to get the current theme from background script
     }
 
-    document.body.classList.toggle(className);
+    document.body.classList.remove(this.currentClassName);
+    document.body.classList.add(className);
+    this.currentClassName = className;
   }
 
   private onSetMode(target: HTMLElement) {
