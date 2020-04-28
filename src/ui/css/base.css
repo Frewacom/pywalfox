@@ -71,6 +71,11 @@ header {
   margin: 0em var(--spacing);
 }
 
+body.light .separator {
+  background-color: var(--background);
+  filter: brightness(90%);
+}
+
 .clickable {
   cursor: pointer;
 }

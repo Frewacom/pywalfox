@@ -17,6 +17,8 @@
   --spacing-xlg: 1.8em;
 
   --brightness-filter: brightness(120%);
+  --brightness-filter-dark: brightness(90%);
+  --brightness-filter-dark-hover: brightness(85%);
   --box-shadow: 0px 2px 20px #0000007a;
   --box-shadow-card: 2px 4px 10px #00000012;
   --transition-time: 0.1s;
@@ -38,8 +40,8 @@
   --background: #252525;
   --background-light: #444444;
   --foreground: #ffffff;
-  --accent-primary: #f9709d;
-  --accent-secondary: #b570f9;
+  --accent-primary: #6cadff;
+  --accent-secondary: #a1caff;
   --text: #ffffff;
 }
 

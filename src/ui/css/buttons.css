@@ -66,8 +66,16 @@ button[data-option] {
   width: 4em;
 }
 
+body.light button[data-option] {
+  filter: var(--brightness-filter-dark);
+}
+
 button[data-option]:hover {
   filter: var(--brightness-filter);
+}
+
+body.light button[data-option]:hover {
+  filter: var(--brightness-filter-dark-hover);
 }
 
 button[data-option][selected] {
@@ -75,7 +83,8 @@ button[data-option][selected] {
   color: var(--background);
 }
 
-button[data-option][selected]:hover {
+button[data-option][selected]:hover,
+body.light button[data-option][selected] {
   filter: none;
 }
 
@@ -134,14 +143,6 @@ button[data-color="accentSecondary"] {
   background: var(--accent-secondary);
 }
 
-button[type=dialog] {
-  background-color: transparent;
-  color: var(--text);
-  border-radius: 0;
-  padding-left: 0;
-  padding-right: 0;
-}
-
 button[type=colorpicker-color] {
   height: var(--button-height-sm);
   border-radius: var(--border-radius-sm);
@@ -193,7 +194,7 @@ body.light #colorpicker-custom {
   width: 11.5em; /* Fixed width to prevent flickering when changing themes */
 }
 
-button[dialog] {
+button[type=dialog] {
   border-radius: var(--border-radius-sm);
   background-color: transparent;
   border: none;
@@ -201,21 +202,35 @@ button[dialog] {
   font-size: var(--font-size-md);
   padding: 0;
   height: var(--button-height-md);
+  box-shadow: none;
 }
 
-button[dialog][selected] {
+button[type=dialog][selected] {
+  color: var(--background);
   background-color: var(--accent-secondary);
 }
 
-button[dialog][selected]:hover {
+body.light button[type=dialog][selected] {
+  color: var(--text);
+}
+
+button[type=dialog][selected]:hover {
   background-color: var(--accent-secondary);
   opacity: 1;
 }
 
-button[dialog]:hover {
+button[type=dialog]:hover {
  opacity: 0.8;
 }
 
-button[dialog] > i {
+body.light button[type=dialog] > i {
+  filter: invert(100%);
+}
+
+button[type=dialog] > i {
   transform: scale(0.8);
+}
+
+button[type=dialog][selected] > i {
+  filter: invert(100%);
 }
