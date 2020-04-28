@@ -59,6 +59,7 @@ export class Themepicker extends Dialog {
     let className = mode;
     if (mode === ThemeModes.Auto) {
       // TODO: If auto, we need to get the current theme from background script
+      className = ThemeModes.Dark;
     }
 
     document.body.classList.remove(this.currentClassName);

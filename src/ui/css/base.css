@@ -97,3 +97,7 @@ header {
     border-radius: var(--border-radius-sm);
     resize: none;
 }
+
+body.light #debugging-output {
+  background-color: rgba(0,0,0,0.1);
+}

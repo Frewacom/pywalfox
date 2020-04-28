@@ -18,6 +18,7 @@
 
   --brightness-filter: brightness(120%);
   --box-shadow: 0px 2px 20px #0000007a;
+  --box-shadow-card: 2px 4px 10px #00000012;
   --transition-time: 0.1s;
 
   --arrow-size: 1em;
@@ -37,7 +38,14 @@
   --background: #252525;
   --background-light: #444444;
   --foreground: #ffffff;
-  --accent-primary: #0284f7;
-  --accent-secondary: #0284f7;
+  --accent-primary: #f9709d;
+  --accent-secondary: #b570f9;
   --text: #ffffff;
+}
+
+:root body.light {
+  --background: #eeeeee;
+  --background-light: #ffffff;
+  --foreground: #333;
+  --text: #252525;
 }

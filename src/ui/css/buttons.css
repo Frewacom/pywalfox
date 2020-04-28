@@ -14,6 +14,7 @@ button {
   align-items: center;
   padding-bottom: 0.05em;
   position: relative;
+  box-shadow: var(--box-shadow-card);
 }
 
 button > i {
@@ -27,6 +28,10 @@ button::-moz-focus-inner {
 button[type=primary] {
   background-color: var(--accent-primary);
   color: var(--background);
+}
+
+body.light button[type=primary] {
+  color: var(--text);
 }
 
 button[type=primary]:hover {
@@ -125,6 +130,8 @@ button[type=colorpicker-color] {
   border: 2px solid transparent;
   transform: translateY(0px);
   box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
+  transition-duration: var(--transition-time);
+  transition-property: border-radius, border-color;
 }
 
 button[type=colorpicker-color]:hover {
@@ -133,13 +140,20 @@ button[type=colorpicker-color]:hover {
 
 button[type=colorpicker-color][selected] {
   border-color: var(--text);
-  box-shadow: -0px 0px 10px 10px rgba(0,0,0,0.2);
-  transform: translateY(-1px);
+  border-radius: 50%;
+}
+
+body.light button[type=colorpicker-color] {
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.4);
 }
 
 #colorpicker-custom, #colorpicker-undo {
   border-radius: var(--border-radius-sm);
   height: var(--button-height-sm);
+}
+
+body.light #colorpicker-custom {
+  color: var(--background-light);
 }
 
 #colorpicker-custom:hover, #colorpicker-undo:hover {

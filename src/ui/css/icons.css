@@ -2,6 +2,10 @@ i {
   margin-right: var(--spacing-sm);
 }
 
+body.light i {
+  filter: invert(100%);
+}
+
 i[icon="pen"] {
   content: url('../icons/pen-tool.svg');
 }

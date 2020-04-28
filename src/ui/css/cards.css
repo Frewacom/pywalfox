@@ -3,6 +3,7 @@
   border-radius: var(--border-radius);
   box-sizing: border-box;
   position: relative;
+  box-shadow: var(--box-shadow-card);
 }
 
 .card-header {
@@ -17,7 +18,7 @@
 }
 
 .card-header i {
-  transform: scale(0.85);
+  transform: scale(0.8);
 }
 
 .card-title {
@@ -44,12 +45,16 @@
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+body.light .card[open] .card-content {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
 .card[open] .card-header:hover {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
 
 .card[open] #debugging-info {
-  font-size: calc(var(--font-size) * 0.97);
+  font-size: calc(var(--font-size) * 0.95);
   padding: var(--spacing-sm) var(--spacing-lg);
 }

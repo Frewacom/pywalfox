@@ -11,6 +11,7 @@
   overflow: hidden;
   box-sizing: border-box;
   z-index: var(--z-index-dialog);
+  box-shadow: var(--box-shadow-card);
 }
 
 .dialog[open] {

@@ -4,6 +4,8 @@
   justify-content: flex-start;
   align-items: center;
   min-height: 100vh;
+  padding-bottom: var(--spacing-xlg);
+  box-sizing: border-box;
 }
 
 .container {
