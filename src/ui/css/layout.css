@@ -22,6 +22,25 @@
   width: 100%;
 }
 
+.indent {
+  margin-left: var(--spacing-xlg);
+  box-sizing: border-box;
+  width: calc(100% - var(--spacing-xlg));
+  position: relative;
+}
+
+.indent::before {
+  content: '';
+  width: calc(var(--spacing-lg) - 0.6em);
+  height: 90%;
+  background-color: transparent;
+  position: absolute;
+  left: calc(-1 * var(--spacing-lg));
+  border-left: 2px solid var(--accent-secondary);
+  border-bottom: 2px solid var(--accent-secondary);
+  bottom: 20%;
+}
+
 .box {
   display: flex;
   flex-direction: inherit;

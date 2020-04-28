@@ -80,6 +80,14 @@ body.light .separator {
   cursor: pointer;
 }
 
+#font-size-option {
+  display: none;
+}
+
+#user-chrome-option[selected] + #font-size-option {
+  display: flex;
+}
+
 #debugging-version {
   padding: var(--spacing-xsm) var(--spacing-md);
   color: var(--text);
