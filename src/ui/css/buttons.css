@@ -26,7 +26,7 @@ button::-moz-focus-inner {
 
 button[type=primary] {
   background-color: var(--accent-primary);
-  color: var(--text);
+  color: var(--background);
 }
 
 button[type=primary]:hover {
@@ -154,14 +154,8 @@ button[type=colorpicker-color][selected] {
   background-color: var(--text);
 }
 
-#colorpicker-undo {
-  background-color: var(--accent-primary);
-  color: var(--text);
-  margin-top: var(--spacing-sm);
-}
-
 #theme-select {
-  width: 12em; /* Fixed width to prevent flickering when changing themes */
+  width: 11.5em; /* Fixed width to prevent flickering when changing themes */
 }
 
 button[dialog] {

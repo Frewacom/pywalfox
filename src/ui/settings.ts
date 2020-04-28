@@ -34,7 +34,12 @@ function openDialog(dialog: Dialog, target: HTMLElement) {
     open(overlay);
   }
 
-  if (currentDialog !== null && currentDialog !== dialog) {
+  if (currentDialog === dialog) {
+    if (dialog !== colorpicker || currentDialog.getTarget() === target) {
+      closeDialog();
+      return;
+    }
+  } else if (currentDialog !== null && currentDialog !== dialog) {
     currentDialog.close();
   }
 

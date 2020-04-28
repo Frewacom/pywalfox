@@ -34,6 +34,10 @@ export abstract class Dialog {
     this.onOpen !== undefined && this.onOpen();
   }
 
+  public getTarget() {
+    return this.target;
+  }
+
   protected onOpen() {};
   protected onClose() {};
 
