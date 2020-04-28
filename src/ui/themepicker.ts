@@ -3,20 +3,28 @@ import { ThemeModes } from '../definitions';
 import { requestThemeModeSet } from './messenger';
 import * as Utils from './utils';
 
+interface ModeLookup {
+  [key: string]: HTMLElement;
+}
+
 export class Themepicker extends Dialog {
   private themeSelectButton: HTMLElement;
   private modeButtons: NodeListOf<HTMLElement>;
+  private modeLookup: ModeLookup;
 
   constructor() {
     super('themepicker');
 
     this.themeSelectButton = document.getElementById('theme-select');
     this.modeButtons = document.querySelectorAll('button[data-theme]');
+    this.modeLookup = {};
     this.setupListeners();
   }
 
   private setupListeners() {
     this.modeButtons.forEach((button: HTMLElement) => {
+      const buttonMode: string = button.getAttribute('data-theme');
+      this.modeLookup[buttonMode] = button; // For setting the selected button when changing modes
       button.addEventListener('click', () => this.onSetMode(button));
     });
   }
@@ -46,20 +54,30 @@ export class Themepicker extends Dialog {
     this.selected = target;
   }
 
+  private toggleBodyClass(mode: ThemeModes) {
+    let className = mode;
+    if (mode === ThemeModes.Auto) {
+      // TODO: If auto, we need to get the current theme from background script
+    }
+
+    document.body.classList.toggle(className);
+  }
+
   private onSetMode(target: HTMLElement) {
     const mode = <ThemeModes>target.getAttribute('data-theme');
+    this.toggleBodyClass(mode);
     this.selectMode(target, mode);
     requestThemeModeSet(mode);
   }
 
   public setSelectedMode(mode: ThemeModes) {
-    for (let i = 0; i < this.modeButtons.length; i++) {
-      const button: HTMLElement = this.modeButtons[i];
-      const buttonMode: string = button.getAttribute('data-theme');
-      if (buttonMode === mode) {
-        this.selectMode(button, mode);
-        break;
-      }
+    const targetButton: HTMLElement = this.modeLookup[mode];
+    if (targetButton) {
+      this.selectMode(targetButton, mode);
+    } else {
+      console.error(`Could not find target button associated with the mode: ${mode}`);
     }
+
+    this.toggleBodyClass(mode);
   }
 }

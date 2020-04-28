@@ -22,3 +22,4 @@ export function select(element: Element) {
 export function deselect(element: Element) {
   element.removeAttribute('selected');
 }
+
