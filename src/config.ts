@@ -90,6 +90,8 @@ export const EXTENSION_MESSAGES = {
   TEMPLATE_GET: "template:get",
   PYWAL_COLORS_GET: "pywal:colors:get",
   PYWAL_COLORS_SET: "pywal:colors:set",
+  OPTION_GET: "option:get",
+  OPTION_SET: "option:set",
   NOTIFCATION: "notification",
   CSS_ENABLE: "css:enable",
   CSS_DISABLE: "css:disable",
@@ -99,7 +101,7 @@ export const EXTENSION_MESSAGES = {
   CSS_DISABLE_FAILED: "css:disable:failed",
   DDG_THEME_GET: "ddg:theme:get",
   DDG_THEME_SET: "ddg:theme:set",
-  DDG_THEME_RESET: "ddg:theme:reset"
+  DDG_THEME_RESET: "ddg:theme:reset",
 };
 
 export const MESSAGES = {

@@ -1,8 +1,9 @@
-import { Dialog } from './dialog';
+import * as Utils from './utils';
 import * as Messenger from './messenger';
+
+import { Dialog } from './dialog';
 import { Colorpicker } from './colorpicker';
 import { Themepicker } from './themepicker';
-import { toggleOpen, open, close, isOpen } from './utils';
 import { IExtensionMessage, IColorschemeTemplate } from '../definitions';
 import { EXTENSION_MESSAGES } from '../config';
 
@@ -10,6 +11,7 @@ const fetchButton: HTMLElement = document.getElementById('fetch');
 const disableButton: HTMLElement = document.getElementById('disable');
 const themeButton: HTMLElement = document.getElementById('theme-select');
 const colorButtons: NodeListOf<HTMLElement> = document.querySelectorAll('button[data-color]');
+const optionButtons: NodeListOf<HTMLElement> = document.querySelectorAll('button[data-option]');
 const settingCardHeaders: NodeListOf<HTMLElement> = document.querySelectorAll('.setting-card-header');
 const debuggingOutput: HTMLTextAreaElement = <HTMLTextAreaElement>document.getElementById('debugging-output');
 const debuggingConnected: HTMLElement = document.getElementById('debugging-connected');
@@ -28,10 +30,10 @@ let template: IColorschemeTemplate = null;
  * @param {HTMLElement} target - the element that triggered the opening of the dialog
  */
 function openDialog(dialog: Dialog, target: HTMLElement) {
-  const overlayOpen = isOpen(overlay);
+  const overlayOpen = Utils.isOpen(overlay);
 
   if (!overlayOpen) {
-    open(overlay);
+    Utils.open(overlay);
   }
 
   if (currentDialog === dialog) {
@@ -53,8 +55,8 @@ function closeDialog() {
     currentDialog = null;
   }
 
-  if (isOpen(overlay)) {
-    close(overlay);
+  if (Utils.isOpen(overlay)) {
+    Utils.close(overlay);
   }
 }
 
@@ -69,13 +71,37 @@ function writeOutput(message: string) {
 }
 
 function onSettingCardClicked(header: HTMLElement) {
-  toggleOpen(<HTMLElement>header.parentNode);
+  Utils.toggleOpen(<HTMLElement>header.parentNode);
 }
 
 function onColorClicked(e: Event) {
   const element = <HTMLElement>e.target;
   openDialog(colorpicker, element);
   colorpicker.setSelectedColorForTarget(template);
+}
+
+function setOptionEnabled(target: HTMLElement, enabled: boolean) {
+  if (enabled) {
+    Utils.deselect(target);
+    target.innerText = 'No';
+  } else {
+    Utils.select(target);
+    target.innerText = 'Yes';
+  }
+}
+
+function onOptionClicked(e: Event) {
+  const target = <HTMLElement>e.target;
+  const option = target.getAttribute('data-option');
+  const isEnabled = Utils.isSet('selected', target);
+
+  if (Utils.isSet('async', target)) {
+    // TODO: Implement loading state on button
+  } else {
+    setOptionEnabled(target, isEnabled);
+  }
+
+  Messenger.requestOptionSet(option, isEnabled);
 }
 
 function onOverlayClicked(e: Event) {
@@ -100,6 +126,7 @@ fetchButton.addEventListener('click', onFetchClicked);
 disableButton.addEventListener('click', onDisableClicked);
 themeButton.addEventListener('click', onThemeClicked);
 colorButtons.forEach((button: HTMLElement) => button.addEventListener('click', onColorClicked));
+optionButtons.forEach((button: HTMLElement) => button.addEventListener('click', onOptionClicked));
 settingCardHeaders.forEach((header: HTMLElement) => header.addEventListener('click', () => onSettingCardClicked(header)));
 overlay.addEventListener('click', onOverlayClicked);
 

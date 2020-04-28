@@ -1,5 +1,5 @@
 import { EXTENSION_MESSAGES } from '../config';
-import { ThemeModes } from '../definitions';
+import { ThemeModes, OptionSetData } from '../definitions';
 
 export function requestDebuggingInfo() {
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.DEBUGGING_INFO_GET });
@@ -28,3 +28,9 @@ export function requestThemeMode() {
 export function requestThemeModeSet(mode: ThemeModes) {
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.THEME_MODE_SET, data: mode });
 }
+
+export function requestOptionSet(option: string, enabled: boolean) {
+  const data: OptionSetData = { option, enabled };
+  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.OPTION_SET, data });
+}
+

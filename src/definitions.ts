@@ -96,6 +96,11 @@ export enum ThemeModes {
   Auto = 'auto'
 }
 
+export interface OptionSetData {
+  option: string;
+  enabled: boolean;
+}
+
 /**
  * Expose 'wrappedJSObject' from the 'window' namespace.
  *

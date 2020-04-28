@@ -93,7 +93,34 @@
             <button type="dropdown"><i icon="chevron"></i></button>
           </div>
           <div class="card-content column expand">
-
+            <div class="row expand space-between v-center margin-bottom">
+              <div class="box column align-left">
+                <p class="setting-title">Use DuckDuckGo theme?</p>
+                <p class="setting-description">Applies matching theme to all DuckDuckGo-pages</p>
+              </div>
+              <button data-option="duckduckgo">No</button>
+            </div>
+            <div class="row expand space-between v-center margin-bottom">
+              <div class="box column align-left">
+                <p class="setting-title">Use included userChrome.css?</p>
+                <p class="setting-description">Bold text, styled dropdown and context menus</p>
+              </div>
+              <button data-option="userChrome" async>No</button>
+            </div>
+            <div class="row expand space-between v-center margin-bottom">
+              <div class="box column align-left">
+                <p class="setting-title">Font size</p>
+                <p class="setting-description">The base font size to be used in userChrome.css</p>
+              </div>
+              <button data-option="fontSize" async>No</button>
+            </div>
+            <div class="row expand space-between v-center">
+              <div class="box column align-left">
+                <p class="setting-title">Use included userContent.css</p>
+                <p class="setting-description">Globally hides the page scrollbar</p>
+              </div>
+              <button data-option="userContent" async>No</button>
+            </div>
           </div>
         </section>
         <section class="setting-card card expand space-between margin-bottom-lg">

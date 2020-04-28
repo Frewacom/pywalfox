@@ -58,6 +58,27 @@ button[type=dropdown]:hover {
   color: var(--accent-primary);
 }
 
+button[data-option] {
+  background-color: var(--background);
+  color: var(--text);
+  border-radius: var(--border-radius-sm);
+  padding: 0em;
+  width: 4em;
+}
+
+button[data-option]:hover {
+  filter: var(--brightness-filter);
+}
+
+button[data-option][selected] {
+  background-color: var(--text);
+  color: var(--background);
+}
+
+button[data-option][selected]:hover {
+  filter: none;
+}
+
 button[data-color] {
   width: var(--button-height-md);
   height: var(--button-height-md);
