@@ -1,6 +1,6 @@
 :root {
   --font: sans-serif;
-  --font-size: 0.93em;
+  --font-size: 0.85rem;
   --font-size-sm: calc(var(--font-size) * 0.9);
   --font-size-lg: calc(var(--font-size) * 1.25);
   --font-size-md: calc(var(--font-size) * 0.95);
