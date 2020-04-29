@@ -25,40 +25,18 @@ button::-moz-focus-inner {
   border: 0;
 }
 
-button[type=primary] {
-  background-color: var(--accent-primary);
-  color: var(--background);
-}
-
-body.light button[type=primary] {
-  color: var(--text);
-}
-
-button[type=primary]:hover {
-  filter: var(--brightness-filter);
-}
-
-button[type=secondary] {
-  background-color: var(--background-light);
-  color: var(--text);
-}
-
-button[type=secondary]:hover {
-  filter: var(--brightness-filter);
-}
-
-button[type=dropdown] {
+.btn-dropdown {
   background-color: transparent;
   color: var(--text);
   padding: 0em;
   height: auto;
 }
 
-button[type=dropdown]:hover {
+.btn-dropdown:hover {
   color: var(--accent-primary);
 }
 
-button[data-option] {
+.btn-option {
   background-color: var(--background);
   color: var(--text);
   border-radius: var(--border-radius-sm);
@@ -66,29 +44,30 @@ button[data-option] {
   width: 4em;
 }
 
-body.light button[data-option] {
+body.light .btn-option {
   filter: var(--brightness-filter-dark);
 }
 
-button[data-option]:hover {
+.btn-option:hover {
   filter: var(--brightness-filter);
 }
 
-body.light button[data-option]:hover {
+body.light .btn-option:hover {
   filter: var(--brightness-filter-dark-hover);
 }
 
-button[data-option][selected] {
+.btn-option[selected] {
   background-color: var(--text);
   color: var(--background);
 }
 
-button[data-option][selected]:hover,
-body.light button[data-option][selected] {
+.btn-option[selected]:hover,
+body.light .btn-option[selected] {
   filter: none;
 }
 
-button[data-color] {
+
+.btn-color {
   width: var(--button-height-md);
   height: var(--button-height-md);
   border: 2px solid var(--text);
@@ -143,7 +122,7 @@ button[data-color="accentSecondary"] {
   background: var(--accent-secondary);
 }
 
-button[type=colorpicker-color] {
+.btn-palette-color {
   height: var(--button-height-sm);
   border-radius: var(--border-radius-sm);
   background-color: var(--background);
@@ -156,17 +135,80 @@ button[type=colorpicker-color] {
   transition-property: border-radius, border-color;
 }
 
-button[type=colorpicker-color]:hover {
+.btn-palette-color:hover {
   border-color: var(--text);
 }
 
-button[type=colorpicker-color][selected] {
+.btn-palette-color[selected] {
   border-color: var(--text);
   border-radius: 50%;
 }
 
-body.light button[type=colorpicker-color] {
+body.light .btn-palette-color {
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.4);
+}
+
+.btn-dialog {
+  border-radius: var(--border-radius-sm);
+  background-color: transparent;
+  border: none;
+  color: var(--text);
+  font-size: var(--font-size-md);
+  padding: 0;
+  height: var(--button-height-md);
+  box-shadow: none;
+}
+
+.btn-dialog[selected] {
+  color: var(--background);
+  background-color: var(--accent-secondary);
+}
+
+body.light .btn-dialog[selected] {
+  color: var(--text);
+}
+
+.btn-dialog[selected]:hover {
+  background-color: var(--accent-secondary);
+  opacity: 1;
+}
+
+.btn-dialog:hover {
+ opacity: 0.8;
+}
+
+body.light .btn-dialog > i {
+  filter: invert(100%);
+}
+
+.btn-dialog > i {
+  transform: scale(0.8);
+}
+
+.btn-dialog[selected] > i {
+  filter: invert(100%);
+}
+
+.btn-primary {
+  background-color: var(--accent-primary);
+  color: var(--background);
+}
+
+body.light .btn-primary {
+  color: var(--text);
+}
+
+.btn-primary:hover {
+  filter: var(--brightness-filter);
+}
+
+.btn-secondary {
+  background-color: var(--background-light);
+  color: var(--text);
+}
+
+.btn-secondary:hover {
+  filter: var(--brightness-filter);
 }
 
 #colorpicker-custom, #colorpicker-undo {
@@ -194,43 +236,3 @@ body.light #colorpicker-custom {
   width: 11.5em; /* Fixed width to prevent flickering when changing themes */
 }
 
-button[type=dialog] {
-  border-radius: var(--border-radius-sm);
-  background-color: transparent;
-  border: none;
-  color: var(--text);
-  font-size: var(--font-size-md);
-  padding: 0;
-  height: var(--button-height-md);
-  box-shadow: none;
-}
-
-button[type=dialog][selected] {
-  color: var(--background);
-  background-color: var(--accent-secondary);
-}
-
-body.light button[type=dialog][selected] {
-  color: var(--text);
-}
-
-button[type=dialog][selected]:hover {
-  background-color: var(--accent-secondary);
-  opacity: 1;
-}
-
-button[type=dialog]:hover {
- opacity: 0.8;
-}
-
-body.light button[type=dialog] > i {
-  filter: invert(100%);
-}
-
-button[type=dialog] > i {
-  transform: scale(0.8);
-}
-
-button[type=dialog][selected] > i {
-  filter: invert(100%);
-}

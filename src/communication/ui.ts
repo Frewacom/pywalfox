@@ -1,7 +1,8 @@
 import { IPywalColors, IColorschemeTemplate, ThemeModes } from '../definitions';
 import { EXTENSION_MESSAGES } from '../config';
 
-export function sendDebuggingOutput(message: string) {
+export function sendDebuggingOutput(message: string, error?: boolean) {
+  error === true ? console.error(message) : console.log(message);
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.DEBUGGING_OUTPUT, data: message });
 }
 

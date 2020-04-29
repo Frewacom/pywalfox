@@ -1,5 +1,5 @@
 import { EXTENSION_MESSAGES } from '../config';
-import { ThemeModes, OptionSetData } from '../definitions';
+import { ThemeModes, IOptionSetData } from '../definitions';
 
 export function requestDebuggingInfo() {
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.DEBUGGING_INFO_GET });
@@ -30,7 +30,12 @@ export function requestThemeModeSet(mode: ThemeModes) {
 }
 
 export function requestOptionSet(option: string, enabled: boolean) {
-  const data: OptionSetData = { option, enabled };
-  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.OPTION_SET, data });
+  const optionData: IOptionSetData = { option, enabled };
+  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.OPTION_SET, data: optionData });
 }
+
+export function requestFontSizeSet(size: number) {
+  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.FONT_SIZE_SET, data: size });
+}
+
 

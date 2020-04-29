@@ -96,7 +96,7 @@ export enum ThemeModes {
   Auto = 'auto'
 }
 
-export interface OptionSetData {
+export interface IOptionSetData {
   option: string;
   enabled: boolean;
 }

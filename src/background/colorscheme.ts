@@ -88,16 +88,27 @@ export function generateExtensionTheme(colorscheme: IColorscheme) {
  */
 export function generateDDGTheme(colorscheme: IColorscheme) {
   return [
-    { id: '7',  value: colorscheme.palette.background },        // Background
-    { id: 'j',  value: colorscheme.palette.background },        // Header background
-    { id: '9',  value: colorscheme.palette.text },              // Result link title
-    { id: 'aa', value: colorscheme.palette.accentPrimary },     // Result visited link title
-    { id: 'x',  value: colorscheme.palette.accentSecondary },   // Result link url
-    { id: '8',  value: 'f8f8f8' },                              // Result description
-    { id: '21', value: colorscheme.palette.backgroundLight },   // Result hover, dropdown, etc.
-    { id: 'ae', value: 'pywalfox' },                            // The theme name
+    { id: 'k7',  value: stripHash(colorscheme.palette.background) },        // Background
+    { id: 'kj',  value: stripHash(colorscheme.palette.background) },        // Header background
+    { id: 'k9',  value: stripHash(colorscheme.palette.text) },              // Result link title
+    { id: 'kaa', value: stripHash(colorscheme.palette.accentPrimary) },     // Result visited link title
+    { id: 'kx',  value: stripHash(colorscheme.palette.accentSecondary) },   // Result link url
+    { id: 'k8',  value: 'f8f8f8' },                                         // Result description
+    { id: 'k21', value: stripHash(colorscheme.palette.backgroundLight) },   // Result hover, dropdown, etc.
+    { id: 'kae', value: 'pywalfox' },                                       // The theme name
   ];
 }
 
+/**
+ * Removes the '#' symbol from a color.
+ * This is used because DDG does not support colors starting with '#'.
+ *
+ * @param {string} color
+ * @returns {string} color with the first '#' removed
+ */
+function stripHash(color: string) {
+  // TODO: Move this to some utils file?
+  return color.substring(1);
+}
 
 

@@ -114,12 +114,12 @@ export class State {
     return this.currentState.theme.extension;
   }
 
-  public getDuckDuckGoTheme() {
+  public getDDGTheme() {
     return this.currentState.theme.ddg;
   }
 
-  public getDuckDuckGoThemeEnabled() {
-    return this.currentState.options.ddgTheme;
+  public getDDGThemeEnabled() {
+    return this.currentState.options.ddgEnabled;
   }
 
   public setVersion(version: number) {
@@ -178,6 +178,15 @@ export class State {
         ...this.currentState.theme,
         mode: mode,
         template: mode === ThemeModes.Dark ? DEFAULT_THEME_TEMPLATE_DARK : DEFAULT_THEME_TEMPLATE_LIGHT
+      }
+    });
+  }
+
+  public setDDGThemeEnabled(enabled: boolean) {
+    this.set({
+      options: {
+        ...this.currentState.options,
+        ddgEnabled: enabled
       }
     });
   }

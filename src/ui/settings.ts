@@ -5,7 +5,7 @@ import { Dialog } from './dialog';
 import { Colorpicker } from './colorpicker';
 import { Themepicker } from './themepicker';
 import { IExtensionMessage, IColorschemeTemplate } from '../definitions';
-import { EXTENSION_MESSAGES } from '../config';
+import { EXTENSION_MESSAGES, EXTENSION_OPTIONS } from '../config';
 
 const fetchButton: HTMLElement = document.getElementById('fetch');
 const disableButton: HTMLElement = document.getElementById('disable');
@@ -17,6 +17,9 @@ const debuggingOutput: HTMLTextAreaElement = <HTMLTextAreaElement>document.getEl
 const debuggingConnected: HTMLElement = document.getElementById('debugging-connected');
 const debuggingVersion: HTMLElement = document.getElementById('debugging-version');
 const overlay: HTMLElement = document.getElementById('overlay');
+
+const fontSizeSaveButton: HTMLElement = document.getElementById('font-size-save');
+const fontSizeSaveInput: HTMLElement = document.getElementById('font-size-input');
 
 const colorpicker = new Colorpicker();
 const themepicker = new Themepicker();
@@ -94,6 +97,7 @@ function onOptionClicked(e: Event) {
   const target = <HTMLElement>e.target;
   const option = target.getAttribute('data-option');
   const isEnabled = Utils.isSet('selected', target);
+  const newState = isEnabled ? false : true;
 
   if (Utils.isSet('async', target)) {
     // TODO: Implement loading state on button
@@ -101,7 +105,7 @@ function onOptionClicked(e: Event) {
     setOptionEnabled(target, isEnabled);
   }
 
-  Messenger.requestOptionSet(option, isEnabled);
+  Messenger.requestOptionSet(option, newState);
 }
 
 function onOverlayClicked(e: Event) {
@@ -122,6 +126,17 @@ function onThemeClicked(e: Event) {
   openDialog(themepicker, themeButton);
 }
 
+function onFontSizeSave(e: Event) {
+  const inputElement = <HTMLInputElement>fontSizeSaveInput;
+  if (inputElement.checkValidity()) {
+    // TODO: Set loading state on button
+    Messenger.requestFontSizeSet(parseInt(inputElement.value));
+  } else {
+    // TODO: Display notifiction or something
+    return;
+  }
+}
+
 async function setCurrentTheme(themeInfo?: browser.theme.ThemeUpdateInfo) {
   const selectedMode = await Utils.setInitialThemeClass(themeInfo);
   themepicker.setSelectedMode(selectedMode);
@@ -134,6 +149,7 @@ colorButtons.forEach((button: HTMLElement) => button.addEventListener('click', o
 optionButtons.forEach((button: HTMLElement) => button.addEventListener('click', onOptionClicked));
 settingCardHeaders.forEach((header: HTMLElement) => header.addEventListener('click', () => onSettingCardClicked(header)));
 overlay.addEventListener('click', onOverlayClicked);
+fontSizeSaveButton.addEventListener('click', onFontSizeSave);
 browser.theme.onUpdated.addListener(setCurrentTheme);
 
 browser.runtime.onMessage.addListener((message: IExtensionMessage) => {

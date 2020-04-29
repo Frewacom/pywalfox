@@ -1,0 +1,13 @@
+input {
+  background-color: var(--background);
+  border-radius: var(--border-radius-sm);
+  height: var(--button-height);
+  padding: 0 var(--spacing-sm);
+  border: none;
+  color: var(--text);
+}
+
+input[type=number] {
+  text-align: center;
+  width: 4em;
+}

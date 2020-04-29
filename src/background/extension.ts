@@ -7,6 +7,7 @@ import {
   IDuckDuckGoTheme,
   IExtensionMessage,
   IColorschemeTemplate,
+  IOptionSetData,
 } from '../definitions';
 
 import {
@@ -15,10 +16,16 @@ import {
   generateDDGTheme,
 } from './colorscheme';
 
+import {
+  MIN_REQUIRED_DAEMON_VERSION,
+  EXTENSION_MESSAGES,
+  EXTENSION_OPTIONS,
+  VALID_CSS_TARGETS,
+} from '../config';
+
 import { State } from './state';
 import { NativeApp } from './native-app';
 import { SettingsPage } from './settings-page';
-import { MIN_REQUIRED_DAEMON_VERSION, EXTENSION_MESSAGES } from '../config';
 
 import * as UI from '../communication/ui';
 import * as DDG from '../communication/duckduckgo';
@@ -59,11 +66,33 @@ export class Extension {
     }
   }
 
+  private setOption(optionData: IOptionSetData) {
+    if (!optionData) {
+      UI.sendDebuggingOutput('Tried to set option, but no data was provided', true);
+      return;
+    }
+
+    switch (optionData.option) {
+      case EXTENSION_OPTIONS.FONT_SIZE:
+        // TODO: Set font size
+        break;
+      case EXTENSION_OPTIONS.DUCKDUCKGO:
+        this.setDDGEnabled(optionData.enabled);
+        break;
+      case EXTENSION_OPTIONS.USER_CHROME: /* Fallthrough */
+      case EXTENSION_OPTIONS.USER_CONTENT:
+        this.setCustomCSSEnabled(optionData.option, optionData.enabled);
+        break;
+      default:
+        UI.sendDebuggingOutput(`Received unhandled option: ${optionData.option}`);
+    }
+  }
+
   /* Handles incoming messages from the UI and other content scripts. */
   private onMessage(message: IExtensionMessage) {
     switch (message.action) {
       case EXTENSION_MESSAGES.DDG_THEME_GET:
-        const theme = this.state.getDuckDuckGoTheme();
+        const theme = this.state.getDDGTheme();
         theme ? DDG.setTheme(theme) : DDG.resetTheme();
         break;
       case EXTENSION_MESSAGES.PYWAL_COLORS_GET:
@@ -92,6 +121,10 @@ export class Extension {
       case EXTENSION_MESSAGES.DEBUGGING_INFO_GET:
         const info = this.state.getDebuggingInfo();
         UI.sendDebuggingInfo(info);
+        break;
+      case EXTENSION_MESSAGES.OPTION_SET:
+        this.setOption(message.data);
+        break;
     }
   }
 
@@ -109,7 +142,7 @@ export class Extension {
     this.settingsPage.resetTheme();
     UI.sendDebuggingOutput('Theme was disabled');
 
-    if (this.state.getDuckDuckGoThemeEnabled()) {
+    if (this.state.getDDGThemeEnabled()) {
       DDG.resetTheme();
     }
 
@@ -122,6 +155,7 @@ export class Extension {
     const template = this.state.getTemplate();
     const colorscheme = generateColorscheme(pywalColors, customColors, template);
     const extensionTheme = generateExtensionTheme(colorscheme);
+    const ddgTheme = generateDDGTheme(colorscheme);
 
     this.setBrowserTheme(colorscheme.browser);
     this.settingsPage.setTheme(extensionTheme);
@@ -129,9 +163,7 @@ export class Extension {
     UI.sendTemplate(template);
     UI.sendDebuggingOutput('Pywal colors was fetched from daemon and applied successfully');
 
-    let ddgTheme: IDuckDuckGoTheme = null;
-    if (this.state.getDuckDuckGoThemeEnabled()) {
-      ddgTheme = generateDDGTheme(colorscheme);
+    if (this.state.getDDGThemeEnabled()) {
       DDG.setTheme(ddgTheme);
     }
 
@@ -143,6 +175,31 @@ export class Extension {
 
   private setBrowserTheme(browserTheme: IBrowserTheme) {
     browser.theme.update({ colors: browserTheme });
+  }
+
+  private setCustomCSSEnabled(target: string, enabled: boolean) {
+    if (VALID_CSS_TARGETS.includes(target)) {
+      this.nativeApp.requestCssEnabled(target, enabled);
+    } else {
+      UI.sendDebuggingOutput(`Could not enable CSS target "${target}". Invalid target`);
+    }
+  }
+
+  private setDDGEnabled(enabled: boolean) {
+    const isEnabled = this.state.getDDGThemeEnabled();
+
+    if (enabled && !isEnabled) {
+      const ddgTheme = this.state.getDDGTheme();
+      if (!ddgTheme) {
+        UI.sendDebuggingOutput('Could not enable DuckDuckGo theme. Is the Pywalfox theme enabled?');
+      } else {
+        DDG.setTheme(ddgTheme);
+      }
+    } else if (!enabled && isEnabled) {
+      DDG.resetTheme();
+    }
+
+    this.state.setDDGThemeEnabled(enabled);
   }
 
   /**
@@ -172,7 +229,7 @@ export class Extension {
   }
 
   private updateNeeded() {
-    console.log('Update needed');
+    UI.sendDebuggingOutput('Daemon is outdated and things may break. Please update');
   }
 
   private nativeAppConnected() {
@@ -184,7 +241,7 @@ export class Extension {
   }
 
   private nativeAppDisconnected() {
-    console.error('Disconnected from native app');
+    UI.sendDebuggingOutput('Disconnected from native app', true);
     this.state.setConnected(false);
   }
 
@@ -193,6 +250,8 @@ export class Extension {
   }
 
   private cssToggleFailed(error: string) {
+    // TODO: Send an 'OPTION_SET' error so that the settings page can update the button state
+    UI.sendDebuggingOutput(error, true);
     UI.sendNotification(error);
   }
 

@@ -72,6 +72,11 @@ export const DEFAULT_THEME_TEMPLATE_LIGHT = {
   }
 }
 
+export const VALID_CSS_TARGETS = [
+  "userChrome",
+  "userContent"
+];
+
 export const EXTERNAL_MESSAGES = {
   COLORSCHEME: "colors",
   DISABLED: "disabled"
@@ -92,6 +97,8 @@ export const EXTENSION_MESSAGES = {
   PYWAL_COLORS_SET: "pywal:colors:set",
   OPTION_GET: "option:get",
   OPTION_SET: "option:set",
+  FONT_SIZE_SET: "font:size:set",
+  FONT_SIZE_GET: "font:size:get",
   NOTIFCATION: "notification",
   CSS_ENABLE: "css:enable",
   CSS_DISABLE: "css:disable",
@@ -102,6 +109,13 @@ export const EXTENSION_MESSAGES = {
   DDG_THEME_GET: "ddg:theme:get",
   DDG_THEME_SET: "ddg:theme:set",
   DDG_THEME_RESET: "ddg:theme:reset",
+};
+
+export const EXTENSION_OPTIONS = {
+  FONT_SIZE: "fontSize",
+  USER_CHROME: "userChrome",
+  USER_CONTENT: "userContent",
+  DUCKDUCKGO: "duckduckgo",
 };
 
 export const MESSAGES = {

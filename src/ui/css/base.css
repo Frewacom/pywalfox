@@ -1,6 +1,7 @@
 @import url('variables.css');
 @import url('layout.css');
 @import url('buttons.css');
+@import url('inputs.css');
 @import url('cards.css');
 @import url('settings.css');
 @import url('notifications.css');
@@ -90,7 +91,7 @@ body.light .separator {
 
 #debugging-version {
   padding: var(--spacing-xsm) var(--spacing-md);
-  color: var(--text);
+  color: var(--background);
   background-color: var(--accent-secondary);
   border-radius: var(--border-radius);
   font-size: var(--font-size-md);

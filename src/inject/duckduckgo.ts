@@ -8,13 +8,14 @@ function getCurrentTheme() {
 
 function resetTheme() {
   console.debug('Resetting theme');
+  // TODO: We could send the reset theme from the background script based on the current theme mode
   window.wrappedJSObject.DDG.settings.setTheme('d');
 }
 
 function applyTheme(theme: IDuckDuckGoTheme) {
   console.debug('Applying Pywalfox theme');
   for (const color of theme) {
-    window.wrappedJSObject.DDG.settings.set(`k${color.id}`, color.value, { saveToCookie: true });
+    window.wrappedJSObject.DDG.settings.set(color.id, color.value);
   }
 }
 
@@ -33,13 +34,11 @@ function onMessage(message: IExtensionMessage) {
   }
 }
 
-function load() {
-  console.debug('Pywalfox content script loaded');
-  browser.runtime.onMessage.addListener(onMessage);
-  requestTheme();
-}
+browser.runtime.onMessage.addListener(onMessage);
+requestTheme();
 
-load();
+console.debug('Pywalfox content script loaded');
+
 
 
 

@@ -14,14 +14,14 @@
           <h1 id="logo">Pywalfox<span id="version">v2.0.0</span></h1>
         </div>
         <div class="box">
-          <button type="secondary" id="disable" class="margin-right">Disable theme</button>
-          <button type="primary" id="fetch">Fetch pywal colors</button>
+          <button class="btn-secondary margin-right" id="disable">Disable theme</button>
+          <button class="btn-primary" id="fetch">Fetch pywal colors</button>
           <div class="separator"></div>
-          <button type="secondary" id="theme-select" class="dialog-arrow"></button>
+          <button class="btn-secondary dialog-arrow" id="theme-select"></button>
           <aside class="dialog" id="themepicker">
-            <button type="dialog" data-theme="dark"><i icon="moon"></i>Dark</button>
-            <button type="dialog" data-theme="light"><i icon="sun"></i>Light</button>
-            <button type="dialog" data-theme="auto"><i icon="auto"></i>Auto</button>
+            <button class="btn-dialog" data-theme="dark"><i icon="moon"></i>Dark</button>
+            <button class="btn-dialog" data-theme="light"><i icon="sun"></i>Light</button>
+            <button class="btn-dialog" data-theme="auto"><i icon="auto"></i>Auto</button>
           </aside>
         </div>
       </header>
@@ -30,14 +30,14 @@
           <aside class="dialog" id="colorpicker">
             <div id="colorpicker-grid"></div>
             <button class="margin-bottom-sm" id="colorpicker-custom">Custom</button>
-            <button type="primary" id="colorpicker-undo">Undo</button>
+            <button class="btn-primary" id="colorpicker-undo">Undo</button>
           </aside>
           <div class="setting-card-header card-header expand row v-center space-between clickable">
             <div class="box">
               <i icon="pen"></i>
               <p class="card-title">Color settings</p>
             </div>
-            <button type="dropdown"><i icon="chevron"></i></button>
+            <button class="btn-dropdown"><i icon="chevron"></i></button>
           </div>
           <div class="card-content column expand">
             <div class="row expand space-between v-center margin-bottom">
@@ -45,42 +45,42 @@
                 <p class="setting-title">Background</p>
                 <p class="setting-description">Main background color</p>
               </div>
-              <button data-color="background" class="dialog-arrow"></button>
+              <button data-color="background" class="btn-color dialog-arrow"></button>
             </div>
             <div class="row expand space-between v-center margin-bottom">
               <div class="box column align-left">
                 <p class="setting-title">Background light</p>
                 <p class="setting-description">Secondary background color. Used to provide contrast to different elements</p>
               </div>
-              <button data-color="backgroundLight" class="dialog-arrow"></button>
+              <button data-color="backgroundLight" class="btn-color dialog-arrow"></button>
             </div>
             <div class="row expand space-between v-center margin-bottom">
               <div class="box column align-left">
                 <p class="setting-title">Text</p>
                 <p class="setting-description">Main text color</p>
               </div>
-              <button data-color="text" class="dialog-arrow"></button>
+              <button data-color="text" class="btn-color dialog-arrow"></button>
             </div>
             <div class="row expand space-between v-center margin-bottom">
               <div class="box column align-left">
                 <p class="setting-title">Foreground</p>
                 <p class="setting-description">Used as text color in some menus, hovers</p>
               </div>
-              <button data-color="foreground" class="dialog-arrow"></button>
+              <button data-color="foreground" class="btn-color dialog-arrow"></button>
             </div>
             <div class="row expand space-between v-center margin-bottom">
               <div class="box column align-left">
                 <p class="setting-title">Accent primary</p>
                 <p class="setting-description">Main accent color, used for icons</p>
               </div>
-              <button data-color="accentPrimary" class="dialog-arrow"></button>
+              <button data-color="accentPrimary" class="btn-color dialog-arrow"></button>
             </div>
             <div class="row expand space-between v-center">
               <div class="box column align-left">
                 <p class="setting-title">Accent secondary</p>
                 <p class="setting-description">Mainly used for hovers and highlights</p>
               </div>
-              <button data-color="accentSecondary" class="dialog-arrow"></button>
+              <button data-color="accentSecondary" class="btn-color dialog-arrow"></button>
             </div>
           </div>
         </section>
@@ -90,7 +90,7 @@
               <i icon="settings"></i>
               <p class="card-title">General settings</p>
             </div>
-            <button type="dropdown"><i icon="chevron"></i></button>
+            <button class="btn-dropdown"><i icon="chevron"></i></button>
           </div>
           <div class="card-content column expand">
             <div class="row expand space-between v-center margin-bottom">
@@ -98,28 +98,31 @@
                 <p class="setting-title">Use DuckDuckGo theme?</p>
                 <p class="setting-description">Applies matching theme to all DuckDuckGo-pages</p>
               </div>
-              <button data-option="duckduckgo">No</button>
+              <button class="btn-option" data-option="duckduckgo">No</button>
             </div>
             <div class="row expand space-between v-center margin-bottom" id="user-chrome-option">
               <div class="box column align-left">
                 <p class="setting-title">Use included userChrome.css?</p>
                 <p class="setting-description">Bold text, styled dropdown and context menus</p>
               </div>
-              <button data-option="userChrome" async>No</button>
+              <button class="btn-option" data-option="userChrome" async>No</button>
             </div>
             <div class="row expand space-between v-center margin-bottom indent" id="font-size-option">
               <div class="box column align-left">
                 <p class="setting-title">Font size</p>
                 <p class="setting-description">The base font size to be used in userChrome.css</p>
               </div>
-              <button data-option="fontSize" async>No</button>
+              <div class="box row v-center">
+                <input type="number" min=10 max=20 id="font-size-input" class="margin-right-sm">
+                <button class="btn-primary btn-option" data-option="fontSize" id="font-size-save" async>Set</button>
+              </div>
             </div>
             <div class="row expand space-between v-center">
               <div class="box column align-left">
                 <p class="setting-title">Use included userContent.css</p>
                 <p class="setting-description">Globally hides the page scrollbar</p>
               </div>
-              <button data-option="userContent" async>No</button>
+              <button class="btn-option" data-option="userContent" async>No</button>
             </div>
           </div>
         </section>
@@ -129,7 +132,7 @@
               <i icon="template"></i>
               <p class="card-title">Custom theme template</p>
             </div>
-            <button type="dropdown"><i icon="chevron"></i></button>
+            <button class="btn-dropdown"><i icon="chevron"></i></button>
           </div>
           <div class="card-content column expand">
 
@@ -141,7 +144,7 @@
               <i icon="message"></i>
               <p class="card-title">Debugging output</p>
             </div>
-            <button type="dropdown"><i icon="chevron"></i></button>
+            <button class="btn-dropdown"><i icon="chevron"></i></button>
           </div>
           <div class="card-content row expand space-between v-center" id="debugging-info">
             <div class="box row v-center">
