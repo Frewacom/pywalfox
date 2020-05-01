@@ -1,7 +1,9 @@
 button {
-  height: var(--button-height);
-  border-radius: 15px;
-  padding: 0em var(--spacing-xlg);
+  max-height: var(--button-height);
+  min-height: var(--button-height-sm);
+  border-radius: var(--border-radius);
+  padding: 0.8em var(--spacing-xlg);
+  /* padding-bottom: calc(var(--font-size-md) * 0.1); */
   border: none;
   font-family: var(--font);
   font-weight: 700;
@@ -12,9 +14,9 @@ button {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding-bottom: 0.05em;
   position: relative;
-  box-shadow: var(--box-shadow-card);
+  line-height: 1rem;
+  box-shadow: var(--box-shadow);
 }
 
 button[loading]::before {
@@ -64,12 +66,7 @@ button::-moz-focus-inner {
   background-color: var(--background);
   color: var(--text);
   border-radius: var(--border-radius-sm);
-  padding: 0em;
   width: 4em;
-}
-
-body.light .btn-option {
-  filter: var(--brightness-filter-dark);
 }
 
 .btn-option:hover {
@@ -85,6 +82,10 @@ body.light .btn-option:hover {
   color: var(--background);
 }
 
+body.light .btn-option[selected] {
+  color: var(--background-light);
+}
+
 .btn-option[selected]:hover,
 body.light .btn-option[selected] {
   filter: none;
@@ -94,10 +95,9 @@ body.light .btn-option[selected] {
 .btn-color {
   width: var(--button-height-md);
   height: var(--button-height-md);
-  border: 2px solid var(--text);
-  border-radius: 50%;
   padding: 0;
   z-index: var(--z-index-color-button);
+  box-shadow: var(--box-shadow);
 }
 
 .dialog-arrow[selected]::after {
@@ -109,7 +109,7 @@ body.light .btn-option[selected] {
   position: absolute;
   content: '';
   top: calc(50% - var(--arrow-size));
-  left: calc(100% + var(--spacing-lg) * 1.9);
+  left: calc(100% + var(--spacing-lg) * 1.5);
 }
 
 #theme-select.dialog-arrow[selected]::after {
