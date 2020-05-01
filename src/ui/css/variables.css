@@ -24,12 +24,16 @@
   --brightness-filter-dark-hover: brightness(85%);
   --box-shadow: 0px 2px 10px 1px rgba(0,0,0,0.2);
   --box-shadow-card: 2px 4px 10px #00000012;
+  --box-shadow-highlight: 0px 2px 12px 3px rgba(0,0,0,0.4);
   --transition-time: 0.1s;
 
   --arrow-size: 1em;
   --button-height: 2.9em;
   --button-height-md: 2.7em;
   --button-height-sm: 2.4em;
+  --icon-size-sm: 1.2em;
+  --icon-size: 1.35em;
+  --icon-size-lg: 1.7em;
   --content-width: 52em;
   --dialog-width: 7.2em;
   --dialog-offset: calc(var(--content-width) + var(--spacing-lg));
@@ -56,4 +60,5 @@
 
   --box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
   --box-shadow-card: 0 1px 4px 0 rgba(12, 12, 13, 0.1);
+  --box-shadow-highlight: var(--box-shadow);
 }

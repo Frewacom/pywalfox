@@ -122,6 +122,10 @@ body.light .btn-option[selected] {
   filter: brightness(85%);
 }
 
+body.light #theme-select.dialog-arrow[selected]:hover::after {
+  filter: none;
+}
+
 button[data-color="background"] {
   background: var(--background);
 }
@@ -206,7 +210,8 @@ body.light .btn-dialog > i {
 }
 
 .btn-dialog > i {
-  transform: scale(0.8);
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
 }
 
 .btn-dialog[selected] > i {
@@ -233,6 +238,10 @@ body.light .btn-primary {
 
 .btn-secondary:hover {
   filter: var(--brightness-filter);
+}
+
+body.light .btn-secondary:hover {
+  filter: none;
 }
 
 #colorpicker-custom, #colorpicker-undo {

@@ -93,7 +93,7 @@ body.light .separator {
   padding: var(--spacing-xsm) var(--spacing-md);
   color: var(--background);
   background-color: var(--accent-secondary);
-  border-radius: var(--border-radius);
+  border-radius: var(--border-radius-sm);
   font-size: var(--font-size-sm);
 }
 

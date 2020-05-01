@@ -7,7 +7,7 @@
 }
 
 .card-header {
-  padding: var(--spacing-sm) var(--spacing-lg);
+  padding: var(--spacing-md) var(--spacing-lg);
   box-sizing: border-box;
   transition: background-color var(--transition-time);
   border-radius: var(--border-radius);
@@ -18,7 +18,13 @@
 }
 
 .card-header i {
-  transform: scale(0.8);
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+}
+
+.card-header i[icon=chevron] {
+  width: var(--icon-size-lg);
+  height: var(--icon-size-lg);
 }
 
 .card-title {

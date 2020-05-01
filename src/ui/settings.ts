@@ -97,9 +97,11 @@ function setOptionEnabled(target: HTMLElement, enabled: boolean) {
 
   if (enabled) {
     Utils.select(target);
+    Utils.select(target.parentElement);
     target.innerText = 'Yes';
   } else {
     Utils.deselect(target);
+    Utils.deselect(target.parentElement);
     target.innerText = 'No';
   }
 }
