@@ -40,7 +40,7 @@ First, install the [Firefox add-on](https://addons.mozilla.org/en-US/firefox/add
 3. Restart Firefox 
 4. Click the Pywalfox icon to access the settings and click "Fetch Pywal colors" 
 
-*If the Pywal colors could not be fetched, take a look in the Troubleshooting section below.*
+*If the Pywal colors could not be fetched, take a look in the [Troubleshooting](#troubleshooting) section below.*
 
 ## Usage
 
@@ -63,7 +63,7 @@ To enable the custom CSS sheets:
 If you are using some script for theming your system and do not want to manually refetch your Pywal colors using the Pywalfox settings page, you can trigger an update of the browser theme by running `pywalfox update` in your terminal. 
 
 ## Troubleshooting
-* If you updated Pywalfox and have issues, try re-running the setup script as described in Installation above.
+* If you updated Pywalfox and have issues, try re-running the setup script as described in [Installation](#installation) above.
 * If you do not have permission to copy files to `.mozilla/native-messaging-hosts`, you can either
 
   - `chown <username> ~/.mozilla/native-messaging-host` 
@@ -91,7 +91,8 @@ If you are using some script for theming your system and do not want to manually
 
    The script runs in an infinite loop, so as long as the script does not crash when running it, the issues must lie elsewhere.
 
-If you encounter any other errors: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#Troubleshooting
+If you encounter any other errors [this troubleshooting guide](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#Troubleshooting
+) from Mozilla may be of use. 
 
 ## Development setup
 ```bash
