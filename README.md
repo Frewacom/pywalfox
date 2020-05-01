@@ -71,3 +71,16 @@ Pywalfox comes with custom CSS that you can enable if you want to. It applies yo
 
 If you encounter any other errors: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#Troubleshooting
 
+#### Development setup
+```bash
+git clone git@github.com/Frewacom/Pywalfox.git
+cd Pywalfox 
+yarn install # or npm if you do not have yarn installed
+yarn run debug
+```
+
+
+To build the extension into a zip: 
+```bash
+yarn run build
+```
