@@ -5,7 +5,7 @@
 > Dynamic theming of Firefox using your Pywal colors
 
 - Tired of Firefox not respecting your gorgeous Pywal colors like the rest of your system? 
-- Looking to rack up some karma :arrow_up: on [/r/unixporn](reddit.com/r/unixporn)? 
+- Looking to rack up some karma :arrow_up: on [/r/unixporn](https://reddit.com/r/unixporn)? 
 
 Introducing **Pywalfox**, an [add-on for Firefox](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/) that themes the browser using your Pywal colors through the official Firefox Theme API! 
 With Pywalfox you can:
