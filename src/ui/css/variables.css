@@ -8,6 +8,9 @@
   --border-radius: 15px;
   --border-radius-sm: 6px;
 
+  --spinner-width: 1em;
+  --spinner-thickness: 0.2em;
+
   --spacing: 1em;
   --spacing-xxsm: 0.1em;
   --spacing-xsm: 0.3em;

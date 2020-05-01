@@ -92,7 +92,7 @@ function onColorClicked(e: Event) {
 
 function setOptionEnabled(target: HTMLElement, enabled: boolean) {
   if (Utils.isSet('loading', target)) {
-    target.removeAttribute('loading');
+    Utils.loaded(target);
   }
 
   if (enabled) {
@@ -112,7 +112,7 @@ function onOptionClicked(e: Event) {
 
   if (Utils.isSet('async', target)) {
     // TODO: Implement loading state on button
-    target.setAttribute('loading', '');
+    Utils.loading(target);
   } else {
     setOptionEnabled(target, newState);
   }
@@ -144,8 +144,19 @@ function onFontSizeSave(e: Event) {
     // TODO: Set loading state on button
     Messenger.requestFontSizeSet(parseInt(inputElement.value));
   } else {
-    // TODO: Display notifiction or something
+    // TODO: Display notification or something on error
     return;
+  }
+}
+
+function updateOptionButtonState(message: IExtensionMessage) {
+  const optionData: IOptionSetData = message.data;
+  const target: HTMLElement = optionButtonsLookup[optionData.option];
+
+  if (!target) {
+    console.error(`Tried to set invalid option: ${optionData.option}`);
+  } else {
+    setOptionEnabled(target, optionData.enabled);
   }
 }
 
@@ -193,15 +204,7 @@ browser.runtime.onMessage.addListener((message: IExtensionMessage) => {
       themepicker.setSelectedMode(message.data);
       break;
     case EXTENSION_MESSAGES.OPTION_SET:
-      const optionData: IOptionSetData = message.data;
-      const target: HTMLElement = optionButtonsLookup[optionData.option];
-
-      if (!target) {
-        console.error(`Tried to set invalid option: ${optionData.option}`);
-      } else {
-        setOptionEnabled(target, optionData.enabled);
-      }
-
+      updateOptionButtonState(message);
       break;
     case EXTENSION_MESSAGES.DEBUGGING_OUTPUT:
       writeOutput(message.data);
