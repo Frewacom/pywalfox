@@ -96,11 +96,11 @@ function setOptionEnabled(target: HTMLElement, enabled: boolean) {
   }
 
   if (enabled) {
-    Utils.deselect(target);
-    target.innerText = 'No';
-  } else {
     Utils.select(target);
     target.innerText = 'Yes';
+  } else {
+    Utils.deselect(target);
+    target.innerText = 'No';
   }
 }
 
@@ -112,8 +112,9 @@ function onOptionClicked(e: Event) {
 
   if (Utils.isSet('async', target)) {
     // TODO: Implement loading state on button
+    target.setAttribute('loading', '');
   } else {
-    setOptionEnabled(target, isEnabled);
+    setOptionEnabled(target, newState);
   }
 
   Messenger.requestOptionSet(option, newState);
@@ -195,10 +196,10 @@ browser.runtime.onMessage.addListener((message: IExtensionMessage) => {
       const optionData: IOptionSetData = message.data;
       const target: HTMLElement = optionButtonsLookup[optionData.option];
 
-      if (target) {
-        setOptionEnabled(target, optionData.enabled);
-      } else {
+      if (!target) {
         console.error(`Tried to set invalid option: ${optionData.option}`);
+      } else {
+        setOptionEnabled(target, optionData.enabled);
       }
 
       break;

@@ -34,8 +34,7 @@ export class NativeApp {
   }
 
   private logError(error: string) {
-    this.callbacks.output(error);
-    console.error(error);
+    this.callbacks.output(error, true);
   }
 
   private getData(message: INativeAppMessage) {
@@ -49,17 +48,17 @@ export class NativeApp {
 
   private handleCssToggleResponse(message: INativeAppMessage, enabled: boolean) {
     const target = this.getData(message);
+    const error = message['error'];
 
     if (!target) {
       this.logError(`Custom CSS was applied successfully, but no target was specified`);
       return;
     }
 
-    // TODO: 'target' is currently the return message, not the option string
     if (message.success) {
-      this.callbacks.cssToggleSuccess(target, enabled);
+      this.callbacks.cssToggleSuccess(target);
     } else {
-      this.callbacks.cssToggleFailed(message.error);
+      this.callbacks.cssToggleFailed(target, error);
     }
   }
 

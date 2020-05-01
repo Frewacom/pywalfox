@@ -115,10 +115,10 @@ export interface INativeAppMessageCallbacks {
   updateNeeded: () => void,
   disconnected: () => void,
   version: (version: string) => void,
-  output: (message: string) => void,
+  output: (message: string, error?: boolean) => void,
   colorscheme: (colorscheme: IPywalColors) => void,
-  cssToggleSuccess: (target: string, enabled: boolean) => void,
-  cssToggleFailed: (error: string) => void,
+  cssToggleSuccess: (target: string) => void,
+  cssToggleFailed: (target: string, error: string) => void,
 }
 
 /**
@@ -126,6 +126,12 @@ export interface INativeAppMessageCallbacks {
  */
 export interface INodeLookup {
   [key: string]: HTMLElement;
+}
+
+export interface INotificationData {
+  title: string;
+  message: string;
+  error: boolean;
 }
 
 /**

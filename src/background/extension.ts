@@ -245,16 +245,16 @@ export class Extension {
     this.state.setConnected(false);
   }
 
-  private cssToggleSuccess(target: string, enabled: boolean) {
-    UI.sendOptionSet(target, enabled);
-    UI.sendNotification(`Custom CSS: ${target} was enabled successfully!`);
-    this.state.setCssEnabled(target, enabled);
+  private cssToggleSuccess(target: string) {
+    UI.sendOptionSet(target, true);
+    UI.sendNotification('Custom CSS', `${target} was enabled successfully!`);
+    this.state.setCssEnabled(target, true);
   }
 
-  private cssToggleFailed(error: string) {
+  private cssToggleFailed(target: string, error: string) {
     // TODO: Send an 'OPTION_SET' error so that the settings page can update the button state
-    UI.sendDebuggingOutput(error, true);
-    UI.sendNotification(error);
+    UI.sendOptionSet(target, false);
+    UI.sendNotification('Custom CSS', error, true);
   }
 
   public async start() {

@@ -41,7 +41,7 @@ export async function setInitialThemeClass(themeInfo?: browser.theme.ThemeUpdate
     theme = await browser.theme.getCurrent();
   }
 
-  if (Object.keys(theme).length > 0) {
+  if (Object.keys(theme).length > 0 && theme['colors'] !== null) {
     // Seems like there is no better way of identifying themes
     if (theme.colors.toolbar_field === '#fff' || theme.colors.toolbar_field === '#ffffff') {
       document.body.classList.add('light');
