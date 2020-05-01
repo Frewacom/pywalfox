@@ -4,85 +4,105 @@
 
 > Dynamic theming of Firefox using your Pywal colors
 
-Tired of Firefox not respecting your gorgeous Pywal colors like the rest of your system? 
-Looking to rack up some karma on [reddit.com/r/unixporn](/r/unixporn)? 
+- Tired of Firefox not respecting your gorgeous Pywal colors like the rest of your system? 
+- Looking to rack up some karma :arrow_up: on [/r/unixporn](reddit.com/r/unixporn)? 
 
-**Introducing Pywalfox**, an [add-on for Firefox](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/) that themes the browser using your Pywal colors through the official Firefox Theme API. 
-The add-on allows you to
+Introducing **Pywalfox**, an [add-on for Firefox](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/) that themes the browser using your :clap: Pywal colors :clap: through the official Firefox Theme API! 
+With Pywalfox you can:
 - Customize the colors of almost every UI element
-- Automatically theme DuckDuckGo (optional)
-- Have bold text, styled dropdowns, etc. (optional)
-- Update the browser theme using the add-on and/or through your terminal
+- Automatically theme DuckDuckGo :duck: (optional)
+- Have bold text, styled dropdowns and much more (optional)
+- Easily update the browser theme using the add-on and/or your terminal
 
-The Firefox add-on [here](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/)
-
-### Warning
-To use this add-on, you must install a script on your computer. The script fetches your pywal colors and will be run by Firefox upon launch. As of now, Pywalfox supports only Linux.
-
-### Requirements
+# Requirements
 - Python (both 2.7.x and 3.x versions are supported)
 - Pywal
 - Firefox
 - Linux
 
-### Installation
+# Installation
+
+First, install the [Firefox add-on](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/).
+
+**To use the add-on you must also install the script that fetches the Pywal colors:**
 1. `git clone https://github.com/Frewacom/Pywalfox.git`
 2. `cd Pywalfox`
 3. `bash setup.sh`
 
-If the setup is successful, it should look something like this:
-```
-Creating 'native-messaging-hosts' folder in ~/.mozilla
-Copying native messaging manifest to /home/<username>/.mozilla/native-messaging-hosts/pywalfox.json
-Setting path to daemon/pywalfox.py in the manifest
-Setting execution permissions on daemon/pywalfox.py
-Finished.
-```
+   If the setup was successful, it should look something like this:
+    ```
+   Creating 'native-messaging-hosts' folder in ~/.mozilla
+   Copying native messaging manifest to /home/<username>/.mozilla/native-messaging-hosts/pywalfox.json
+   Setting path to daemon/pywalfox.py in the manifest
+   Setting execution permissions on daemon/pywalfox.py
+   Finished.
+   ```
 
-Restart Firefox and you should be able to fetch the colors using the Settings page. If not, take a look in the Troubleshooting section below.
+4. Restart Firefox 
+5. Click the Pywalfox icon to access the settings and click "fetch Pywal colors" 
 
-### Updating the theme using the terminal
-If you are using some script for theming your system and do not want to manually refetch your pywal colors using the settings page, you can trigger an update of the browser theme by running `./daemon/pywalfox.py update` in your terminal (the script is not in your `PATH` by default).
+*If the Pywal colors could not be fetched, take a look in the Troubleshooting section below.*
 
-### Using the included userChrome.css and userContent.css
-Pywalfox comes with custom CSS that you can enable if you want to. It applies your Pywal colors to context menus and other elements of the browser that are not available using the Firefox Theme API. If you want to use this feature, you must do the following:
+# Usage
+
+## Usage
+
+## General usage here
+Not done
+
+## Further theming with the included userChrome.css and userContent.css
+Pywalfox includes custom CSS sheets that you can enable. 
+The custom CSS sheets applies your Pywal colors to the context menus and other elements of the browser that are not available using the Firefox Theme API.
+The scrollbar can also be hidden for a cleaner look.
+
+To enable the custom CSS sheets:
 1. Navigate to `about:config` in Firefox
 2. Set `toolkit.legacyUserProfileCustomizations.stylesheets` to `true`
-3. Enable the `Custom CSS` option in the Settings page of the addon
+3. To enable further theming of context menus etc., enable the "Use included userChrome.css" option under General settings in the Pywalfox settings page
 
-### Troubleshooting
-* If you updated Pywalfox and have issues, try re-running the setup script as described above.
-* If you do not have permission to copy files to `.mozilla/native-messaging-hosts`, you can either run \
-`chown <username> ~/.mozilla/native-messaging-host` or (if the folder is empty) simply remove it and the setup script will recreate it with the correct permissions.
-* Take a look at the Debugging output in the Settings page of the addon
+   To hide the scrollbar, enable the "Use included userContent.css" option.
+
+## Updating the theme using the terminal
+If you are using some script for theming your system and do not want to manually refetch your Pywal colors using the Pywalfox settings page, you can trigger an update of the browser theme by running `./daemon/pywalfox.py update` in your terminal. 
+
+# Troubleshooting
+* If you updated Pywalfox and have issues, try re-running the setup script as described in Installation above.
+* If you do not have permission to copy files to `.mozilla/native-messaging-hosts`, you can either
+
+  - `chown <username> ~/.mozilla/native-messaging-host` 
+  
+     or  
+     
+  - `rm -r .mozilla/native-messaging-hosts`; the setup script will then recreate it with the correct permissions.
+  
+* Take a look at the Debugging output in the Pywalfox settings page
 * Make sure that `path` in `~/.mozilla/native-messaging-hosts/pywalfox.json` points to the location of `daemon/pywalfox.py`
-* Make sure that `pywalfox.py` is executable (`chmod +x pywalfox.py`)
-* Make sure that the file `~/.cache/wal/colors` exists and contains the colors generated by pywal
-* Take a look at the Browser console (`Tools > Web developer > Browser console`) for errors
+* Make sure that `pywalfox.py` is executable, i.e. `chmod +x pywalfox.py`
+* Make sure that `~/.cache/wal/colors` exists and contains the colors generated by Pywal
+* Take a look at the Browser console for errors, i.e. `Tools > Web developer > Browser console` in Firefox
 
-#### Errors in browser console
-- `ExtensionError: No such native application pywalfox`
+## Errors in browser console
+- `ExtensionError: No such native application pywalfox`:
 
-   The manifest is not installed properly. Follow the instructions here: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_manifests. The manifest is located at `daemon/assets/pywalfox-manifest.json`.
+   The manifest is not installed properly. Follow the instructions [here](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_manifests.). The manifest is located at `daemon/assets/pywalfox-manifest.json`.
 
-   If you still can not get it to work, you could try reinstalling Firefox: [#14](https://github.com/Frewacom/Pywalfox/issues/14)
+   If it is still not working try reinstalling Firefox, see [#14](https://github.com/Frewacom/Pywalfox/issues/14).
 
-- `Unchecked lastError value: Error: Could not establish connection. Receiving end does not exist.`
+- `Unchecked lastError value: Error: Could not establish connection. Receiving end does not exist.`:
 
-   The path to the script in the manifest is invalid or the script crashed on execution (try running it manually).
+   The path to the script in the manifest is invalid or the script crashed on execution. Try running it manually.
 
-   The script runs in an infinite loop, so as long as the script does not crash when running it, we know that the issues lies somewhere else.
+   The script runs in an infinite loop, so as long as the script does not crash when running it, the issues must lie elsewhere.
 
 If you encounter any other errors: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#Troubleshooting
 
-#### Development setup
+# Development setup
 ```bash
 git clone git@github.com/Frewacom/Pywalfox.git
 cd Pywalfox 
 yarn install # or npm if you do not have yarn installed
 yarn run debug
 ```
-
 
 To build the extension into a zip: 
 ```bash
