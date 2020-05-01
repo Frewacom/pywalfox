@@ -5,16 +5,16 @@
 > Dynamic theming of Firefox using your Pywal colors
 
 Tired of Firefox not respecting your gorgeous Pywal colors like the rest of your system? 
-Looking to rack up some karma on [reddit.com/r/unixporn](/r/unixporn)? 
+Looking to rack up some karma on [/r/unixporn](reddit.com/r/unixporn)? 
 
-**Introducing Pywalfox**, an [add-on for Firefox](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/) that themes the browser using your Pywal colors through the official Firefox Theme API. 
+Introducing **Pywalfox**, an [add-on for Firefox](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/) that themes the browser using your Pywal colors through the official Firefox Theme API. 
 The add-on allows you to
 - Customize the colors of almost every UI element
 - Automatically theme DuckDuckGo (optional)
 - Have bold text, styled dropdowns, etc. (optional)
 - Update the browser theme using the add-on and/or through your terminal
 
-The Firefox add-on [here](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/)
+The Firefox add-on can be downloader [here](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/).
 
 ### Warning
 To use this add-on, you must install a script on your computer. The script fetches your pywal colors and will be run by Firefox upon launch. As of now, Pywalfox supports only Linux.
