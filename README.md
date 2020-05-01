@@ -70,7 +70,7 @@ If you are using some script for theming your system and do not want to manually
   
      or  
      
-  - `rm -r .mozilla/native-messaging-hosts`; the setup script will then recreate it with the correct permissions.
+  - `rm -r ~/.mozilla/native-messaging-hosts`; the setup script will then recreate it with the correct permissions.
   
 * Take a look at the Debugging output in the Pywalfox settings page
 * Make sure that `path` in `~/.mozilla/native-messaging-hosts/pywalfox.json` points to the location of `daemon/pywalfox.py`
