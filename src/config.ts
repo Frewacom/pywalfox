@@ -72,6 +72,7 @@ export const DEFAULT_THEME_TEMPLATE_LIGHT = {
   }
 }
 
+// TODO: Convert these into enums
 export const VALID_CSS_TARGETS = [
   "userChrome",
   "userContent"

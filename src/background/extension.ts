@@ -246,6 +246,8 @@ export class Extension {
   }
 
   private cssToggleSuccess(target: string, enabled: boolean) {
+    UI.sendOptionSet(target, enabled);
+    UI.sendNotification(`Custom CSS: ${target} was enabled successfully!`);
     this.state.setCssEnabled(target, enabled);
   }
 

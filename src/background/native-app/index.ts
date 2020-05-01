@@ -1,30 +1,14 @@
 import { MESSAGES } from '../../config';
-import { IPywalColors } from '../../definitions';
+import {
+  IPywalColors,
+  INativeAppMessage,
+  INativeAppMessageCallbacks
+} from '../../definitions';
 
 /* Interface for the messages sent to the native messaging host. */
 interface INativeAppRequest {
   action: string;
   target?: string;
-}
-
-/* Interface for the messages received from the native messaging host. */
-export interface INativeAppMessage {
-  action: string;
-  success: boolean;
-  error?: string;
-  data?: string;
-  [key: string]: any;
-}
-
-export interface INativeAppMessageCallbacks {
-  connected: () => void,
-  updateNeeded: () => void,
-  disconnected: () => void,
-  version: (version: string) => void,
-  output: (message: string) => void,
-  colorscheme: (colorscheme: IPywalColors) => void,
-  cssToggleSuccess: (target: string, enabled: boolean) => void,
-  cssToggleFailed: (error: string) => void,
 }
 
 /**
@@ -71,6 +55,7 @@ export class NativeApp {
       return;
     }
 
+    // TODO: 'target' is currently the return message, not the option string
     if (message.success) {
       this.callbacks.cssToggleSuccess(target, enabled);
     } else {
