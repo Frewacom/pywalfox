@@ -107,14 +107,10 @@ function setOptionEnabled(target: HTMLElement, enabled: boolean) {
 function onOptionClicked(e: Event) {
   const target = <HTMLElement>e.target;
   const option = target.getAttribute('data-option');
-  const isEnabled = Utils.isSet('selected', target);
-  const newState = isEnabled ? false : true;
+  const newState = Utils.isSet('selected', target) ? false : true;
 
   if (Utils.isSet('async', target)) {
-    // TODO: Implement loading state on button
     Utils.loading(target);
-  } else {
-    setOptionEnabled(target, newState);
   }
 
   Messenger.requestOptionSet(option, newState);
