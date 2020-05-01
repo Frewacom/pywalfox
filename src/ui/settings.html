@@ -29,8 +29,11 @@
         <section class="setting-card card expand space-between margin-bottom-lg" open>
           <aside class="dialog" id="colorpicker">
             <div id="colorpicker-grid"></div>
-            <button class="margin-bottom-sm" id="colorpicker-custom">Custom</button>
-            <button class="btn-primary" id="colorpicker-undo">Undo</button>
+            <div class="box" id="colorpicker-custom-container">
+              <label for="colorpicker-custom" id="colorpicker-custom-label">Custom</label>
+              <input id="colorpicker-custom" class="clickable" type="color">
+            </div>
+            <button class="btn-primary margin-top-sm" id="colorpicker-undo">Undo</button>
           </aside>
           <div class="setting-card-header card-header expand row v-center space-between clickable">
             <div class="box">

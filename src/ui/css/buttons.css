@@ -113,7 +113,7 @@ body.light .btn-option[selected] {
 }
 
 #theme-select.dialog-arrow[selected]::after {
-  right: calc(-1 * (var(--spacing) + var(--arrow-size)));
+  right: calc(-1 * (var(--spacing-md) + var(--arrow-size)));
   left: unset;
 }
 
@@ -255,14 +255,6 @@ body.light #colorpicker-custom {
 
 #colorpicker-custom:hover, #colorpicker-undo:hover {
   filter: brightness(85%);
-}
-
-#colorpicker-custom {
-  background-color: var(--text);
-}
-
-#colorpicker-custom:hover {
-  background-color: var(--text);
 }
 
 #theme-select {

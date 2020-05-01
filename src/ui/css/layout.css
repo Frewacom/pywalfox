@@ -96,6 +96,10 @@
   margin-top: var(--spacing);
 }
 
+.margin-top-sm {
+  margin-top: var(--spacing-sm);
+}
+
 .margin-bottom {
   margin-bottom: var(--spacing);
 }

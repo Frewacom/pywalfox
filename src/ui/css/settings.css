@@ -1,7 +1,3 @@
-.setting {
-
-}
-
 .setting-title {
   font-weight: bold;
   font-size: var(--font-size-md);
@@ -13,4 +9,43 @@
   font-size: var(--font-size-md);
   margin: 0;
   margin-top: var(--spacing-xxsm);
+}
+
+#colorpicker-custom-container {
+  border: 2px solid var(--background);
+  border-radius: var(--border-radius-sm);
+  overflow: hidden;
+  position: relative;
+  box-sizing: border-box;
+  transition: border var(--transition-time);
+}
+
+#colorpicker-custom-container[selected] {
+  border: 2px solid var(--text);
+}
+
+#colorpicker-custom-label {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--background);
+  color: var(--text);
+}
+
+#colorpicker-custom {
+  opacity: 0;
+}
+
+#font-size-option {
+  display: none;
+}
+
+#user-chrome-option[selected] + #font-size-option {
+  display: flex;
 }

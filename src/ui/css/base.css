@@ -81,14 +81,6 @@ body.light .separator {
   cursor: pointer;
 }
 
-#font-size-option {
-  display: none;
-}
-
-#user-chrome-option[selected] + #font-size-option {
-  display: flex;
-}
-
 #debugging-version {
   padding: var(--spacing-xsm) var(--spacing-md);
   color: var(--background);
@@ -112,5 +104,5 @@ body.light .separator {
 }
 
 body.light #debugging-output {
-  background-color: rgba(0,0,0,0.1);
+  background-color: rgba(0,0,0,0.04);
 }
