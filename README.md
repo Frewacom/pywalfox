@@ -14,32 +14,34 @@ The add-on allows you to
 - Have bold text, styled dropdowns, etc. (optional)
 - Update the browser theme using the add-on and/or through your terminal
 
-The Firefox add-on can be downloader [here](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/).
-
-### Warning
-To use this add-on, you must install a script on your computer. The script fetches your pywal colors and will be run by Firefox upon launch. As of now, Pywalfox supports only Linux.
-
-### Requirements
+# Requirements
 - Python (both 2.7.x and 3.x versions are supported)
 - Pywal
 - Firefox
 - Linux
 
-### Installation
+# Installation
+
+First, install the [Firefox add-on](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/).
+
+**To use the add-on you must also install the script that fetches the Pywal colors:**
 1. `git clone https://github.com/Frewacom/Pywalfox.git`
 2. `cd Pywalfox`
 3. `bash setup.sh`
 
-If the setup is successful, it should look something like this:
-```
-Creating 'native-messaging-hosts' folder in ~/.mozilla
-Copying native messaging manifest to /home/<username>/.mozilla/native-messaging-hosts/pywalfox.json
-Setting path to daemon/pywalfox.py in the manifest
-Setting execution permissions on daemon/pywalfox.py
-Finished.
-```
+   If the setup was successful, it should look something like this:
+    ```
+   Creating 'native-messaging-hosts' folder in ~/.mozilla
+   Copying native messaging manifest to /home/<username>/.mozilla/native-messaging-hosts/pywalfox.json
+   Setting path to daemon/pywalfox.py in the manifest
+   Setting execution permissions on daemon/pywalfox.py
+   Finished.
+   ```
 
-Restart Firefox and you should be able to fetch the colors using the Settings page. If not, take a look in the Troubleshooting section below.
+4. Restart Firefox 
+5. Click the Pywalfox icon to access the settings and click "fetch Pywal colors" 
+
+*If the Pywal colors could not be fetched, take a look in the Troubleshooting section below.*
 
 ### Updating the theme using the terminal
 If you are using some script for theming your system and do not want to manually refetch your pywal colors using the settings page, you can trigger an update of the browser theme by running `./daemon/pywalfox.py update` in your terminal (the script is not in your `PATH` by default).
