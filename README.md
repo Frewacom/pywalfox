@@ -51,20 +51,22 @@ First, install the [Firefox add-on](https://addons.mozilla.org/en-US/firefox/add
 Not done
 
 ## Further theming with the included userChrome.css and userContent.css
-Pywalfox includes a custom CSS sheet that you can enable. 
-The custom CSS sheet applies your Pywal colors to the context menus and other elements of the browser that are not available using the Firefox Theme API.
+Pywalfox includes custom CSS sheets that you can enable. 
+The custom CSS sheets applies your Pywal colors to the context menus and other elements of the browser that are not available using the Firefox Theme API.
+The scrollbar can also be hidden for a cleaner look.
 
-To enable the custom CSS sheet:
+To enable the custom CSS sheets:
 1. Navigate to `about:config` in Firefox
 2. Set `toolkit.legacyUserProfileCustomizations.stylesheets` to `true`
-3. Enable the `Custom CSS` option in the Settings page of the addon
+3. To enable further theming of context menus etc., enable the "Use included userChrome.css" option under General settings in the Pywalfox settings page
+
+   To hide the scrollbar, enable the "Use included userContent.css" option.
 
 ## Updating the theme using the terminal
 If you are using some script for theming your system and do not want to manually refetch your Pywal colors using the Pywalfox settings page, you can trigger an update of the browser theme by running `./daemon/pywalfox.py update` in your terminal. 
-*Note that the script is not in your `PATH` by default.*
 
 # Troubleshooting
-* If you updated Pywalfox and have issues, try re-running the setup script as described in [Installation](installation) above.
+* If you updated Pywalfox and have issues, try re-running the setup script as described in Installation above.
 * If you do not have permission to copy files to `.mozilla/native-messaging-hosts`, you can either
 
   - `chown <username> ~/.mozilla/native-messaging-host` 
