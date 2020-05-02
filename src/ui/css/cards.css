@@ -60,6 +60,11 @@ body.light .card[open] .card-content {
   border-bottom-right-radius: 0;
 }
 
+#theme-template-content {
+  /* This div is autopopulated and each item has margin-bottom */
+  padding-bottom: var(--spacing-sm);
+}
+
 .card[open] #debugging-info {
   font-size: var(--font-size-md);
   padding: var(--spacing-xsm) var(--spacing-lg);

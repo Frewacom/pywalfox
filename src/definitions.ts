@@ -139,6 +139,11 @@ export interface IPaletteColorData {
   [key: string]: string;
 }
 
+export interface IThemeTemplateItem {
+  title: string;
+  description: string;
+}
+
 /**
  * Expose 'wrappedJSObject' from the 'window' namespace.
  *
