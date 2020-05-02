@@ -24,8 +24,9 @@ p {
 a {
   color: var(--text);
   text-decoration: none;
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-sm);
   outline: none;
+  padding: var(--spacing-sm) var(--spacing-md);
 }
 
 a:hover {
@@ -90,20 +91,25 @@ body.light .separator {
   font-size: var(--font-size-sm);
 }
 
+body.light #debugging-version {
+  color: var(--background-light);
+}
+
 #debugging-output {
-    padding: 10px;
-    width: 100%;
-    height: 150px;
-    background: rgba(0,0,0,0.3);
-    color: var(--text);
-    border: none;
-    box-sizing: border-box;
-    font-weight: bold;
-    font-size: var(--font-size-sm);
-    border-radius: var(--border-radius-sm);
-    resize: none;
+  padding: var(--spacing-md);
+  width: 100%;
+  height: 150px;
+  background: var(--darker-background);
+  color: var(--text);
+  border: none;
+  box-sizing: border-box;
+  font-weight: bold;
+  font-size: var(--font-size-sm);
+  border-radius: var(--border-radius-sm);
+  resize: none;
 }
 
 body.light #debugging-output {
-  background-color: rgba(0,0,0,0.04);
+  box-shadow: var(--box-shadow);
 }
+
