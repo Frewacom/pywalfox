@@ -45,14 +45,14 @@ body {
   --z-index-header: 15;
   --z-index-overlay: 10;
 
-  --lighter-background: rgba(255,255,255,0.1);
+  --lighter-background: rgba(255,255,255,0.05);
   --lighter-background-hover: rgba(255,255,255,0.2);
   --darker-background: rgba(0,0,0,0.2);
 
   --background: #252525;
   --background-light: #444444;
   --text: #ffffff;
-  --textFocus: #ffffff;
+  --text-focus: #ffffff;
   --accent-primary: #6cadff;
   --accent-secondary: #a1caff;
 }
@@ -61,9 +61,9 @@ body.light {
   --background: #EDEDF0;
   --background-light: #ffffff;
   --text: #333;
-  --textFocus: #252525;
+  --text-focus: #252525;
 
-  --lighter-background: rgba(0,0,0,0.015);
+  --lighter-background: rgba(0,0,0,0.02);
   --lighter-background-hover: rgba(0,0,0,0.03);
   --darker-background: var(--lighter-background);
 

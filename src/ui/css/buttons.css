@@ -50,10 +50,6 @@ button::-moz-focus-inner {
   border: 0;
 }
 
-.btn-header {
-  border-radius: var(--border-radius);
-}
-
 .btn-lighter {
   background-color: var(--lighter-background);
   /* padding: var(--spacing-sm) var(--spacing-md); */
@@ -87,7 +83,11 @@ button::-moz-focus-inner {
 }
 
 .btn-option:hover {
-  background-color: var(--lighter-background-hover);
+  filter: brightness(150%);
+}
+
+body.light .btn-option:hover {
+  filter: brightness(92%);
 }
 
 .btn-option[selected] {
@@ -152,7 +152,7 @@ button[data-color="text"] {
 }
 
 button[data-color="textFocus"] {
-  background: var(--textFocus);
+  background: var(--text-focus);
 }
 
 button[data-color="accentPrimary"] {
@@ -229,6 +229,11 @@ body.light .btn-dialog > i {
 
 .btn-dialog[selected] > i {
   filter: invert(100%);
+}
+
+.btn-header {
+  border-radius: var(--border-radius);
+  color: var(--text-focus);
 }
 
 .btn-primary {

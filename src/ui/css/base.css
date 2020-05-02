@@ -22,7 +22,7 @@ p {
 }
 
 a {
-  color: var(--text);
+  color: var(--text-focus);
   text-decoration: none;
   font-size: var(--font-size-sm);
   outline: none;

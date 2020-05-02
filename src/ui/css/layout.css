@@ -22,6 +22,15 @@
   width: 100%;
 }
 
+.sticky {
+  position: sticky;
+  top: 0;
+  background-color: var(--background);
+  z-index: 100;
+  border-top: none;
+  box-shadow: var(--box-shadow);
+}
+
 .indent {
   margin-left: var(--spacing-xlg);
   box-sizing: border-box;

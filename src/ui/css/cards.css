@@ -49,6 +49,10 @@
   border-top: 1px solid var(--lighter-background-hover);
 }
 
+.card[open] .card-content.sticky {
+  border-top: none;
+}
+
 .card-subsection {
   padding: var(--spacing) var(--spacing);
   border-left: 0.4em solid var(--accent-primary);
