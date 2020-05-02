@@ -1,5 +1,3 @@
-<img src="https://i.imgur.com/tZybQsU.gif"/>
-
 # Pywalfox [<img src="https://img.shields.io/amo/v/pywalfox">](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/) [<img src="https://img.shields.io/amo/stars/pywalfox">](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/) [<img src="https://img.shields.io/amo/users/pywalfox">](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/) [<img src="https://img.shields.io/amo/dw/pywalfox">](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/)
 
 > Dynamic theming of Firefox using your Pywal colors
@@ -13,6 +11,8 @@ With Pywalfox you can:
 - Automatically theme DuckDuckGo :duck: (optional)
 - Have bold text, styled dropdowns and much more (optional)
 - Easily update the browser theme using the add-on and/or your terminal
+
+<img src="https://i.imgur.com/tZybQsU.gif"/>
 
 ## Requirements
 - Python (both 2.7.x and 3.x versions are supported)
