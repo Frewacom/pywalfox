@@ -50,6 +50,26 @@ button::-moz-focus-inner {
   border: 0;
 }
 
+.btn-link {
+  background-color: rgba(255,255,255,0.1);
+  padding: var(--spacing-sm) var(--spacing-md);
+  width: auto;
+  border-radius: var(--border-radius-sm);
+}
+
+body.light .btn-link {
+  background-color: rgba(0,0,0,0.05);
+}
+
+.btn-link:hover {
+  filter: var(--brightness-filter-dark-hover);
+}
+
+body.light .btn-link:hover {
+  filter: none;
+  background-color: rgba(0,0,0,0.1);
+}
+
 .btn-dropdown {
   background-color: transparent;
   color: var(--text);

@@ -82,5 +82,5 @@ body.light .card[open] .card-content {
 
 .card[open] #debugging-info {
   font-size: var(--font-size-md);
-  padding: var(--spacing-xsm) var(--spacing-lg);
+  padding: var(--spacing-sm) var(--spacing-lg);
 }
