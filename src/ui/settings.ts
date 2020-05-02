@@ -28,6 +28,7 @@ const debuggingConnected: HTMLElement = document.getElementById('debugging-conne
 const debuggingVersion: HTMLElement = document.getElementById('debugging-version');
 const overlay: HTMLElement = document.getElementById('overlay');
 const themeTemplateContent: HTMLElement = document.getElementById('theme-template-content');
+const helpToggleButtons: NodeListOf<HTMLElement> = document.querySelectorAll('button[data-help]');
 
 const fontSizeSaveButton: HTMLElement = document.getElementById('font-size-save');
 const fontSizeSaveInput: HTMLElement = document.getElementById('font-size-input');
@@ -154,6 +155,18 @@ function onFontSizeSave(e: Event) {
   }
 }
 
+function onHelpToggle(target: HTMLElement) {
+  const helpElementId: string = target.getAttribute('data-help');
+  const helpElement = document.getElementById(helpElementId);
+
+  if (!helpElement) {
+    console.error(`Could not find help text with id: ${helpElementId}`);
+    return;
+  }
+
+  Utils.toggleOpen(helpElement);
+}
+
 function updateOptionButtonState(optionData: IOptionSetData) {
   const target: HTMLElement = optionButtonsLookup[optionData.option];
 
@@ -220,6 +233,7 @@ optionButtons.forEach((button: HTMLElement) => button.addEventListener('click', 
 settingCardHeaders.forEach((header: HTMLElement) => header.addEventListener('click', () => onSettingCardClicked(header)));
 overlay.addEventListener('click', onOverlayClicked);
 fontSizeSaveButton.addEventListener('click', onFontSizeSave);
+helpToggleButtons.forEach((button: HTMLElement) => button.addEventListener('click', () => onHelpToggle(button)));
 browser.theme.onUpdated.addListener(setCurrentTheme);
 
 browser.runtime.onMessage.addListener((message: IExtensionMessage) => {

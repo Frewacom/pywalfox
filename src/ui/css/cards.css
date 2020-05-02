@@ -66,13 +66,6 @@
   padding: var(--spacing-sm) var(--spacing-card);
 }
 
-.card-subsection {
-  padding: var(--spacing) var(--spacing);
-  border-left: 0.4em solid var(--accent-primary);
-  background-color: var(--lighter-background);
-  border-bottom: 1px solid var(--lighter-background-hover);
-}
-
 .card-help-title {
   font-size: var(--font-size-md);
   margin: 0;
@@ -91,6 +84,19 @@
 #theme-template-content {
   /* This div is autopopulated and each item has margin-bottom */
   padding-bottom: var(--spacing-sm);
+}
+
+.card-subsection,
+.card[open] .card-subsection {
+  padding: var(--spacing) var(--spacing);
+  border-left: 0.4em solid var(--accent-primary);
+  background-color: var(--lighter-background);
+  border-bottom: 1px solid var(--lighter-background-hover);
+  display: none;
+}
+
+.card[open] .card-subsection[open] {
+  display: flex;
 }
 
 .card-content-lg {

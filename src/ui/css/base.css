@@ -13,7 +13,7 @@ body {
   background-color: var(--background);
   font-size: var(--font-size);
   color: var(--text);
-  font-weight: normal;
+  font-weight: bold;
   margin: 0em;
 }
 
@@ -25,7 +25,6 @@ a {
   color: var(--text-focus);
   text-decoration: none;
   font-size: var(--font-size-sm);
-  font-weight: bold;
   outline: none;
   padding: var(--spacing-sm) var(--spacing-md);
   border-radius: var(--border-radius-sm);
