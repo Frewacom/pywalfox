@@ -72,6 +72,7 @@ export class Extension {
     const themeMode = this.state.getThemeMode();
     const debuggingInfo = this.state.getDebuggingInfo();
     const enabled = this.state.getEnabled();
+    const options = this.state.getOptionsData();
 
     return {
       pywalColors,
@@ -79,6 +80,7 @@ export class Extension {
       themeMode,
       debuggingInfo,
       enabled,
+      options,
     };
   }
 
@@ -93,11 +95,11 @@ export class Extension {
         // TODO: Set font size
         break;
       case EXTENSION_OPTIONS.DUCKDUCKGO:
-        this.setDDGEnabled(optionData.enabled);
+        this.setDDGEnabled(optionData);
         break;
       case EXTENSION_OPTIONS.USER_CHROME: /* Fallthrough */
       case EXTENSION_OPTIONS.USER_CONTENT:
-        this.setCustomCSSEnabled(optionData.option, optionData.enabled);
+        this.setCustomCSSEnabled(optionData);
         break;
       default:
         UI.sendDebuggingOutput(`Received unhandled option: ${optionData.option}`);
@@ -203,7 +205,9 @@ export class Extension {
     browser.theme.update({ colors: browserTheme });
   }
 
-  private setCustomCSSEnabled(target: string, enabled: boolean) {
+  private setCustomCSSEnabled(optionData: IOptionSetData) {
+    const target = optionData.option;
+    const enabled = optionData.enabled;
     if (VALID_CSS_TARGETS.includes(target)) {
       this.nativeApp.requestCssEnabled(target, enabled);
     } else {
@@ -211,20 +215,20 @@ export class Extension {
     }
   }
 
-  private setDDGEnabled(enabled: boolean) {
+  private setDDGEnabled(optionData: IOptionSetData) {
+    const enabled = optionData.enabled;
     const isEnabled = this.state.getDDGThemeEnabled();
 
     if (enabled && !isEnabled) {
       const ddgTheme = this.state.getDDGTheme();
-      if (!ddgTheme) {
-        UI.sendDebuggingOutput('Could not enable DuckDuckGo theme. Is the Pywalfox theme enabled?');
-      } else {
+      if (ddgTheme) {
         DDG.setTheme(ddgTheme);
       }
     } else if (!enabled && isEnabled) {
       DDG.resetTheme();
     }
 
+    UI.sendOptionSet(optionData.option, optionData.enabled);
     this.state.setDDGThemeEnabled(enabled);
   }
 

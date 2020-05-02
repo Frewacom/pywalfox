@@ -154,8 +154,7 @@ function onFontSizeSave(e: Event) {
   }
 }
 
-function updateOptionButtonState(message: IExtensionMessage) {
-  const optionData: IOptionSetData = message.data;
+function updateOptionButtonState(optionData: IOptionSetData) {
   const target: HTMLElement = optionButtonsLookup[optionData.option];
 
   if (!target) {
@@ -200,11 +199,17 @@ async function setCurrentTheme(themeInfo?: browser.theme.ThemeUpdateInfo) {
 function setInitialData(data: IInitialData) {
   colorpicker.setPalette(data.pywalColors);
   colorpicker.setSelectedColorForTarget(data.template);
-  setDebuggingInfo(data.debuggingInfo);
 
   if (data.enabled) {
     themepicker.setSelectedMode(data.themeMode);
   }
+
+  console.log(data.options);
+  for (const optionData of data.options) {
+    updateOptionButtonState(optionData);
+  }
+
+  setDebuggingInfo(data.debuggingInfo);
 }
 
 fetchButton.addEventListener('click', onFetchClicked);
@@ -234,7 +239,7 @@ browser.runtime.onMessage.addListener((message: IExtensionMessage) => {
       themepicker.setSelectedMode(message.data);
       break;
     case EXTENSION_MESSAGES.OPTION_SET:
-      updateOptionButtonState(message);
+      updateOptionButtonState(message.data);
       break;
     case EXTENSION_MESSAGES.DEBUGGING_OUTPUT:
       writeOutput(message.data);

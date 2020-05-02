@@ -135,6 +135,7 @@ export interface IInitialData {
   themeMode: ThemeModes;
   debuggingInfo: IDebuggingInfoData;
   enabled: boolean;
+  options: IOptionSetData[];
 }
 
 export interface IDebuggingInfoData {

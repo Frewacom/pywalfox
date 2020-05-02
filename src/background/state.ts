@@ -5,7 +5,8 @@ import {
   IDuckDuckGoTheme,
   IColorscheme,
   IColorschemeTemplate,
-  ThemeModes
+  ThemeModes,
+  IOptionSetData,
 } from '../definitions';
 
 export interface IExtensionState {
@@ -23,12 +24,10 @@ export interface IExtensionState {
     template: IColorschemeTemplate;
   };
   options: {
-    css: {
-      userChrome: boolean;
-      userContent: boolean;
-      fontSize: number;
-    },
-    ddgEnabled: boolean;
+    userChrome: boolean;
+    userContent: boolean;
+    fontSize: number;
+    duckduckgo: boolean;
   };
 }
 
@@ -52,12 +51,10 @@ export class State {
         template: DEFAULT_THEME_TEMPLATE_DARK,
       },
       options: {
-        css: {
-          userChrome: false,
-          userContent: false,
-          fontSize: 11,
-        },
-        ddgEnabled: false,
+        userChrome: false,
+        userContent: false,
+        fontSize: 11,
+        duckduckgo: false,
       }
     };
   }
@@ -119,15 +116,25 @@ export class State {
   }
 
   public getDDGThemeEnabled() {
-    return this.currentState.options.ddgEnabled;
+    return this.currentState.options.duckduckgo;
   }
 
   public getCssEnabled(target: string) {
-    if (this.currentState.options.css.hasOwnProperty(target)) {
-      return this.currentState.options.css[target];
+    if (this.currentState.options.hasOwnProperty(target)) {
+      return this.currentState.options[target];
     }
 
     return false;
+  }
+
+  public getOptionsData() {
+    let data: IOptionSetData[] = [];
+    for (const key in this.currentState.options) {
+      const value = this.currentState.options[key];
+      data.push({ option: key, enabled: value });
+    }
+
+    return data;
   }
 
   public setVersion(version: number) {
@@ -171,10 +178,8 @@ export class State {
   public setCssEnabled(target: string, enabled: boolean) {
     this.set({
       options: {
-        css: {
-          ...this.currentState.options.css,
-          [target]: enabled,
-        }
+        ...this.currentState.options,
+        [target]: enabled,
       }
     });
   }
@@ -194,7 +199,7 @@ export class State {
     this.set({
       options: {
         ...this.currentState.options,
-        ddgEnabled: enabled
+        duckduckgo: enabled
       }
     });
   }
