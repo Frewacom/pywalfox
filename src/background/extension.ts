@@ -118,6 +118,12 @@ export class Extension {
       case EXTENSION_MESSAGES.THEME_DISABLE:
         this.resetThemes();
         break;
+      case EXTENSION_MESSAGES.PALETTE_COLOR_SET:
+        var pywalColors = this.state.getPywalColors();
+        if (pywalColors !== null) {
+          this.updateThemes(pywalColors, message.data);
+        }
+        break;
       case EXTENSION_MESSAGES.DEBUGGING_INFO_GET:
         const info = this.state.getDebuggingInfo();
         UI.sendDebuggingInfo(info);

@@ -17,6 +17,7 @@ export interface IPalette {
   accentPrimary: string;
   accentSecondary: string;
   text: string;
+  [key: string]: string;
 }
 
 /**
@@ -132,6 +133,10 @@ export interface INotificationData {
   title: string;
   message: string;
   error: boolean;
+}
+
+export interface IPaletteColorData {
+  [key: string]: string;
 }
 
 /**

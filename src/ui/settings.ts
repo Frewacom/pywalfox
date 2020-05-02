@@ -10,7 +10,8 @@ import {
     IExtensionMessage,
     IColorschemeTemplate,
     IOptionSetData,
-    INodeLookup
+    INodeLookup,
+    IPywalColors
 } from '../definitions';
 
 const fetchButton: HTMLElement = document.getElementById('fetch');
@@ -30,6 +31,7 @@ const fontSizeSaveInput: HTMLElement = document.getElementById('font-size-input'
 const colorpicker = new Colorpicker();
 const themepicker = new Themepicker();
 let currentDialog: Dialog = null;
+let pywalColors: IPywalColors = null;
 let template: IColorschemeTemplate = null;
 let optionButtonsLookup: INodeLookup = {};
 
@@ -128,6 +130,7 @@ function onFetchClicked(e: Event) {
 
 function onDisableClicked(e: Event) {
   Messenger.requestDisable();
+  pywalColors = null;
   colorpicker.setPalette(null);
   colorpicker.setSelectedColorForTarget(null);
 }
@@ -170,8 +173,10 @@ function createOptionButtonLookup() {
 }
 
 async function setCurrentTheme(themeInfo?: browser.theme.ThemeUpdateInfo) {
-  const selectedMode = await Utils.setInitialThemeClass(themeInfo);
-  themepicker.setSelectedMode(selectedMode);
+  if (pywalColors === null) {
+    const selectedMode = await Utils.setInitialThemeClass(themeInfo);
+    themepicker.setSelectedMode(selectedMode);
+  }
 }
 
 fetchButton.addEventListener('click', onFetchClicked);
@@ -187,6 +192,7 @@ browser.theme.onUpdated.addListener(setCurrentTheme);
 browser.runtime.onMessage.addListener((message: IExtensionMessage) => {
   switch (message.action) {
     case EXTENSION_MESSAGES.PYWAL_COLORS_SET:
+      pywalColors = message.data;
       colorpicker.setPalette(message.data);
       break;
     case EXTENSION_MESSAGES.TEMPLATE_SET:

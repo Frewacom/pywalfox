@@ -79,3 +79,7 @@ export async function setInitialThemeClass(themeInfo?: browser.theme.ThemeUpdate
   document.body.classList.remove('light');
   return ThemeModes.Dark;
 }
+
+export function rgbToHex(rgb: string) {
+  return '#' + rgb.substr(4, rgb.indexOf(')') - 4).split(',').map((color) => parseInt(color).toString(16)).join('');
+}

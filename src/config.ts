@@ -92,6 +92,8 @@ export const EXTENSION_MESSAGES = {
   THEME_SET: "theme:set",
   THEME_MODE_SET: "theme:mode:set",
   THEME_MODE_GET: "theme:mode:get",
+  PALETTE_COLOR_SET: "palette:color:set",
+  PALETTE_COLOR_GET: "palette:color:get",
   TEMPLATE_SET: "template:set",
   TEMPLATE_GET: "template:get",
   PYWAL_COLORS_GET: "pywal:colors:get",

@@ -1,5 +1,5 @@
 import { EXTENSION_MESSAGES } from '../config';
-import { ThemeModes, IOptionSetData } from '../definitions';
+import { ThemeModes, IOptionSetData, IPaletteColorData } from '../definitions';
 
 export function requestDebuggingInfo() {
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.DEBUGGING_INFO_GET });
@@ -27,6 +27,11 @@ export function requestThemeMode() {
 
 export function requestThemeModeSet(mode: ThemeModes) {
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.THEME_MODE_SET, data: mode });
+}
+
+export function requestPaletteColorSet(id: string, color: string) {
+  const paletteColorData: IPaletteColorData = { [id]: color };
+  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.PALETTE_COLOR_SET, data: paletteColorData });
 }
 
 export function requestOptionSet(option: string, enabled: boolean) {

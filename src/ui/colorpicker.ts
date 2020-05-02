@@ -1,11 +1,12 @@
 import { Dialog } from './dialog';
+import { requestPaletteColorSet } from './messenger';
 import { IPywalColors, IColorschemeTemplate } from '../definitions';
 import { PYWAL_PALETTE_LENGTH } from '../config';
 import * as Utils from './utils';
 
 export class Colorpicker extends Dialog {
   private grid: HTMLElement;
-  private customColorButton: HTMLElement;
+  private customColorButton: HTMLInputElement;
   private undoButton: HTMLElement;
   private pywalColors: IPywalColors;
   private resetElement: HTMLElement;
@@ -15,7 +16,7 @@ export class Colorpicker extends Dialog {
     super('colorpicker');
 
     this.grid = document.getElementById('colorpicker-grid');
-    this.customColorButton = document.getElementById('colorpicker-custom');
+    this.customColorButton = <HTMLInputElement>document.getElementById('colorpicker-custom');
     this.undoButton = document.getElementById('colorpicker-undo');
 
     this.pywalColors = null;
@@ -58,19 +59,53 @@ export class Colorpicker extends Dialog {
     }
 
     Utils.select(element);
+    this.setCustomColor(element);
     this.selected = element;
+  }
+
+  private getSelectedPywalColor(selectedElement: HTMLElement) {
+    if (this.pywalColors === null) {
+      return null;
+    }
+
+    const colorIndex = parseInt(selectedElement.getAttribute('data-color-index'));
+    const color = this.pywalColors[colorIndex];
+
+    return color;
+  }
+
+  private setCustomColor(element: HTMLElement) {
+    const color = element.style.backgroundColor;
+    this.customColorButton.value = Utils.rgbToHex(color);
+  }
+
+  private updatePaletteColor(selectedElement: HTMLElement, customColor?: string) {
+    if (this.pywalColors === null) {
+      return;
+    }
+
+    const id = this.target.getAttribute('data-color');
+    let color: string = customColor;
+
+    if (!customColor) {
+      color = this.getSelectedPywalColor(selectedElement);
+    }
+
+    requestPaletteColorSet(id, color);
   }
 
   private onSetColor(e: Event) {
     const element = <HTMLElement>e.target;
+    this.updatePaletteColor(element);
     this.highlightSelectedColor(element);
     this.selectedElement = element;
   }
 
   private onSetCustomColor(e: Event) {
-    const target = <HTMLInputElement>e.target;
-    this.highlightSelectedColor(target.parentElement);
-    this.selectedElement = target;
+    const element = <HTMLInputElement>e.target;
+    this.updatePaletteColor(element, element.value);
+    this.highlightSelectedColor(element.parentElement);
+    this.selectedElement = element;
   }
 
   private onUndo(e: Event) {
