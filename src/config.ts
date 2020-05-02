@@ -17,10 +17,10 @@ export const DEFAULT_THEME_TEMPLATE_DARK = {
   palette: {
     background: 0,
     backgroundLight: 17,
-    foreground: 15,
+    text: 15,
     accentPrimary: 1,
     accentSecondary: 2,
-    text: 16,
+    textFocus: 16,
     /* icons: 1, */
     /* icons_attention: 2, */
     /* frame: 0, */
@@ -65,10 +65,10 @@ export const DEFAULT_THEME_TEMPLATE_LIGHT = {
   palette: {
     background: 15,
     backgroundLight: 16,
-    foreground: 17,
+    text: 17,
     accentPrimary: 1,
     accentSecondary: 2,
-    text: 0,
+    textFocus: 0,
   }
 }
 

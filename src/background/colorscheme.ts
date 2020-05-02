@@ -17,11 +17,11 @@ export function generateColorscheme(
   // Override the templated palette with any custom colors set by the user
   const palette = Object.assign({
     background: pywalColors[template.palette.background],
-    foreground: pywalColors[template.palette.foreground],
+    text: pywalColors[template.palette.text],
+    textFocus: pywalColors[template.palette.textFocus],
     backgroundLight: pywalColors[template.palette.backgroundLight],
     accentPrimary: pywalColors[template.palette.accentPrimary],
     accentSecondary: pywalColors[template.palette.accentSecondary],
-    text: pywalColors[template.palette.text],
   }, customColors);
 
   return {
@@ -30,38 +30,38 @@ export function generateColorscheme(
       icons: palette.accentPrimary,
       icons_attention: palette.accentSecondary,
       frame: palette.background,
-      tab_text: palette.text,
+      tab_text: palette.textFocus,
       tab_loading: palette.accentPrimary,
-      tab_background_text: palette.foreground,
+      tab_background_text: palette.text,
       tab_selected: palette.backgroundLight,
       tab_line: palette.accentPrimary,
       tab_background_separator: palette.background,
       toolbar: palette.backgroundLight,
       toolbar_field: palette.backgroundLight,
       toolbar_field_focus: palette.background,
-      toolbar_field_text: palette.foreground,
-      toolbar_field_text_focus: palette.foreground,
+      toolbar_field_text: palette.text,
+      toolbar_field_text_focus: palette.text,
       toolbar_field_border: palette.background,
       toolbar_field_border_focus: palette.background,
       toolbar_field_separator: palette.background,
       toolbar_field_highlight: palette.accentPrimary,
-      toolbar_field_highlight_text: palette.text,
+      toolbar_field_highlight_text: palette.textFocus,
       toolbar_bottom_separator: palette.background,
       toolbar_top_separator: palette.background,
       toolbar_vertical_separator: palette.backgroundLight,
       ntp_background: palette.background,
-      ntp_text: palette.foreground,
+      ntp_text: palette.text,
       popup: palette.background,
       popup_border: palette.backgroundLight,
-      popup_text: palette.foreground,
+      popup_text: palette.text,
       popup_highlight: palette.accentSecondary,
-      popup_highlight_text: palette.text,
+      popup_highlight_text: palette.textFocus,
       sidebar: palette.background,
       sidebar_border: palette.backgroundLight,
-      sidebar_text: palette.foreground,
+      sidebar_text: palette.text,
       sidebar_highlight: palette.accentPrimary,
-      sidebar_highlight_text: palette.text,
-      bookmark_text: palette.text,
+      sidebar_highlight_text: palette.textFocus,
+      bookmark_text: palette.textFocus,
       button_background_hover: palette.backgroundLight,
       button_background_active: palette.backgroundLight,
     },
@@ -73,10 +73,10 @@ export function generateExtensionTheme(colorscheme: IColorscheme) {
     body.light, body.dark {
       --background: ${colorscheme.palette.background};
       --background-light: ${colorscheme.palette.backgroundLight};
-      --foreground: ${colorscheme.palette.foreground};
+      --text: ${colorscheme.palette.text};
       --accent-primary: ${colorscheme.palette.accentPrimary};
       --accent-secondary: ${colorscheme.palette.accentSecondary};
-      --text: ${colorscheme.palette.text};
+      --textFocus: ${colorscheme.palette.textFocus};
     }
   `;
 }
@@ -107,7 +107,6 @@ export function generateDDGTheme(colorscheme: IColorscheme) {
  * @returns {string} color with the first '#' removed
  */
 function stripHash(color: string) {
-  // TODO: Move this to some utils file?
   return color.substring(1);
 }
 

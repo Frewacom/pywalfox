@@ -12,7 +12,7 @@ export interface IPywalColors  {
 
 export interface IPalette {
   background: string;
-  foreground: string;
+  textFocus: string;
   backgroundLight: string;
   accentPrimary: string;
   accentSecondary: string;

@@ -51,17 +51,17 @@ body {
 
   --background: #252525;
   --background-light: #444444;
-  --foreground: #ffffff;
+  --text: #ffffff;
+  --textFocus: #ffffff;
   --accent-primary: #6cadff;
   --accent-secondary: #a1caff;
-  --text: #ffffff;
 }
 
 body.light {
   --background: #EDEDF0;
   --background-light: #ffffff;
-  --foreground: #333;
-  --text: #252525;
+  --text: #333;
+  --textFocus: #252525;
 
   --lighter-background: rgba(0,0,0,0.015);
   --lighter-background-hover: rgba(0,0,0,0.03);
