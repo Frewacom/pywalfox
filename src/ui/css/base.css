@@ -24,6 +24,7 @@ p {
 a {
   color: var(--text);
   text-decoration: none;
+  font-size: var(--font-size-md);
   outline: none;
 }
 
