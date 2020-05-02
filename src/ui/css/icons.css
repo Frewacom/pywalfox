@@ -57,6 +57,18 @@ i[icon="activity"] {
   content: url('../icons/activity.svg');
 }
 
+i[icon="help-circle"] {
+  content: url('../icons/help-circle.svg');
+}
+
+i[icon="droplet"] {
+  content: url('../icons/droplet.svg');
+}
+
+i[icon="edit"] {
+  content: url('../icons/edit.svg');
+}
+
 .icon-sm {
   width: var(--icon-size-sm);
   height: var(--icon-size-sm);
