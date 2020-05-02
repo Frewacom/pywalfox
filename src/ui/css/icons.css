@@ -69,6 +69,10 @@ i[icon="edit"] {
   content: url('../icons/edit.svg');
 }
 
+i[icon="alert-triangle"] {
+  content: url('../icons/alert-triangle.svg');
+}
+
 .icon-sm {
   width: var(--icon-size-sm);
   height: var(--icon-size-sm);
