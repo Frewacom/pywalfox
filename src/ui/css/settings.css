@@ -1,3 +1,18 @@
+.setting {
+  padding: calc(var(--spacing-sm) * 0.8) var(--spacing-md);
+  box-sizing: border-box;
+  background-color: transparent;
+  border-radius: var(--border-radius-sm);
+}
+
+.setting:hover {
+  background-color: var(--lighter-background);
+}
+
+body.light .setting:hover {
+  box-shadow: var(--box-shadow);
+}
+
 .setting-title {
   font-weight: bold;
   font-size: var(--font-size-md);

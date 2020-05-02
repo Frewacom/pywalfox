@@ -16,6 +16,7 @@
   --spacing-xsm: 0.3em;
   --spacing-sm: 0.65em;
   --spacing-md: 0.75em;
+  --spacing-card: 1.2em;
   --spacing-lg: 1.5em;
   --spacing-xlg: 1.8em;
 
@@ -63,7 +64,7 @@
   --text: #252525;
 
   --lighter-background: rgba(0,0,0,0.015);
-  --lighter-background-hover: rgba(0,0,0,0.05);
+  --lighter-background-hover: rgba(0,0,0,0.03);
   --darker-background: var(--lighter-background);
 
   --box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);

@@ -178,7 +178,7 @@ function createOptionButtonLookup() {
 function createThemeTemplateContent() {
   THEME_TEMPLATE_DATA.forEach((item: IThemeTemplateItem) => {
     themeTemplateContent.innerHTML += `
-      <div class="row expand space-between v-center margin-bottom">
+      <div class="setting row expand space-between v-center">
         <div class="box column align-left">
           <p class="setting-title">${item.title}</p>
           <p class="setting-description">${item.description}</p>
