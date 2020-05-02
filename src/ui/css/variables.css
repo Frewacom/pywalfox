@@ -1,4 +1,4 @@
-:root {
+body {
   --font: sans-serif;
   --font-size-sm: 0.75rem;
   --font-size-md: 0.82rem;
@@ -57,7 +57,7 @@
   --text: #ffffff;
 }
 
-:root body.light {
+body.light {
   --background: #EDEDF0;
   --background-light: #ffffff;
   --foreground: #333;

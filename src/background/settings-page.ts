@@ -121,7 +121,9 @@ export class SettingsPage {
 
     browser.tabs.insertCSS(this.tab.id, {
       code: extensionTheme,
-      runAt: 'document_start'
+      runAt: 'document_start',
+      cssOrigin: 'author',
+      allFrames: true,
     });
 
     this.currentTheme = extensionTheme;

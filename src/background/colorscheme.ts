@@ -32,15 +32,15 @@ export function generateColorscheme(
       frame: palette.background,
       tab_text: palette.text,
       tab_loading: palette.accentPrimary,
-      tab_background_text: palette.text,
+      tab_background_text: palette.foreground,
       tab_selected: palette.backgroundLight,
       tab_line: palette.accentPrimary,
       tab_background_separator: palette.background,
-      toolbar: palette.background,
-      toolbar_field: palette.background,
+      toolbar: palette.backgroundLight,
+      toolbar_field: palette.backgroundLight,
       toolbar_field_focus: palette.background,
-      toolbar_field_text: palette.text,
-      toolbar_field_text_focus: palette.text,
+      toolbar_field_text: palette.foreground,
+      toolbar_field_text_focus: palette.foreground,
       toolbar_field_border: palette.background,
       toolbar_field_border_focus: palette.background,
       toolbar_field_separator: palette.background,
@@ -70,7 +70,7 @@ export function generateColorscheme(
 
 export function generateExtensionTheme(colorscheme: IColorscheme) {
   return `
-    body {
+    body.light, body.dark {
       --background: ${colorscheme.palette.background};
       --background-light: ${colorscheme.palette.backgroundLight};
       --foreground: ${colorscheme.palette.foreground};
