@@ -9,10 +9,12 @@ import { EXTENSION_MESSAGES, EXTENSION_OPTIONS, THEME_TEMPLATE_DATA } from '../c
 import {
     IExtensionMessage,
     IColorschemeTemplate,
+    IInitialData,
     IOptionSetData,
     INodeLookup,
     IPywalColors,
     IThemeTemplateItem,
+    IDebuggingInfoData,
 } from '../definitions';
 
 const fetchButton: HTMLElement = document.getElementById('fetch');
@@ -74,7 +76,7 @@ function closeDialog() {
   }
 }
 
-function setDebuggingInfo(info: { connected: boolean, version: number }) {
+function setDebuggingInfo(info: IDebuggingInfoData) {
   debuggingConnected.innerText = info.connected ? 'Connected' : 'Disconnected';
   debuggingVersion.innerText = info.version == 0 ? 'version not set' : `version ${info.version}`;
 }
@@ -195,6 +197,16 @@ async function setCurrentTheme(themeInfo?: browser.theme.ThemeUpdateInfo) {
   }
 }
 
+function setInitialData(data: IInitialData) {
+  colorpicker.setPalette(data.pywalColors);
+  colorpicker.setSelectedColorForTarget(data.template);
+  setDebuggingInfo(data.debuggingInfo);
+
+  if (data.enabled) {
+    themepicker.setSelectedMode(data.themeMode);
+  }
+}
+
 fetchButton.addEventListener('click', onFetchClicked);
 disableButton.addEventListener('click', onDisableClicked);
 themeButton.addEventListener('click', onThemeClicked);
@@ -207,6 +219,9 @@ browser.theme.onUpdated.addListener(setCurrentTheme);
 
 browser.runtime.onMessage.addListener((message: IExtensionMessage) => {
   switch (message.action) {
+    case EXTENSION_MESSAGES.INITIAL_DATA_SET:
+      setInitialData(message.data);
+      break;
     case EXTENSION_MESSAGES.PYWAL_COLORS_SET:
       pywalColors = message.data;
       colorpicker.setPalette(message.data);
@@ -216,11 +231,6 @@ browser.runtime.onMessage.addListener((message: IExtensionMessage) => {
       colorpicker.setSelectedColorForTarget(template);
       break;
     case EXTENSION_MESSAGES.THEME_MODE_SET:
-      /**
-       * TODO: When these have been combined into one single call,
-       *       we want to check if the pywalfox theme is enabled.
-       *       Currently, the mode from 'setCurrentTheme' will be overridden.
-       */
       themepicker.setSelectedMode(message.data);
       break;
     case EXTENSION_MESSAGES.OPTION_SET:
@@ -239,8 +249,4 @@ setCurrentTheme();
 createOptionButtonLookup();
 createThemeTemplateContent();
 
-// TODO: Combine into one call
-Messenger.requestPywalColors();
-Messenger.requestTemplate();
-Messenger.requestThemeMode();
-Messenger.requestDebuggingInfo();
+Messenger.requestInitialData();

@@ -129,6 +129,19 @@ export interface INodeLookup {
   [key: string]: HTMLElement;
 }
 
+export interface IInitialData {
+  pywalColors: IPywalColors;
+  template: IColorschemeTemplate;
+  themeMode: ThemeModes;
+  debuggingInfo: IDebuggingInfoData;
+  enabled: boolean;
+}
+
+export interface IDebuggingInfoData {
+  version: number;
+  connected: boolean;
+}
+
 export interface INotificationData {
   title: string;
   message: string;

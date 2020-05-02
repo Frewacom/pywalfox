@@ -84,6 +84,8 @@ export const EXTERNAL_MESSAGES = {
 };
 
 export const EXTENSION_MESSAGES = {
+  INITIAL_DATA_GET: "initial:data:get",
+  INITIAL_DATA_SET: "initial:data:set",
   DEBUGGING_INFO_GET: "debugging:info:get",
   DEBUGGING_INFO_SET: "debugging:info:set",
   DEBUGGING_OUTPUT: "debugging:output",

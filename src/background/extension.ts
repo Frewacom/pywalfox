@@ -66,6 +66,22 @@ export class Extension {
     }
   }
 
+  private getInitialData() {
+    const pywalColors = this.state.getPywalColors();
+    const template = this.state.getTemplate();
+    const themeMode = this.state.getThemeMode();
+    const debuggingInfo = this.state.getDebuggingInfo();
+    const enabled = this.state.getEnabled();
+
+    return {
+      pywalColors,
+      template,
+      themeMode,
+      debuggingInfo,
+      enabled,
+    };
+  }
+
   private setOption(optionData: IOptionSetData) {
     if (!optionData) {
       UI.sendDebuggingOutput('Tried to set option, but no data was provided', true);
@@ -91,6 +107,10 @@ export class Extension {
   /* Handles incoming messages from the UI and other content scripts. */
   private onMessage(message: IExtensionMessage) {
     switch (message.action) {
+      case EXTENSION_MESSAGES.INITIAL_DATA_GET:
+        const initialData = this.getInitialData();
+        UI.sendInitialData(initialData);
+        break;
       case EXTENSION_MESSAGES.DDG_THEME_GET:
         const theme = this.state.getDDGTheme();
         theme ? DDG.setTheme(theme) : DDG.resetTheme();

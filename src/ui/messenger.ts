@@ -1,6 +1,10 @@
 import { EXTENSION_MESSAGES } from '../config';
 import { ThemeModes, IOptionSetData, IPaletteColorData } from '../definitions';
 
+export function requestInitialData() {
+  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.INITIAL_DATA_GET });
+}
+
 export function requestDebuggingInfo() {
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.DEBUGGING_INFO_GET });
 }

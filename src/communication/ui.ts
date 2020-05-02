@@ -1,18 +1,24 @@
 import {
+  IInitialData,
   IPywalColors,
   IColorschemeTemplate,
   ThemeModes,
+  IDebuggingInfoData,
   IOptionSetData,
   INotificationData,
 } from '../definitions';
 import { EXTENSION_MESSAGES } from '../config';
+
+export function sendInitialData(data: IInitialData) {
+  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.INITIAL_DATA_SET, data });
+}
 
 export function sendDebuggingOutput(message: string, error=false) {
   error === true ? console.error(message) : console.log(message);
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.DEBUGGING_OUTPUT, data: message });
 }
 
-export function sendDebuggingInfo(info: { connected: boolean, version: number }) {
+export function sendDebuggingInfo(info: IDebuggingInfoData) {
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.DEBUGGING_INFO_SET, data: info });
 }
 
