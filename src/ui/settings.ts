@@ -24,6 +24,7 @@ const debuggingOutput: HTMLTextAreaElement = <HTMLTextAreaElement>document.getEl
 const debuggingConnected: HTMLElement = document.getElementById('debugging-connected');
 const debuggingVersion: HTMLElement = document.getElementById('debugging-version');
 const overlay: HTMLElement = document.getElementById('overlay');
+const themeTemplateContent: HTMLElement = document.getElementById('theme-template-content');
 
 const fontSizeSaveButton: HTMLElement = document.getElementById('font-size-save');
 const fontSizeSaveInput: HTMLElement = document.getElementById('font-size-input');
@@ -35,42 +36,42 @@ let pywalColors: IPywalColors = null;
 let template: IColorschemeTemplate = null;
 let optionButtonsLookup: INodeLookup = {};
 
-const templateData = [
+const themeTemplateData = [
   { title: 'Icons', description: 'The color of toolbar icons, excluding those in the find toolbar.' },
-  { title: 'Icons_attention', description: 'The color of toolbar icons in attention state such as the starred bookmark icon or finished download icon.' },
-  { title: 'Frame', description: 'The color of the header area background, displayed in the part of the header not covered or visible through the images specified in "theme_frame" and "additional_backgrounds".' },
-  { title: 'Tab text', description: 'From Firefox 59, it represents the text color for the selected tab. If tab_line isn\'t specified, it also defines the color of the selected tab line.' },
+  { title: 'Icons_attention', description: 'The color of toolbar icons in attention state, e.g. the starred bookmark icon.' },
+  { title: 'Frame', description: 'The color of the header area background.' },
+  { title: 'Tab text', description: 'The text color for the selected tab.' },
   { title: 'Tab loading', description: 'The color of the tab loading indicator and the tab loading burst.' },
-  { title: 'Tab background_text', description: 'The color of the text displayed in the inactive page tabs. If tab_text or bookmark_text isn\'t specified, applies to the active tab text.' },
-  { title: 'Tab selected', description: 'The background color of the selected tab. When not in use selected tab color is set by frame and the frame_inactive.' },
+  { title: 'Tab background_text', description: 'The color of the text displayed in the inactive page tabs.' },
+  { title: 'Tab selected', description: 'The background color of the selected tab.' },
   { title: 'Tab line', description: 'The color of the selected tab line.' },
   { title: 'Tab background_separator', description: 'The color of the vertical separator of the background tabs.' },
-  { title: 'Toolbar', description: 'The background color for the navigation bar, the bookmarks bar, and the selected tab. This also sets the background color of the "Find" bar.' },
-  { title: 'Toolbar field', description: 'The background color for fields in the toolbar, such as the URL bar. This also sets the background color of the Find in page field.' },
+  { title: 'Toolbar', description: 'The background color for the navigation bar, the bookmarks bar, and the selected tab.' },
+  { title: 'Toolbar field', description: 'The background color for fields in the toolbar, such as the URL bar.' },
   { title: 'Toolbar field focus', description: 'The focused background color for fields in the toolbar, such as the URL bar.' },
-  { title: 'Toolbar field text', description: 'The color of text in fields in the toolbar, such as the URL bar. This also sets the color of text in the Find in page field.' },
+  { title: 'Toolbar field text', description: 'The color of text in fields in the toolbar, such as the URL bar.' },
   { title: 'Toolbar field text focus', description: 'The color of text in focused fields in the toolbar, such as the URL bar.' },
-  { title: 'Toolbar field border', description: 'The border color for fields in the toolbar. This also sets the border color of the Find in page field.' },
+  { title: 'Toolbar field border', description: 'The border color for fields in the toolbar.' },
   { title: 'Toolbar field border focus', description: 'The focused border color for fields in the toolbar.' },
-  { title: 'Toolbar field separator', description: 'The color of separators inside the URL bar. In Firefox 58 this was implemented as toolbar vertical separator.' },
-  { title: 'Toolbar field highlight', description: 'The background color used to indicate the current selection of text in the URL bar (and the search bar, if it\'s configured to be separate). ' },
-  { title: 'Toolbar field highlight text', description: 'The color used to draw text that\'s currently selected in the URL bar (and the search bar, if it\'s configured to be separate box).' },
+  { title: 'Toolbar field separator', description: 'The color of separators inside the URL bar.' },
+  { title: 'Toolbar field highlight', description: 'The background color used to indicate the current selection of text in the URL bar.' },
+  { title: 'Toolbar field highlight text', description: 'The color used to draw text that\'s currently selected in the URL bar.' },
   { title: 'Toolbar bottom_separator', description: 'The color of the line separating the bottom of the toolbar from the region below.' },
   { title: 'Toolbar top separator', description: 'The color of the line separating the top of the toolbar from the region above.' },
-  { title: 'Toolbar vertical separator', description: 'The color of the separator next to the application menu icon. In Firefox 58, it corresponds to the color of separators inside the URL bar.' },
+  { title: 'Toolbar vertical separator', description: 'The color of the separator next to the application menu icon.' },
   { title: 'New tab page background', description: 'The new tab page background color.' },
   { title: 'New tab page text', description: 'The new tab page text color.' },
-  { title: 'Popup', description: 'The background color of popups (such as the url bar dropdown and the arrow panels).' },
+  { title: 'Popup', description: 'The background color of popups (eg. url bar dropdown and arrow panels).' },
   { title: 'Popup_border', description: 'The border color of popups.' },
   { title: 'Popup text', description: 'The text color of popups.' },
-  { title: 'Popup highlight', description: 'The background color of items highlighted using the keyboard inside popups (such as the selected url bar dropdown item).' },
+  { title: 'Popup highlight', description: 'The background color of items highlighted using the keyboard inside popups.' },
   { title: 'Popup highlight text', description: 'The text color of items highlighted inside popups.' },
   { title: 'Sidebar', description: 'The background color of the sidebar.' },
   { title: 'Sidebar border', description: 'The border and splitter color of the browser sidebar' },
   { title: 'Sidebar text', description: 'The text color of sidebars.' },
   { title: 'Sidebar highlight', description: 'The background color of highlighted rows in built-in sidebars' },
   { title: 'Sidebar highlight text', description: 'The text color of highlighted rows in sidebars.' },
-  { title: 'Bookmark text', description: 'The color of text and icons in the bookmark and find bars. Also, if tab text isn\'t defined it sets the color of the active tab text and if icons isn\'t defined the color of the toolbar icons. Provided as Chrome compatible alias for toolbar text.' },
+  { title: 'Bookmark text', description: 'The color of text and icons in the bookmark and find bars.' },
   { title: 'Button background hover', description: 'The color of the background of the toolbar buttons on hover.' },
   { title: 'Button background active', description: 'The color of the background of the pressed toolbar buttons.' },
 ]
@@ -212,6 +213,20 @@ function createOptionButtonLookup() {
   });
 }
 
+function createThemeTemplateContent() {
+  themeTemplateData.forEach((item) => {
+    themeTemplateContent.innerHTML += `
+      <div class="row expand space-between v-center margin-bottom">
+        <div class="box column align-left">
+          <p class="setting-title">${item.title}</p>
+          <p class="setting-description">${item.description}</p>
+        </div>
+        <button data-color="background" class="btn-color dialog-arrow"></button>
+      </div>
+`;
+  });
+}
+
 async function setCurrentTheme(themeInfo?: browser.theme.ThemeUpdateInfo) {
   if (pywalColors === null) {
     const selectedMode = await Utils.setInitialThemeClass(themeInfo);
@@ -261,6 +276,7 @@ browser.runtime.onMessage.addListener((message: IExtensionMessage) => {
 
 setCurrentTheme();
 createOptionButtonLookup();
+createThemeTemplateContent();
 
 // TODO: Combine into one call
 Messenger.requestPywalColors();
