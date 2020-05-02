@@ -101,6 +101,39 @@ export interface IOptionSetData {
   enabled: boolean;
 }
 
+/* Interface for the messages received from the native messaging host. */
+export interface INativeAppMessage {
+  action: string;
+  success: boolean;
+  error?: string;
+  data?: string;
+  [key: string]: any;
+}
+
+export interface INativeAppMessageCallbacks {
+  connected: () => void,
+  updateNeeded: () => void,
+  disconnected: () => void,
+  version: (version: string) => void,
+  output: (message: string, error?: boolean) => void,
+  colorscheme: (colorscheme: IPywalColors) => void,
+  cssToggleSuccess: (target: string) => void,
+  cssToggleFailed: (target: string, error: string) => void,
+}
+
+/**
+ * Use an attribute of an element as key with the actual HTMLElement node.
+ */
+export interface INodeLookup {
+  [key: string]: HTMLElement;
+}
+
+export interface INotificationData {
+  title: string;
+  message: string;
+  error: boolean;
+}
+
 /**
  * Expose 'wrappedJSObject' from the 'window' namespace.
  *

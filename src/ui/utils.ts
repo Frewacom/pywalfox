@@ -9,28 +9,53 @@ export function isOpen(element: HTMLElement) {
   return isSet('open', element);
 }
 
+export function toggleAttribute(element: HTMLElement, attr: string) {
+  const newState = isSet(attr, element) ? false : true;
+  if (newState) {
+    element.setAttribute(attr, '');
+  } else {
+    element.removeAttribute(attr);
+  }
+}
+
+export function setAttribute(element: HTMLElement, attr: string, enabled: boolean) {
+  if (enabled) {
+    element.setAttribute(attr, '');
+  } else {
+    element.removeAttribute(attr);
+  }
+}
+
 export function open(element: HTMLElement) {
-  element.setAttribute('open', '');
+  setAttribute(element, 'open', true);
 }
 
 export function close(element: HTMLElement) {
-  element.removeAttribute('open');
-}
-
-export function toggleOpen(element: HTMLElement) {
-  isSet('open', element) ? close(element) : open(element);
+  setAttribute(element, 'open', false);
 }
 
 export function select(element: HTMLElement) {
-  element.setAttribute('selected', '');
+  setAttribute(element, 'selected', true);
 }
 
 export function deselect(element: HTMLElement) {
-  element.removeAttribute('selected');
+  setAttribute(element, 'selected', false);
+}
+
+export function loading(element: HTMLElement) {
+  setAttribute(element, 'loading', true);
+}
+
+export function loaded(element: HTMLElement) {
+  setAttribute(element, 'loading', false);
 }
 
 export function toggleSelected(element: HTMLElement) {
-  isSet('selected', element) ? deselect(element) : select(element);
+  toggleAttribute(element, 'selected');
+}
+
+export function toggleOpen(element: HTMLElement) {
+  toggleAttribute(element, 'open');
 }
 
 export async function setInitialThemeClass(themeInfo?: browser.theme.ThemeUpdateInfo) {
@@ -41,7 +66,7 @@ export async function setInitialThemeClass(themeInfo?: browser.theme.ThemeUpdate
     theme = await browser.theme.getCurrent();
   }
 
-  if (Object.keys(theme).length > 0) {
+  if (Object.keys(theme).length > 0 && theme['colors'] !== null) {
     // Seems like there is no better way of identifying themes
     if (theme.colors.toolbar_field === '#fff' || theme.colors.toolbar_field === '#ffffff') {
       document.body.classList.add('light');

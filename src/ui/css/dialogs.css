@@ -27,6 +27,6 @@
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
-  row-gap: var(--spacing-xsm);
+  row-gap: 0.4rem;
   margin-bottom: var(--spacing-sm);
 }

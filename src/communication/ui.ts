@@ -1,7 +1,13 @@
-import { IPywalColors, IColorschemeTemplate, ThemeModes } from '../definitions';
+import {
+  IPywalColors,
+  IColorschemeTemplate,
+  ThemeModes,
+  IOptionSetData,
+  INotificationData,
+} from '../definitions';
 import { EXTENSION_MESSAGES } from '../config';
 
-export function sendDebuggingOutput(message: string, error?: boolean) {
+export function sendDebuggingOutput(message: string, error=false) {
   error === true ? console.error(message) : console.log(message);
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.DEBUGGING_OUTPUT, data: message });
 }
@@ -10,8 +16,9 @@ export function sendDebuggingInfo(info: { connected: boolean, version: number })
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.DEBUGGING_INFO_SET, data: info });
 }
 
-export function sendNotification(message: string) {
-  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.NOTIFCATION, data: message });
+export function sendNotification(title: string, message: string, error=false) {
+  const notificationData: INotificationData = { title, message, error };
+  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.NOTIFCATION, data: notificationData });
 }
 
 export function sendPywalColors(pywalColors: IPywalColors) {
@@ -25,3 +32,9 @@ export function sendTemplate(template: IColorschemeTemplate) {
 export function sendThemeMode(mode: ThemeModes) {
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.THEME_MODE_SET, data: mode });
 }
+
+export function sendOptionSet(option: string, enabled: boolean) {
+  const optionData: IOptionSetData = { option, enabled };
+  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.OPTION_SET, data: optionData });
+}
+

@@ -4,8 +4,14 @@ import * as Messenger from './messenger';
 import { Dialog } from './dialog';
 import { Colorpicker } from './colorpicker';
 import { Themepicker } from './themepicker';
-import { IExtensionMessage, IColorschemeTemplate } from '../definitions';
 import { EXTENSION_MESSAGES, EXTENSION_OPTIONS } from '../config';
+
+import {
+    IExtensionMessage,
+    IColorschemeTemplate,
+    IOptionSetData,
+    INodeLookup
+} from '../definitions';
 
 const fetchButton: HTMLElement = document.getElementById('fetch');
 const disableButton: HTMLElement = document.getElementById('disable');
@@ -25,6 +31,7 @@ const colorpicker = new Colorpicker();
 const themepicker = new Themepicker();
 let currentDialog: Dialog = null;
 let template: IColorschemeTemplate = null;
+let optionButtonsLookup: INodeLookup = {};
 
 const templateData = [
   { title: icons, description: 'The color of toolbar icons, excluding those in the find toolbar.' },
@@ -124,25 +131,28 @@ function onColorClicked(e: Event) {
 }
 
 function setOptionEnabled(target: HTMLElement, enabled: boolean) {
+  if (Utils.isSet('loading', target)) {
+    Utils.loaded(target);
+  }
+
   if (enabled) {
-    Utils.deselect(target);
-    target.innerText = 'No';
-  } else {
     Utils.select(target);
+    Utils.select(target.parentElement);
     target.innerText = 'Yes';
+  } else {
+    Utils.deselect(target);
+    Utils.deselect(target.parentElement);
+    target.innerText = 'No';
   }
 }
 
 function onOptionClicked(e: Event) {
   const target = <HTMLElement>e.target;
   const option = target.getAttribute('data-option');
-  const isEnabled = Utils.isSet('selected', target);
-  const newState = isEnabled ? false : true;
+  const newState = Utils.isSet('selected', target) ? false : true;
 
   if (Utils.isSet('async', target)) {
-    // TODO: Implement loading state on button
-  } else {
-    setOptionEnabled(target, isEnabled);
+    Utils.loading(target);
   }
 
   Messenger.requestOptionSet(option, newState);
@@ -172,9 +182,31 @@ function onFontSizeSave(e: Event) {
     // TODO: Set loading state on button
     Messenger.requestFontSizeSet(parseInt(inputElement.value));
   } else {
-    // TODO: Display notifiction or something
+    // TODO: Display notification or something on error
     return;
   }
+}
+
+function updateOptionButtonState(message: IExtensionMessage) {
+  const optionData: IOptionSetData = message.data;
+  const target: HTMLElement = optionButtonsLookup[optionData.option];
+
+  if (!target) {
+    console.error(`Tried to set invalid option: ${optionData.option}`);
+  } else {
+    setOptionEnabled(target, optionData.enabled);
+  }
+}
+
+function createOptionButtonLookup() {
+  optionButtons.forEach((button) => {
+    const option = button.getAttribute('data-option');
+    if (option) {
+      optionButtonsLookup[option] = button;
+    } else {
+      console.warn('Found option button with no "data-option" attribute: ', button);
+    }
+  });
 }
 
 async function setCurrentTheme(themeInfo?: browser.theme.ThemeUpdateInfo) {
@@ -209,6 +241,9 @@ browser.runtime.onMessage.addListener((message: IExtensionMessage) => {
        */
       themepicker.setSelectedMode(message.data);
       break;
+    case EXTENSION_MESSAGES.OPTION_SET:
+      updateOptionButtonState(message);
+      break;
     case EXTENSION_MESSAGES.DEBUGGING_OUTPUT:
       writeOutput(message.data);
       break;
@@ -219,6 +254,7 @@ browser.runtime.onMessage.addListener((message: IExtensionMessage) => {
 });
 
 setCurrentTheme();
+createOptionButtonLookup();
 
 // TODO: Combine into one call
 Messenger.requestPywalColors();

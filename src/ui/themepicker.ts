@@ -1,16 +1,12 @@
 import { Dialog } from './dialog';
-import { ThemeModes } from '../definitions';
+import { ThemeModes, INodeLookup } from '../definitions';
 import { requestThemeModeSet } from './messenger';
 import * as Utils from './utils';
-
-interface ModeLookup {
-  [key: string]: HTMLElement;
-}
 
 export class Themepicker extends Dialog {
   private themeSelectButton: HTMLElement;
   private modeButtons: NodeListOf<HTMLElement>;
-  private modeLookup: ModeLookup;
+  private modeLookup: INodeLookup;
   private currentClassName: ThemeModes;
 
   constructor() {

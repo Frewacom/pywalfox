@@ -122,6 +122,14 @@ export class State {
     return this.currentState.options.ddgEnabled;
   }
 
+  public getCssEnabled(target: string) {
+    if (this.currentState.options.css.hasOwnProperty(target)) {
+      return this.currentState.options.css[target];
+    }
+
+    return false;
+  }
+
   public setVersion(version: number) {
     return this.set({ version });
   }
@@ -164,7 +172,7 @@ export class State {
     this.set({
       options: {
         css: {
-          ...this.currentState.css,
+          ...this.currentState.options.css,
           [target]: enabled,
         }
       }

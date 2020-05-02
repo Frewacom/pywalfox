@@ -1,7 +1,9 @@
 button {
-  height: var(--button-height);
-  border-radius: 15px;
-  padding: 0em var(--spacing-xlg);
+  max-height: var(--button-height);
+  min-height: var(--button-height-sm);
+  border-radius: var(--border-radius);
+  padding: 0.8em var(--spacing-xlg);
+  /* padding-bottom: calc(var(--font-size-md) * 0.1); */
   border: none;
   font-family: var(--font);
   font-weight: 700;
@@ -12,9 +14,32 @@ button {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding-bottom: 0.05em;
   position: relative;
-  box-shadow: var(--box-shadow-card);
+  line-height: 1rem;
+  box-shadow: var(--box-shadow);
+}
+
+button[loading]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: inherit;
+  border-radius: inherit;
+}
+
+button[loading]::after {
+  content: '';
+  position: absolute;
+  width: var(--spinner-width);
+  height: calc(var(--spinner-width) / 2);
+  border: var(--spinner-thickness) solid var(--text);
+  border-bottom: 0;
+  border-top-right-radius: var(--spinner-width);
+  border-top-left-radius: var(--spinner-width);
+  margin-bottom: calc(var(--spinner-width) / 2);
 }
 
 button > i {
@@ -30,6 +55,7 @@ button::-moz-focus-inner {
   color: var(--text);
   padding: 0em;
   height: auto;
+  box-shadow: none;
 }
 
 .btn-dropdown:hover {
@@ -40,12 +66,7 @@ button::-moz-focus-inner {
   background-color: var(--background);
   color: var(--text);
   border-radius: var(--border-radius-sm);
-  padding: 0em;
   width: 4em;
-}
-
-body.light .btn-option {
-  filter: var(--brightness-filter-dark);
 }
 
 .btn-option:hover {
@@ -61,6 +82,10 @@ body.light .btn-option:hover {
   color: var(--background);
 }
 
+body.light .btn-option[selected] {
+  color: var(--background-light);
+}
+
 .btn-option[selected]:hover,
 body.light .btn-option[selected] {
   filter: none;
@@ -70,10 +95,9 @@ body.light .btn-option[selected] {
 .btn-color {
   width: var(--button-height-md);
   height: var(--button-height-md);
-  border: 2px solid var(--text);
-  border-radius: 50%;
   padding: 0;
   z-index: var(--z-index-color-button);
+  box-shadow: var(--box-shadow);
 }
 
 .dialog-arrow[selected]::after {
@@ -85,17 +109,21 @@ body.light .btn-option[selected] {
   position: absolute;
   content: '';
   top: calc(50% - var(--arrow-size));
-  left: calc(100% + var(--spacing-lg) * 1.9);
+  left: calc(100% + var(--spacing-lg) * 1.5);
 }
 
 #theme-select.dialog-arrow[selected]::after {
-  right: calc(-1 * (var(--spacing) + var(--arrow-size)));
+  right: calc(-1 * (var(--spacing-md) + var(--arrow-size)));
   left: unset;
 }
 
 #theme-select.dialog-arrow[selected]:hover::after {
   /* The filter on the button changes the brightness of the arrow as well */
   filter: brightness(85%);
+}
+
+body.light #theme-select.dialog-arrow[selected]:hover::after {
+  filter: none;
 }
 
 button[data-color="background"] {
@@ -182,7 +210,8 @@ body.light .btn-dialog > i {
 }
 
 .btn-dialog > i {
-  transform: scale(0.8);
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
 }
 
 .btn-dialog[selected] > i {
@@ -211,6 +240,10 @@ body.light .btn-primary {
   filter: var(--brightness-filter);
 }
 
+body.light .btn-secondary:hover {
+  filter: none;
+}
+
 #colorpicker-custom, #colorpicker-undo {
   border-radius: var(--border-radius-sm);
   height: var(--button-height-sm);
@@ -222,14 +255,6 @@ body.light #colorpicker-custom {
 
 #colorpicker-custom:hover, #colorpicker-undo:hover {
   filter: brightness(85%);
-}
-
-#colorpicker-custom {
-  background-color: var(--text);
-}
-
-#colorpicker-custom:hover {
-  background-color: var(--text);
 }
 
 #theme-select {

@@ -81,37 +81,28 @@ body.light .separator {
   cursor: pointer;
 }
 
-#font-size-option {
-  display: none;
-}
-
-#user-chrome-option[selected] + #font-size-option {
-  display: flex;
-}
-
 #debugging-version {
   padding: var(--spacing-xsm) var(--spacing-md);
   color: var(--background);
   background-color: var(--accent-secondary);
-  border-radius: var(--border-radius);
-  font-size: var(--font-size-md);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-sm);
 }
 
 #debugging-output {
     padding: 10px;
     width: 100%;
-    min-width: var(--content-width);
     height: 150px;
     background: rgba(0,0,0,0.3);
     color: var(--text);
     border: none;
     box-sizing: border-box;
     font-weight: bold;
-    font-size: var(--font-size-md);
+    font-size: var(--font-size-sm);
     border-radius: var(--border-radius-sm);
     resize: none;
 }
 
 body.light #debugging-output {
-  background-color: rgba(0,0,0,0.1);
+  background-color: rgba(0,0,0,0.04);
 }

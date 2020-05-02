@@ -1,30 +1,14 @@
 import { MESSAGES } from '../../config';
-import { IPywalColors } from '../../definitions';
+import {
+  IPywalColors,
+  INativeAppMessage,
+  INativeAppMessageCallbacks
+} from '../../definitions';
 
 /* Interface for the messages sent to the native messaging host. */
 interface INativeAppRequest {
   action: string;
   target?: string;
-}
-
-/* Interface for the messages received from the native messaging host. */
-export interface INativeAppMessage {
-  action: string;
-  success: boolean;
-  error?: string;
-  data?: string;
-  [key: string]: any;
-}
-
-export interface INativeAppMessageCallbacks {
-  connected: () => void,
-  updateNeeded: () => void,
-  disconnected: () => void,
-  version: (version: string) => void,
-  output: (message: string) => void,
-  colorscheme: (colorscheme: IPywalColors) => void,
-  cssToggleSuccess: (target: string, enabled: boolean) => void,
-  cssToggleFailed: (error: string) => void,
 }
 
 /**
@@ -50,8 +34,7 @@ export class NativeApp {
   }
 
   private logError(error: string) {
-    this.callbacks.output(error);
-    console.error(error);
+    this.callbacks.output(error, true);
   }
 
   private getData(message: INativeAppMessage) {
@@ -65,6 +48,7 @@ export class NativeApp {
 
   private handleCssToggleResponse(message: INativeAppMessage, enabled: boolean) {
     const target = this.getData(message);
+    const error = message['error'];
 
     if (!target) {
       this.logError(`Custom CSS was applied successfully, but no target was specified`);
@@ -72,9 +56,9 @@ export class NativeApp {
     }
 
     if (message.success) {
-      this.callbacks.cssToggleSuccess(target, enabled);
+      this.callbacks.cssToggleSuccess(target);
     } else {
-      this.callbacks.cssToggleFailed(message.error);
+      this.callbacks.cssToggleFailed(target, error);
     }
   }
 

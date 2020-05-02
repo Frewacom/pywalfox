@@ -1,12 +1,15 @@
 :root {
   --font: sans-serif;
+  --font-size-sm: 0.75rem;
+  --font-size-md: 0.82rem;
   --font-size: 0.85rem;
-  --font-size-sm: calc(var(--font-size) * 0.9);
-  --font-size-lg: calc(var(--font-size) * 1.25);
-  --font-size-md: calc(var(--font-size) * 0.95);
+  --font-size-lg: 1.08rem;
 
-  --border-radius: 15px;
-  --border-radius-sm: 6px;
+  --border-radius: 7px;
+  --border-radius-sm: 3px;
+
+  --spinner-width: 1em;
+  --spinner-thickness: 0.2em;
 
   --spacing: 1em;
   --spacing-xxsm: 0.1em;
@@ -19,16 +22,20 @@
   --brightness-filter: brightness(120%);
   --brightness-filter-dark: brightness(90%);
   --brightness-filter-dark-hover: brightness(85%);
-  --box-shadow: 0px 2px 20px #0000007a;
+  --box-shadow: 0px 2px 10px 1px rgba(0,0,0,0.2);
   --box-shadow-card: 2px 4px 10px #00000012;
+  --box-shadow-highlight: 0px 2px 12px 3px rgba(0,0,0,0.4);
   --transition-time: 0.1s;
 
   --arrow-size: 1em;
-  --button-height: 3em;
-  --button-height-sm: 2.5em;
-  --button-height-md: 2.8em;
-  --content-width: 55em;
-  --dialog-width: 7em;
+  --button-height: 2.9em;
+  --button-height-md: 2.7em;
+  --button-height-sm: 2.4em;
+  --icon-size-sm: 1.2em;
+  --icon-size: 1.35em;
+  --icon-size-lg: 1.7em;
+  --content-width: 52em;
+  --dialog-width: 7.2em;
   --dialog-offset: calc(var(--content-width) + var(--spacing-lg));
 
   --z-index-dialog: 50;
@@ -46,8 +53,12 @@
 }
 
 :root body.light {
-  --background: #eeeeee;
+  --background: #EDEDF0;
   --background-light: #ffffff;
   --foreground: #333;
   --text: #252525;
+
+  --box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+  --box-shadow-card: 0 1px 4px 0 rgba(12, 12, 13, 0.1);
+  --box-shadow-highlight: var(--box-shadow);
 }
