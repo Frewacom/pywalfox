@@ -116,6 +116,7 @@ export class Colorpicker extends Dialog {
     const resetIndex = this.resetElement.getAttribute('data-color-index');
     const selectedIndex = this.selectedElement.getAttribute('data-color-index');
     if (resetIndex !== selectedIndex) {
+      this.updatePaletteColor(this.resetElement);
       this.highlightSelectedColor(this.resetElement);
       this.selectedElement = null;
     }
@@ -145,6 +146,7 @@ export class Colorpicker extends Dialog {
       return;
     }
 
+    // TODO: The color index should be based on the selected color, not the template
     const targetColor = this.target.getAttribute('data-color');
     const colorIndex = template.palette[targetColor];
     const element: HTMLElement = document.querySelector(`button[data-color-index="${colorIndex}"]`);
