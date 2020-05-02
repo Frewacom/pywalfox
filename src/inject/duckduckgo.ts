@@ -34,6 +34,8 @@ function onMessage(message: IExtensionMessage) {
   }
 }
 
+// TODO: Perhaps it is better to just query local storage directly and only
+//       setup listeners, etc if it is actually enabled.
 browser.runtime.onMessage.addListener(onMessage);
 requestTheme();
 

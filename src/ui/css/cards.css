@@ -46,18 +46,31 @@
 
 .card[open] .card-content {
   display: flex;
-  border-top: 1px solid var(--lighter-background-hover);
 }
 
-.card[open] .card-content.sticky {
+.card[open] .card-header {
+  border-bottom: 1px solid var(--lighter-background-hover);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.card[open] .card-content-header {
   border-top: none;
+}
+
+.card-content-header {
+  background-color: var(--background);
+  border-top: none;
+  box-shadow: var(--box-shadow);
+  font-size: var(--font-size-md);
+  padding: var(--spacing-sm) var(--spacing-card);
 }
 
 .card-subsection {
   padding: var(--spacing) var(--spacing);
   border-left: 0.4em solid var(--accent-primary);
   background-color: var(--lighter-background);
-  border-bottom: 1px solid var(--lighter-background);
+  border-bottom: 1px solid var(--lighter-background-hover);
 }
 
 .card-help-title {
@@ -80,11 +93,10 @@
   padding-bottom: var(--spacing-sm);
 }
 
-.card-content-sm {
-  font-size: var(--font-size-md);
-  padding: var(--spacing-sm) var(--spacing-card);
-}
-
 .card-content-lg {
   padding: var(--spacing) var(--spacing);
+}
+
+.no-border-bottom {
+  border-bottom: none !important;
 }

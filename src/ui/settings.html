@@ -130,34 +130,65 @@
           </div>
         </section>
         <section class="setting-card card expand space-between margin-bottom-lg">
-          <div class="setting-card-header card-header expand row v-center space-between clickable">
+          <div class="setting-card-header card-header expand row v-center space-between clickable no-border-bottom">
             <div class="box">
               <i icon="edit"></i>
               <p class="card-title">Palette template</p>
             </div>
             <i icon="chevron"></i>
           </div>
+          <div class="card-content card-content-header row expand v-center space-between sticky">
+            <div class="box">
+              <button class="btn-primary btn-sm margin-right-sm">Save template</button>
+              <button class="btn-secondary btn-sm margin-right-sm">Set from current palette</button>
+              <button class="btn-secondary btn-sm">Reset to default</button>
+            </div>
+            <button class="btn-secondary btn-sm btn-h-sm">
+              <i icon="help-circle"></i>
+              Help
+            </button>
+          </div>
+          <div class="card-content card-subsection column expand align-left" id="palette-template-help">
+            <h3 class="card-help-title">Creating a custom palette</h3>
+            <p class="card-help-description">
+              The palette is a collection of colors used by the theme template to set the colors
+              for the different elements of the theme. By default, the palette consists of six
+              different colors, but you are free to add more as you see fit.
+              <br><br>
+              Every palette color (both default and custom) is available to use in the "Theme template" section below.
+            </p>
+            <a class="row v-center margin-top btn-lighter"
+               href="https://github.com/Frewacom/Pywalfox#palette-templates"
+               target="_blank"
+               rel="noopener noreferrer">
+              <i icon="external-link"></i>
+              Palette template guide
+            </a>
+          </div>
           <div class="card-content column expand">
 
           </div>
         </section>
         <section class="setting-card card expand space-between margin-bottom-lg">
-          <div class="setting-card-header card-header expand row v-center space-between clickable">
+          <div class="setting-card-header card-header expand row v-center space-between clickable no-border-bottom">
             <div class="box">
               <i icon="template"></i>
               <p class="card-title">Theme template</p>
             </div>
             <i icon="chevron"></i>
           </div>
-          <div class="card-content card-content-sm row expand v-center space-between sticky">
+          <div class="card-content card-content-header row expand v-center space-between sticky">
             <div class="box">
               <button class="btn-primary btn-sm margin-right-sm">Save template</button>
-              <button class="btn-lighter btn-sm">Reset to default</button>
+              <button class="btn-secondary btn-sm">Reset to default</button>
             </div>
-            <button class="btn-lighter btn-sm">Help</button>
+            <button class="btn-secondary btn-sm btn-h-sm">
+              <i icon="help-circle"></i>
+              Help
+            </button>
           </div>
-          <div class="card-content card-subsection column expand align-left">
-            <h3 class="card-help-title">How does it work?</h3>
+          <div class="card-content card-subsection column expand align-left" id="theme-template-help">
+            <h3 class="card-help-title">Creating a custom theme template</h3>
             <p class="card-help-description">
               Custom theme templates allows you to customize each element individually by telling
               Pywalfox which palette color should be used for a specific element.
@@ -165,28 +196,40 @@
               If you want to use a different color than the ones provided (background, accent primary, etc),
               you can add another color in the "Palette template" section above.
             </p>
-            <a class="row v-center margin-top btn-lighter" href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme#colors" target="_blank" rel="noopener noreferrer">
-              <i icon="external-link"></i>
-              Visual description of theme elements
-            </a>
+            <div class="box expand row v-center align-left">
+              <a class="row v-center margin-top btn-lighter margin-right-sm"
+                 href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme#colors"
+                 target="_blank"
+                 rel="noopener noreferrer">
+                <i icon="external-link"></i>
+                Visual description of theme elements
+              </a>
+              <a class="row v-center margin-top btn-lighter"
+                href="https://github.com/Frewacom/Pywalfox#theme-templates"
+                target="_blank"
+                rel="noopener noreferrer">
+                <i icon="external-link"></i>
+                Theme template guide
+              </a>
+            </div>
           </div>
           <div class="card-content column expand" id="theme-template-content"></div>
         </section>
         <section class="setting-card card expand space-between">
-          <div class="setting-card-header card-header expand row v-center space-between clickable">
+          <div class="setting-card-header card-header expand row v-center space-between clickable no-border-bottom">
             <div class="box">
               <i icon="message"></i>
               <p class="card-title">Debugging</p>
             </div>
             <i icon="chevron"></i>
           </div>
-          <div class="card-content card-content-sm card-subsection row expand space-between v-center" id="debugging-info">
+          <div class="card-content card-content-header row expand space-between v-center" id="debugging-info">
             <div class="box row v-center">
               <i icon="activity" class="icon-sm"></i>
               <p id="debugging-connected" class="margin-right-sm">Disconnected</p>
               <p id="debugging-version">version not set</p>
             </div>
-            <a class="row v-center btn-lighter" href="https://github.com/frewacom/pywalfox#troubleshooting" target="_blank" rel="noopener noreferrer">
+            <a class="row v-center btn-secondary" href="https://github.com/frewacom/pywalfox#troubleshooting" target="_blank" rel="noopener noreferrer">
               <i icon="external-link"></i>
               Troubleshooting guide
             </a>

@@ -270,6 +270,11 @@ body.light .btn-secondary:hover {
   font-size: var(--font-size-sm);
 }
 
+.btn-h-sm {
+  padding-left: var(--spacing);
+  padding-right: var(--spacing);
+}
+
 #colorpicker-custom, #colorpicker-undo {
   border-radius: var(--border-radius-sm);
   height: var(--button-height-sm);

@@ -25,10 +25,7 @@
 .sticky {
   position: sticky;
   top: 0;
-  background-color: var(--background);
   z-index: 100;
-  border-top: none;
-  box-shadow: var(--box-shadow);
 }
 
 .indent {
