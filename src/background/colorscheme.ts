@@ -1,4 +1,4 @@
-import { DEFAULT_PALETTE } from '../config';
+import { DEFAULT_PALETTE, DUCKDUCKGO_THEME_ID } from '../config';
 import {
   IPalette,
   IPywalColors,
@@ -95,7 +95,7 @@ export function generateDDGTheme(colorscheme: IColorscheme) {
     { id: 'kx',  value: stripHash(colorscheme.palette.accentSecondary) },   // Result link url
     { id: 'k8',  value: 'f8f8f8' },                                         // Result description
     { id: 'k21', value: stripHash(colorscheme.palette.backgroundLight) },   // Result hover, dropdown, etc.
-    { id: 'kae', value: 'pywalfox' },                                       // The theme name
+    { id: 'kae', value: DUCKDUCKGO_THEME_ID },                              // The theme name
   ];
 }
 

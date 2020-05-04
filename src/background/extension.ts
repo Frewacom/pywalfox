@@ -43,7 +43,7 @@ export class Extension {
       disconnected: this.nativeAppDisconnected.bind(this),
       version: this.validateVersion.bind(this),
       output: UI.sendDebuggingOutput,
-      colorscheme: this.updateThemes.bind(this),
+      colorscheme: this.onPywalColorsReceived.bind(this),
       cssToggleSuccess: this.cssToggleSuccess.bind(this),
       cssToggleFailed: this.cssToggleFailed.bind(this),
     });
@@ -115,7 +115,7 @@ export class Extension {
         break;
       case EXTENSION_MESSAGES.DDG_THEME_GET:
         const theme = this.state.getDDGTheme();
-        theme ? DDG.setTheme(theme) : DDG.resetTheme();
+        DDG.setTheme(theme);
         break;
       case EXTENSION_MESSAGES.PYWAL_COLORS_GET:
         var pywalColors = this.state.getPywalColors();
@@ -156,6 +156,11 @@ export class Extension {
     }
   }
 
+  private onPywalColorsReceived(pywalColors: IPywalColors) {
+    UI.sendDebuggingOutput('Pywal colors was fetched from daemon and applied successfully');
+    this.updateThemes(pywalColors);
+  }
+
   private createSettingsPage() {
     let currentTheme = null;
     if (this.state.getEnabled()) {
@@ -187,9 +192,10 @@ export class Extension {
 
     this.setBrowserTheme(colorscheme.browser);
     this.settingsPage.setTheme(extensionTheme);
+
+    // TODO: Do we have to send this on each theme update?
     UI.sendPywalColors(pywalColors);
     UI.sendTemplate(template);
-    UI.sendDebuggingOutput('Pywal colors was fetched from daemon and applied successfully');
 
     if (this.state.getDDGThemeEnabled()) {
       DDG.setTheme(ddgTheme);
@@ -197,7 +203,6 @@ export class Extension {
 
     this.state.setThemes(pywalColors, colorscheme, extensionTheme, ddgTheme);
     this.state.setApplied(true);
-
     !this.state.getEnabled() && this.state.setEnabled(true);
   }
 

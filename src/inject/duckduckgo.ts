@@ -1,4 +1,4 @@
-import { EXTENSION_MESSAGES } from '../config';
+import { EXTENSION_MESSAGES, DUCKDUCKGO_THEME_ID } from '../config';
 import { IDuckDuckGoTheme, IExtensionMessage } from '../definitions';
 import { requestTheme } from '../communication/duckduckgo';
 
@@ -23,22 +23,29 @@ function onMessage(message: IExtensionMessage) {
   switch (message.action) {
     case EXTENSION_MESSAGES.DDG_THEME_SET:
       const theme = message.data;
-      theme && applyTheme(theme);
+      const currentTheme = getCurrentTheme();
+      if (!theme ) {
+        if (currentTheme === DUCKDUCKGO_THEME_ID) {
+          resetTheme();
+        }
+      } else {
+        if (currentTheme !== DUCKDUCKGO_THEME_ID) {
+          applyTheme(theme);
+        }
+      }
       break;
     case EXTENSION_MESSAGES.DDG_THEME_RESET:
-      if (getCurrentTheme() === 'pywalfox') {
+      if (getCurrentTheme() === DUCKDUCKGO_THEME_ID) {
         resetTheme();
       }
+      break;
     default:
       console.error(`Received unhandled action: ${message.action}`);
   }
 }
 
-// TODO: Perhaps it is better to just query local storage directly and only
-//       setup listeners, etc if it is actually enabled.
-browser.runtime.onMessage.addListener(onMessage);
 requestTheme();
-
+browser.runtime.onMessage.addListener(onMessage);
 console.debug('Pywalfox content script loaded');
 
 

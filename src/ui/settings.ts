@@ -170,9 +170,7 @@ function onHelpToggle(target: HTMLElement) {
 function updateOptionButtonState(optionData: IOptionSetData) {
   const target: HTMLElement = optionButtonsLookup[optionData.option];
 
-  if (!target) {
-    console.error(`Tried to set invalid option: ${optionData.option}`);
-  } else {
+  if (target) {
     setOptionEnabled(target, optionData.enabled);
   }
 }
@@ -198,7 +196,7 @@ function createThemeTemplateContent() {
         </div>
         <button data-color="background" class="btn-color dialog-arrow"></button>
       </div>
-`;
+    `;
   });
 }
 
@@ -217,7 +215,6 @@ function setInitialData(data: IInitialData) {
     themepicker.setSelectedMode(data.themeMode);
   }
 
-  console.log(data.options);
   for (const optionData of data.options) {
     updateOptionButtonState(optionData);
   }
@@ -225,18 +222,7 @@ function setInitialData(data: IInitialData) {
   setDebuggingInfo(data.debuggingInfo);
 }
 
-fetchButton.addEventListener('click', onFetchClicked);
-disableButton.addEventListener('click', onDisableClicked);
-themeButton.addEventListener('click', onThemeClicked);
-colorButtons.forEach((button: HTMLElement) => button.addEventListener('click', onColorClicked));
-optionButtons.forEach((button: HTMLElement) => button.addEventListener('click', onOptionClicked));
-settingCardHeaders.forEach((header: HTMLElement) => header.addEventListener('click', () => onSettingCardClicked(header)));
-overlay.addEventListener('click', onOverlayClicked);
-fontSizeSaveButton.addEventListener('click', onFontSizeSave);
-helpToggleButtons.forEach((button: HTMLElement) => button.addEventListener('click', () => onHelpToggle(button)));
-browser.theme.onUpdated.addListener(setCurrentTheme);
-
-browser.runtime.onMessage.addListener((message: IExtensionMessage) => {
+function handleExtensionMessage(message: IExtensionMessage) {
   switch (message.action) {
     case EXTENSION_MESSAGES.INITIAL_DATA_SET:
       setInitialData(message.data);
@@ -262,7 +248,21 @@ browser.runtime.onMessage.addListener((message: IExtensionMessage) => {
       setDebuggingInfo(message.data);
       break;
   }
-});
+}
+
+overlay.addEventListener('click', onOverlayClicked);
+fetchButton.addEventListener('click', onFetchClicked);
+themeButton.addEventListener('click', onThemeClicked);
+disableButton.addEventListener('click', onDisableClicked);
+fontSizeSaveButton.addEventListener('click', onFontSizeSave);
+
+colorButtons.forEach((button: HTMLElement) => button.addEventListener('click', onColorClicked));
+optionButtons.forEach((button: HTMLElement) => button.addEventListener('click', onOptionClicked));
+helpToggleButtons.forEach((button: HTMLElement) => button.addEventListener('click', () => onHelpToggle(button)));
+settingCardHeaders.forEach((header: HTMLElement) => header.addEventListener('click', () => onSettingCardClicked(header)));
+
+browser.theme.onUpdated.addListener(setCurrentTheme);
+browser.runtime.onMessage.addListener(handleExtensionMessage);
 
 setCurrentTheme();
 createOptionButtonLookup();

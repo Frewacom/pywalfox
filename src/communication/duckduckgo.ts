@@ -9,7 +9,7 @@ async function sendMessage(message: IExtensionMessage) {
 }
 
 export function requestTheme() {
-  sendMessage({ action: EXTENSION_MESSAGES.DDG_THEME_GET });
+  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.DDG_THEME_GET });
 }
 
 export function setTheme(theme: IDuckDuckGoTheme) {
