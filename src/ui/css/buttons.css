@@ -260,24 +260,31 @@ body.light .btn-dialog > i {
   color: var(--background);
 }
 
-body.light .btn-primary {
-  color: var(--text);
-}
-
-.btn-primary:hover {
-  filter: var(--brightness-filter);
-}
-
 .btn-secondary {
-  background-color: var(--background-light);
-  color: var(--text);
+  background-color: var(--accent-secondary);
+  color: var(--background);
 }
 
+.btn-primary:hover,
 .btn-secondary:hover {
   filter: var(--brightness-filter);
 }
 
-body.light .btn-secondary:hover {
+body.light .btn-primary,
+body.light .btn-secondary {
+  color: var(--text);
+}
+
+.btn-default {
+  background-color: var(--background-light);
+  color: var(--text);
+}
+
+.btn-default:hover {
+  filter: var(--brightness-filter);
+}
+
+body.light .btn-default:hover {
   filter: none;
 }
 
