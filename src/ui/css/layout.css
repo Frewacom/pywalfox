@@ -38,10 +38,10 @@
 .indent::before {
   content: '';
   width: calc(var(--spacing-lg) - 0.6em);
-  height: 90%;
+  height: 60%;
   background-color: transparent;
   position: absolute;
-  left: calc(-1 * var(--spacing-lg));
+  left: calc(-1 * var(--spacing-card));
   border-left: 2px solid var(--accent-secondary);
   border-bottom: 2px solid var(--accent-secondary);
   bottom: 20%;
@@ -112,6 +112,10 @@
 
 .margin-bottom-sm {
   margin-bottom: var(--spacing-sm);
+}
+
+.margin-bottom-xsm {
+  margin-bottom: var(--spacing-xsm);
 }
 
 .margin-bottom-lg {

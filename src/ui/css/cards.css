@@ -6,7 +6,7 @@
 }
 
 .card-header {
-  padding: var(--spacing-md) var(--spacing-card);
+  padding: var(--spacing-sm) var(--spacing-card);
   box-sizing: border-box;
   transition: background-color var(--transition-time);
   border-radius: var(--border-radius);

@@ -40,7 +40,7 @@ export class Colorpicker extends Dialog {
 
   private addColorElement(index: number) {
     const button = <HTMLElement>document.createElement('button');
-    button.setAttribute('class', 'btn-palette-color');
+    button.setAttribute('class', 'btn btn-palette-color');
     button.setAttribute('data-color-index', index.toString());
     button.addEventListener('click', this.onSetColor.bind(this));
     this.grid.appendChild(button);

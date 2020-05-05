@@ -1,13 +1,21 @@
-input {
+input, .input-container {
   background-color: var(--background);
   border-radius: var(--border-radius-sm);
   height: var(--button-height);
   padding: 0 var(--spacing-sm);
   border: none;
   color: var(--text);
+  font-weight: bold;
+}
+
+.input-container {
+  padding: 0 var(--spacing-xsm);
+  overflow: hidden;
+  box-shadow: var(--box-shadow);
 }
 
 input[type=number] {
   text-align: center;
-  width: 4em;
+  width: 2em;
+  -moz-appearance:textfield;
 }

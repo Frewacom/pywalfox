@@ -14,14 +14,14 @@
           <h1 id="logo">Pywalfox<span id="version">v2.0.0</span></h1>
         </div>
         <div class="box">
-          <button class="btn-secondary btn-header margin-right" id="disable">Disable theme</button>
-          <button class="btn-primary btn-header" id="fetch">Fetch pywal colors</button>
+          <button class="btn btn-secondary btn-header margin-right" id="disable">Disable theme</button>
+          <button class="btn btn-primary btn-header" id="fetch">Fetch pywal colors</button>
           <div class="separator"></div>
-          <button class="btn-secondary btn-header dialog-arrow" id="theme-select"></button>
+          <button class="btn btn-secondary btn-header dialog-arrow" id="theme-select"></button>
           <aside class="dialog" id="themepicker">
-            <button class="btn-dialog" data-theme="dark"><i icon="moon"></i>Dark</button>
-            <button class="btn-dialog" data-theme="light"><i icon="sun"></i>Light</button>
-            <button class="btn-dialog" data-theme="auto"><i icon="auto"></i>Auto</button>
+            <button class="btn btn-sm btn-dialog margin-bottom-xsm" data-theme="dark"><i icon="moon"></i>Dark</button>
+            <button class="btn btn-sm btn-dialog margin-bottom-xsm" data-theme="light"><i icon="sun"></i>Light</button>
+            <button class="btn btn-sm btn-dialog" data-theme="auto"><i icon="auto"></i>Auto</button>
           </aside>
         </div>
       </header>
@@ -29,11 +29,11 @@
         <section class="setting-card card expand space-between margin-bottom-lg" open>
           <aside class="dialog" id="colorpicker">
             <div id="colorpicker-grid"></div>
-            <div class="box" id="colorpicker-custom-container">
-              <label for="colorpicker-custom" id="colorpicker-custom-label">Custom</label>
+            <div class="box btn btn-secondary btn-sm" id="colorpicker-custom-container">
+              <label for="colorpicker-custom" id="colorpicker-custom-label" class="clickable">Custom</label>
               <input id="colorpicker-custom" class="clickable" type="color">
             </div>
-            <button class="btn-primary margin-top-sm" id="colorpicker-undo">Undo</button>
+            <button class="btn btn-primary btn-sm margin-top-sm" id="colorpicker-undo">Undo</button>
           </aside>
           <div class="setting-card-header card-header expand row v-center space-between clickable">
             <div class="box">
@@ -58,14 +58,14 @@
                 <p class="setting-title">Use DuckDuckGo theme?</p>
                 <p class="setting-description">Applies matching theme to all DuckDuckGo-pages</p>
               </div>
-              <button class="btn-option" data-option="duckduckgo">No</button>
+              <button class="btn btn-darker" data-option="duckduckgo">No</button>
             </div>
             <div class="setting row expand space-between v-center" id="user-chrome-option">
               <div class="box column align-left">
                 <p class="setting-title">Use included userChrome.css?</p>
                 <p class="setting-description">Bold text, styled dropdown and context menus</p>
               </div>
-              <button class="btn-option" data-option="userChrome" async>No</button>
+              <button class="btn btn-darker" data-option="userChrome" async>No</button>
             </div>
             <div class="setting row expand space-between v-center indent" id="font-size-option">
               <div class="box column align-left">
@@ -74,7 +74,7 @@
               </div>
               <div class="box row v-center">
                 <input type="number" min=10 max=20 id="font-size-input" class="margin-right-sm">
-                <button class="btn-primary btn-option" id="font-size-save" async>Set</button>
+                <button class="btn btn-primary btn-darker" id="font-size-save" async>Set</button>
               </div>
             </div>
             <div class="setting row expand space-between v-center">
@@ -82,7 +82,7 @@
                 <p class="setting-title">Use included userContent.css</p>
                 <p class="setting-description">Globally hides the page scrollbar</p>
               </div>
-              <button class="btn-option" data-option="userContent" async>No</button>
+              <button class="btn btn-darker" data-option="userContent" async>No</button>
             </div>
           </div>
         </section>
@@ -96,11 +96,11 @@
           </div>
           <div class="card-content card-content-header row expand v-center space-between sticky">
             <div class="box">
-              <button class="btn-primary btn-sm margin-right-sm">Save palette</button>
-              <button class="btn-secondary btn-sm margin-right-sm">Set from current palette</button>
-              <button class="btn-secondary btn-sm">Reset to default</button>
+              <button class="btn btn-primary btn-sm margin-right-sm">Save palette</button>
+              <button class="btn btn-secondary btn-sm margin-right-sm">Set from current palette</button>
+              <button class="btn btn-secondary btn-sm">Reset to default</button>
             </div>
-            <button class="btn-secondary btn-sm btn-h-sm" data-help="palette-template-help">
+            <button class="btn btn-secondary btn-sm btn-h-sm" data-help="palette-template-help">
               <i icon="help-circle"></i>
               Help
             </button>
@@ -115,7 +115,7 @@
               If you want to change the color for a certain element of the browser theme, you can do that in
               the "Theme template"-section below.
             </p>
-            <a class="row v-center margin-top btn-lighter"
+            <a class="row v-center margin-top btn btn-lighter"
                href="https://github.com/Frewacom/Pywalfox#palette-templates"
                target="_blank"
                rel="noopener noreferrer">
@@ -135,10 +135,10 @@
           </div>
           <div class="card-content card-content-header row expand v-center space-between sticky">
             <div class="box">
-              <button class="btn-primary btn-sm margin-right-sm">Save template</button>
-              <button class="btn-secondary btn-sm">Reset to default</button>
+              <button class="btn btn-primary btn-sm margin-right-sm">Save template</button>
+              <button class="btn btn-secondary btn-sm">Reset to default</button>
             </div>
-            <button class="btn-secondary btn-sm btn-h-sm" data-help="theme-template-help">
+            <button class="btn btn-secondary btn-sm btn-h-sm" data-help="theme-template-help">
               <i icon="help-circle"></i>
               Help
             </button>
@@ -153,14 +153,14 @@
               you can add another color in the "Palette template" section above.
             </p>
             <div class="box expand row v-center align-left">
-              <a class="row v-center margin-top btn-lighter margin-right-sm"
+              <a class="row v-center margin-top btn btn-lighter margin-right-sm"
                  href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme#colors"
                  target="_blank"
                  rel="noopener noreferrer">
                 <i icon="external-link"></i>
                 Visual description of theme elements
               </a>
-              <a class="row v-center margin-top btn-lighter"
+              <a class="row v-center margin-top btn btn-lighter"
                 href="https://github.com/Frewacom/Pywalfox#theme-templates"
                 target="_blank"
                 rel="noopener noreferrer">
@@ -185,7 +185,10 @@
               <p id="debugging-connected" class="margin-right-sm">Disconnected</p>
               <p id="debugging-version">version not set</p>
             </div>
-            <a class="row v-center btn-secondary" href="https://github.com/frewacom/pywalfox#troubleshooting" target="_blank" rel="noopener noreferrer">
+            <a class="row v-center btn btn-secondary btn-sm"
+               href="https://github.com/frewacom/pywalfox#troubleshooting"
+               target="_blank"
+               rel="noopener noreferrer">
               <i icon="external-link"></i>
               Troubleshooting guide
             </a>

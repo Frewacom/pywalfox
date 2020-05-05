@@ -206,31 +206,35 @@ function createThemeTemplateContent() {
           <p class="setting-title">${item.title}</p>
           <p class="setting-description">${item.description}</p>
         </div>
-        <button data-color="background" class="btn-color dialog-arrow"></button>
+        <button data-color="background" class="btn btn-color dialog-arrow"></button>
       </div>
     `;
   });
 }
 
-function createPaletteTemplateContent() {
+function createPaletteContent() {
   PALETTE_TEMPLATE_DATA.forEach((item: IPaletteTemplateItem) => {
-    paletteTemplateContent.innerHTML += `
-      <div class="setting row expand space-between v-center">
-        <div class="box column align-left">
-          <p class="setting-title">${item.title}</p>
-          <p class="setting-description">${item.description}</p>
-        </div>
-        <input type="number" data-color="${item.target}" min="0" max="${PYWAL_PALETTE_LENGTH}"></input>
-      </div>
-    `;
-
     paletteContent.innerHTML += `
       <div class="setting row expand space-between v-center">
         <div class="box column align-left">
           <p class="setting-title">${item.title}</p>
           <p class="setting-description">${item.description}</p>
         </div>
-        <button data-color="${item.target}" class="btn-color dialog-arrow"></button>
+        <button data-color="${item.target}" class="btn btn-color dialog-arrow"></button>
+      </div>
+    `;
+
+    paletteTemplateContent.innerHTML += `
+      <div class="setting row expand space-between v-center">
+        <div class="box column align-left">
+          <p class="setting-title">${item.title}</p>
+          <p class="setting-description">${item.description}</p>
+        </div>
+        <div class="input-container row v-center">
+          <button class="btn btn-control">-</button>
+          <input type="number" data-color="${item.target}" min="0" max="${PYWAL_PALETTE_LENGTH - 1}"></input>
+          <button class="btn btn-control">+</button>
+        </div>
       </div>
     `;
   });
@@ -303,8 +307,8 @@ browser.theme.onUpdated.addListener(setCurrentTheme);
 browser.runtime.onMessage.addListener(handleExtensionMessage);
 
 setCurrentTheme();
+createPaletteContent();
 createOptionButtonLookup();
 createThemeTemplateContent();
-createPaletteTemplateContent();
 
 Messenger.requestInitialData();

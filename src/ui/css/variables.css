@@ -1,6 +1,6 @@
 body {
   --font: sans-serif;
-  --font-size-sm: 0.75rem;
+  --font-size-sm: 0.76rem;
   --font-size-md: 0.82rem;
   --font-size: 0.85rem;
   --font-size-lg: 1.08rem;
@@ -8,35 +8,38 @@ body {
   --border-radius: 7px;
   --border-radius-sm: 3px;
 
-  --spinner-width: 1em;
-  --spinner-thickness: 0.2em;
+  --spinner-width: 1rem;
+  --spinner-thickness: 0.2rem;
 
-  --spacing: 1em;
-  --spacing-xxsm: 0.1em;
-  --spacing-xsm: 0.3em;
-  --spacing-sm: 0.65em;
-  --spacing-md: 0.75em;
-  --spacing-card: 1.2em;
-  --spacing-lg: 1.5em;
-  --spacing-xlg: 1.8em;
+  --spacing: 1rem;
+  --spacing-xxsm: 0.1rem;
+  --spacing-xsm: 0.3rem;
+  --spacing-sm: 0.55rem;
+  --spacing-md: 0.75rem;
+  --spacing-card: 1.1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xlg: 1.8rem;
 
   --brightness-filter: brightness(120%);
   --brightness-filter-dark: brightness(90%);
   --brightness-filter-dark-hover: brightness(85%);
+
   --box-shadow: 0px 2px 10px 1px rgba(0,0,0,0.2);
   --box-shadow-card: 2px 4px 10px #00000012;
   --box-shadow-highlight: 0px 2px 12px 3px rgba(0,0,0,0.4);
-  --transition-time: 0.1s;
 
-  --arrow-size: 1em;
-  --button-height: 2.83em;
-  --button-height-md: 2.7em;
-  --button-height-sm: 2.4em;
-  --icon-size-sm: 1.2em;
-  --icon-size: 1.35em;
-  --icon-size-lg: 1.7em;
-  --content-width: 52em;
-  --dialog-width: 7.2em;
+  --button-height-sm: 2.2rem;
+  --button-height-md: 2.3rem;
+  --button-height: 2.5rem;
+
+  --icon-size-sm: 1.1rem;
+  --icon-size: 1.4rem;
+  --icon-size-lg: 1.7rem;
+
+  --arrow-size: 1rem;
+  --content-width: 48rem;
+
+  --dialog-width: 6.2rem;
   --dialog-offset: calc(var(--content-width) + var(--spacing-lg));
 
   --z-index-dialog: 50;
@@ -44,6 +47,8 @@ body {
   --z-index-color-button: 20;
   --z-index-header: 15;
   --z-index-overlay: 10;
+
+  --transition-time: 0.1s;
 
   --lighter-background: rgba(255,255,255,0.05);
   --lighter-background-hover: rgba(255,255,255,0.2);

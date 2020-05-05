@@ -6,7 +6,7 @@
 }
 
 .setting:hover,
-.setting[selected] {
+.setting[selected]:not(#user-chrome-option[selected]) {
   background-color: var(--lighter-background);
 }
 
