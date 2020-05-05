@@ -1,6 +1,7 @@
 import { DEFAULT_PALETTE, DUCKDUCKGO_THEME_ID } from '../config';
 import {
   IPalette,
+  IPaletteHash,
   IPywalColors,
   IColorscheme,
   IColorschemeTemplate,
@@ -25,6 +26,7 @@ export function generateColorscheme(
   }, customColors);
 
   return {
+    hash: createPaletteHash(palette),
     palette: palette,
     browser: {
       icons: palette.accentPrimary,
@@ -87,16 +89,38 @@ export function generateExtensionTheme(colorscheme: IColorscheme) {
  * @returns {IDuckDuckGoTheme} The cookies used to set the DuckDuckGo theme
  */
 export function generateDDGTheme(colorscheme: IColorscheme) {
-  return [
-    { id: 'k7',  value: stripHash(colorscheme.palette.background) },        // Background
-    { id: 'kj',  value: stripHash(colorscheme.palette.background) },        // Header background
-    { id: 'k9',  value: stripHash(colorscheme.palette.text) },              // Result link title
-    { id: 'kaa', value: stripHash(colorscheme.palette.accentPrimary) },     // Result visited link title
-    { id: 'kx',  value: stripHash(colorscheme.palette.accentSecondary) },   // Result link url
-    { id: 'k8',  value: 'f8f8f8' },                                         // Result description
-    { id: 'k21', value: stripHash(colorscheme.palette.backgroundLight) },   // Result hover, dropdown, etc.
-    { id: 'kae', value: DUCKDUCKGO_THEME_ID },                              // The theme name
-  ];
+  return {
+    hash: colorscheme.hash,
+    colors: [
+      { id: 'k7',  value: stripHashSymbol(colorscheme.palette.background) },        // Background
+      { id: 'kj',  value: stripHashSymbol(colorscheme.palette.background) },        // Header background
+      { id: 'k9',  value: stripHashSymbol(colorscheme.palette.text) },              // Result link title
+      { id: 'kaa', value: stripHashSymbol(colorscheme.palette.accentPrimary) },     // Result visited link title
+      { id: 'kx',  value: stripHashSymbol(colorscheme.palette.accentSecondary) },   // Result link url
+      { id: 'k8',  value: 'f8f8f8' },                                               // Result description
+      { id: 'k21', value: stripHashSymbol(colorscheme.palette.backgroundLight) },   // Result hover, dropdown, etc.
+      { id: 'kae', value: DUCKDUCKGO_THEME_ID },                                    // The theme name
+    ],
+  };
+}
+
+/**
+ * Creates a unique hash based on the colors in the palette,
+ * used to detect when the theme has been changed.
+ *
+ * @param {IPalette} palette
+ * @returns {string} the hash based on palette
+ */
+function createPaletteHash(palette: IPalette) {
+  const colors = Object.keys(palette);
+  colors.sort((a: string, b: string) => (a > b) ? 1 : -1);
+
+  let hash: string = '';
+  for (const key of colors) {
+    hash += stripHashSymbol(palette[key]);
+  }
+
+  return hash;
 }
 
 /**
@@ -106,7 +130,7 @@ export function generateDDGTheme(colorscheme: IColorscheme) {
  * @param {string} color
  * @returns {string} color with the first '#' removed
  */
-function stripHash(color: string) {
+function stripHashSymbol(color: string) {
   return color.substring(1);
 }
 

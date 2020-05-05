@@ -114,8 +114,13 @@ export class Extension {
         UI.sendInitialData(initialData);
         break;
       case EXTENSION_MESSAGES.DDG_THEME_GET:
-        const theme = this.state.getDDGTheme();
-        DDG.setTheme(theme);
+        const isEnabled = this.state.getDDGThemeEnabled();
+        if (isEnabled) {
+          const theme = this.state.getDDGTheme();
+          theme ? DDG.setTheme(theme): DDG.resetTheme();
+        } else {
+          DDG.resetTheme();
+        }
         break;
       case EXTENSION_MESSAGES.PYWAL_COLORS_GET:
         var pywalColors = this.state.getPywalColors();

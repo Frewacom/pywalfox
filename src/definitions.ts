@@ -10,6 +10,8 @@ export interface IPywalColors  {
   [index: number]: string;
 }
 
+export type IPaletteHash = string;
+
 export interface IPalette {
   background: string;
   textFocus: string;
@@ -73,9 +75,14 @@ export interface IColorObject {
 }
 
 export type IExtensionTheme = string;
-export type IDuckDuckGoTheme = IColorObject[];
+
+export interface IDuckDuckGoTheme {
+  hash: IPaletteHash;
+  colors: IColorObject[];
+}
 
 export interface IColorscheme {
+  hash: IPaletteHash;
   palette: IPalette;
   browser: IBrowserTheme;
 }
