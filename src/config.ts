@@ -133,6 +133,15 @@ export const MESSAGES = {
   CSS_DISABLE: "css:disable"
 };
 
+export const PALETTE_TEMPLATE_DATA = [
+  { title: 'Background', description: 'Main background color', target: 'background' },
+  { title: 'Background light', description: 'Secondary background color', target: 'backgroundLight' },
+  { title: 'Text', description: 'Main text color', target: 'text' },
+  { title: 'Text focus', description: 'Text used in the current tab, etc.', target: 'textFocus' },
+  { title: 'Accent primary', description: 'Main accent color, used for icons', target: 'accentPrimary' },
+  { title: 'Accent secondary', description: 'Mainly used for hovers and highlights', target: 'accentSecondary' },
+];
+
 export const THEME_TEMPLATE_DATA = [
   { title: 'Icons', description: 'The color of toolbar icons, excluding those in the find toolbar.' },
   { title: 'Icons attention', description: 'The color of toolbar icons in attention state, e.g. the starred bookmark icon.' },

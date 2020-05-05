@@ -4,7 +4,14 @@ import * as Messenger from './messenger';
 import { Dialog } from './dialog';
 import { Colorpicker } from './colorpicker';
 import { Themepicker } from './themepicker';
-import { EXTENSION_MESSAGES, EXTENSION_OPTIONS, THEME_TEMPLATE_DATA } from '../config';
+
+import {
+  EXTENSION_MESSAGES,
+  EXTENSION_OPTIONS,
+  THEME_TEMPLATE_DATA,
+  PALETTE_TEMPLATE_DATA,
+  PYWAL_PALETTE_LENGTH,
+} from '../config';
 
 import {
     IExtensionMessage,
@@ -14,27 +21,32 @@ import {
     INodeLookup,
     IPywalColors,
     IThemeTemplateItem,
+    IPaletteTemplateItem,
     IDebuggingInfoData,
 } from '../definitions';
 
+const optionButtons: NodeListOf<HTMLElement> = document.querySelectorAll('button[data-option]');
+const helpToggleButtons: NodeListOf<HTMLElement> = document.querySelectorAll('button[data-help]');
+const settingCardHeaders: NodeListOf<HTMLElement> = document.querySelectorAll('.setting-card-header');
+
+const overlay: HTMLElement = document.getElementById('overlay');
 const fetchButton: HTMLElement = document.getElementById('fetch');
 const disableButton: HTMLElement = document.getElementById('disable');
 const themeButton: HTMLElement = document.getElementById('theme-select');
-const colorButtons: NodeListOf<HTMLElement> = document.querySelectorAll('button[data-color]');
-const optionButtons: NodeListOf<HTMLElement> = document.querySelectorAll('button[data-option]');
-const settingCardHeaders: NodeListOf<HTMLElement> = document.querySelectorAll('.setting-card-header');
-const debuggingOutput: HTMLTextAreaElement = <HTMLTextAreaElement>document.getElementById('debugging-output');
-const debuggingConnected: HTMLElement = document.getElementById('debugging-connected');
 const debuggingVersion: HTMLElement = document.getElementById('debugging-version');
-const overlay: HTMLElement = document.getElementById('overlay');
+const debuggingConnected: HTMLElement = document.getElementById('debugging-connected');
+const debuggingOutput: HTMLTextAreaElement = <HTMLTextAreaElement>document.getElementById('debugging-output');
+
+const paletteContent: HTMLElement = document.getElementById('palette-content');
 const themeTemplateContent: HTMLElement = document.getElementById('theme-template-content');
-const helpToggleButtons: NodeListOf<HTMLElement> = document.querySelectorAll('button[data-help]');
+const paletteTemplateContent: HTMLElement = document.getElementById('palette-template-content');
 
 const fontSizeSaveButton: HTMLElement = document.getElementById('font-size-save');
 const fontSizeSaveInput: HTMLElement = document.getElementById('font-size-input');
 
 const colorpicker = new Colorpicker();
 const themepicker = new Themepicker();
+
 let currentDialog: Dialog = null;
 let pywalColors: IPywalColors = null;
 let template: IColorschemeTemplate = null;
@@ -200,6 +212,33 @@ function createThemeTemplateContent() {
   });
 }
 
+function createPaletteTemplateContent() {
+  PALETTE_TEMPLATE_DATA.forEach((item: IPaletteTemplateItem) => {
+    paletteTemplateContent.innerHTML += `
+      <div class="setting row expand space-between v-center">
+        <div class="box column align-left">
+          <p class="setting-title">${item.title}</p>
+          <p class="setting-description">${item.description}</p>
+        </div>
+        <input type="number" data-color="${item.target}" min="0" max="${PYWAL_PALETTE_LENGTH}"></input>
+      </div>
+    `;
+
+    paletteContent.innerHTML += `
+      <div class="setting row expand space-between v-center">
+        <div class="box column align-left">
+          <p class="setting-title">${item.title}</p>
+          <p class="setting-description">${item.description}</p>
+        </div>
+        <button data-color="${item.target}" class="btn-color dialog-arrow"></button>
+      </div>
+    `;
+  });
+
+  const colorButtons: NodeListOf<HTMLElement> = document.querySelectorAll('button[data-color]');
+  colorButtons.forEach((button: HTMLElement) => button.addEventListener('click', onColorClicked));
+}
+
 async function setCurrentTheme(themeInfo?: browser.theme.ThemeUpdateInfo) {
   if (pywalColors === null) {
     const selectedMode = await Utils.setInitialThemeClass(themeInfo);
@@ -256,7 +295,6 @@ themeButton.addEventListener('click', onThemeClicked);
 disableButton.addEventListener('click', onDisableClicked);
 fontSizeSaveButton.addEventListener('click', onFontSizeSave);
 
-colorButtons.forEach((button: HTMLElement) => button.addEventListener('click', onColorClicked));
 optionButtons.forEach((button: HTMLElement) => button.addEventListener('click', onOptionClicked));
 helpToggleButtons.forEach((button: HTMLElement) => button.addEventListener('click', () => onHelpToggle(button)));
 settingCardHeaders.forEach((header: HTMLElement) => header.addEventListener('click', () => onSettingCardClicked(header)));
@@ -267,5 +305,6 @@ browser.runtime.onMessage.addListener(handleExtensionMessage);
 setCurrentTheme();
 createOptionButtonLookup();
 createThemeTemplateContent();
+createPaletteTemplateContent();
 
 Messenger.requestInitialData();

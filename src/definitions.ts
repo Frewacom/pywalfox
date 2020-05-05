@@ -165,6 +165,11 @@ export interface IThemeTemplateItem {
   description: string;
 }
 
+export interface IPaletteTemplateItem extends IThemeTemplateItem {
+  target: string;
+}
+
+
 /**
  * Expose 'wrappedJSObject' from the 'window' namespace.
  *

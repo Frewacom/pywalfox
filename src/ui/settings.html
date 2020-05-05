@@ -42,50 +42,7 @@
             </div>
             <i icon="chevron"></i>
           </div>
-          <div class="card-content column expand">
-            <div class="setting row expand space-between v-center">
-              <div class="box column align-left">
-                <p class="setting-title">Background</p>
-                <p class="setting-description">Main background color</p>
-              </div>
-              <button data-color="background" class="btn-color dialog-arrow"></button>
-            </div>
-            <div class="setting row expand space-between v-center">
-              <div class="box column align-left">
-                <p class="setting-title">Background light</p>
-                <p class="setting-description">Secondary background color. Used to provide contrast to different elements</p>
-              </div>
-              <button data-color="backgroundLight" class="btn-color dialog-arrow"></button>
-            </div>
-            <div class="setting row expand space-between v-center">
-              <div class="box column align-left">
-                <p class="setting-title">Text</p>
-                <p class="setting-description">Main text color</p>
-              </div>
-              <button data-color="text" class="btn-color dialog-arrow"></button>
-            </div>
-            <div class="setting row expand space-between v-center">
-              <div class="box column align-left">
-                <p class="setting-title">Text focus</p>
-                <p class="setting-description">Text used in the current tab, etc.</p>
-              </div>
-              <button data-color="textFocus" class="btn-color dialog-arrow"></button>
-            </div>
-            <div class="setting row expand space-between v-center">
-              <div class="box column align-left">
-                <p class="setting-title">Accent primary</p>
-                <p class="setting-description">Main accent color, used for icons</p>
-              </div>
-              <button data-color="accentPrimary" class="btn-color dialog-arrow"></button>
-            </div>
-            <div class="setting row expand space-between v-center">
-              <div class="box column align-left">
-                <p class="setting-title">Accent secondary</p>
-                <p class="setting-description">Mainly used for hovers and highlights</p>
-              </div>
-              <button data-color="accentSecondary" class="btn-color dialog-arrow"></button>
-            </div>
-          </div>
+          <div class="card-content column expand" id="palette-content"></div>
         </section>
         <section class="setting-card card expand space-between margin-bottom-lg" open>
           <div class="setting-card-header card-header expand row v-center space-between clickable">
@@ -139,7 +96,7 @@
           </div>
           <div class="card-content card-content-header row expand v-center space-between sticky">
             <div class="box">
-              <button class="btn-primary btn-sm margin-right-sm">Save template</button>
+              <button class="btn-primary btn-sm margin-right-sm">Save palette</button>
               <button class="btn-secondary btn-sm margin-right-sm">Set from current palette</button>
               <button class="btn-secondary btn-sm">Reset to default</button>
             </div>
@@ -151,11 +108,12 @@
           <div class="card-content card-subsection column expand align-left" id="palette-template-help">
             <h3 class="card-help-title">Creating a custom palette</h3>
             <p class="card-help-description">
-              The palette is a collection of colors used by the theme template to set the colors
-              for the different elements of the theme. By default, the palette consists of six
-              different colors, but you are free to add more as you see fit.
+              The palette is a collection of pywal colors that is generated when clicking the "Fetch pywal colors" button.
+              A custom palette template allows you to manually select which pywal color should be the default color
+              used for the background, text, etc.
               <br><br>
-              Every palette color (both default and custom) is available to use in the "Theme template" section below.
+              If you want to change the color for a certain element of the browser theme, you can do that in
+              the "Theme template"-section below.
             </p>
             <a class="row v-center margin-top btn-lighter"
                href="https://github.com/Frewacom/Pywalfox#palette-templates"
@@ -165,9 +123,7 @@
               Palette template guide
             </a>
           </div>
-          <div class="card-content column expand">
-
-          </div>
+          <div class="card-content column expand" id="palette-template-content"></div>
         </section>
         <section class="setting-card card expand space-between margin-bottom-lg">
           <div class="setting-card-header card-header expand row v-center space-between clickable no-border-bottom">
