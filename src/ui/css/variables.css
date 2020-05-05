@@ -3,20 +3,20 @@ body {
   --font-size-sm: 0.76rem;
   --font-size-md: 0.82rem;
   --font-size: 0.85rem;
-  --font-size-lg: 1.08rem;
+  --font-size-lg: 1.2rem;
 
   --border-radius: 7px;
   --border-radius-sm: 3px;
 
-  --spinner-width: 1rem;
-  --spinner-thickness: 0.2rem;
+  --spinner-width: 0.8rem;
+  --spinner-thickness: 0.15rem;
 
   --spacing: 1rem;
   --spacing-xxsm: 0.1rem;
-  --spacing-xsm: 0.3rem;
-  --spacing-sm: 0.55rem;
+  --spacing-xsm: 0.25rem;
+  --spacing-sm: 0.5rem;
   --spacing-md: 0.75rem;
-  --spacing-card: 1.1rem;
+  --spacing-card: 1.05rem;
   --spacing-lg: 1.5rem;
   --spacing-xlg: 1.8rem;
 
@@ -30,9 +30,10 @@ body {
 
   --button-height-sm: 2.2rem;
   --button-height-md: 2.3rem;
-  --button-height: 2.5rem;
+  --button-height: 2.45rem;
 
   --icon-size-sm: 1.1rem;
+  --icon-size-md: 1.25rem;
   --icon-size: 1.4rem;
   --icon-size-lg: 1.7rem;
 
@@ -46,6 +47,7 @@ body {
   --z-index-notification: 30;
   --z-index-color-button: 20;
   --z-index-header: 15;
+  --z-index-sticky: 25;
   --z-index-overlay: 10;
 
   --transition-time: 0.1s;

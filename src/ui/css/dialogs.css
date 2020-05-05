@@ -19,7 +19,7 @@
 }
 
 #themepicker {
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-sm);
 }
 
 #colorpicker-grid {

@@ -47,6 +47,18 @@
   border-top-right-radius: var(--spinner-width);
   border-top-left-radius: var(--spinner-width);
   margin-bottom: calc(var(--spinner-width) / 2);
+  transform: rotate(0deg);
+  transform-origin: bottom;
+  animation-name: loading-animation;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-in-out;
+  animation-duration: 1.2s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes loading-animation {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .btn-sm {

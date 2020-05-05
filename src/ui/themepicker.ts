@@ -35,13 +35,13 @@ export class Themepicker extends Dialog {
     if (this.themeSelectButton !== null) {
       switch (mode) {
         case 'dark':
-          this.themeSelectButton.innerHTML = `<i icon="moon"></i>Dark mode`;
+          this.themeSelectButton.innerHTML = `<i icon="moon" class="icon-md"></i>Dark mode`;
           break;
         case 'light':
-          this.themeSelectButton.innerHTML = `<i icon="sun"></i>Light mode`;
+          this.themeSelectButton.innerHTML = `<i icon="sun" class="icon-md"></i>Light mode`;
           break;
         case 'auto':
-          this.themeSelectButton.innerHTML = `<i icon="auto"></i>Auto mode`;
+          this.themeSelectButton.innerHTML = `<i icon="auto" class="icon-md"></i>Auto mode`;
           break;
         default:
           console.error('Invalid theme type');
