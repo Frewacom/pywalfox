@@ -30,16 +30,16 @@ export abstract class Dialog {
       Utils.deselect(this.target);
     }
 
+    this.onOpen !== undefined && this.onOpen(this.target, target);
     this.target = target;
-    this.onOpen !== undefined && this.onOpen();
   }
 
   public getTarget() {
     return this.target;
   }
 
-  protected onOpen() {};
-  protected onClose() {};
+  protected onOpen(currentTarget: HTMLElement, nextTarget: HTMLElement) {};
+  protected onClose(currentTarget: HTMLElement) {};
 
   /**
    * Closes the dialog and unselects the opener element.
@@ -49,8 +49,7 @@ export abstract class Dialog {
     Utils.close(this.dialog);
     Utils.deselect(this.target);
 
+    this.onClose !== undefined && this.onClose(this.target);
     this.target = null;
-
-    this.onClose !== undefined && this.onClose();
   }
 }

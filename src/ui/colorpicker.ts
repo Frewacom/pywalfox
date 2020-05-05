@@ -46,6 +46,18 @@ export class Colorpicker extends Dialog {
     this.grid.appendChild(button);
   }
 
+  protected onOpen(currentTarget: HTMLElement, nextTarget: HTMLElement) {
+    if (currentTarget !== null) {
+      Utils.deselect(currentTarget.parentElement);
+    }
+
+    Utils.select(nextTarget.parentElement);
+  }
+
+  protected onClose(currentTarget: HTMLElement) {
+    Utils.deselect(currentTarget.parentElement);
+  }
+
   private highlightSelectedColor(element: HTMLElement) {
     if (element === null) {
       if (this.selected !== null) {

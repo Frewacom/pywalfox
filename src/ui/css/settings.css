@@ -5,11 +5,13 @@
   border-radius: var(--border-radius-sm);
 }
 
-.setting:hover {
+.setting:hover,
+.setting[selected] {
   background-color: var(--lighter-background);
 }
 
-body.light .setting:hover {
+body.light .setting:hover,
+body.light .setting[selected] {
   box-shadow: var(--box-shadow);
 }
 
