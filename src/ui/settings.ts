@@ -50,7 +50,9 @@ const themepicker = new Themepicker();
 let currentDialog: Dialog = null;
 let pywalColors: IPywalColors = null;
 let template: IColorschemeTemplate = null;
+
 let optionButtonsLookup: INodeLookup = {};
+let paletteTemplateInputLookup: INodeLookup = {};
 
 /**
  * Opens a dialog on the right hand side of the UI.
@@ -179,6 +181,15 @@ function onHelpToggle(target: HTMLElement) {
   Utils.toggleOpen(helpElement);
 }
 
+function onPaletteTemplateInputChanged(e: Event) {
+  const target = <HTMLInputElement>e.target;
+  const value = target.value;
+
+  if (target.checkValidity()) {
+    console.log(value);
+  }
+}
+
 function updateOptionButtonState(optionData: IOptionSetData) {
   const target: HTMLElement = optionButtonsLookup[optionData.option];
 
@@ -187,15 +198,15 @@ function updateOptionButtonState(optionData: IOptionSetData) {
   }
 }
 
-function createOptionButtonLookup() {
-  optionButtons.forEach((button) => {
-    const option = button.getAttribute('data-option');
-    if (option) {
-      optionButtonsLookup[option] = button;
+function updatePaletteTemplateInputs(template: IColorschemeTemplate) {
+  for (const key in template.palette) {
+    const element = <HTMLInputElement>paletteTemplateInputLookup[key];
+    if (element) {
+      element.value = template.palette[key].toString();
     } else {
-      console.warn('Found option button with no "data-option" attribute: ', button);
+      console.error(`Found unhandled palette template target: ${key}`);
     }
-  });
+  }
 }
 
 function createThemeTemplateContent() {
@@ -232,15 +243,22 @@ function createPaletteContent() {
         </div>
         <div class="input-container row v-center">
           <button class="btn btn-control">-</button>
-          <input type="number" data-color="${item.target}" min="0" max="${PYWAL_PALETTE_LENGTH - 1}"></input>
+          <input type="number" data-target="${item.target}" min="0" max="${PYWAL_PALETTE_LENGTH - 1}" />
           <button class="btn btn-control">+</button>
         </div>
       </div>
     `;
   });
 
+  const paletteTemplateInputs: NodeListOf<HTMLElement> = document.querySelectorAll('input[data-target]');
   const colorButtons: NodeListOf<HTMLElement> = document.querySelectorAll('button[data-color]');
+
   colorButtons.forEach((button: HTMLElement) => button.addEventListener('click', onColorClicked));
+  paletteTemplateInputs.forEach((input: HTMLElement) => {
+    const target = input.getAttribute('data-target');
+    input.addEventListener('change', onPaletteTemplateInputChanged);
+    paletteTemplateInputLookup[target] = input;
+  });
 }
 
 async function setCurrentTheme(themeInfo?: browser.theme.ThemeUpdateInfo) {
@@ -253,6 +271,7 @@ async function setCurrentTheme(themeInfo?: browser.theme.ThemeUpdateInfo) {
 function setInitialData(data: IInitialData) {
   colorpicker.setPalette(data.pywalColors);
   colorpicker.setSelectedColorForTarget(data.template);
+  updatePaletteTemplateInputs(data.template);
 
   if (data.enabled) {
     themepicker.setSelectedMode(data.themeMode);
@@ -276,7 +295,8 @@ function handleExtensionMessage(message: IExtensionMessage) {
       break;
     case EXTENSION_MESSAGES.TEMPLATE_SET:
       template = message.data;
-      colorpicker.setSelectedColorForTarget(template);
+      updatePaletteTemplateInputs(template);
+      /* colorpicker.setSelectedColorForTarget(template); */
       break;
     case EXTENSION_MESSAGES.THEME_MODE_SET:
       themepicker.setSelectedMode(message.data);
@@ -299,16 +319,24 @@ themeButton.addEventListener('click', onThemeClicked);
 disableButton.addEventListener('click', onDisableClicked);
 fontSizeSaveButton.addEventListener('click', onFontSizeSave);
 
-optionButtons.forEach((button: HTMLElement) => button.addEventListener('click', onOptionClicked));
 helpToggleButtons.forEach((button: HTMLElement) => button.addEventListener('click', () => onHelpToggle(button)));
 settingCardHeaders.forEach((header: HTMLElement) => header.addEventListener('click', () => onSettingCardClicked(header)));
+optionButtons.forEach((button: HTMLElement) => {
+  const option = button.getAttribute('data-option');
+  button.addEventListener('click', onOptionClicked);
+
+  if (option) {
+    optionButtonsLookup[option] = button;
+  } else {
+    console.warn('Found option button with no "data-option" attribute: ', button);
+  }
+});
 
 browser.theme.onUpdated.addListener(setCurrentTheme);
 browser.runtime.onMessage.addListener(handleExtensionMessage);
 
 setCurrentTheme();
 createPaletteContent();
-createOptionButtonLookup();
 createThemeTemplateContent();
 
 Messenger.requestInitialData();
