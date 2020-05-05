@@ -1,4 +1,5 @@
 import { DEFAULT_PALETTE, DUCKDUCKGO_THEME_ID } from '../config';
+import { changeColorBrightness } from '../utils/colors';
 import {
   IPalette,
   IPaletteHash,
@@ -89,17 +90,20 @@ export function generateExtensionTheme(colorscheme: IColorscheme) {
  * @returns {IDuckDuckGoTheme} The cookies used to set the DuckDuckGo theme
  */
 export function generateDDGTheme(colorscheme: IColorscheme) {
+  const linkColor = changeColorBrightness(colorscheme.palette.accentSecondary, 0.2);
+  const visitedLinkColor = changeColorBrightness(colorscheme.palette.accentPrimary, 0.2);
+
   return {
     hash: colorscheme.hash,
     colors: [
-      { id: 'k7',  value: stripHashSymbol(colorscheme.palette.background) },        // Background
-      { id: 'kj',  value: stripHashSymbol(colorscheme.palette.background) },        // Header background
-      { id: 'k9',  value: stripHashSymbol(colorscheme.palette.text) },              // Result link title
-      { id: 'kaa', value: stripHashSymbol(colorscheme.palette.accentPrimary) },     // Result visited link title
-      { id: 'kx',  value: stripHashSymbol(colorscheme.palette.accentSecondary) },   // Result link url
-      { id: 'k8',  value: 'f8f8f8' },                                               // Result description
-      { id: 'k21', value: stripHashSymbol(colorscheme.palette.backgroundLight) },   // Result hover, dropdown, etc.
-      { id: 'kae', value: DUCKDUCKGO_THEME_ID },                                    // The theme name
+      { id: 'k7',  value: stripHashSymbol(colorscheme.palette.background) },      // Background
+      { id: 'kj',  value: stripHashSymbol(colorscheme.palette.background) },      // Header background
+      { id: 'k9',  value: stripHashSymbol(colorscheme.palette.textFocus) },       // Result link title
+      { id: 'kx',  value: stripHashSymbol(linkColor) },                           // Result link url
+      { id: 'kaa', value: stripHashSymbol(visitedLinkColor) },                    // Result visited link title
+      { id: 'k8',  value: stripHashSymbol(colorscheme.palette.text) },            // Result description
+      { id: 'k21', value: stripHashSymbol(colorscheme.palette.backgroundLight) }, // Result hover, dropdown, etc.
+      { id: 'kae', value: DUCKDUCKGO_THEME_ID },                                  // The theme name
     ],
   };
 }
