@@ -12,14 +12,22 @@ export interface IPywalColors  {
 
 export type IPaletteHash = string;
 
+export enum PaletteColors {
+  Background = 'background',
+  BackgroundLight = 'backgroundLight',
+  AccentPrimary = 'accentPrimary',
+  AccentSecondary = 'accentSecondary',
+  Text = 'text',
+  TextFocus = 'textFocus',
+}
+
 export interface IPalette {
-  background: string;
-  textFocus: string;
-  backgroundLight: string;
-  accentPrimary: string;
-  accentSecondary: string;
-  text: string;
-  [key: string]: string;
+  [PaletteColors.Background]: string;
+  [PaletteColors.BackgroundLight]: string;
+  [PaletteColors.AccentPrimary]: string;
+  [PaletteColors.AccentSecondary]: string;
+  [PaletteColors.Text]: string;
+  [PaletteColors.TextFocus]: string;
 }
 
 /**
@@ -91,6 +99,9 @@ export interface IColorschemeTemplate {
   palette: {
     [key: string]: number;
   };
+  browser: {
+    [key: string]: PaletteColors;
+  }
 }
 
 export interface IExtensionMessage {

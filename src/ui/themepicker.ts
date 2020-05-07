@@ -34,13 +34,13 @@ export class Themepicker extends Dialog {
 
     if (this.themeSelectButton !== null) {
       switch (mode) {
-        case 'dark':
+        case ThemeModes.Dark:
           this.themeSelectButton.innerHTML = `<i icon="moon" class="icon-md"></i>Dark mode`;
           break;
-        case 'light':
+        case ThemeModes.Light:
           this.themeSelectButton.innerHTML = `<i icon="sun" class="icon-md"></i>Light mode`;
           break;
-        case 'auto':
+        case ThemeModes.Auto:
           this.themeSelectButton.innerHTML = `<i icon="auto" class="icon-md"></i>Auto mode`;
           break;
         default:

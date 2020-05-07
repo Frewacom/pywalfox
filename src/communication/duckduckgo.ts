@@ -1,4 +1,4 @@
-import { EXTENSION_MESSAGES, INJECT_URL_PATTERN } from '../config';
+import { EXTENSION_MESSAGES, INJECT_URL_PATTERN } from '../config/general';
 import { IDuckDuckGoTheme, IExtensionMessage } from '../definitions';
 
 async function sendMessage(message: IExtensionMessage) {

@@ -1,3 +1,5 @@
+import { EXTENSION_MESSAGES } from '../config/general';
+
 import {
   IInitialData,
   IPywalColors,
@@ -7,7 +9,6 @@ import {
   IOptionSetData,
   INotificationData,
 } from '../definitions';
-import { EXTENSION_MESSAGES } from '../config';
 
 export function sendInitialData(data: IInitialData) {
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.INITIAL_DATA_SET, data });
@@ -42,5 +43,9 @@ export function sendThemeMode(mode: ThemeModes) {
 export function sendOptionSet(option: string, enabled: boolean) {
   const optionData: IOptionSetData = { option, enabled };
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.OPTION_SET, data: optionData });
+}
+
+export function sendPaletteTemplateSet(template: IColorschemeTemplate) {
+  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.PALETTE_TEMPLATE_SET, data: template });
 }
 

@@ -1,4 +1,5 @@
-import { MESSAGES } from '../../config';
+import { RESPONSE_TIMEOUT, NATIVE_MESSAGES } from '../../config/native';
+
 import {
   IPywalColors,
   INativeAppMessage,
@@ -22,8 +23,8 @@ interface INativeAppRequest {
  * @param callbacks - the callbacks to be used when a message is received
  */
 export class NativeApp {
-  private port: browser.runtime.Port;
   private isConnected: boolean;
+  private port: browser.runtime.Port;
   private callbacks: INativeAppMessageCallbacks;
 
   private versionCheckTimeout: number;
@@ -46,7 +47,18 @@ export class NativeApp {
     return false;
   }
 
-  private handleCssToggleResponse(message: INativeAppMessage, enabled: boolean) {
+  private onVersionResponse(message: INativeAppMessage) {
+    const version = this.getData(message);
+    if (version) {
+      this.callbacks.version(version);
+    } else {
+      this.callbacks.updateNeeded();
+    }
+
+    clearTimeout(this.versionCheckTimeout);
+  }
+
+  private onCssToggleResponse(message: INativeAppMessage, enabled: boolean) {
     const target = this.getData(message);
     const error = message['error'];
 
@@ -65,34 +77,24 @@ export class NativeApp {
   private async onMessage(message: INativeAppMessage) {
     console.debug(message);
     switch(message.action) {
-      case MESSAGES.VERSION:
-        const version = this.getData(message);
-        if (version) {
-          this.callbacks.version(version);
-        } else {
-          this.callbacks.updateNeeded();
-        }
-        clearTimeout(this.versionCheckTimeout);
+      case NATIVE_MESSAGES.VERSION:
+        this.onVersionResponse(message);
         break;
-      case MESSAGES.OUTPUT:
+      case NATIVE_MESSAGES.OUTPUT:
         const output = this.getData(message);
-        if (output) {
-          this.callbacks.output(output);
-        }
+        output && this.callbacks.output(output);
         break;
-      case MESSAGES.COLORSCHEME:
+      case NATIVE_MESSAGES.COLORSCHEME:
         const colorscheme = this.getData(message);
-        if (colorscheme) {
-          this.callbacks.colorscheme(colorscheme);
-        }
+        colorscheme && this.callbacks.colorscheme(colorscheme);
         break;
-      case MESSAGES.CSS_ENABLE:
-        this.handleCssToggleResponse(message, true);
+      case NATIVE_MESSAGES.CSS_ENABLE:
+        this.onCssToggleResponse(message, true);
         break;
-      case MESSAGES.CSS_DISABLE:
-        this.handleCssToggleResponse(message, false);
+      case NATIVE_MESSAGES.CSS_DISABLE:
+        this.onCssToggleResponse(message, false);
         break;
-      case MESSAGES.INVALID_ACTION:
+      case NATIVE_MESSAGES.INVALID_ACTION:
         this.logError(`Native app recieved unhandled message action: ${message.action}`);
         break;
       default:
@@ -115,11 +117,11 @@ export class NativeApp {
     this.port.onDisconnect.addListener(this.onDisconnect.bind(this));
   }
 
-  public async connect() {
-    this.port = await browser.runtime.connectNative('pywalfox');
+  public connect() {
+    this.port = browser.runtime.connectNative('pywalfox');
     this.isConnected = true;
-    this.versionCheckTimeout = window.setTimeout(this.callbacks.updateNeeded, 1000);
-    this.connectedCheckTimeout = window.setTimeout(this.callbacks.connected, 1000);
+    this.versionCheckTimeout = window.setTimeout(this.callbacks.updateNeeded, RESPONSE_TIMEOUT);
+    this.connectedCheckTimeout = window.setTimeout(this.callbacks.connected, RESPONSE_TIMEOUT);
     this.setupListeners();
     this.requestVersion();
   }
@@ -129,14 +131,14 @@ export class NativeApp {
   }
 
   public requestVersion() {
-    this.sendMessage({ action: MESSAGES.VERSION });
+    this.sendMessage({ action: NATIVE_MESSAGES.VERSION });
   }
 
   public requestColorscheme() {
-    this.sendMessage({ action: MESSAGES.COLORSCHEME });
+    this.sendMessage({ action: NATIVE_MESSAGES.COLORSCHEME });
   }
 
   public requestCssEnabled(target: string, enabled: boolean) {
-    this.sendMessage({ action: enabled ? MESSAGES.CSS_ENABLE : MESSAGES.CSS_DISABLE, target });
+    this.sendMessage({ action: enabled ? NATIVE_MESSAGES.CSS_ENABLE : NATIVE_MESSAGES.CSS_DISABLE, target });
   }
 }

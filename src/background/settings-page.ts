@@ -1,11 +1,12 @@
-import { SETTINGS_PAGE_URL } from '../config';
 import { IExtensionTheme } from '../definitions';
+import { SETTINGS_PAGE_URL } from '../config/general';
 
 export class SettingsPage {
   private tab: browser.tabs.Tab;
   private currentTheme: IExtensionTheme;
   private url: string;
 
+  // TODO: Is the constructor param needed?
   constructor(currentTheme: IExtensionTheme) {
     this.tab = null;
     this.currentTheme = null;

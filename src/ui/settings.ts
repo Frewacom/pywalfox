@@ -7,11 +7,13 @@ import { Themepicker } from './themepicker';
 
 import {
   EXTENSION_MESSAGES,
-  EXTENSION_OPTIONS,
+  PYWAL_PALETTE_LENGTH,
+} from '../config/general';
+
+import {
   THEME_TEMPLATE_DATA,
   PALETTE_TEMPLATE_DATA,
-  PYWAL_PALETTE_LENGTH,
-} from '../config';
+} from '../config/template-data';
 
 import {
     IExtensionMessage,
@@ -38,8 +40,14 @@ const debuggingConnected: HTMLElement = document.getElementById('debugging-conne
 const debuggingOutput: HTMLTextAreaElement = <HTMLTextAreaElement>document.getElementById('debugging-output');
 
 const paletteContent: HTMLElement = document.getElementById('palette-content');
-const themeTemplateContent: HTMLElement = document.getElementById('theme-template-content');
 const paletteTemplateContent: HTMLElement = document.getElementById('palette-template-content');
+const paletteTemplateSaveButton: HTMLElement = document.getElementById('palette-template-save');
+const paletteTemplateResetButton: HTMLElement = document.getElementById('palette-template-reset');
+const paletteTemplateCurrentButton: HTMLElement = document.getElementById('palette-template-current');
+
+const themeTemplateContent: HTMLElement = document.getElementById('theme-template-content');
+const themeTemplateSaveButton: HTMLElement = document.getElementById('theme-template-save');
+const themeTemplateResetButton: HTMLElement = document.getElementById('theme-template-reset');
 
 const fontSizeSaveButton: HTMLElement = document.getElementById('font-size-save');
 const fontSizeSaveInput: HTMLElement = document.getElementById('font-size-input');
@@ -190,6 +198,26 @@ function onPaletteTemplateInputChanged(e: Event) {
   }
 }
 
+function onPaletteTemplateSave(e: Event) {
+
+}
+
+function onPaletteTemplateReset(e: Event) {
+
+}
+
+function onPaletteTemplateUseCurrent(e: Event) {
+
+}
+
+function onThemeTemplateSave(e: Event) {
+
+}
+
+function onThemeTemplateReset(e: Event) {
+
+}
+
 function updateOptionButtonState(optionData: IOptionSetData) {
   const target: HTMLElement = optionButtonsLookup[optionData.option];
 
@@ -241,11 +269,7 @@ function createPaletteContent() {
           <p class="setting-title">${item.title}</p>
           <p class="setting-description">${item.description}</p>
         </div>
-        <div class="input-container row v-center">
-          <button class="btn btn-control">-</button>
-          <input type="number" data-target="${item.target}" min="0" max="${PYWAL_PALETTE_LENGTH - 1}" />
-          <button class="btn btn-control">+</button>
-        </div>
+        <input type="number" data-target="${item.target}" min="0" max="${PYWAL_PALETTE_LENGTH - 1}" />
       </div>
     `;
   });
@@ -293,11 +317,11 @@ function handleExtensionMessage(message: IExtensionMessage) {
       pywalColors = message.data;
       colorpicker.setPalette(message.data);
       break;
-    case EXTENSION_MESSAGES.TEMPLATE_SET:
-      template = message.data;
-      updatePaletteTemplateInputs(template);
-      /* colorpicker.setSelectedColorForTarget(template); */
-      break;
+    /* case EXTENSION_MESSAGES.TEMPLATE_SET: */
+    /*   template = message.data; */
+    /*   updatePaletteTemplateInputs(template); */
+    /*   colorpicker.setSelectedColorForTarget(template); */
+    /*   break; */
     case EXTENSION_MESSAGES.THEME_MODE_SET:
       themepicker.setSelectedMode(message.data);
       break;
@@ -313,30 +337,38 @@ function handleExtensionMessage(message: IExtensionMessage) {
   }
 }
 
-overlay.addEventListener('click', onOverlayClicked);
-fetchButton.addEventListener('click', onFetchClicked);
-themeButton.addEventListener('click', onThemeClicked);
-disableButton.addEventListener('click', onDisableClicked);
-fontSizeSaveButton.addEventListener('click', onFontSizeSave);
+function setupListeners() {
+  overlay.addEventListener('click', onOverlayClicked);
+  fetchButton.addEventListener('click', onFetchClicked);
+  themeButton.addEventListener('click', onThemeClicked);
+  disableButton.addEventListener('click', onDisableClicked);
+  fontSizeSaveButton.addEventListener('click', onFontSizeSave);
+  themeTemplateSaveButton.addEventListener('click', onThemeTemplateSave);
+  themeTemplateResetButton.addEventListener('click', onThemeTemplateReset);
+  paletteTemplateSaveButton.addEventListener('click', onPaletteTemplateSave);
+  paletteTemplateResetButton.addEventListener('click', onPaletteTemplateReset);
+  paletteTemplateCurrentButton.addEventListener('click', onPaletteTemplateUseCurrent);
 
-helpToggleButtons.forEach((button: HTMLElement) => button.addEventListener('click', () => onHelpToggle(button)));
-settingCardHeaders.forEach((header: HTMLElement) => header.addEventListener('click', () => onSettingCardClicked(header)));
-optionButtons.forEach((button: HTMLElement) => {
-  const option = button.getAttribute('data-option');
-  button.addEventListener('click', onOptionClicked);
+  helpToggleButtons.forEach((button: HTMLElement) => button.addEventListener('click', () => onHelpToggle(button)));
+  settingCardHeaders.forEach((header: HTMLElement) => header.addEventListener('click', () => onSettingCardClicked(header)));
+  optionButtons.forEach((button: HTMLElement) => {
+    const option = button.getAttribute('data-option');
+    button.addEventListener('click', onOptionClicked);
 
-  if (option) {
-    optionButtonsLookup[option] = button;
-  } else {
-    console.warn('Found option button with no "data-option" attribute: ', button);
-  }
-});
+    if (option) {
+      optionButtonsLookup[option] = button;
+    } else {
+      console.warn('Found option button with no "data-option" attribute: ', button);
+    }
+  });
 
-browser.theme.onUpdated.addListener(setCurrentTheme);
-browser.runtime.onMessage.addListener(handleExtensionMessage);
+  browser.theme.onUpdated.addListener(setCurrentTheme);
+  browser.runtime.onMessage.addListener(handleExtensionMessage);
+}
 
-setCurrentTheme();
+setupListeners();
 createPaletteContent();
 createThemeTemplateContent();
 
+setCurrentTheme();
 Messenger.requestInitialData();

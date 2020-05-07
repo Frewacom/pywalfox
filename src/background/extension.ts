@@ -1,12 +1,8 @@
 import {
   IPalette,
   IPywalColors,
-  IColorscheme,
   IBrowserTheme,
-  IExtensionTheme,
-  IDuckDuckGoTheme,
   IExtensionMessage,
-  IColorschemeTemplate,
   IOptionSetData,
 } from '../definitions';
 
@@ -21,7 +17,7 @@ import {
   EXTENSION_MESSAGES,
   EXTENSION_OPTIONS,
   VALID_CSS_TARGETS,
-} from '../config';
+} from '../config/general';
 
 import { State } from './state';
 import { NativeApp } from './native-app';

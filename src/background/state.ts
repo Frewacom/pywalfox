@@ -1,4 +1,4 @@
-import { DEFAULT_THEME_TEMPLATE_DARK, DEFAULT_THEME_TEMPLATE_LIGHT } from '../config';
+import { DEFAULT_THEME_TEMPLATE_DARK, DEFAULT_THEME_TEMPLATE_LIGHT } from '../config/default-themes';
 import {
   IPywalColors,
   IExtensionTheme,

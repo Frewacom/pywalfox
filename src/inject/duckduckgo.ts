@@ -1,4 +1,4 @@
-import { EXTENSION_MESSAGES, DUCKDUCKGO_THEME_ID } from '../config';
+import { EXTENSION_MESSAGES, DUCKDUCKGO_THEME_ID } from '../config/general';
 import { IDuckDuckGoTheme, IExtensionMessage } from '../definitions';
 import { requestTheme } from '../communication/duckduckgo';
 

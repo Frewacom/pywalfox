@@ -1,15 +1,14 @@
-import { DEFAULT_PALETTE, DUCKDUCKGO_THEME_ID } from '../config';
+import { DUCKDUCKGO_THEME_ID } from '../config/general';
 import { changeColorBrightness } from '../utils/colors';
+
 import {
+  PaletteColors,
   IPalette,
-  IPaletteHash,
   IPywalColors,
   IColorscheme,
   IColorschemeTemplate,
-  IBrowserTheme,
-  IExtensionTheme,
-  IDuckDuckGoTheme,
 } from '../definitions';
+
 
 export function generateColorscheme(
   pywalColors: IPywalColors,
@@ -30,43 +29,43 @@ export function generateColorscheme(
     hash: createPaletteHash(palette),
     palette: palette,
     browser: {
-      icons: palette.accentPrimary,
-      icons_attention: palette.accentSecondary,
-      frame: palette.background,
-      tab_text: palette.textFocus,
-      tab_loading: palette.accentPrimary,
-      tab_background_text: palette.text,
-      tab_selected: palette.backgroundLight,
-      tab_line: palette.accentPrimary,
-      tab_background_separator: palette.background,
-      toolbar: palette.backgroundLight,
-      toolbar_field: palette.backgroundLight,
-      toolbar_field_focus: palette.backgroundLight,
-      toolbar_field_text: palette.text,
-      toolbar_field_text_focus: palette.textFocus,
-      toolbar_field_border: palette.background,
-      toolbar_field_border_focus: palette.backgroundLight,
-      toolbar_field_separator: palette.background,
-      toolbar_field_highlight: palette.accentPrimary,
-      toolbar_field_highlight_text: palette.background,
-      toolbar_bottom_separator: palette.background,
-      toolbar_top_separator: palette.background,
-      toolbar_vertical_separator: palette.backgroundLight,
-      ntp_background: palette.background,
-      ntp_text: palette.text,
-      popup: palette.backgroundLight,
-      popup_border: palette.backgroundLight,
-      popup_text: palette.text,
-      popup_highlight: palette.accentPrimary,
-      popup_highlight_text: palette.background,
-      sidebar: palette.background,
-      sidebar_border: palette.backgroundLight,
-      sidebar_text: palette.text,
-      sidebar_highlight: palette.accentPrimary,
-      sidebar_highlight_text: palette.textFocus,
-      bookmark_text: palette.textFocus,
-      button_background_hover: palette.background,
-      button_background_active: palette.background,
+      icons: palette[template.browser.icons],
+      icons_attention: palette[template.browser.icons_attention],
+      frame: palette[template.browser.frame],
+      tab_text: palette[template.browser.tab_text],
+      tab_loading: palette[template.browser.tab_loading],
+      tab_background_text: palette[template.browser.tab_background_text],
+      tab_selected: palette[template.browser.tab_selected],
+      tab_line: palette[template.browser.tab_line],
+      tab_background_separator: palette[template.browser.tab_background_separator],
+      toolbar: palette[template.browser.toolbar],
+      toolbar_field: palette[template.browser.toolbar_field],
+      toolbar_field_focus: palette[template.browser.toolbar_field_focus],
+      toolbar_field_text: palette[template.browser.toolbar_field_text],
+      toolbar_field_text_focus: palette[template.browser.toolbar_field_text_focus],
+      toolbar_field_border: palette[template.browser.toolbar_field_border],
+      toolbar_field_border_focus: palette[template.browser.toolbar_field_border_focus],
+      toolbar_field_separator: palette[template.browser.toolbar_field_separator],
+      toolbar_field_highlight: palette[template.browser.toolbar_field_highlight],
+      toolbar_field_highlight_text: palette[template.browser.toolbar_field_highlight_text],
+      toolbar_bottom_separator: palette[template.browser.toolbar_bottom_separator],
+      toolbar_top_separator: palette[template.browser.toolbar_top_separator],
+      toolbar_vertical_separator: palette[template.browser.toolbar_vertical_separator],
+      ntp_background: palette[template.browser.ntp_background],
+      ntp_text: palette[template.browser.ntp_text],
+      popup: palette[template.browser.popup],
+      popup_border: palette[template.browser.popup_border],
+      popup_text: palette[template.browser.popup_text],
+      popup_highlight: palette[template.browser.popup_highlight],
+      popup_highlight_text: palette[template.browser.popup_highlight_text],
+      sidebar: palette[template.browser.sidebar],
+      sidebar_border: palette[template.browser.sidebar_border],
+      sidebar_text: palette[template.browser.sidebar_text],
+      sidebar_highlight: palette[template.browser.sidebar_highlight],
+      sidebar_highlight_text: palette[template.browser.sidebar_highlight_text],
+      bookmark_text: palette[template.browser.bookmark_text],
+      button_background_hover: palette[template.browser.button_background_hover],
+      button_background_active: palette[template.browser.button_background_active],
     },
   };
 }
@@ -113,7 +112,7 @@ export function generateDDGTheme(colorscheme: IColorscheme) {
  * used to detect when the theme has been changed.
  *
  * @param {IPalette} palette
- * @returns {string} the hash based on palette
+ * @returns {IPaletteHash} the hash based on palette
  */
 function createPaletteHash(palette: IPalette) {
   const colors = Object.keys(palette);
@@ -121,7 +120,7 @@ function createPaletteHash(palette: IPalette) {
 
   let hash: string = '';
   for (const key of colors) {
-    hash += stripHashSymbol(palette[key]);
+    hash += stripHashSymbol(palette[<PaletteColors>key]);
   }
 
   return hash;

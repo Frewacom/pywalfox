@@ -1,4 +1,4 @@
-import { EXTENSION_MESSAGES } from '../config';
+import { EXTENSION_MESSAGES } from '../config/general';
 import { ThemeModes, IOptionSetData, IPaletteColorData } from '../definitions';
 
 export function requestInitialData() {

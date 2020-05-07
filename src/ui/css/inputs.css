@@ -16,6 +16,6 @@ input, .input-container {
 
 input[type=number] {
   text-align: center;
-  width: 2em;
-  -moz-appearance:textfield;
+  width: 3rem;
 }
+

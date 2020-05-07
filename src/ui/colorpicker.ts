@@ -1,7 +1,7 @@
 import { Dialog } from './dialog';
 import { requestPaletteColorSet } from './messenger';
 import { IPywalColors, IColorschemeTemplate } from '../definitions';
-import { PYWAL_PALETTE_LENGTH } from '../config';
+import { PYWAL_PALETTE_LENGTH } from '../config/general';
 import * as Utils from './utils';
 
 export class Colorpicker extends Dialog {
