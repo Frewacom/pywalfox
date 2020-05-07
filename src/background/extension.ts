@@ -4,6 +4,9 @@ import {
   IBrowserTheme,
   IExtensionMessage,
   IOptionSetData,
+  IPaletteTemplate,
+  IThemeTemplate,
+  ThemeModes,
 } from '../definitions';
 
 import {
@@ -18,6 +21,15 @@ import {
   EXTENSION_OPTIONS,
   VALID_CSS_TARGETS,
 } from '../config/general';
+
+import {
+  DEFAULT_THEME_DARK,
+  DEFAULT_THEME_LIGHT,
+  DEFAULT_PALETTE_TEMPLATE_DARK,
+  DEFAULT_BROWSER_TEMPLATE_DARK,
+  DEFAULT_PALETTE_TEMPLATE_LIGHT,
+  DEFAULT_BROWSER_TEMPLATE_LIGHT,
+} from '../config/default-themes';
 
 import { State } from './state';
 import { NativeApp } from './native-app';
@@ -82,6 +94,21 @@ export class Extension {
     };
   }
 
+  private getDefaultTemplate() {
+    const themeMode = this.state.getThemeMode();
+
+    if (!themeMode) {
+      console.error('Theme mode is not set');
+      return;
+    }
+
+    if (themeMode === ThemeModes.Dark) {
+      return DEFAULT_THEME_DARK;
+    }
+
+    return DEFAULT_THEME_LIGHT;
+  }
+
   private setOption(optionData: IOptionSetData) {
     if (!optionData) {
       UI.sendDebuggingOutput('Tried to set option, but no data was provided', true);
@@ -130,6 +157,12 @@ export class Extension {
       case EXTENSION_MESSAGES.TEMPLATE_GET:
         const template = this.state.getTemplate();
         template && UI.sendTemplate(template);
+        break;
+      case EXTENSION_MESSAGES.PALETTE_TEMPLATE_SET:
+        this.setPaletteTemplate(message);
+        break;
+      case EXTENSION_MESSAGES.THEME_TEMPLATE_SET:
+        this.setThemeTemplate(message);
         break;
       case EXTENSION_MESSAGES.THEME_MODE_GET:
         const mode = this.state.getThemeMode();
@@ -252,6 +285,29 @@ export class Extension {
       this.state.setApplied(true);
     } else {
       this.state.setApplied(false);
+    }
+  }
+
+  // TODO: Validate type of message.data
+  private setPaletteTemplate(message: IExtensionMessage) {
+    const template = message.data;
+
+    if (template === null) {
+      const defaultTemplate = this.getDefaultTemplate();
+      this.state.setPaletteTemplate(defaultTemplate.palette);
+    } else {
+      this.state.setPaletteTemplate(template);
+    }
+  }
+
+  private setThemeTemplate(message: IExtensionMessage) {
+    const template = message.data;
+
+    if (template === null) {
+      const defaultTemplate = this.getDefaultTemplate();
+      this.state.setThemeTemplate(defaultTemplate.browser);
+    } else {
+      this.state.setThemeTemplate(template);
     }
   }
 

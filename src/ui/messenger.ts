@@ -1,5 +1,12 @@
 import { EXTENSION_MESSAGES } from '../config/general';
-import { ThemeModes, IOptionSetData, IPaletteColorData } from '../definitions';
+
+import {
+  ThemeModes,
+  IOptionSetData,
+  IPaletteColorData,
+  IPaletteTemplate,
+  IThemeTemplate
+} from '../definitions';
 
 export function requestInitialData() {
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.INITIAL_DATA_GET });
@@ -47,4 +54,18 @@ export function requestFontSizeSet(size: number) {
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.FONT_SIZE_SET, data: size });
 }
 
+export function requestThemeTemplateSet(template: IThemeTemplate) {
+  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.THEME_TEMPLATE_SET, data: template });
+}
 
+export function requestThemeTemplateReset() {
+  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.THEME_TEMPLATE_SET, data: null });
+}
+
+export function requestPaletteTemplateSet(template: IPaletteTemplate) {
+  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.PALETTE_TEMPLATE_SET, data: template });
+}
+
+export function requestPaletteTemplateReset() {
+  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.PALETTE_TEMPLATE_SET, data: null });
+}

@@ -1,5 +1,5 @@
 import { DEFAULT_CSS_FONT_SIZE } from '../config/general';
-import { DEFAULT_THEME_TEMPLATE_DARK, DEFAULT_THEME_TEMPLATE_LIGHT } from '../config/default-themes';
+import { DEFAULT_THEME_DARK, DEFAULT_THEME_LIGHT } from '../config/default-themes';
 
 import {
   IPywalColors,
@@ -7,6 +7,8 @@ import {
   IDuckDuckGoTheme,
   IColorscheme,
   IColorschemeTemplate,
+  IPaletteTemplate,
+  IThemeTemplate,
   ThemeModes,
   IOptionSetData,
 } from '../definitions';
@@ -50,7 +52,7 @@ export class State {
         colorscheme: null,
         extension: null,
         ddg: null,
-        template: DEFAULT_THEME_TEMPLATE_DARK,
+        template: DEFAULT_THEME_DARK,
       },
       options: {
         userChrome: false,
@@ -94,7 +96,7 @@ export class State {
 
     // TODO: Add case for Auto theme type
     const themeMode = this.currentState.theme.mode;
-    return themeMode === ThemeModes.Dark ? DEFAULT_THEME_TEMPLATE_DARK : DEFAULT_THEME_TEMPLATE_LIGHT;
+    return themeMode === ThemeModes.Dark ? DEFAULT_THEME_DARK : DEFAULT_THEME_LIGHT;
   }
 
   public getThemeMode() {
@@ -164,6 +166,30 @@ export class State {
     });
   }
 
+  public setPaletteTemplate(template: IPaletteTemplate) {
+    this.set({
+      theme: {
+        ...this.currentState.theme,
+        template: {
+          ...this.currentState.theme.template,
+          palette: template,
+        },
+      }
+    });
+  }
+
+  public setThemeTemplate(template: IThemeTemplate) {
+    this.set({
+      theme: {
+        ...this.currentState.theme,
+        template: {
+          ...this.currentState.theme.template,
+          browser: template,
+        },
+      }
+    });
+  }
+
   public setThemes(
     pywalColors: IPywalColors,
     colorscheme: IColorscheme,
@@ -205,7 +231,7 @@ export class State {
       theme: {
         ...this.currentState.theme,
         mode: mode,
-        template: mode === ThemeModes.Dark ? DEFAULT_THEME_TEMPLATE_DARK : DEFAULT_THEME_TEMPLATE_LIGHT
+        template: mode === ThemeModes.Dark ? DEFAULT_THEME_DARK : DEFAULT_THEME_LIGHT
       }
     });
   }

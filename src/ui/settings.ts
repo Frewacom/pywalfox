@@ -58,6 +58,7 @@ const themepicker = new Themepicker();
 let currentDialog: Dialog = null;
 let pywalColors: IPywalColors = null;
 let template: IColorschemeTemplate = null;
+let editTemplate: IColorschemeTemplate = null;
 
 let optionButtonsLookup: INodeLookup = {};
 let paletteTemplateInputLookup: INodeLookup = {};
@@ -203,7 +204,7 @@ function onPaletteTemplateSave(e: Event) {
 }
 
 function onPaletteTemplateReset(e: Event) {
-
+  Messenger.requestPaletteTemplateReset();
 }
 
 function onPaletteTemplateUseCurrent(e: Event) {
@@ -215,7 +216,7 @@ function onThemeTemplateSave(e: Event) {
 }
 
 function onThemeTemplateReset(e: Event) {
-
+  Messenger.requestThemeTemplateReset();
 }
 
 function updateOptionButtonState(optionData: IOptionSetData) {
@@ -317,11 +318,11 @@ function handleExtensionMessage(message: IExtensionMessage) {
       pywalColors = message.data;
       colorpicker.setPalette(message.data);
       break;
-    /* case EXTENSION_MESSAGES.TEMPLATE_SET: */
-    /*   template = message.data; */
-    /*   updatePaletteTemplateInputs(template); */
-    /*   colorpicker.setSelectedColorForTarget(template); */
-    /*   break; */
+    case EXTENSION_MESSAGES.TEMPLATE_SET:
+      template = message.data;
+      updatePaletteTemplateInputs(template);
+      colorpicker.setSelectedColorForTarget(template);
+      break;
     case EXTENSION_MESSAGES.THEME_MODE_SET:
       themepicker.setSelectedMode(message.data);
       break;

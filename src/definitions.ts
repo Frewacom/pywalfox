@@ -101,13 +101,17 @@ export interface IColorscheme {
   browser: IBrowserTheme;
 }
 
+export interface IPaletteTemplate {
+  [key: string]: number;
+}
+
+export interface IThemeTemplate {
+  [key: string]: PaletteColors;
+}
+
 export interface IColorschemeTemplate {
-  palette: {
-    [key: string]: number;
-  };
-  browser: {
-    [key: string]: PaletteColors;
-  }
+  palette: IPaletteTemplate;
+  browser: IThemeTemplate;
 }
 
 export interface IExtensionMessage {
