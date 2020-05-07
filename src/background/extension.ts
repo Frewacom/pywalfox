@@ -42,6 +42,8 @@ export class Extension {
       colorscheme: this.onPywalColorsReceived.bind(this),
       cssToggleSuccess: this.cssToggleSuccess.bind(this),
       cssToggleFailed: this.cssToggleFailed.bind(this),
+      cssFontSizeSetSuccess: this.cssFontSizeSetSuccess.bind(this),
+      cssFontSizeSetFailed: this.cssFontSizeSetFailed.bind(this),
     });
 
     browser.runtime.onMessage.addListener(this.onMessage.bind(this));
@@ -94,6 +96,9 @@ export class Extension {
         this.setDDGEnabled(optionData);
         break;
       case EXTENSION_OPTIONS.USER_CHROME: /* Fallthrough */
+        this.setCustomCSSEnabled(optionData);
+        // TODO: If the base font size has changed, request a font size update
+        break;
       case EXTENSION_OPTIONS.USER_CONTENT:
         this.setCustomCSSEnabled(optionData);
         break;
@@ -155,11 +160,6 @@ export class Extension {
         this.setOption(message.data);
         break;
     }
-  }
-
-  private onPywalColorsReceived(pywalColors: IPywalColors) {
-    UI.sendDebuggingOutput('Pywal colors was fetched from daemon and applied successfully');
-    this.updateThemes(pywalColors);
   }
 
   private createSettingsPage() {
@@ -281,6 +281,11 @@ export class Extension {
     this.state.setConnected(false);
   }
 
+  private onPywalColorsReceived(pywalColors: IPywalColors) {
+    UI.sendDebuggingOutput('Pywal colors was fetched from daemon and applied successfully');
+    this.updateThemes(pywalColors);
+  }
+
   private cssToggleSuccess(target: string) {
     const newState = this.state.getCssEnabled(target) ? false : true;
     let notificationMessage: string;
@@ -299,7 +304,17 @@ export class Extension {
   private cssToggleFailed(target: string, error: string) {
     const currentState = this.state.getCssEnabled(target);
     UI.sendOptionSet(target, currentState);
-    UI.sendNotification('Custom CSS', error, true);
+    UI.sendNotification('Custom CSS', error);
+  }
+
+  private cssFontSizeSetSuccess(size: number) {
+    UI.sendNotification('Font size', 'Updated base font size successfully');
+    UI.sendFontSizeSet(size);
+    this.state.setCssFontSize(size);
+  }
+
+  private cssFontSizeSetFailed(error: string) {
+    UI.sendNotification('Font size', error, false);
   }
 
   public async start() {

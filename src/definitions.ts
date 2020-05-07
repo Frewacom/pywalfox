@@ -21,6 +21,12 @@ export enum PaletteColors {
   TextFocus = 'textFocus',
 }
 
+export enum ThemeModes {
+  Dark = 'dark',
+  Light = 'light',
+  Auto = 'auto'
+}
+
 export interface IPalette {
   [PaletteColors.Background]: string;
   [PaletteColors.BackgroundLight]: string;
@@ -109,12 +115,6 @@ export interface IExtensionMessage {
   data?: any;
 };
 
-export enum ThemeModes {
-  Dark = 'dark',
-  Light = 'light',
-  Auto = 'auto'
-}
-
 export interface IOptionSetData {
   option: string;
   enabled: boolean;
@@ -129,6 +129,13 @@ export interface INativeAppMessage {
   [key: string]: any;
 }
 
+/* Interface for the messages sent to the native messaging host. */
+export interface INativeAppRequest {
+  action: string;
+  target?: string;
+  size?: number;
+}
+
 export interface INativeAppMessageCallbacks {
   connected: () => void,
   updateNeeded: () => void,
@@ -138,6 +145,8 @@ export interface INativeAppMessageCallbacks {
   colorscheme: (colorscheme: IPywalColors) => void,
   cssToggleSuccess: (target: string) => void,
   cssToggleFailed: (target: string, error: string) => void,
+  cssFontSizeSetSuccess: () => void,
+  cssFontSizeSetFailed: (error: string) => void,
 }
 
 /**
@@ -179,7 +188,6 @@ export interface IThemeTemplateItem {
 export interface IPaletteTemplateItem extends IThemeTemplateItem {
   target: string;
 }
-
 
 /**
  * Expose 'wrappedJSObject' from the 'window' namespace.

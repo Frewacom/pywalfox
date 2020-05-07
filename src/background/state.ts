@@ -1,4 +1,6 @@
+import { DEFAULT_CSS_FONT_SIZE } from '../config/general';
 import { DEFAULT_THEME_TEMPLATE_DARK, DEFAULT_THEME_TEMPLATE_LIGHT } from '../config/default-themes';
+
 import {
   IPywalColors,
   IExtensionTheme,
@@ -53,7 +55,7 @@ export class State {
       options: {
         userChrome: false,
         userContent: false,
-        fontSize: 11,
+        fontSize: DEFAULT_CSS_FONT_SIZE,
         duckduckgo: false,
       }
     };
@@ -127,6 +129,10 @@ export class State {
     return false;
   }
 
+  public getCssFontSize() {
+    return this.currentState.options.fontSize;
+  }
+
   public getOptionsData() {
     let data: IOptionSetData[] = [];
     for (const key in this.currentState.options) {
@@ -180,6 +186,15 @@ export class State {
       options: {
         ...this.currentState.options,
         [target]: enabled,
+      }
+    });
+  }
+
+  public setCssFontSize(size: number) {
+    this.set({
+      options: {
+        ...this.currentState.options,
+        fontSize: size,
       }
     });
   }

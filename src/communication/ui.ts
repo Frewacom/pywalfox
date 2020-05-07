@@ -45,6 +45,10 @@ export function sendOptionSet(option: string, enabled: boolean) {
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.OPTION_SET, data: optionData });
 }
 
+export function sendFontSizeSet(size: number) {
+  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.FONT_SIZE_SET, data: size });
+}
+
 export function sendPaletteTemplateSet(template: IColorschemeTemplate) {
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.PALETTE_TEMPLATE_SET, data: template });
 }

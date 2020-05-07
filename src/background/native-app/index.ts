@@ -3,14 +3,9 @@ import { RESPONSE_TIMEOUT, NATIVE_MESSAGES } from '../../config/native';
 import {
   IPywalColors,
   INativeAppMessage,
+  INativeAppRequest,
   INativeAppMessageCallbacks
 } from '../../definitions';
-
-/* Interface for the messages sent to the native messaging host. */
-interface INativeAppRequest {
-  action: string;
-  target?: string;
-}
 
 /**
  * Implements the communcation with the native messaging host.
@@ -58,9 +53,8 @@ export class NativeApp {
     clearTimeout(this.versionCheckTimeout);
   }
 
-  private onCssToggleResponse(message: INativeAppMessage, enabled: boolean) {
+  private onCssToggleResponse(message: INativeAppMessage) {
     const target = this.getData(message);
-    const error = message['error'];
 
     if (!target) {
       this.logError(`Custom CSS was applied successfully, but no target was specified`);
@@ -70,7 +64,17 @@ export class NativeApp {
     if (message.success) {
       this.callbacks.cssToggleSuccess(target);
     } else {
+      const error = message['error'];
       this.callbacks.cssToggleFailed(target, error);
+    }
+  }
+
+  private onCssFontSizeResponse(message: INativeAppMessage) {
+    if (message.success) {
+      this.callbacks.cssFontSizeSetSuccess();
+    } else {
+      const error = message['error'];
+      this.callbacks.cssFontSizeSetFailed(error);
     }
   }
 
@@ -88,11 +92,12 @@ export class NativeApp {
         const colorscheme = this.getData(message);
         colorscheme && this.callbacks.colorscheme(colorscheme);
         break;
-      case NATIVE_MESSAGES.CSS_ENABLE:
-        this.onCssToggleResponse(message, true);
-        break;
+      case NATIVE_MESSAGES.CSS_ENABLE: /* fallthrough */
       case NATIVE_MESSAGES.CSS_DISABLE:
-        this.onCssToggleResponse(message, false);
+        this.onCssToggleResponse(message);
+        break;
+      case NATIVE_MESSAGES.CSS_FONT_SIZE:
+        this.onCssFontSizeResponse(message);
         break;
       case NATIVE_MESSAGES.INVALID_ACTION:
         this.logError(`Native app recieved unhandled message action: ${message.action}`);
@@ -140,5 +145,9 @@ export class NativeApp {
 
   public requestCssEnabled(target: string, enabled: boolean) {
     this.sendMessage({ action: enabled ? NATIVE_MESSAGES.CSS_ENABLE : NATIVE_MESSAGES.CSS_DISABLE, target });
+  }
+
+  public requestFontSizeSet(target: string, size: number) {
+    this.sendMessage({ action: NATIVE_MESSAGES.CSS_FONT_SIZE, target, size });
   }
 }
