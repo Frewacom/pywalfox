@@ -100,6 +100,7 @@ body.applied .color-preview {
   background-color: var(--accent-secondary);
   border-radius: var(--border-radius-sm);
   font-size: var(--font-size-sm);
+  margin: 0;
 }
 
 body.light #debugging-version {

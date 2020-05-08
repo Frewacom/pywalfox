@@ -5,8 +5,8 @@ body {
   --font-size: 0.85rem;
   --font-size-lg: 1.2rem;
 
-  --border-radius: 7px;
-  --border-radius-sm: 3px;
+  --border-radius: 4px;
+  --border-radius-sm: 2px;
 
   --spinner-width: 0.8rem;
   --spinner-thickness: 0.15rem;
