@@ -59,6 +59,7 @@ header {
   position: relative;
   font-size: var(--font-size-lg);
   font-weight: 900;
+  color: var(--text-focus);
   margin: 0;
 }
 

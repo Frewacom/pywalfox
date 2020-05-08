@@ -12,7 +12,7 @@ import {
 
 export function generateColorscheme(
   pywalColors: IPywalColors,
-  customColors: IPalette,
+  customColors: Partial<IPalette>,
   template: IColorschemeTemplate
 ) {
   // Override the templated palette with any custom colors set by the user
@@ -78,7 +78,7 @@ export function generateExtensionTheme(colorscheme: IColorscheme) {
       --text: ${colorscheme.palette.text};
       --accent-primary: ${colorscheme.palette.accentPrimary};
       --accent-secondary: ${colorscheme.palette.accentSecondary};
-      --textFocus: ${colorscheme.palette.textFocus};
+      --text-focus: ${colorscheme.palette.textFocus};
     }
   `;
 }

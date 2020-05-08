@@ -180,10 +180,6 @@ export interface INotificationData {
   error: boolean;
 }
 
-export interface IPaletteColorData {
-  [key: string]: string;
-}
-
 export interface IThemeTemplateItem {
   title: string;
   description: string;

@@ -1,11 +1,11 @@
 import { EXTENSION_MESSAGES } from '../config/general';
 
 import {
-  ThemeModes,
+  IPalette,
   IOptionSetData,
-  IPaletteColorData,
   IPaletteTemplate,
-  IThemeTemplate
+  IThemeTemplate,
+  ThemeModes,
 } from '../definitions';
 
 export function requestInitialData() {
@@ -41,7 +41,7 @@ export function requestThemeModeSet(mode: ThemeModes) {
 }
 
 export function requestPaletteColorSet(id: string, color: string) {
-  const paletteColorData: IPaletteColorData = { [id]: color };
+  const paletteColorData: Partial<IPalette> = { [id]: color };
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.PALETTE_COLOR_SET, data: paletteColorData });
 }
 

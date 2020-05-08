@@ -364,6 +364,7 @@ function handleExtensionMessage(message: IExtensionMessage) {
     case EXTENSION_MESSAGES.PYWAL_COLORS_SET:
       pywalColors = message.data;
       colorpicker.setPalette(message.data);
+      updatePaletteTemplateInputs(template.palette);
       document.body.classList.add(ENABLED_BODY_CLASS);
       break;
     case EXTENSION_MESSAGES.TEMPLATE_SET:

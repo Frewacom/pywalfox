@@ -4,7 +4,7 @@ input, .input-container {
   height: var(--button-height);
   padding: 0 var(--spacing-sm);
   border: none;
-  color: var(--text);
+  color: var(--text-focus);
   font-weight: bold;
   box-shadow: var(--box-shadow);
 }

@@ -25,10 +25,6 @@ import {
 import {
   DEFAULT_THEME_DARK,
   DEFAULT_THEME_LIGHT,
-  DEFAULT_PALETTE_TEMPLATE_DARK,
-  DEFAULT_BROWSER_TEMPLATE_DARK,
-  DEFAULT_PALETTE_TEMPLATE_LIGHT,
-  DEFAULT_BROWSER_TEMPLATE_LIGHT,
 } from '../config/default-themes';
 
 import { State } from './state';
@@ -170,6 +166,7 @@ export class Extension {
         break;
       case EXTENSION_MESSAGES.THEME_MODE_SET:
         this.state.setThemeMode(message.data);
+        this.state.setCustomColors(null);
         var pywalColors = this.state.getPywalColors();
         pywalColors && this.updateThemes(pywalColors);
         break;
@@ -182,7 +179,8 @@ export class Extension {
       case EXTENSION_MESSAGES.PALETTE_COLOR_SET:
         var pywalColors = this.state.getPywalColors();
         if (pywalColors !== null) {
-          this.updateThemes(pywalColors, message.data);
+          const customPalette = this.createCustomColorPalette(message.data);
+          this.updateThemes(pywalColors, customPalette);
         }
         break;
       case EXTENSION_MESSAGES.DEBUGGING_INFO_GET:
@@ -214,11 +212,12 @@ export class Extension {
     }
 
     this.state.setThemes(null, null, null, null); // TODO: Could probably save the generated themes
+    this.state.setCustomColors(null);
     this.state.setApplied(false);
     this.state.setEnabled(false);
   }
 
-  private updateThemes(pywalColors: IPywalColors, customColors?: IPalette) {
+  private updateThemes(pywalColors: IPywalColors, customColors?: Partial<IPalette>) {
     const template = this.state.getTemplate();
     const colorscheme = generateColorscheme(pywalColors, customColors, template);
     const extensionTheme = generateExtensionTheme(colorscheme);
@@ -227,12 +226,12 @@ export class Extension {
     this.setBrowserTheme(colorscheme.browser);
     this.settingsPage.setTheme(extensionTheme);
 
-    // TODO: Do we have to send this on each theme update?
-    UI.sendPywalColors(pywalColors);
-    UI.sendTemplate(template);
-
     if (this.state.getDDGThemeEnabled()) {
       DDG.setTheme(ddgTheme);
+    }
+
+    if (customColors) {
+      this.state.setCustomColors(customColors);
     }
 
     this.state.setThemes(pywalColors, colorscheme, extensionTheme, ddgTheme);
@@ -309,6 +308,16 @@ export class Extension {
     UI.sendThemeTemplateSet(template);
   }
 
+  private createCustomColorPalette(data: Partial<IPalette>) {
+    const currentColors = this.state.getCustomColors();
+
+    if (currentColors === null) {
+      return data;
+    }
+
+    return Object.assign(currentColors, data);
+  }
+
   private validateVersion(version: string) {
     const versionNumber = parseFloat(version);
     if (versionNumber < MIN_REQUIRED_DAEMON_VERSION) {
@@ -337,6 +346,7 @@ export class Extension {
 
   private onPywalColorsReceived(pywalColors: IPywalColors) {
     UI.sendDebuggingOutput('Pywal colors was fetched from daemon and applied successfully');
+    UI.sendPywalColors(pywalColors);
     this.updateThemes(pywalColors);
   }
 

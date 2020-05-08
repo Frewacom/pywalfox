@@ -2,6 +2,7 @@ import { DEFAULT_CSS_FONT_SIZE } from '../config/general';
 import { DEFAULT_THEME_DARK, DEFAULT_THEME_LIGHT } from '../config/default-themes';
 
 import {
+  IPalette,
   IPywalColors,
   IExtensionTheme,
   IDuckDuckGoTheme,
@@ -22,6 +23,7 @@ export interface IExtensionState {
     isApplied: boolean;
     customTemplateEnabled: boolean;
     pywalColors: IPywalColors;
+    customColors: Partial<IPalette>;
     colorscheme: IColorscheme;
     extension: IExtensionTheme;
     ddg: IDuckDuckGoTheme;
@@ -49,6 +51,7 @@ export class State {
         isApplied: false,
         customTemplateEnabled: false,
         pywalColors: null,
+        customColors: null,
         colorscheme: null,
         extension: null,
         ddg: null,
@@ -107,6 +110,10 @@ export class State {
     return this.currentState.theme.pywalColors;
   }
 
+  public getCustomColors() {
+    return this.currentState.theme.customColors;
+  }
+
   public getColorscheme() {
     return this.currentState.theme.generated;
   }
@@ -162,6 +169,15 @@ export class State {
       theme: {
         ...this.currentState.theme,
         isApplied,
+      }
+    });
+  }
+
+  public setCustomColors(customColors: Partial<IPalette>) {
+    this.set({
+      theme: {
+        ...this.currentState.theme,
+        customColors,
       }
     });
   }
