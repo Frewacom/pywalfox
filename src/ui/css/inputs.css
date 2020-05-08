@@ -6,6 +6,7 @@ input, .input-container {
   border: none;
   color: var(--text);
   font-weight: bold;
+  box-shadow: var(--box-shadow);
 }
 
 .input-container {
