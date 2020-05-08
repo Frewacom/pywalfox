@@ -341,6 +341,7 @@ function setInitialData(data: IInitialData) {
   pywalColors = data.pywalColors;
 
   colorpicker.setPalette(data.pywalColors);
+  colorpicker.setCustomColors(data.customColors);
   colorpicker.setSelectedColorForTarget(data.template.palette);
   updatePaletteTemplateInputs(data.template.palette);
 
@@ -364,6 +365,7 @@ function handleExtensionMessage(message: IExtensionMessage) {
     case EXTENSION_MESSAGES.PYWAL_COLORS_SET:
       pywalColors = message.data;
       colorpicker.setPalette(message.data);
+      colorpicker.setSelectedColorForTarget(template.palette);
       updatePaletteTemplateInputs(template.palette);
       document.body.classList.add(ENABLED_BODY_CLASS);
       break;
@@ -379,7 +381,6 @@ function handleExtensionMessage(message: IExtensionMessage) {
       template.palette = paletteTemplate;
       break;
     case EXTENSION_MESSAGES.THEME_TEMPLATE_SET:
-      // TODO: Update theme template inputs
       break;
     case EXTENSION_MESSAGES.THEME_MODE_SET:
       themepicker.setSelectedMode(message.data);

@@ -75,6 +75,7 @@ export class Extension {
   private getInitialData() {
     const pywalColors = this.state.getPywalColors();
     const template = this.state.getTemplate();
+    const customColors = this.state.getCustomColors();
     const themeMode = this.state.getThemeMode();
     const debuggingInfo = this.state.getDebuggingInfo();
     const enabled = this.state.getEnabled();
@@ -84,6 +85,7 @@ export class Extension {
       pywalColors,
       template,
       themeMode,
+      customColors,
       debuggingInfo,
       enabled,
       options,

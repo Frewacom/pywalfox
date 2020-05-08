@@ -163,6 +163,7 @@ export interface INodeLookup {
 export interface IInitialData {
   pywalColors: IPywalColors;
   template: IColorschemeTemplate;
+  customColors: Partial<IPalette>;
   themeMode: ThemeModes;
   debuggingInfo: IDebuggingInfoData;
   enabled: boolean;

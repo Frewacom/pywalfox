@@ -1,27 +1,42 @@
+import * as Utils from './utils';
+
 import { Dialog } from './dialog';
 import { requestPaletteColorSet } from './messenger';
-import { IPywalColors, IPaletteTemplate, IPalette } from '../definitions';
 import { PYWAL_PALETTE_LENGTH } from '../config/general';
-import * as Utils from './utils';
+
+import {
+  IPywalColors,
+  IPaletteTemplate,
+  IPalette,
+  INodeLookup,
+  PaletteColors
+} from '../definitions';
 
 export class Colorpicker extends Dialog {
   private grid: HTMLElement;
   private customColorButton: HTMLInputElement;
+  private customColorButtonContainer: HTMLElement;
   private undoButton: HTMLElement;
   private pywalColors: IPywalColors;
+  private customColors: Partial<IPalette>
   private resetElement: HTMLElement;
   private selectedElement: HTMLElement;
+  private colorElementLookup: INodeLookup;
 
   constructor() {
     super('colorpicker');
 
     this.grid = document.getElementById('colorpicker-grid');
     this.customColorButton = <HTMLInputElement>document.getElementById('colorpicker-custom');
+    this.customColorButtonContainer = document.getElementById('colorpicker-custom-container');
     this.undoButton = document.getElementById('colorpicker-undo');
 
     this.pywalColors = null;
     this.resetElement = null;
     this.selectedElement = null;
+
+    this.customColors = {};
+    this.colorElementLookup = {};
 
     this.populateColorGrid();
     this.setupListeners();
@@ -103,6 +118,7 @@ export class Colorpicker extends Dialog {
       color = this.getSelectedPywalColor(selectedElement);
     }
 
+    this.customColors[<PaletteColors>id] = color;
     requestPaletteColorSet(id, color);
   }
 
@@ -116,7 +132,7 @@ export class Colorpicker extends Dialog {
   private onSetCustomColor(e: Event) {
     const element = <HTMLInputElement>e.target;
     this.updatePaletteColor(element, element.value);
-    this.highlightSelectedColor(element.parentElement);
+    this.highlightSelectedColor(this.customColorButtonContainer);
     this.selectedElement = element;
   }
 
@@ -124,6 +140,8 @@ export class Colorpicker extends Dialog {
     if (this.selectedElement === null) {
       return;
     }
+
+    // TODO: Add case for custom color
 
     const resetIndex = this.resetElement.getAttribute('data-color-index');
     const selectedIndex = this.selectedElement.getAttribute('data-color-index');
@@ -137,15 +155,24 @@ export class Colorpicker extends Dialog {
   public setPalette(pywalColors: IPywalColors) {
     if (pywalColors !== null) {
       this.grid.childNodes.forEach((element: HTMLElement, index: number) => {
-        element.style.backgroundColor = pywalColors[index];
+        const color = pywalColors[index]
+        element.style.backgroundColor = color;
+        this.colorElementLookup[color] = element;
       });
     } else {
       this.grid.childNodes.forEach((element: HTMLElement) => {
         element.style.backgroundColor = "";
-      })
+      });
+
+      this.customColors = {};
+      this.colorElementLookup = {};
     }
 
     this.pywalColors = pywalColors;
+  }
+
+  public setCustomColors(customColors: Partial<IPalette>) {
+    this.customColors = customColors ? customColors : {};
   }
 
   public setSelectedColorForTarget(template: IPaletteTemplate) {
@@ -158,10 +185,23 @@ export class Colorpicker extends Dialog {
       return;
     }
 
-    // TODO: The color index should be based on the selected color, not the template
     const targetColor = this.target.getAttribute('data-color');
     const colorIndex = template[targetColor];
-    const element: HTMLElement = document.querySelector(`button[data-color-index="${colorIndex}"]`);
+
+    let color: string;
+    let element: HTMLElement;
+
+    if (this.customColors !== null && this.customColors.hasOwnProperty(targetColor)) {
+      color = this.customColors[<PaletteColors>targetColor];
+      if (this.colorElementLookup.hasOwnProperty(color)) {
+        element = this.colorElementLookup[color];
+      } else {
+        element = this.customColorButtonContainer;
+      }
+    } else {
+      color = this.pywalColors[colorIndex];
+      element = this.colorElementLookup[color];
+    }
 
     if (element) {
       this.highlightSelectedColor(element);
