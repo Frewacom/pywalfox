@@ -4,6 +4,8 @@ import {
   IInitialData,
   IPywalColors,
   IColorschemeTemplate,
+  IPaletteTemplate,
+  IThemeTemplate,
   ThemeModes,
   IDebuggingInfoData,
   IOptionSetData,
@@ -49,7 +51,11 @@ export function sendFontSizeSet(size: number) {
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.FONT_SIZE_SET, data: size });
 }
 
-export function sendPaletteTemplateSet(template: IColorschemeTemplate) {
+export function sendPaletteTemplateSet(template: IPaletteTemplate) {
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.PALETTE_TEMPLATE_SET, data: template });
+}
+
+export function sendThemeTemplateSet(template: IThemeTemplate) {
+  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.THEME_TEMPLATE_SET, data: template });
 }
 

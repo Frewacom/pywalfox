@@ -85,6 +85,14 @@ body.light .separator {
   cursor: pointer;
 }
 
+.color-preview {
+  display: none;
+}
+
+.color-preview[open] {
+  display: flex;
+}
+
 #debugging-version {
   padding: var(--spacing-xsm) var(--spacing-md);
   color: var(--background);

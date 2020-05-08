@@ -290,25 +290,23 @@ export class Extension {
 
   // TODO: Validate type of message.data
   private setPaletteTemplate(message: IExtensionMessage) {
-    const template = message.data;
-
+    let template: IPaletteTemplate = message.data;
     if (template === null) {
-      const defaultTemplate = this.getDefaultTemplate();
-      this.state.setPaletteTemplate(defaultTemplate.palette);
-    } else {
-      this.state.setPaletteTemplate(template);
+      template = this.getDefaultTemplate().palette;
     }
+
+    this.state.setPaletteTemplate(template);
+    UI.sendPaletteTemplateSet(template);
   }
 
   private setThemeTemplate(message: IExtensionMessage) {
-    const template = message.data;
-
+    let template: IThemeTemplate = message.data;
     if (template === null) {
-      const defaultTemplate = this.getDefaultTemplate();
-      this.state.setThemeTemplate(defaultTemplate.browser);
-    } else {
-      this.state.setThemeTemplate(template);
+      template = this.getDefaultTemplate().browser;
     }
+
+    this.state.setThemeTemplate(template);
+    UI.sendThemeTemplateSet(template);
   }
 
   private validateVersion(version: string) {

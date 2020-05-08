@@ -18,6 +18,8 @@ import {
 import {
     IExtensionMessage,
     IColorschemeTemplate,
+    IPaletteTemplate,
+    IThemeTemplate,
     IInitialData,
     IOptionSetData,
     INodeLookup,
@@ -58,7 +60,6 @@ const themepicker = new Themepicker();
 let currentDialog: Dialog = null;
 let pywalColors: IPywalColors = null;
 let template: IColorschemeTemplate = null;
-let editTemplate: IColorschemeTemplate = null;
 
 let optionButtonsLookup: INodeLookup = {};
 let paletteTemplateInputLookup: INodeLookup = {};
@@ -110,6 +111,26 @@ function writeOutput(message: string) {
   debuggingOutput.scrollTop = debuggingOutput.scrollHeight; // Scrolls to bottom of textarea
 }
 
+function updatePaletteTemplateColorPreview(element: HTMLElement, index: number) {
+  const previewElement = <HTMLElement>element.previousElementSibling;
+  if (!previewElement) {
+    console.error('Could not find preview element as sibling to:', element);
+    return;
+  }
+
+  if (index < 0 || index >= PYWAL_PALETTE_LENGTH) {
+    console.error(`Could not show color preview, index is invalid: ${index}`);
+    return;
+  }
+
+  if (pywalColors !== null) {
+    previewElement.style.backgroundColor = pywalColors[index];
+    Utils.open(previewElement);
+  } else {
+    Utils.close(previewElement);
+  }
+}
+
 function onSettingCardClicked(header: HTMLElement) {
   Utils.toggleOpen(<HTMLElement>header.parentNode);
 }
@@ -117,7 +138,7 @@ function onSettingCardClicked(header: HTMLElement) {
 function onColorClicked(e: Event) {
   const element = <HTMLElement>e.target;
   openDialog(colorpicker, element);
-  colorpicker.setSelectedColorForTarget(template);
+  colorpicker.setSelectedColorForTarget(template.palette);
 }
 
 function setOptionEnabled(target: HTMLElement, enabled: boolean) {
@@ -192,15 +213,27 @@ function onHelpToggle(target: HTMLElement) {
 
 function onPaletteTemplateInputChanged(e: Event) {
   const target = <HTMLInputElement>e.target;
+  const targetId = target.getAttribute('data-target');
   const value = target.value;
 
+  if (!template.palette.hasOwnProperty(targetId)) {
+    console.error(`Invalid/missing 'data-target' attribute on palette template input:  ${targetId}`);
+    return;
+  }
+
   if (target.checkValidity()) {
-    console.log(value);
+    template.palette[targetId] = parseInt(value);
+    updatePaletteTemplateColorPreview(target, value);
   }
 }
 
 function onPaletteTemplateSave(e: Event) {
+  if (template === null || !template.hasOwnProperty('palette')) {
+    console.error(`Template is null or the palette template is not set: ${template}`);
+    return;
+  }
 
+  Messenger.requestPaletteTemplateSet(template.palette);
 }
 
 function onPaletteTemplateReset(e: Event) {
@@ -212,7 +245,12 @@ function onPaletteTemplateUseCurrent(e: Event) {
 }
 
 function onThemeTemplateSave(e: Event) {
+  if (template === null || !template.hasOwnProperty('browser')) {
+    console.error(`Template is null or the browser template is not set: ${template}`);
+    return;
+  }
 
+  Messenger.requestThemeTemplateSet(template.browser);
 }
 
 function onThemeTemplateReset(e: Event) {
@@ -227,11 +265,13 @@ function updateOptionButtonState(optionData: IOptionSetData) {
   }
 }
 
-function updatePaletteTemplateInputs(template: IColorschemeTemplate) {
-  for (const key in template.palette) {
+function updatePaletteTemplateInputs(template: IPaletteTemplate) {
+  for (const key in template) {
     const element = <HTMLInputElement>paletteTemplateInputLookup[key];
     if (element) {
-      element.value = template.palette[key].toString();
+      const index = template[key];
+      element.value = index.toString();
+      updatePaletteTemplateColorPreview(element, index);
     } else {
       console.error(`Found unhandled palette template target: ${key}`);
     }
@@ -270,7 +310,10 @@ function createPaletteContent() {
           <p class="setting-title">${item.title}</p>
           <p class="setting-description">${item.description}</p>
         </div>
-        <input type="number" data-target="${item.target}" min="0" max="${PYWAL_PALETTE_LENGTH - 1}" />
+        <div class="box row v-center">
+          <div class="btn btn-color color-preview margin-right-sm"></div>
+          <input type="number" data-target="${item.target}" min="0" max="${PYWAL_PALETTE_LENGTH - 1}" />
+        </div>
       </div>
     `;
   });
@@ -294,9 +337,10 @@ async function setCurrentTheme(themeInfo?: browser.theme.ThemeUpdateInfo) {
 }
 
 function setInitialData(data: IInitialData) {
+  template = data.template;
   colorpicker.setPalette(data.pywalColors);
-  colorpicker.setSelectedColorForTarget(data.template);
-  updatePaletteTemplateInputs(data.template);
+  colorpicker.setSelectedColorForTarget(data.template.palette);
+  updatePaletteTemplateInputs(data.template.palette);
 
   if (data.enabled) {
     themepicker.setSelectedMode(data.themeMode);
@@ -320,8 +364,17 @@ function handleExtensionMessage(message: IExtensionMessage) {
       break;
     case EXTENSION_MESSAGES.TEMPLATE_SET:
       template = message.data;
-      updatePaletteTemplateInputs(template);
-      colorpicker.setSelectedColorForTarget(template);
+      updatePaletteTemplateInputs(template.palette);
+      colorpicker.setSelectedColorForTarget(template.palette);
+      break;
+    case EXTENSION_MESSAGES.PALETTE_TEMPLATE_SET:
+      const paletteTemplate = message.data;
+      colorpicker.setSelectedColorForTarget(paletteTemplate);
+      updatePaletteTemplateInputs(paletteTemplate);
+      template.palette = paletteTemplate;
+      break;
+    case EXTENSION_MESSAGES.THEME_TEMPLATE_SET:
+      // TODO: Update theme template inputs
       break;
     case EXTENSION_MESSAGES.THEME_MODE_SET:
       themepicker.setSelectedMode(message.data);

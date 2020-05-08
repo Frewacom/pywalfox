@@ -1,6 +1,6 @@
 import { Dialog } from './dialog';
 import { requestPaletteColorSet } from './messenger';
-import { IPywalColors, IColorschemeTemplate } from '../definitions';
+import { IPywalColors, IPaletteTemplate } from '../definitions';
 import { PYWAL_PALETTE_LENGTH } from '../config/general';
 import * as Utils from './utils';
 
@@ -148,7 +148,7 @@ export class Colorpicker extends Dialog {
     this.pywalColors = pywalColors;
   }
 
-  public setSelectedColorForTarget(template: IColorschemeTemplate) {
+  public setSelectedColorForTarget(template: IPaletteTemplate) {
     if (this.target === null) {
       return;
     }
@@ -160,7 +160,7 @@ export class Colorpicker extends Dialog {
 
     // TODO: The color index should be based on the selected color, not the template
     const targetColor = this.target.getAttribute('data-color');
-    const colorIndex = template.palette[targetColor];
+    const colorIndex = template[targetColor];
     const element: HTMLElement = document.querySelector(`button[data-color-index="${colorIndex}"]`);
 
     if (element) {
