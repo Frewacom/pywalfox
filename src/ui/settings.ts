@@ -8,6 +8,7 @@ import { Themepicker } from './themepicker';
 import {
   EXTENSION_MESSAGES,
   PYWAL_PALETTE_LENGTH,
+  ENABLED_BODY_CLASS,
 } from '../config/general';
 
 import {
@@ -125,9 +126,6 @@ function updatePaletteTemplateColorPreview(element: HTMLElement, index: number) 
 
   if (pywalColors !== null) {
     previewElement.style.backgroundColor = pywalColors[index];
-    Utils.open(previewElement);
-  } else {
-    Utils.close(previewElement);
   }
 }
 
@@ -182,6 +180,7 @@ function onDisableClicked(e: Event) {
   pywalColors = null;
   colorpicker.setPalette(null);
   colorpicker.setSelectedColorForTarget(null);
+  document.body.classList.remove(ENABLED_BODY_CLASS);
 }
 
 function onThemeClicked(e: Event) {
@@ -222,8 +221,9 @@ function onPaletteTemplateInputChanged(e: Event) {
   }
 
   if (target.checkValidity()) {
-    template.palette[targetId] = parseInt(value);
-    updatePaletteTemplateColorPreview(target, value);
+    const index = parseInt(value);
+    template.palette[targetId] = index;
+    updatePaletteTemplateColorPreview(target, index);
   }
 }
 
@@ -338,12 +338,15 @@ async function setCurrentTheme(themeInfo?: browser.theme.ThemeUpdateInfo) {
 
 function setInitialData(data: IInitialData) {
   template = data.template;
+  pywalColors = data.pywalColors;
+
   colorpicker.setPalette(data.pywalColors);
   colorpicker.setSelectedColorForTarget(data.template.palette);
   updatePaletteTemplateInputs(data.template.palette);
 
   if (data.enabled) {
     themepicker.setSelectedMode(data.themeMode);
+    document.body.classList.add(ENABLED_BODY_CLASS);
   }
 
   for (const optionData of data.options) {
@@ -361,6 +364,7 @@ function handleExtensionMessage(message: IExtensionMessage) {
     case EXTENSION_MESSAGES.PYWAL_COLORS_SET:
       pywalColors = message.data;
       colorpicker.setPalette(message.data);
+      document.body.classList.add(ENABLED_BODY_CLASS);
       break;
     case EXTENSION_MESSAGES.TEMPLATE_SET:
       template = message.data;

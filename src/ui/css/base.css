@@ -87,9 +87,10 @@ body.light .separator {
 
 .color-preview {
   display: none;
+  cursor: initial;
 }
 
-.color-preview[open] {
+body.applied .color-preview {
   display: flex;
 }
 
