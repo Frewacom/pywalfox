@@ -20,7 +20,8 @@ body {
   --spacing-lg: 1.5rem;
   --spacing-xlg: 1.8rem;
 
-  --brightness-filter: brightness(140%);
+  --brightness-filter-light: brightness(140%);
+  --brightness-filter: brightness(120%);
   --brightness-filter-dark: brightness(90%);
   --brightness-filter-dark-hover: brightness(85%);
 
@@ -38,6 +39,7 @@ body {
   --icon-size-lg: 1.7rem;
 
   --arrow-size: 1rem;
+  --header-height: calc((2 * var(--spacing-sm)) + var(--button-height));
   --content-width: 48rem;
 
   --dialog-width: 6.2rem;
@@ -45,9 +47,9 @@ body {
 
   --z-index-dialog: 50;
   --z-index-notification: 30;
-  --z-index-color-button: 20;
-  --z-index-header: 15;
-  --z-index-sticky: 25;
+  --z-index-color-button: 15;
+  --z-index-header: 25;
+  --z-index-sticky: 20;
   --z-index-overlay: 10;
 
   --transition-time: 0.1s;

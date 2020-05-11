@@ -37,6 +37,8 @@ a:hover {
 
 header {
   z-index: var(--z-index-header);
+  background-color: var(--background);
+  height: var(--header-height);
 }
 
 #overlay {

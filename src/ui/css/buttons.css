@@ -112,7 +112,7 @@ body.light .btn-control {
 }
 
 .btn-darker:hover {
-  filter: var(--brightness-filter);
+  filter: var(--brightness-filter-light);
 }
 
 .btn-darker[selected] {

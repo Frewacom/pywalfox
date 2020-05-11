@@ -219,6 +219,17 @@ export class Extension {
     this.state.setEnabled(false);
   }
 
+  private applyUpdatedTemplate() {
+    const customColors = this.state.getCustomColors();
+    const pywalColors = this.state.getPywalColors();
+
+    if (!pywalColors) {
+      return;
+    }
+
+    this.updateThemes(pywalColors, customColors);
+  }
+
   private updateThemes(pywalColors: IPywalColors, customColors?: Partial<IPalette>) {
     const template = this.state.getTemplate();
     const colorscheme = generateColorscheme(pywalColors, customColors, template);
@@ -296,6 +307,7 @@ export class Extension {
     }
 
     this.state.setPaletteTemplate(template);
+    this.applyUpdatedTemplate();
     UI.sendPaletteTemplateSet(template);
   }
 
@@ -306,6 +318,7 @@ export class Extension {
     }
 
     this.state.setThemeTemplate(template);
+    this.applyUpdatedTemplate();
     UI.sendThemeTemplateSet(template);
   }
 

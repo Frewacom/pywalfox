@@ -55,16 +55,12 @@
   border-bottom-right-radius: 0;
 }
 
-.card[open] .card-content-header {
-  border-top: none;
-}
-
 .card-content-header {
   background-color: var(--background);
-  border-top: none;
   box-shadow: var(--box-shadow);
   font-size: var(--font-size-md);
   padding: var(--spacing-sm) var(--spacing-card);
+  border-top: 1px solid var(--lighter-background);
 }
 
 .card-help-title {
