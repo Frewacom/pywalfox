@@ -289,7 +289,6 @@ export class Extension {
     }
   }
 
-  // TODO: Validate type of message.data
   private setPaletteTemplate(message: IExtensionMessage) {
     let template: IPaletteTemplate = message.data;
     if (template === null) {

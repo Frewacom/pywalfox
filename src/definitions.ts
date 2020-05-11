@@ -181,12 +181,9 @@ export interface INotificationData {
   error: boolean;
 }
 
-export interface IThemeTemplateItem {
+export interface ITemplateItem {
   title: string;
   description: string;
-}
-
-export interface IPaletteTemplateItem extends IThemeTemplateItem {
   target: string;
 }
 

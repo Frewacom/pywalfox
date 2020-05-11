@@ -19,3 +19,26 @@ input[type=number] {
   text-align: center;
   width: 3rem;
 }
+
+select {
+  background-color: var(--background);
+  border-radius: var(--border-radius-sm);
+  border: none;
+  padding: var(--spacing-sm);
+  padding-right: var(--spacing-xlg);
+  height: var(--button-height);
+  color: white;
+  font-weight: bold;
+  font-size: var(--font-size-sm);
+  -moz-appearance: none;
+  outline: none;
+  background-image: url('../icons/chevron.svg');
+  background-position: calc(100% - var(--spacing-sm));
+  background-repeat: no-repeat;
+  background-size: 1.2rem;
+  box-shadow: var(--box-shadow);
+}
+
+select:hover {
+  filter: var(--brightness-filter);
+}

@@ -25,9 +25,9 @@ import {
     IOptionSetData,
     INodeLookup,
     IPywalColors,
-    IThemeTemplateItem,
-    IPaletteTemplateItem,
+    ITemplateItem,
     IDebuggingInfoData,
+    PaletteColors,
 } from '../definitions';
 
 const optionButtons: NodeListOf<HTMLElement> = document.querySelectorAll('button[data-option]');
@@ -64,6 +64,7 @@ let template: IColorschemeTemplate = null;
 
 let optionButtonsLookup: INodeLookup = {};
 let paletteTemplateInputLookup: INodeLookup = {};
+let themeTemplateInputLookup: INodeLookup = {};
 
 /**
  * Opens a dialog on the right hand side of the UI.
@@ -216,7 +217,7 @@ function onPaletteTemplateInputChanged(e: Event) {
   const value = target.value;
 
   if (!template.palette.hasOwnProperty(targetId)) {
-    console.error(`Invalid/missing 'data-target' attribute on palette template input:  ${targetId}`);
+    console.error(`Invalid/missing 'data-target' attribute on palette template input: ${targetId}`);
     return;
   }
 
@@ -225,6 +226,23 @@ function onPaletteTemplateInputChanged(e: Event) {
     template.palette[targetId] = index;
     updatePaletteTemplateColorPreview(target, index);
   }
+}
+
+function onThemeTemplateInputChanged(target: HTMLSelectElement) {
+  const targetId = target.getAttribute('data-target');
+  const value = (<HTMLOptionElement>target[target.selectedIndex]).value;
+
+  if (!template.browser.hasOwnProperty(targetId)) {
+    console.error(`Invalid 'data-target' attribute on theme template input: ${targetId}`);
+    return;
+  }
+
+  if (Object.keys(PaletteColors).includes(value)) {
+    console.error(`Invalid palette color id was selected: ${value}. No such value in the PaletteColors enum`);
+    return;
+  }
+
+  template.browser[targetId] = <PaletteColors>value;
 }
 
 function onPaletteTemplateSave(e: Event) {
@@ -278,22 +296,47 @@ function updatePaletteTemplateInputs(template: IPaletteTemplate) {
   }
 }
 
+function updateThemeTemplateInputs(template: IThemeTemplate) {
+  for (const key in template) {
+    const element = <HTMLSelectElement>themeTemplateInputLookup[key];
+    if (element) {
+      const defaultValue = template[key];
+      element.value = defaultValue;
+    } else {
+      console.error(`Found unhandled theme template target: ${key}`);
+    }
+  }
+}
+
 function createThemeTemplateContent() {
-  THEME_TEMPLATE_DATA.forEach((item: IThemeTemplateItem) => {
+  let options: string = '';
+  for (const color of Object.values(PaletteColors)) {
+    options += `<option>${color}</option>`;
+  }
+
+  THEME_TEMPLATE_DATA.forEach((item: ITemplateItem) => {
     themeTemplateContent.innerHTML += `
       <div class="setting row expand space-between v-center">
         <div class="box column align-left">
           <p class="setting-title">${item.title}</p>
           <p class="setting-description">${item.description}</p>
         </div>
-        <button data-color="background" class="btn btn-color dialog-arrow"></button>
+        <select class="clickable" data-target="${item.target}">${options}</select>
       </div>
     `;
+  });
+
+  const selectElements: NodeListOf<HTMLSelectElement> = document.querySelectorAll('select[data-target]');
+
+  selectElements.forEach((input) => {
+    const target = input.getAttribute('data-target');
+    input.addEventListener('change', () => onThemeTemplateInputChanged(input));
+    themeTemplateInputLookup[target] = input;
   });
 }
 
 function createPaletteContent() {
-  PALETTE_TEMPLATE_DATA.forEach((item: IPaletteTemplateItem) => {
+  PALETTE_TEMPLATE_DATA.forEach((item: ITemplateItem) => {
     paletteContent.innerHTML += `
       <div class="setting row expand space-between v-center">
         <div class="box column align-left">
@@ -343,7 +386,9 @@ function setInitialData(data: IInitialData) {
   colorpicker.setPalette(data.pywalColors);
   colorpicker.setCustomColors(data.customColors);
   colorpicker.setSelectedColorForTarget(data.template.palette);
+
   updatePaletteTemplateInputs(data.template.palette);
+  updateThemeTemplateInputs(data.template.browser);
 
   if (data.enabled) {
     themepicker.setSelectedMode(data.themeMode);
@@ -372,6 +417,7 @@ function handleExtensionMessage(message: IExtensionMessage) {
     case EXTENSION_MESSAGES.TEMPLATE_SET:
       template = message.data;
       updatePaletteTemplateInputs(template.palette);
+      updateThemeTemplateInputs(template.browser);
       colorpicker.setSelectedColorForTarget(template.palette);
       break;
     case EXTENSION_MESSAGES.PALETTE_TEMPLATE_SET:
@@ -381,6 +427,9 @@ function handleExtensionMessage(message: IExtensionMessage) {
       template.palette = paletteTemplate;
       break;
     case EXTENSION_MESSAGES.THEME_TEMPLATE_SET:
+      const themeTemplate = message.data;
+      updateThemeTemplateInputs(themeTemplate);
+      template.browser = themeTemplate;
       break;
     case EXTENSION_MESSAGES.THEME_MODE_SET:
       themepicker.setSelectedMode(message.data);
