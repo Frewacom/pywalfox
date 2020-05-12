@@ -35,7 +35,7 @@
   }
 
   #colorpicker-grid {
-    width: 26rem;
+    width: 25rem;
     margin: 0;
     margin-right: var(--spacing-sm);
     row-gap: var(--spacing-sm);
@@ -48,7 +48,7 @@
 
   .btn-palette-color {
     height: var(--button-height-md);
-    flex-basis: calc(11% - var(--spacing-sm) + 1px);
+    max-width: var(--button-height-md);
   }
 
   #colorpicker-buttons {
@@ -59,7 +59,15 @@
 
 @media screen and (max-width: 45rem) {
   body {
-    --content-width: calc(100% - 2 * var(--spacing-md));
+    --content-width: calc(100% - 2 * var(--spacing-md) + 1rem);
+  }
+
+  #colorpicker-buttons > .btn {
+    height: 100%;
+  }
+
+  .card {
+    margin-bottom: var(--spacing-md);
   }
 
   .btn.btn-sm {
@@ -75,6 +83,7 @@
 
   header {
     justify-content: flex-start;
+    margin: 0 !important;
   }
 
   #header-buttons {

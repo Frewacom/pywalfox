@@ -2,6 +2,7 @@ export const MIN_REQUIRED_DAEMON_VERSION = 2.0;
 export const PYWAL_PALETTE_LENGTH = 18;
 export const DEFAULT_CSS_FONT_SIZE = 14;
 
+export const NOTIFICATION_TIMEOUT = 5000;
 export const ENABLED_BODY_CLASS = 'applied';
 export const DUCKDUCKGO_THEME_ID = 'pywalfox';
 export const INJECT_URL_PATTERN = [ "*://*.duckduckgo.com/*" ];

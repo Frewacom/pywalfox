@@ -20,6 +20,7 @@
 
 #themepicker {
   padding: var(--spacing-sm) var(--spacing-sm);
+  top: var(--spacing-sm);
 }
 
 #colorpicker-grid {

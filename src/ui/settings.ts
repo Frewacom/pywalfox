@@ -9,6 +9,7 @@ import {
   EXTENSION_MESSAGES,
   PYWAL_PALETTE_LENGTH,
   ENABLED_BODY_CLASS,
+  NOTIFICATION_TIMEOUT,
 } from '../config/general';
 
 import {
@@ -26,6 +27,7 @@ import {
     INodeLookup,
     IPywalColors,
     ITemplateItem,
+    INotificationData,
     IDebuggingInfoData,
     PaletteColors,
 } from '../definitions';
@@ -51,6 +53,8 @@ const paletteTemplateCurrentButton: HTMLElement = document.getElementById('palet
 const themeTemplateContent: HTMLElement = document.getElementById('theme-template-content');
 const themeTemplateSaveButton: HTMLElement = document.getElementById('theme-template-save');
 const themeTemplateResetButton: HTMLElement = document.getElementById('theme-template-reset');
+
+const notificationContainer: HTMLElement = document.getElementById('notification-container');
 
 const fontSizeSaveButton: HTMLElement = document.getElementById('font-size-save');
 const fontSizeSaveInput: HTMLElement = document.getElementById('font-size-input');
@@ -308,6 +312,43 @@ function updateThemeTemplateInputs(template: IThemeTemplate) {
   }
 }
 
+function createNotification(data: INotificationData) {
+  const icon: string = data.error ? 'error' : 'bell';
+  const notification: HTMLElement = document.createElement('div');
+  const iconElement: HTMLElement = document.createElement('i');
+  const closeElement: HTMLElement = document.createElement('button');
+  const titleElement: HTMLElement = document.createElement('span');
+  const messageElement: HTMLElement = document.createElement('span');
+
+  notification.classList.add('notification', 'box', 'row', 'v-center');
+  titleElement.classList.add('notification-title');
+  messageElement.classList.add('notification-content');
+  closeElement.classList.add('btn', 'notification-close');
+  iconElement.classList.add('icon-sm');
+  iconElement.setAttribute('icon', icon);
+
+  titleElement.innerText = data.title + ':';
+  messageElement.innerText = data.message;
+
+  notification.appendChild(iconElement);
+  notification.appendChild(titleElement);
+  notification.appendChild(messageElement);
+  notification.appendChild(closeElement);
+
+  notificationContainer.appendChild(notification);
+
+  closeElement.addEventListener('click', () => {
+    notificationContainer.removeChild(notification)
+  });
+
+  notification.classList.add('fadeout');
+  setTimeout(() => notification.classList.remove('fadeout'), 50);
+  setTimeout(() => {
+    notificationContainer.removeChild(notification);
+  }, NOTIFICATION_TIMEOUT);
+}
+
+// TOOD: Remove 'innerHTML' calls or it wont pass validation
 function createThemeTemplateContent() {
   let options: string = '';
   for (const color of Object.values(PaletteColors)) {
@@ -436,6 +477,9 @@ function handleExtensionMessage(message: IExtensionMessage) {
       break;
     case EXTENSION_MESSAGES.OPTION_SET:
       updateOptionButtonState(message.data);
+      break;
+    case EXTENSION_MESSAGES.NOTIFCATION:
+      createNotification(message.data);
       break;
     case EXTENSION_MESSAGES.DEBUGGING_OUTPUT:
       writeOutput(message.data);
