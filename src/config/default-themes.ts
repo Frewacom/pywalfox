@@ -39,7 +39,7 @@ export const DEFAULT_BROWSER_TEMPLATE_DARK = {
   popup_text: PaletteColors.Text,
   popup_highlight: PaletteColors.AccentPrimary,
   popup_highlight_text: PaletteColors.Background,
-  sidebar: PaletteColors.Background,
+  sidebar: PaletteColors.BackgroundLight,
   sidebar_border: PaletteColors.BackgroundLight,
   sidebar_text: PaletteColors.Text,
   sidebar_highlight: PaletteColors.AccentPrimary,

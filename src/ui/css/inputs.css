@@ -27,15 +27,16 @@ select {
   padding: var(--spacing-sm);
   padding-right: var(--spacing-xlg);
   height: var(--button-height);
-  color: white;
+  color: var(--text-focus);
   font-weight: bold;
   font-size: var(--font-size-sm);
   -moz-appearance: none;
   outline: none;
-  background-image: url('../icons/chevron.svg');
+  background-image: linear-gradient(black, black), url('../icons/chevron.svg');
   background-position: calc(100% - var(--spacing-sm));
   background-repeat: no-repeat;
   background-size: 1.2rem;
+  background-blend-mode: difference;
   box-shadow: var(--box-shadow);
 }
 
