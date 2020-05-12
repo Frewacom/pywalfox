@@ -101,9 +101,13 @@ export class Colorpicker extends Dialog {
     return color;
   }
 
+  // TODO: Custom color does not update its value when refetching colors and the dialog is open
   private setCustomColor(element: HTMLElement) {
     const color = element.style.backgroundColor;
-    this.customColorButton.value = Utils.rgbToHex(color);
+
+    if (color) {
+      this.customColorButton.value = Utils.rgbToHex(color);
+    }
   }
 
   private updatePaletteColor(selectedElement: HTMLElement, customColor?: string) {

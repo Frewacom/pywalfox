@@ -41,7 +41,7 @@ body {
   --arrow-size: 1rem;
   --header-height: calc((2 * var(--spacing-sm)) + var(--button-height));
   --content-width: 48rem;
-  --min-content-width: 34rem;
+  --min-content-width: 36rem;
 
   --dialog-width: 6.2rem;
   --dialog-offset: calc(var(--content-width) + var(--spacing-lg));

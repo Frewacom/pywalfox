@@ -59,7 +59,11 @@
 
 @media screen and (max-width: 45rem) {
   body {
-    --content-width: calc(100% - 2 * var(--spacing-md) + 1rem);
+    --content-width: calc(100% - 2 * var(--spacing-md));
+  }
+
+  .wrapper {
+    padding: 0 var(--spacing-sm);
   }
 
   #colorpicker-buttons > .btn {
