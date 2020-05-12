@@ -1,0 +1,87 @@
+@media screen and (max-width: 66rem) {
+  body {
+    --content-width: 40rem;
+  }
+
+  #logo {
+    font-size: 1rem;
+  }
+
+  #logo > span {
+    font-size: var(--font-size-md);
+  }
+
+  .btn:not(.btn-palette-color) {
+    padding: var(--spacing-md) var(--spacing);
+    height: var(--button-height-md);
+  }
+
+  .setting-description {
+    margin-right: var(--spacing);
+  }
+}
+
+@media screen and (max-width: 58rem) {
+  #colorpicker {
+    position: relative;
+    height: var(--dialog-width);
+    width: 100%;
+    height: auto;
+    left: 0;
+    top: 0;
+    margin-bottom: var(--spacing-lg);
+    flex-direction: row;
+    padding: var(--spacing) var(--spacing-card);
+  }
+
+  #colorpicker-grid {
+    width: 26rem;
+    margin: 0;
+    margin-right: var(--spacing-sm);
+    row-gap: var(--spacing-sm);
+    column-gap: var(--spacing-sm);
+  }
+
+  .dialog-arrow[selected]::after {
+    display: none;
+  }
+
+  .btn-palette-color {
+    height: var(--button-height-md);
+    flex-basis: calc(11% - var(--spacing-sm) + 1px);
+  }
+
+  #colorpicker-buttons {
+    flex: 1;
+    flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 45rem) {
+  body {
+    --content-width: calc(100% - 2 * var(--spacing-md));
+  }
+
+  .btn.btn-sm {
+    padding: 0 var(--spacing-md);
+    height: 2rem;
+  }
+}
+
+@media screen and (max-width: 40rem) {
+  #logo {
+    display: none;
+  }
+
+  header {
+    justify-content: flex-start;
+  }
+
+  #header-buttons {
+    flex: 1;
+  }
+
+  .btn-header {
+    flex: 1;
+  }
+}

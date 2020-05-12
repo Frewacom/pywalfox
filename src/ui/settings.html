@@ -13,7 +13,7 @@
         <div class="box">
           <h1 id="logo">Pywalfox<span id="version">v2.0.0</span></h1>
         </div>
-        <div class="box">
+        <div class="box" id="header-buttons">
           <button class="btn btn-default btn-header margin-right" id="disable">Disable theme</button>
           <button class="btn btn-primary btn-header" id="fetch">Fetch pywal colors</button>
           <div class="separator"></div>
@@ -26,24 +26,28 @@
         </div>
       </header>
       <main class="container">
-        <section class="setting-card card expand space-between margin-bottom-lg" open>
+        <div class="box column expand palette-card-container">
+          <section class="setting-card card expand space-between margin-bottom-lg" open>
+            <div class="setting-card-header card-header expand row v-center space-between clickable">
+              <div class="box">
+                <i icon="droplet"></i>
+                <p class="card-title">Palette</p>
+              </div>
+              <i icon="chevron"></i>
+            </div>
+            <div class="card-content column expand" id="palette-content"></div>
+          </section>
           <aside class="dialog" id="colorpicker">
             <div id="colorpicker-grid"></div>
-            <div class="box btn btn-default btn-sm" id="colorpicker-custom-container">
-              <label for="colorpicker-custom" id="colorpicker-custom-label" class="clickable">Custom</label>
-              <input id="colorpicker-custom" class="clickable" type="color">
+            <div class="box" id="colorpicker-buttons">
+              <div class="box btn btn-default btn-sm" id="colorpicker-custom-container">
+                <label for="colorpicker-custom" id="colorpicker-custom-label" class="clickable">Custom</label>
+                <input id="colorpicker-custom" class="clickable" type="color">
+              </div>
+              <button class="btn btn-primary btn-sm margin-top-sm" id="colorpicker-undo">Undo</button>
             </div>
-            <button class="btn btn-primary btn-sm margin-top-sm" id="colorpicker-undo">Undo</button>
           </aside>
-          <div class="setting-card-header card-header expand row v-center space-between clickable">
-            <div class="box">
-              <i icon="droplet"></i>
-              <p class="card-title">Palette</p>
-            </div>
-            <i icon="chevron"></i>
-          </div>
-          <div class="card-content column expand" id="palette-content"></div>
-        </section>
+        </div>
         <section class="setting-card card expand space-between margin-bottom-lg" open>
           <div class="setting-card-header card-header expand row v-center space-between clickable">
             <div class="box">
@@ -97,7 +101,7 @@
           <div class="card-content card-content-header row expand v-center space-between sticky">
             <div class="box">
               <button class="btn btn-primary btn-sm margin-right-sm" id="palette-template-save">Save palette</button>
-              <button class="btn btn-default btn-sm margin-right-sm" id="palette-template-current">Set from current palette</button>
+              <button class="btn btn-default btn-sm margin-right-sm" id="palette-template-current">Set from current</button>
               <button class="btn btn-default btn-sm" id="palette-template-reset">Reset to default</button>
             </div>
             <button class="btn btn-default btn-sm btn-h-sm" data-help="palette-template-help">
