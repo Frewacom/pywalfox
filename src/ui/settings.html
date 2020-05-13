@@ -35,7 +35,17 @@
               </div>
               <i icon="chevron"></i>
             </div>
-            <div class="card-content column expand" id="palette-content"></div>
+            <div class="card-content column expand" id="palette-content">
+              <template id="palette-template">
+                <div class="setting row expand space-between v-center">
+                  <div class="box column align-left">
+                    <p class="setting-title"></p>
+                    <p class="setting-description"></p>
+                  </div>
+                  <button data-color="" class="btn btn-color dialog-arrow"></button>
+                </div>
+              </template>
+            </div>
           </section>
           <aside class="dialog" id="colorpicker">
             <div id="colorpicker-grid"></div>
@@ -127,7 +137,20 @@
               Palette template guide
             </a>
           </div>
-          <div class="card-content column expand" id="palette-template-content"></div>
+          <div class="card-content column expand" id="palette-template-content">
+            <template id="palette-edit-template">
+              <div class="setting row expand space-between v-center">
+                <div class="box column align-left">
+                  <p class="setting-title">${item.title}</p>
+                  <p class="setting-description">${item.description}</p>
+                </div>
+                <div class="box row v-center">
+                  <div class="btn btn-color color-preview margin-right-sm"></div>
+                  <input type="number" data-target="${item.target}" min="0" max="${PYWAL_PALETTE_LENGTH - 1}" />
+                </div>
+              </div>
+            </template>
+          </div>
         </section>
         <section class="setting-card card expand space-between margin-bottom-lg">
           <div class="setting-card-header card-header expand row v-center space-between clickable no-border-bottom">
@@ -173,7 +196,17 @@
               </a>
             </div>
           </div>
-          <div class="card-content column expand" id="theme-template-content"></div>
+          <div class="card-content column expand" id="theme-template-content">
+            <template id="theme-template">
+              <div class="setting row expand space-between v-center">
+                <div class="box column align-left">
+                  <p class="setting-title"></p>
+                  <p class="setting-description"></p>
+                </div>
+                <!-- Select element is inserted dynamically -->
+              </div>
+            </template>
+          </div>
         </section>
         <section class="setting-card card expand space-between">
           <div class="setting-card-header card-header expand row v-center space-between clickable no-border-bottom">

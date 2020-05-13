@@ -348,68 +348,82 @@ function createNotification(data: INotificationData) {
   }, NOTIFICATION_TIMEOUT);
 }
 
-// TOOD: Remove 'innerHTML' calls or it wont pass validation
 function createThemeTemplateContent() {
-  let options: string = '';
+  const themeTemplate = <HTMLTemplateElement>document.getElementById('theme-template');
+  const selectElement: HTMLSelectElement = document.createElement('select');
+
+  selectElement.classList.add('clickable');
+
   for (const color of Object.values(PaletteColors)) {
-    options += `<option>${color}</option>`;
+    const optionElement: HTMLOptionElement = document.createElement('option');
+    optionElement.innerText = color;
+    selectElement.appendChild(optionElement);
   }
 
   THEME_TEMPLATE_DATA.forEach((item: ITemplateItem) => {
-    themeTemplateContent.innerHTML += `
-      <div class="setting row expand space-between v-center">
-        <div class="box column align-left">
-          <p class="setting-title">${item.title}</p>
-          <p class="setting-description">${item.description}</p>
-        </div>
-        <select class="clickable" data-target="${item.target}">${options}</select>
-      </div>
-    `;
-  });
+    const clone = <HTMLElement>themeTemplate.content.cloneNode(true);
+    const titleElement = <HTMLParagraphElement>clone.querySelector('.setting-title');
+    const contentElement = <HTMLParagraphElement>clone.querySelector('.setting-description');
+    const container = <HTMLElement>clone.querySelector('.setting');
+    const selectElementClone = <HTMLSelectElement>selectElement.cloneNode(true);
 
-  const selectElements: NodeListOf<HTMLSelectElement> = document.querySelectorAll('select[data-target]');
+    titleElement.innerText = item.title;
+    contentElement.innerText = item.description;
+    selectElementClone.setAttribute('data-target', item.target);
 
-  selectElements.forEach((input) => {
-    const target = input.getAttribute('data-target');
-    input.addEventListener('change', () => onThemeTemplateInputChanged(input));
-    themeTemplateInputLookup[target] = input;
+    selectElementClone.addEventListener('change', () => onThemeTemplateInputChanged(selectElementClone));
+    themeTemplateInputLookup[item.target] = selectElementClone;
+
+    container.appendChild(selectElementClone);
+    themeTemplateContent.appendChild(clone);
   });
 }
 
+function createPaletteItem(parent: HTMLElement, base: HTMLTemplateElement, item: ITemplateItem) {
+  const clone = <HTMLElement>base.content.cloneNode(true);
+  const titleElement = <HTMLParagraphElement>clone.querySelector('.setting-title');
+  const contentElement = <HTMLParagraphElement>clone.querySelector('.setting-description');
+  const buttonElement = <HTMLButtonElement>clone.querySelector('button');
+
+  titleElement.innerText = item.title;
+  contentElement.innerText = item.description;
+  buttonElement.setAttribute('data-color', item.target);
+
+  buttonElement.addEventListener('click', onColorClicked);
+
+  parent.appendChild(clone);
+}
+
+function createPaletteTemplateItem(parent: HTMLElement, base: HTMLTemplateElement, item: ITemplateItem) {
+  const clone = <HTMLElement>base.content.cloneNode(true);
+  const titleElement = <HTMLParagraphElement>clone.querySelector('.setting-title');
+  const contentElement = <HTMLParagraphElement>clone.querySelector('.setting-description');
+  const inputElement = <HTMLInputElement>clone.querySelector('input');
+  const maxValue = (PYWAL_PALETTE_LENGTH - 1).toString();
+
+  titleElement.innerText = item.title;
+  contentElement.innerText = item.description;
+  inputElement.setAttribute('data-target', item.target);
+  inputElement.max = maxValue;
+
+  inputElement.addEventListener('change', onPaletteTemplateInputChanged);
+  paletteTemplateInputLookup[item.target] = inputElement;
+
+  parent.appendChild(clone);
+}
+
 function createPaletteContent() {
+  const paletteTemplate = <HTMLTemplateElement>document.getElementById('palette-template');
+  const paletteEditTemplate = <HTMLTemplateElement>document.getElementById('palette-edit-template');
+
+  if (!paletteTemplate || !paletteEditTemplate) {
+    console.error('Missing required template in HTML-file for the palette');
+    return;
+  }
+
   PALETTE_TEMPLATE_DATA.forEach((item: ITemplateItem) => {
-    paletteContent.innerHTML += `
-      <div class="setting row expand space-between v-center">
-        <div class="box column align-left">
-          <p class="setting-title">${item.title}</p>
-          <p class="setting-description">${item.description}</p>
-        </div>
-        <button data-color="${item.target}" class="btn btn-color dialog-arrow"></button>
-      </div>
-    `;
-
-    paletteTemplateContent.innerHTML += `
-      <div class="setting row expand space-between v-center">
-        <div class="box column align-left">
-          <p class="setting-title">${item.title}</p>
-          <p class="setting-description">${item.description}</p>
-        </div>
-        <div class="box row v-center">
-          <div class="btn btn-color color-preview margin-right-sm"></div>
-          <input type="number" data-target="${item.target}" min="0" max="${PYWAL_PALETTE_LENGTH - 1}" />
-        </div>
-      </div>
-    `;
-  });
-
-  const paletteTemplateInputs: NodeListOf<HTMLElement> = document.querySelectorAll('input[data-target]');
-  const colorButtons: NodeListOf<HTMLElement> = document.querySelectorAll('button[data-color]');
-
-  colorButtons.forEach((button: HTMLElement) => button.addEventListener('click', onColorClicked));
-  paletteTemplateInputs.forEach((input: HTMLElement) => {
-    const target = input.getAttribute('data-target');
-    input.addEventListener('change', onPaletteTemplateInputChanged);
-    paletteTemplateInputLookup[target] = input;
+    createPaletteItem(paletteContent, paletteTemplate, item);
+    createPaletteTemplateItem(paletteTemplateContent, paletteEditTemplate, item);
   });
 }
 
