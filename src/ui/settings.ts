@@ -313,39 +313,25 @@ function updateThemeTemplateInputs(template: IThemeTemplate) {
 }
 
 function createNotification(data: INotificationData) {
-  const icon: string = data.error ? 'error' : 'bell';
-  const notification: HTMLElement = document.createElement('div');
-  const iconElement: HTMLElement = document.createElement('i');
-  const closeElement: HTMLElement = document.createElement('button');
-  const titleElement: HTMLElement = document.createElement('span');
-  const messageElement: HTMLElement = document.createElement('span');
-
-  notification.classList.add('notification', 'box', 'row', 'v-center');
-  titleElement.classList.add('notification-title');
-  messageElement.classList.add('notification-content');
-  closeElement.classList.add('btn', 'notification-close');
-  iconElement.classList.add('icon-sm');
-  iconElement.setAttribute('icon', icon);
+  const notificationTemplate = <HTMLTemplateElement>document.getElementById('notification-template');
+  const clone = <HTMLElement>notificationTemplate.content.cloneNode(true);
+  const containerElement = <HTMLElement>clone.querySelector('.notification');
+  const titleElement = <HTMLParagraphElement>clone.querySelector('.notification-title');
+  const contentElement = <HTMLParagraphElement>clone.querySelector('.notification-content');
+  const iconElement = <HTMLElement>clone.querySelector('i');
+  const closeElement = <HTMLButtonElement>clone.querySelector('button');
 
   titleElement.innerText = data.title + ':';
-  messageElement.innerText = data.message;
+  contentElement.innerText = data.message;
+  iconElement.setAttribute('icon', data.error ? 'error' : 'bell');
 
-  notification.appendChild(iconElement);
-  notification.appendChild(titleElement);
-  notification.appendChild(messageElement);
-  notification.appendChild(closeElement);
+  closeElement.addEventListener('click', () => notificationContainer.removeChild(containerElement));
 
-  notificationContainer.appendChild(notification);
+  notificationContainer.appendChild(clone);
 
-  closeElement.addEventListener('click', () => {
-    notificationContainer.removeChild(notification)
-  });
-
-  notification.classList.add('fadeout');
-  setTimeout(() => notification.classList.remove('fadeout'), 50);
-  setTimeout(() => {
-    notificationContainer.removeChild(notification);
-  }, NOTIFICATION_TIMEOUT);
+  containerElement.classList.add('fadeout');
+  setTimeout(() => containerElement.classList.remove('fadeout'), 50);
+  setTimeout(() => notificationContainer.removeChild(containerElement), NOTIFICATION_TIMEOUT);
 }
 
 function createThemeTemplateContent() {
