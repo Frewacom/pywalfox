@@ -10,9 +10,12 @@ export const INJECT_URL_PATTERN = [ "*://*.duckduckgo.com/*" ];
 export const UPDATE_PAGE_URL = 'dist/update.html';
 export const SETTINGS_PAGE_URL = 'dist/settings.html';
 
+export const USER_CHROME_TARGET = 'userChrome';
+export const USER_CONTENT_TARGET = 'userContent';
+
 export const VALID_CSS_TARGETS = [
-  "userChrome",
-  "userContent"
+  USER_CHROME_TARGET,
+  USER_CONTENT_TARGET,
 ];
 
 export const EXTERNAL_MESSAGES = {
@@ -59,7 +62,7 @@ export const EXTENSION_MESSAGES = {
 
 export const EXTENSION_OPTIONS = {
   FONT_SIZE: "fontSize",
-  USER_CHROME: "userChrome",
-  USER_CONTENT: "userContent",
+  USER_CHROME: USER_CHROME_TARGET,
+  USER_CONTENT: USER_CONTENT_TARGET,
   DUCKDUCKGO: "duckduckgo",
 };

@@ -20,6 +20,7 @@ import {
   EXTENSION_MESSAGES,
   EXTENSION_OPTIONS,
   VALID_CSS_TARGETS,
+  USER_CHROME_TARGET,
 } from '../config/general';
 
 import {
@@ -80,6 +81,7 @@ export class Extension {
     const debuggingInfo = this.state.getDebuggingInfo();
     const enabled = this.state.getEnabled();
     const options = this.state.getOptionsData();
+    const fontSize = this.state.getCssFontSize();
 
     return {
       pywalColors,
@@ -89,6 +91,7 @@ export class Extension {
       debuggingInfo,
       enabled,
       options,
+      fontSize,
     };
   }
 
@@ -115,15 +118,12 @@ export class Extension {
 
     switch (optionData.option) {
       case EXTENSION_OPTIONS.FONT_SIZE:
-        // TODO: Set font size
+        this.setCssFontSize(optionData);
         break;
       case EXTENSION_OPTIONS.DUCKDUCKGO:
         this.setDDGEnabled(optionData);
         break;
       case EXTENSION_OPTIONS.USER_CHROME: /* Fallthrough */
-        this.setCustomCSSEnabled(optionData);
-        // TODO: If the base font size has changed, request a font size update
-        break;
       case EXTENSION_OPTIONS.USER_CONTENT:
         this.setCustomCSSEnabled(optionData);
         break;
@@ -283,6 +283,15 @@ export class Extension {
     this.state.setDDGThemeEnabled(enabled);
   }
 
+  private setCssFontSize(optionData: IOptionSetData) {
+    if (optionData.size !== undefined && optionData.size >= 10 && optionData.size <= 20) {
+      // Currently, only userChrome uses the custom font size feature
+      this.nativeApp.requestFontSizeSet(USER_CHROME_TARGET, optionData.size);
+    } else {
+      UI.sendNotification('Font size error', 'Invalid size or not set', true);
+    }
+  }
+
   /**
    * Fetches the browser- and extension theme from state and applies it, if set.
    * This is used when launching the background script to increase the speed
@@ -375,7 +384,7 @@ export class Extension {
     }
 
     UI.sendOptionSet(target, newState);
-    UI.sendNotification('Custom CSS', notificationMessage);
+    UI.sendNotification('Restart needed', notificationMessage);
     this.state.setCssEnabled(target, newState);
   }
 
@@ -386,7 +395,7 @@ export class Extension {
   }
 
   private cssFontSizeSetSuccess(size: number) {
-    UI.sendNotification('Font size', 'Updated base font size successfully');
+    UI.sendNotification('Restart needed', 'Updated base font size successfully');
     UI.sendFontSizeSet(size);
     this.state.setCssFontSize(size);
   }

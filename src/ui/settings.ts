@@ -54,10 +54,10 @@ const themeTemplateContent: HTMLElement = document.getElementById('theme-templat
 const themeTemplateSaveButton: HTMLElement = document.getElementById('theme-template-save');
 const themeTemplateResetButton: HTMLElement = document.getElementById('theme-template-reset');
 
+const notificationTemplate = <HTMLTemplateElement>document.getElementById('notification-template');
 const notificationContainer: HTMLElement = document.getElementById('notification-container');
 
-const fontSizeSaveButton: HTMLElement = document.getElementById('font-size-save');
-const fontSizeSaveInput: HTMLElement = document.getElementById('font-size-input');
+const fontSizeSaveInput = <HTMLInputElement>document.getElementById('font-size-input');
 
 const colorpicker = new Colorpicker();
 const themepicker = new Themepicker();
@@ -193,12 +193,15 @@ function onThemeClicked(e: Event) {
 }
 
 function onFontSizeSave(e: Event) {
-  const inputElement = <HTMLInputElement>fontSizeSaveInput;
-  if (inputElement.checkValidity()) {
-    // TODO: Set loading state on button
-    Messenger.requestFontSizeSet(parseInt(inputElement.value));
+  if (fontSizeSaveInput.checkValidity()) {
+    const option = fontSizeSaveInput.getAttribute('data-option');
+    Messenger.requestOptionSet(option, true, parseInt(fontSizeSaveInput.value));
   } else {
-    // TODO: Display notification or something on error
+    createNotification({
+      title: 'Custom font size',
+      message: 'Invalid value, should be between 10-20 pixels',
+      error: true
+    });
     return;
   }
 }
@@ -313,7 +316,6 @@ function updateThemeTemplateInputs(template: IThemeTemplate) {
 }
 
 function createNotification(data: INotificationData) {
-  const notificationTemplate = <HTMLTemplateElement>document.getElementById('notification-template');
   const clone = <HTMLElement>notificationTemplate.content.cloneNode(true);
   const containerElement = <HTMLElement>clone.querySelector('.notification');
   const titleElement = <HTMLParagraphElement>clone.querySelector('.notification-title');
@@ -431,6 +433,8 @@ function setInitialData(data: IInitialData) {
   updatePaletteTemplateInputs(data.template.palette);
   updateThemeTemplateInputs(data.template.browser);
 
+  fontSizeSaveInput.value = data.fontSize.toString();
+
   if (data.enabled) {
     themepicker.setSelectedMode(data.themeMode);
     document.body.classList.add(ENABLED_BODY_CLASS);
@@ -495,7 +499,7 @@ function setupListeners() {
   fetchButton.addEventListener('click', onFetchClicked);
   themeButton.addEventListener('click', onThemeClicked);
   disableButton.addEventListener('click', onDisableClicked);
-  fontSizeSaveButton.addEventListener('click', onFontSizeSave);
+  fontSizeSaveInput.addEventListener('change', Utils.debounce(onFontSizeSave, 500));
   themeTemplateSaveButton.addEventListener('click', onThemeTemplateSave);
   themeTemplateResetButton.addEventListener('click', onThemeTemplateReset);
   paletteTemplateSaveButton.addEventListener('click', onPaletteTemplateSave);

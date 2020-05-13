@@ -122,6 +122,7 @@ export interface IExtensionMessage {
 export interface IOptionSetData {
   option: string;
   enabled: boolean;
+  size?: number;
 }
 
 /* Interface for the messages received from the native messaging host. */
@@ -149,7 +150,7 @@ export interface INativeAppMessageCallbacks {
   colorscheme: (colorscheme: IPywalColors) => void,
   cssToggleSuccess: (target: string) => void,
   cssToggleFailed: (target: string, error: string) => void,
-  cssFontSizeSetSuccess: () => void,
+  cssFontSizeSetSuccess: (size: number) => void,
   cssFontSizeSetFailed: (error: string) => void,
 }
 
@@ -168,6 +169,7 @@ export interface IInitialData {
   debuggingInfo: IDebuggingInfoData;
   enabled: boolean;
   options: IOptionSetData[];
+  fontSize: number;
 }
 
 export interface IDebuggingInfoData {

@@ -71,7 +71,7 @@ export class NativeApp {
 
   private onCssFontSizeResponse(message: INativeAppMessage) {
     if (message.success) {
-      this.callbacks.cssFontSizeSetSuccess();
+      this.callbacks.cssFontSizeSetSuccess(parseInt(message.data));
     } else {
       const error = message['error'];
       this.callbacks.cssFontSizeSetFailed(error);

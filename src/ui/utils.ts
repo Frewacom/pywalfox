@@ -83,3 +83,11 @@ export async function setInitialThemeClass(themeInfo?: browser.theme.ThemeUpdate
 export function rgbToHex(rgb: string) {
   return '#' + rgb.substr(4, rgb.indexOf(')') - 4).split(',').map((color) => parseInt(color).toString(16)).join('');
 }
+
+export function debounce<F extends (...params: any[]) => void>(fn: F, delay: number) {
+  let timeoutID: number = null;
+  return function(this: any, ...args: any[]) {
+    clearTimeout(timeoutID);
+    timeoutID = window.setTimeout(() => fn.apply(this, args), delay);
+  } as F;
+}

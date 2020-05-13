@@ -45,13 +45,9 @@ export function requestPaletteColorSet(id: string, color: string) {
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.PALETTE_COLOR_SET, data: paletteColorData });
 }
 
-export function requestOptionSet(option: string, enabled: boolean) {
-  const optionData: IOptionSetData = { option, enabled };
+export function requestOptionSet(option: string, enabled: boolean, size?: number) {
+  const optionData: IOptionSetData = { option, enabled, size };
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.OPTION_SET, data: optionData });
-}
-
-export function requestFontSizeSet(size: number) {
-  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.FONT_SIZE_SET, data: size });
 }
 
 export function requestThemeTemplateSet(template: IThemeTemplate) {

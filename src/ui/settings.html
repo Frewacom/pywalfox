@@ -84,12 +84,9 @@
             <div class="setting row expand space-between v-center indent no-highlight" id="font-size-option">
               <div class="box column align-left">
                 <p class="setting-title">Font size</p>
-                <p class="setting-description">The base font size to be used in userChrome.css</p>
+                <p class="setting-description">The base font size to be used in userChrome.css (in pixels)</p>
               </div>
-              <div class="box row v-center">
-                <input type="number" min=10 max=20 id="font-size-input" class="margin-right-sm">
-                <button class="btn btn-primary btn-darker" id="font-size-save" async>Set</button>
-              </div>
+              <input type="number" min="10" max="20" id="font-size-input" data-option="fontSize">
             </div>
             <div class="setting row expand space-between v-center no-highlight">
               <div class="box column align-left">
