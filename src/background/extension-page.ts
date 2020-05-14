@@ -79,7 +79,7 @@ export class ExtensionPage {
 
   private async create() {
     try {
-      this.tab = await browser.tabs.create({ url: this.url });
+      this.tab = await browser.tabs.create({ url: this.url, active: false });
     } catch (error) {
       console.error(`Could not open ${this.url}: ${error}`);
       return;
@@ -89,12 +89,13 @@ export class ExtensionPage {
   }
 
   public async open() {
-    if (this.isOpen()) {
-      this.focus();
-    } else {
+    if (!this.isOpen()) {
       await this.create();
-      this.setTheme(this.currentTheme, false);
+      await this.setTheme(this.currentTheme, false);
     }
+
+    // TODO: Focus window when the page has loaded to avoid flickering when applying CSS
+    this.focus();
   }
 
   public focus() {
@@ -110,7 +111,7 @@ export class ExtensionPage {
 
       if (extensionTheme !== null) {
         console.log(`Inserting CSS for ${this.url}`);
-        browser.tabs.insertCSS(this.tab.id, {
+        await browser.tabs.insertCSS(this.tab.id, {
           code: extensionTheme,
           runAt: 'document_start',
           cssOrigin: 'author',
