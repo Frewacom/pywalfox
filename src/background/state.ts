@@ -79,6 +79,10 @@ export class State {
     return this.currentState.isApplied;
   }
 
+  public getVersion() {
+    return this.currentState.version;
+  }
+
   public getDebuggingInfo() {
     return {
       connected: this.currentState.connected,

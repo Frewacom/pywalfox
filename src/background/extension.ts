@@ -364,6 +364,7 @@ export class Extension {
 
   private nativeAppDisconnected() {
     UI.sendDebuggingOutput('Disconnected from native app', true);
+    UI.sendDebuggingInfo({ connected: false, version: this.state.getVersion() });
     this.state.setConnected(false);
   }
 
