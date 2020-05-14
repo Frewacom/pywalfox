@@ -193,8 +193,8 @@ export class Extension {
   }
 
   private updateExtensionPagesTheme(extensionTheme: IExtensionTheme) {
-    this.updatePage.setTheme(extensionTheme);
     this.settingsPage.setTheme(extensionTheme);
+    this.updatePage.setTheme(extensionTheme);
   }
 
   private resetThemes() {
@@ -205,7 +205,7 @@ export class Extension {
       DDG.resetTheme();
     }
 
-    this.state.setThemes(null, null, null, null); // TODO: Could probably save the generated themes
+    this.state.setThemes(null, null, null, null);
     this.state.setCustomColors(null);
     this.state.setApplied(false);
     this.state.setEnabled(false);
