@@ -99,7 +99,7 @@ body.applied .color-preview {
 }
 
 #debugging-version {
-  padding: var(--spacing-xsm) var(--spacing-md);
+  padding: var(--spacing-xsm) var(--spacing-sm);
   color: var(--background);
   background-color: var(--accent-secondary);
   border-radius: var(--border-radius-sm);

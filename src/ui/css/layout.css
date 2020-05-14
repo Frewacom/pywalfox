@@ -143,19 +143,23 @@
 }
 
 .padding-v {
-  padding: var(--spacing) 0;
+  padding-top: var(--spacing);
+  padding-bottom: var(--spacing);
 }
 
 .padding-v-lg {
-  padding: var(--spacing-lg) 0;
+  padding-top: var(--spacing-lg);
+  padding-bottom: var(--spacing-lg);
 }
 
 .margin-v-lg {
-  margin: var(--spacing-lg) 0;
+  margin-top: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
 }
 
 .margin-v-sm {
-  margin: var(--spacing-sm) 0;
+  margin-top: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
 }
 
 .no-margin-top {

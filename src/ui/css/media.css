@@ -63,7 +63,15 @@
   }
 
   .wrapper {
-    padding: 0 var(--spacing-sm);
+    padding: 0;
+  }
+
+  header.container {
+    margin: 0;
+  }
+
+  #colorpicker {
+    margin-bottom: var(--spacing-md);
   }
 
   #colorpicker-buttons > .btn {
@@ -85,9 +93,15 @@
     display: none;
   }
 
-  header {
+  header.container {
     justify-content: flex-start;
-    margin: 0 !important;
+  }
+
+  header .separator {
+    width: 0;
+    margin: 0;
+    margin-left: 0px;
+    margin-left: var(--spacing-sm);
   }
 
   #header-buttons {

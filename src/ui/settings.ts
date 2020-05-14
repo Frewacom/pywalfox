@@ -185,6 +185,7 @@ function onDisableClicked(e: Event) {
   Messenger.requestDisable();
   pywalColors = null;
   colorpicker.setPalette(null);
+  colorpicker.setCustomColors(null);
   colorpicker.setSelectedColorForTarget(null);
   document.body.classList.remove(ENABLED_BODY_CLASS);
 }
@@ -455,7 +456,8 @@ function handleExtensionMessage(message: IExtensionMessage) {
       break;
     case EXTENSION_MESSAGES.PYWAL_COLORS_SET:
       pywalColors = message.data;
-      colorpicker.setPalette(message.data);
+      colorpicker.setPalette(pywalColors);
+      colorpicker.setCustomColors(null);
       colorpicker.setSelectedColorForTarget(template.palette);
       updatePaletteTemplateInputs(template.palette);
       document.body.classList.add(ENABLED_BODY_CLASS);
