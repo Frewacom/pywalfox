@@ -11,7 +11,7 @@
     font-size: var(--font-size-md);
   }
 
-  .btn:not(.btn-palette-color) {
+  .btn:not(.btn-palette-color):not(.btn-sm) {
     padding: var(--spacing-md) var(--spacing);
     height: var(--button-height-md);
   }

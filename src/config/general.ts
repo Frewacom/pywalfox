@@ -7,8 +7,10 @@ export const ENABLED_BODY_CLASS = 'applied';
 export const DUCKDUCKGO_THEME_ID = 'pywalfox';
 export const INJECT_URL_PATTERN = [ "*://*.duckduckgo.com/*" ];
 
-export const UPDATE_PAGE_URL = 'dist/update.html';
-export const SETTINGS_PAGE_URL = 'dist/settings.html';
+export const EXTENSION_PAGES = {
+  UPDATE: 'dist/update.html',
+  SETTINGS: 'dist/settings.html',
+};
 
 export const USER_CHROME_TARGET = 'userChrome';
 export const USER_CONTENT_TARGET = 'userContent';

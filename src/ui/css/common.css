@@ -10,6 +10,7 @@ body {
 
 p {
   margin: 0.5em 0em 0.5em 0em;
+  font-weight: normal;
 }
 
 a {
@@ -71,7 +72,7 @@ header {
   height: 2em;
   width: 2px;
   background-color: var(--background-light);
-  margin: 0em var(--spacing);
+  margin: 0em var(--spacing-sm);
 }
 
 body.light .separator {
@@ -92,6 +93,11 @@ body.applied .color-preview {
   display: flex;
 }
 
+#debugging-version,
+#debugging-connected {
+  font-weight: bold;
+}
+
 #debugging-version {
   padding: var(--spacing-xsm) var(--spacing-md);
   color: var(--background);
@@ -105,20 +111,27 @@ body.light #debugging-version {
   color: var(--text-focus);
 }
 
+code,
 #debugging-output {
+  background: var(--darker-background);
   padding: var(--spacing-md);
+  color: var(--text);
+  box-sizing: border-box;
+  border-radius: var(--border-radius-sm);
+  font-weight: normal;
+}
+
+#debugging-output {
   width: 100%;
   height: 150px;
-  background: var(--darker-background);
-  color: var(--text);
   border: none;
-  box-sizing: border-box;
-  font-weight: bold;
   font-size: var(--font-size-sm);
-  border-radius: var(--border-radius-sm);
   resize: none;
 }
 
-body.light #debugging-output {
+body.light #debugging-output, body.light code {
   box-shadow: var(--box-shadow);
+}
+
+code {
 }

@@ -6,10 +6,11 @@
 }
 
 .card-header {
-  padding: var(--spacing-sm) var(--spacing-card);
+  padding: 0 var(--spacing-card);
   box-sizing: border-box;
   transition: background-color var(--transition-time);
   border-radius: var(--border-radius);
+  height: calc(var(--button-height) + 2*var(--spacing-xxsm));
 }
 
 .card-header:hover {
@@ -39,6 +40,10 @@
   box-sizing: border-box;
   height: auto;
   padding: var(--spacing-sm) var(--spacing-sm);
+}
+
+.card-content-lg-padding {
+  padding: var(--spacing-md) var(--spacing-card);
 }
 
 .card[open] i[icon="chevron"] {

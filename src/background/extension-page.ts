@@ -1,31 +1,20 @@
 import { IExtensionTheme } from '../definitions';
-import { SETTINGS_PAGE_URL } from '../config/general';
 
-export class SettingsPage {
-  private tab: browser.tabs.Tab;
-  private currentTheme: IExtensionTheme;
-  private url: string;
+export class ExtensionPage {
+  protected tab: browser.tabs.Tab;
+  protected currentTheme: IExtensionTheme;
+  protected url: string;
 
-  // TODO: Is the constructor param needed?
-  constructor(currentTheme: IExtensionTheme) {
+  constructor(url: string) {
     this.tab = null;
     this.currentTheme = null;
-    this.url = browser.runtime.getURL(SETTINGS_PAGE_URL);
+    this.url = browser.runtime.getURL(url);
     this.findDetached();
   }
 
-  private async findDetached() {
-    const tabs = await browser.tabs.query({ url: this.url });
-    if (tabs.length > 0) {
-      const tail = tabs.slice(1);
-      this.deleteDetached(tail);
-      this.attach(tabs[0]);
-    }
-  }
-
-  private deleteDetached(tabs: browser.tabs.Tab[]) {
+  private async deleteDetached(tabs: browser.tabs.Tab[]) {
     for (const tab of tabs) {
-      browser.tabs.remove(tab.id);
+      await browser.tabs.remove(tab.id);
     }
   }
 
@@ -36,12 +25,23 @@ export class SettingsPage {
   }
 
   /**
-   * Called when the settings tab navigates to a new URL or the title changes,
-   * or when the tab is simply closed.
+   * Finds existing tabs that are displaying this URL and
+   * uses that one instead of creating a new tab.
+   *
+   * If there are multiple tabs with this URL open,
+   * all but one will be closed.
    */
+  protected async findDetached() {
+    const tabs = await browser.tabs.query({ url: this.url });
+
+    if (tabs.length > 0) {
+      const tail = tabs.slice(1);
+      this.deleteDetached(tail);
+      this.attach(tabs[0]);
+    }
+  }
+
   private onClosed(tabId: number, removeInfo?: any) {
-    // TODO: Check if this event is unnecessary, since the 'onUpdated' event
-    // seems to be called when closing the tab as well.
     if (this.tab !== null) {
       if (tabId === this.tab.id) {
         browser.tabs.onRemoved.removeListener(this.onClosed);
@@ -51,10 +51,6 @@ export class SettingsPage {
     }
   }
 
-  /**
-   * This function will be called whenever the Settings tab is reloaded or
-   * the user navigates to a different URL.
-   */
   private onUpdated(tabId: number, changeInfo: any, tab?: any) {
     if (changeInfo.status === 'loading') {
       // The 'url' attribute is only available on loading
@@ -68,10 +64,8 @@ export class SettingsPage {
   }
 
   private setupListeners() {
-    /**
-     * The 'onRemoved' callback has no option for specifying a tab id.
-     * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs/onRemoved
-     */
+    // The 'onRemoved' callback has no option for specifying a tab id.
+    // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs/onRemoved
     browser.tabs.onRemoved.addListener(this.onClosed.bind(this));
     browser.tabs.onUpdated.addListener(this.onUpdated.bind(this), {
       tabId: this.tab.id,
@@ -79,36 +73,32 @@ export class SettingsPage {
     });
   }
 
+  private async removeInsertedCss() {
+    return browser.tabs.removeCSS(this.tab.id, { code: this.currentTheme });
+  }
+
   private async create() {
     try {
       this.tab = await browser.tabs.create({ url: this.url });
     } catch (error) {
-      console.error('Could not open Settings page:', error);
+      console.error(`Could not open ${this.url}: ${error}`);
       return;
     }
 
     this.setupListeners();
   }
 
-  private async removeInsertedCss() {
-    return browser.tabs.removeCSS(this.tab.id, { code: this.currentTheme });
-  }
-
-  public async open(extensionTheme?: IExtensionTheme) {
-    await this.create();
-    extensionTheme && this.setTheme(extensionTheme);
+  public async open() {
+    if (this.isOpen()) {
+      this.focus();
+    } else {
+      await this.create();
+    }
   }
 
   public focus() {
     browser.windows.update(this.tab.windowId, { focused: true });
     browser.tabs.update(this.tab.id, { active: true });
-  }
-
-  public async resetTheme() {
-    if (this.currentTheme !== null) {
-      this.removeInsertedCss();
-      this.currentTheme = null;
-    }
   }
 
   public async setTheme(extensionTheme: IExtensionTheme) {
@@ -120,12 +110,15 @@ export class SettingsPage {
       await this.removeInsertedCss();
     }
 
-    browser.tabs.insertCSS(this.tab.id, {
-      code: extensionTheme,
-      runAt: 'document_start',
-      cssOrigin: 'author',
-      allFrames: true,
-    });
+    if (extensionTheme !== null) {
+      console.log(`Inserting CSS for ${this.url}`);
+      browser.tabs.insertCSS(this.tab.id, {
+        code: extensionTheme,
+        runAt: 'document_start',
+        cssOrigin: 'author',
+        allFrames: true,
+      });
+    }
 
     this.currentTheme = extensionTheme;
   }

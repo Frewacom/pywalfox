@@ -2,6 +2,7 @@ import {
   IPalette,
   IPywalColors,
   IBrowserTheme,
+  IExtensionTheme,
   IExtensionMessage,
   IOptionSetData,
   IPaletteTemplate,
@@ -16,11 +17,12 @@ import {
 } from './colorscheme';
 
 import {
-  MIN_REQUIRED_DAEMON_VERSION,
-  EXTENSION_MESSAGES,
+  EXTENSION_PAGES,
   EXTENSION_OPTIONS,
   VALID_CSS_TARGETS,
   USER_CHROME_TARGET,
+  EXTENSION_MESSAGES,
+  MIN_REQUIRED_DAEMON_VERSION,
 } from '../config/general';
 
 import {
@@ -30,7 +32,7 @@ import {
 
 import { State } from './state';
 import { NativeApp } from './native-app';
-import { SettingsPage } from './settings-page';
+import { ExtensionPage } from './extension-page';
 
 import * as UI from '../communication/ui';
 import * as DDG from '../communication/duckduckgo';
@@ -38,7 +40,8 @@ import * as DDG from '../communication/duckduckgo';
 export class Extension {
   private state: State;
   private nativeApp: NativeApp;
-  private settingsPage: SettingsPage;
+  private settingsPage: ExtensionPage;
+  private updatePage: ExtensionPage;
 
   constructor() {
     this.state = new State();
@@ -56,21 +59,11 @@ export class Extension {
     });
 
     browser.runtime.onMessage.addListener(this.onMessage.bind(this));
-    browser.browserAction.onClicked.addListener(this.onIconClicked.bind(this));
-    // TODO: Setup listener for theme updates and update 'isApplied'
-  }
-
-  private onIconClicked(tab: browser.tabs.Tab, clickData: browser.contextMenus.OnClickData) {
-    if (this.settingsPage.isOpen()) {
-      this.settingsPage.focus();
-    } else {
-      let extensionTheme = this.state.getExtensionTheme();
-      if (extensionTheme) {
-        this.settingsPage.open(extensionTheme);
-      } else {
-        this.settingsPage.open();
-      }
-    }
+    browser.browserAction.onClicked.addListener(() => this.settingsPage.open());
+    /* TODO: Setup listener for theme updates and update 'isApplied'
+     *       This should fix an issue where if you select light mode, resets the theme and
+     *       fetches colors again, dark mode is selected instead of light mode
+     */
   }
 
   private getInitialData() {
@@ -195,19 +188,19 @@ export class Extension {
     }
   }
 
-  private createSettingsPage() {
-    let currentTheme = null;
-    if (this.state.getEnabled()) {
-      currentTheme = this.state.getExtensionTheme();
+  private updateExtensionPagesTheme(extensionTheme: IExtensionTheme) {
+    if (this.updatePage.isOpen()) {
+      this.updatePage.setTheme(extensionTheme);
     }
 
-    this.settingsPage = new SettingsPage(currentTheme);
+    if (this.settingsPage.isOpen()) {
+      this.settingsPage.setTheme(extensionTheme);
+    }
   }
 
   private resetThemes() {
     browser.theme.reset();
-    this.settingsPage.resetTheme();
-    UI.sendDebuggingOutput('Theme was disabled');
+    this.updateExtensionPagesTheme(null);
 
     if (this.state.getDDGThemeEnabled()) {
       DDG.resetTheme();
@@ -217,6 +210,8 @@ export class Extension {
     this.state.setCustomColors(null);
     this.state.setApplied(false);
     this.state.setEnabled(false);
+
+    UI.sendDebuggingOutput('Theme was disabled');
   }
 
   private applyUpdatedTemplate() {
@@ -237,7 +232,7 @@ export class Extension {
     const ddgTheme = generateDDGTheme(colorscheme);
 
     this.setBrowserTheme(colorscheme.browser);
-    this.settingsPage.setTheme(extensionTheme);
+    this.updateExtensionPagesTheme(extensionTheme);
 
     if (this.state.getDDGThemeEnabled()) {
       DDG.setTheme(ddgTheme);
@@ -351,7 +346,8 @@ export class Extension {
   }
 
   private updateNeeded() {
-    UI.sendDebuggingOutput('Daemon is outdated and things may break. Please update');
+    this.updatePage.open();
+    UI.sendNotification('Update required', 'Daemon is outdated and the extension might not work as expected', true);
   }
 
   private nativeAppConnected() {
@@ -413,7 +409,8 @@ export class Extension {
       this.setSavedBrowserTheme();
     }
 
-    this.createSettingsPage();
+    this.settingsPage = new ExtensionPage(EXTENSION_PAGES.SETTINGS);
+    this.updatePage = new ExtensionPage(EXTENSION_PAGES.UPDATE);
     this.nativeApp.connect();
   }
 }

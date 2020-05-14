@@ -4,9 +4,51 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <title>Pywalfox - Update needed</title>
-    link
+    <link rel="stylesheet" href="./css/base.css">
   </head>
   <body>
-    body
+    <div class="wrapper">
+      <header class="container row v-center space-between margin-v-sm">
+        <h1 id="logo">Pywalfox<span id="version">v2.0.0</span></h1>
+      </header>
+      <main class="container">
+        <section class="card expand space-between margin-bottom-lg" open>
+          <div class="card-header expand row v-center">
+            <i icon="message"></i>
+            <p class="card-title">Update required</p>
+          </div>
+          <div class="card-content card-subsection column expand align-left" open>
+            <h3 class="card-help-title">Update information</h3>
+            <p class="card-help-description">
+              The native-application has received changes that are not compatible with older versions of the extension.<br>
+              Not updating will most likely lead to unexpected behaviour and bugs.<br><br>
+
+              If you encounter issues with the new version of daemon, refer to the open issues on GitHub (or create a new one).
+            </p>
+            <a class="row v-center margin-top-sm btn btn-sm btn-lighter" href="https://github.com/Frewacom/Pywalfox/issues" target="_blank" rel="noopener noreferrer">
+              <i icon="external-link"></i>
+              GitHub issues
+            </a>
+          </div>
+          <div class="card-content card-content-lg-padding padding-v-lg column expand">
+            <p class="margin-bottom">Depending on how you installed the daemon, you have two different options:</p>
+            <code class="margin-bottom">
+              pip install --upgrade pywalfox
+            </code>
+            <code>
+              cd &#60;path to pywalfox-native repo&#62;<br>
+              git pull<br>
+            </code>
+            <div class="box row expand v-center margin-bottom-sm margin-top-md">
+              <button class="btn btn-primary expand margin-right-sm" id="disable-button">Do not remind me again</button>
+              <a class="btn btn-lighter expand" href="https://github.com/Frewacom/Pywalfox#troubleshooting">
+                <i icon="external-link" class="icon-md"></i>
+                Troubleshooting guide
+              </a>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
   </body>
 </html>

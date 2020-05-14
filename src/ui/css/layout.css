@@ -110,6 +110,10 @@
   margin-top: var(--spacing-sm);
 }
 
+.margin-top-md {
+  margin-top: var(--spacing-md);
+}
+
 .margin-bottom {
   margin-bottom: var(--spacing);
 }
@@ -140,4 +144,8 @@
 
 .margin-v-sm {
   margin: var(--spacing-sm) 0;
+}
+
+.no-margin-top {
+  margin-top: 0;
 }

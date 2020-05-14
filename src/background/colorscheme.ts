@@ -72,7 +72,7 @@ export function generateColorscheme(
 
 export function generateExtensionTheme(colorscheme: IColorscheme) {
   return `
-    body.light, body.dark {
+    body, body.light, body.dark {
       --background: ${colorscheme.palette.background};
       --background-light: ${colorscheme.palette.backgroundLight};
       --text: ${colorscheme.palette.text};
