@@ -71,16 +71,16 @@ export function generateColorscheme(
 }
 
 export function generateExtensionTheme(colorscheme: IColorscheme) {
-  return `
-    body, body.light, body.dark {
-      --background: ${colorscheme.palette.background};
-      --background-light: ${colorscheme.palette.backgroundLight};
-      --text: ${colorscheme.palette.text};
-      --accent-primary: ${colorscheme.palette.accentPrimary};
-      --accent-secondary: ${colorscheme.palette.accentSecondary};
-      --text-focus: ${colorscheme.palette.textFocus};
-    }
-  `;
+  let css: string = 'body, body.light, body.dark {';
+  css += `--background: ${colorscheme.palette.background};`;
+  css += `--background-light: ${colorscheme.palette.backgroundLight};`;
+  css += `--text: ${colorscheme.palette.text};`;
+  css += `--accent-primary: ${colorscheme.palette.accentPrimary};`;
+  css += `--accent-secondary: ${colorscheme.palette.accentSecondary};`;
+  css += `--text-focus: ${colorscheme.palette.textFocus};`;
+  css += '}';
+
+  return css;
 }
 
 /**

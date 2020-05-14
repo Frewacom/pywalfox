@@ -3,11 +3,11 @@
     --content-width: 40rem;
   }
 
-  #logo {
+  #logo:not(.logo-fixed-size) {
     font-size: 1rem;
   }
 
-  #logo > span {
+  #logo:not(.logo-fixed-size) > span {
     font-size: var(--font-size-md);
   }
 
@@ -81,7 +81,7 @@
 }
 
 @media screen and (max-width: 40rem) {
-  #logo {
+  #logo:not(.logo-fixed-size) {
     display: none;
   }
 

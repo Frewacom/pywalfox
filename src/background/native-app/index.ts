@@ -1,7 +1,6 @@
 import { RESPONSE_TIMEOUT, NATIVE_MESSAGES } from '../../config/native';
 
 import {
-  IPywalColors,
   INativeAppMessage,
   INativeAppRequest,
   INativeAppMessageCallbacks

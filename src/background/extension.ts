@@ -185,17 +185,16 @@ export class Extension {
       case EXTENSION_MESSAGES.OPTION_SET:
         this.setOption(message.data);
         break;
+      case EXTENSION_MESSAGES.UPDATE_PAGE_MUTE:
+        this.state.setUpdateMuted(true);
+        this.updatePage.close();
+        break;
     }
   }
 
   private updateExtensionPagesTheme(extensionTheme: IExtensionTheme) {
-    if (this.updatePage.isOpen()) {
-      this.updatePage.setTheme(extensionTheme);
-    }
-
-    if (this.settingsPage.isOpen()) {
-      this.settingsPage.setTheme(extensionTheme);
-    }
+    this.updatePage.setTheme(extensionTheme);
+    this.settingsPage.setTheme(extensionTheme);
   }
 
   private resetThemes() {
@@ -295,9 +294,12 @@ export class Extension {
    * In all other cases, use 'updateThemes'.
    */
   private setSavedBrowserTheme() {
-    const colorscheme = this.state.getColorscheme();
-    if (colorscheme) {
-      this.setBrowserTheme(colorscheme);
+    const browserTheme = this.state.getBrowserTheme();
+    if (browserTheme !== null) {
+      const extensionTheme = this.state.getExtensionTheme();
+      this.setBrowserTheme(browserTheme);
+      this.updateExtensionPagesTheme(extensionTheme);
+      console.log('Saved browser theme was applied');
       this.state.setApplied(true);
     } else {
       this.state.setApplied(false);
@@ -346,12 +348,16 @@ export class Extension {
   }
 
   private updateNeeded() {
+    if (this.state.getUpdateMuted()) {
+      console.log('Update is required, but user has muted update notifications');
+      return;
+    }
+
     this.updatePage.open();
-    UI.sendNotification('Update required', 'Daemon is outdated and the extension might not work as expected', true);
   }
 
   private nativeAppConnected() {
-    if (!this.state.getApplied() && this.state.getEnabled()) {
+    if (this.state.getEnabled() && !this.state.getApplied()) {
       this.nativeApp.requestColorscheme();
     }
 
@@ -402,15 +408,15 @@ export class Extension {
   }
 
   public async start() {
-    browser.storage.local.clear(); // debugging
+    /* browser.storage.local.clear(); // debugging */
     await this.state.load();
+    this.settingsPage = new ExtensionPage(EXTENSION_PAGES.SETTINGS);
+    this.updatePage = new ExtensionPage(EXTENSION_PAGES.UPDATE);
 
     if (this.state.getEnabled()) {
       this.setSavedBrowserTheme();
     }
 
-    this.settingsPage = new ExtensionPage(EXTENSION_PAGES.SETTINGS);
-    this.updatePage = new ExtensionPage(EXTENSION_PAGES.UPDATE);
     this.nativeApp.connect();
   }
 }

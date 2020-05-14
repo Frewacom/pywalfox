@@ -93,6 +93,7 @@ export class ExtensionPage {
       this.focus();
     } else {
       await this.create();
+      this.setTheme(this.currentTheme, false);
     }
   }
 
@@ -101,23 +102,21 @@ export class ExtensionPage {
     browser.tabs.update(this.tab.id, { active: true });
   }
 
-  public async setTheme(extensionTheme: IExtensionTheme) {
-    if (this.tab === null) {
-      return;
-    }
+  public async setTheme(extensionTheme: IExtensionTheme, resetCurrent=true) {
+    if (this.tab !== null) {
+      if (resetCurrent === true && this.currentTheme !== null) {
+        await this.removeInsertedCss();
+      }
 
-    if (this.currentTheme !== null) {
-      await this.removeInsertedCss();
-    }
-
-    if (extensionTheme !== null) {
-      console.log(`Inserting CSS for ${this.url}`);
-      browser.tabs.insertCSS(this.tab.id, {
-        code: extensionTheme,
-        runAt: 'document_start',
-        cssOrigin: 'author',
-        allFrames: true,
-      });
+      if (extensionTheme !== null) {
+        console.log(`Inserting CSS for ${this.url}`);
+        browser.tabs.insertCSS(this.tab.id, {
+          code: extensionTheme,
+          runAt: 'document_start',
+          cssOrigin: 'author',
+          allFrames: true,
+        });
+      }
     }
 
     this.currentTheme = extensionTheme;
@@ -125,5 +124,14 @@ export class ExtensionPage {
 
   public isOpen() {
     return this.tab === null ? false : true;
+  }
+
+  public close() {
+    if (this.tab === null) {
+      return;
+    }
+
+    browser.tabs.remove(this.tab.id);
+    this.tab = null;
   }
 }

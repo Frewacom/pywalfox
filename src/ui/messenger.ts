@@ -65,3 +65,7 @@ export function requestPaletteTemplateSet(template: IPaletteTemplate) {
 export function requestPaletteTemplateReset() {
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.PALETTE_TEMPLATE_SET, data: null });
 }
+
+export function requestUpdatePageMute() {
+  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.UPDATE_PAGE_MUTE });
+}

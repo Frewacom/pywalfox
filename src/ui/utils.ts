@@ -1,5 +1,9 @@
 import { ThemeModes } from '../definitions';
 
+export function setVersionLabel(element: HTMLElement) {
+  element.innerText = `v${browser.runtime.getManifest().version}`;
+}
+
 export function isSet(attr: string, element: HTMLElement) {
   const value = element.getAttribute(attr);
   return value === '';

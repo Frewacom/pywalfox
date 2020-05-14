@@ -32,30 +32,31 @@ import {
     PaletteColors,
 } from '../definitions';
 
-const optionButtons: NodeListOf<HTMLElement> = document.querySelectorAll('button[data-option]');
-const helpToggleButtons: NodeListOf<HTMLElement> = document.querySelectorAll('button[data-help]');
-const settingCardHeaders: NodeListOf<HTMLElement> = document.querySelectorAll('.setting-card-header');
+const versionLabel = <HTMLSpanElement>document.getElementById('version');
+const optionButtons = <NodeListOf<HTMLElement>>document.querySelectorAll('button[data-option]');
+const helpToggleButtons = <NodeListOf<HTMLElement>>document.querySelectorAll('button[data-help]');
+const settingCardHeaders = <NodeListOf<HTMLElement>>document.querySelectorAll('.setting-card-header');
 
-const overlay: HTMLElement = document.getElementById('overlay');
-const fetchButton: HTMLElement = document.getElementById('fetch');
-const disableButton: HTMLElement = document.getElementById('disable');
-const themeButton: HTMLElement = document.getElementById('theme-select');
-const debuggingVersion: HTMLElement = document.getElementById('debugging-version');
-const debuggingConnected: HTMLElement = document.getElementById('debugging-connected');
-const debuggingOutput: HTMLTextAreaElement = <HTMLTextAreaElement>document.getElementById('debugging-output');
+const overlay = <HTMLDivElement>document.getElementById('overlay');
+const fetchButton = <HTMLButtonElement>document.getElementById('fetch');
+const disableButton = <HTMLButtonElement>document.getElementById('disable');
+const themeButton = <HTMLButtonElement>document.getElementById('theme-select');
+const debuggingVersion = <HTMLParagraphElement>document.getElementById('debugging-version');
+const debuggingConnected = <HTMLParagraphElement>document.getElementById('debugging-connected');
+const debuggingOutput = <HTMLTextAreaElement>document.getElementById('debugging-output');
 
-const paletteContent: HTMLElement = document.getElementById('palette-content');
-const paletteTemplateContent: HTMLElement = document.getElementById('palette-template-content');
-const paletteTemplateSaveButton: HTMLElement = document.getElementById('palette-template-save');
-const paletteTemplateResetButton: HTMLElement = document.getElementById('palette-template-reset');
-const paletteTemplateCurrentButton: HTMLElement = document.getElementById('palette-template-current');
+const paletteContent = <HTMLDivElement>document.getElementById('palette-content');
+const paletteTemplateContent = <HTMLDivElement>document.getElementById('palette-template-content');
+const paletteTemplateSaveButton = <HTMLButtonElement>document.getElementById('palette-template-save');
+const paletteTemplateResetButton = <HTMLButtonElement>document.getElementById('palette-template-reset');
+const paletteTemplateCurrentButton = <HTMLButtonElement>document.getElementById('palette-template-current');
 
-const themeTemplateContent: HTMLElement = document.getElementById('theme-template-content');
-const themeTemplateSaveButton: HTMLElement = document.getElementById('theme-template-save');
-const themeTemplateResetButton: HTMLElement = document.getElementById('theme-template-reset');
+const themeTemplateContent = <HTMLDivElement>document.getElementById('theme-template-content');
+const themeTemplateSaveButton = <HTMLButtonElement>document.getElementById('theme-template-save');
+const themeTemplateResetButton = <HTMLButtonElement>document.getElementById('theme-template-reset');
 
 const notificationTemplate = <HTMLTemplateElement>document.getElementById('notification-template');
-const notificationContainer: HTMLElement = document.getElementById('notification-container');
+const notificationContainer = <HTMLDivElement>document.getElementById('notification-container');
 
 const fontSizeSaveInput = <HTMLInputElement>document.getElementById('font-size-input');
 
@@ -338,12 +339,12 @@ function createNotification(data: INotificationData) {
 
 function createThemeTemplateContent() {
   const themeTemplate = <HTMLTemplateElement>document.getElementById('theme-template');
-  const selectElement: HTMLSelectElement = document.createElement('select');
+  const selectElement = <HTMLSelectElement>document.createElement('select');
 
   selectElement.classList.add('clickable');
 
   for (const color of Object.values(PaletteColors)) {
-    const optionElement: HTMLOptionElement = document.createElement('option');
+    const optionElement = <HTMLOptionElement>document.createElement('option');
     optionElement.innerText = color;
     selectElement.appendChild(optionElement);
   }
@@ -528,4 +529,5 @@ createPaletteContent();
 createThemeTemplateContent();
 
 setCurrentTheme();
+Utils.setVersionLabel(versionLabel);
 Messenger.requestInitialData();

@@ -58,7 +58,7 @@ header {
 }
 
 #logo > span {
-  position: absolute;
+  position: relative;
   color: var(--accent-primary);
   bottom: 0.5em;
   font-size: calc(var(--font-size-lg) * 0.8);

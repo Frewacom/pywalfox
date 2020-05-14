@@ -80,6 +80,14 @@
   align-items: center;
 }
 
+.h-center:not(.row) {
+  align-items: center;
+}
+
+.row.h-center {
+  justify-content: center;
+}
+
 .column {
   display: flex;
   flex-direction: column;
@@ -112,6 +120,10 @@
 
 .margin-top-md {
   margin-top: var(--spacing-md);
+}
+
+.margin-top-lg {
+  margin-top: var(--spacing-lg);
 }
 
 .margin-bottom {

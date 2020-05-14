@@ -18,10 +18,10 @@ export interface IExtensionState {
   version: number,
   enabled: boolean;
   connected: boolean;
+  updateMuted: boolean;
   theme: {
-    mode: ThemeModes;
     isApplied: boolean;
-    customTemplateEnabled: boolean;
+    mode: ThemeModes;
     pywalColors: IPywalColors;
     customColors: Partial<IPalette>;
     colorscheme: IColorscheme;
@@ -46,10 +46,10 @@ export class State {
       version: 0.0,
       enabled: false,
       connected: false,
+      updateMuted: false,
       theme: {
         mode: ThemeModes.Dark,
         isApplied: false,
-        customTemplateEnabled: false,
         pywalColors: null,
         customColors: null,
         colorscheme: null,
@@ -76,11 +76,15 @@ export class State {
   }
 
   public getApplied() {
-    return this.currentState.isApplied;
+    return this.currentState.theme.isApplied;
   }
 
   public getVersion() {
     return this.currentState.version;
+  }
+
+  public getUpdateMuted() {
+    return this.currentState.updateMuted;
   }
 
   public getDebuggingInfo() {
@@ -88,10 +92,6 @@ export class State {
       connected: this.currentState.connected,
       version: this.currentState.version
     };
-  }
-
-  public getTemplateEnabled() {
-    return this.currentState.theme.customTemplateEnabled;
   }
 
   public getTemplate() {
@@ -119,7 +119,16 @@ export class State {
   }
 
   public getColorscheme() {
-    return this.currentState.theme.generated;
+    return this.currentState.theme.colorscheme;
+  }
+
+  public getBrowserTheme() {
+    const colorscheme = this.getColorscheme();
+    if (colorscheme !== null && colorscheme.hasOwnProperty('browser')) {
+      return colorscheme.browser;
+    }
+
+    return null;
   }
 
   public getExtensionTheme() {
@@ -175,6 +184,10 @@ export class State {
         isApplied,
       }
     });
+  }
+
+  public setUpdateMuted(muted: boolean) {
+    return this.set({ updateMuted: muted });
   }
 
   public setCustomColors(customColors: Partial<IPalette>) {
@@ -269,7 +282,6 @@ export class State {
     this.currentState = await browser.storage.local.get(this.initialState);
 }
 
-  /* Used for debugging. */
   public dump() {
     console.log(this.currentState);
   }
