@@ -55,17 +55,17 @@
 }
 
 .card[open] .card-header {
-  border-bottom: 1px solid var(--lighter-background-hover);
+  border-bottom: 1px solid var(--border-color);
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
 
 .card-content-header {
-  background-color: var(--background);
-  box-shadow: var(--box-shadow);
+  background-color: var(--background-light);
   font-size: var(--font-size-md);
   padding: var(--spacing-sm) var(--spacing-card);
-  border-top: 1px solid var(--lighter-background);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--box-shadow-card-content-header);
 }
 
 .card-help-title {
@@ -93,7 +93,7 @@
   padding: var(--spacing) var(--spacing);
   border-left: 0.4em solid var(--accent-primary);
   background-color: var(--lighter-background);
-  border-bottom: 1px solid var(--lighter-background-hover);
+  border-bottom: 1px solid var(--border-color);
   display: none;
 }
 
@@ -105,6 +105,3 @@
   padding: var(--spacing) var(--spacing);
 }
 
-.no-border-bottom {
-  border-bottom: none !important;
-}

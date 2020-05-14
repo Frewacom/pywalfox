@@ -7,6 +7,7 @@ body {
 
   --border-radius: 4px;
   --border-radius-sm: 2px;
+  --border-color: rgba(255,255,255, 0.08);
 
   --spinner-width: 0.8rem;
   --spinner-thickness: 0.15rem;
@@ -28,6 +29,7 @@ body {
   --box-shadow: 0px 2px 10px 1px rgba(0,0,0,0.2);
   --box-shadow-card: 2px 4px 10px #00000012;
   --box-shadow-highlight: 0px 2px 12px 3px rgba(0,0,0,0.4);
+  --box-shadow-card-content-header: 0px 5px 10px -8px #000000d6;
 
   --button-height-sm: 2.2rem;
   --button-height-md: 2.3rem;
@@ -74,11 +76,13 @@ body.light {
   --text: #333;
   --text-focus: #252525;
 
-  --lighter-background: rgba(0,0,0,0.02);
+  --border-color: rgba(0,0,0,0.15);
+  --lighter-background: rgba(0,0,0,0.05);
   --lighter-background-hover: rgba(0,0,0,0.03);
   --darker-background: var(--lighter-background);
 
   --box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
   --box-shadow-card: 0 1px 4px 0 rgba(12, 12, 13, 0.1);
   --box-shadow-highlight: var(--box-shadow);
+  --box-shadow-card-content-header: 0px 5px 10px -8px rgba(0,0,0,0.2);
 }

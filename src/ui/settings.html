@@ -98,7 +98,7 @@
           </div>
         </section>
         <section class="setting-card card expand space-between margin-bottom-lg">
-          <div class="setting-card-header card-header expand row v-center space-between clickable no-border-bottom">
+          <div class="setting-card-header card-header expand row v-center space-between clickable">
             <div class="box">
               <i icon="edit"></i>
               <p class="card-title">Palette template</p>
@@ -108,10 +108,10 @@
           <div class="card-content card-content-header row expand v-center space-between sticky">
             <div class="box">
               <button class="btn btn-primary btn-sm margin-right-sm" id="palette-template-save">Save palette</button>
-              <button class="btn btn-default btn-sm margin-right-sm" id="palette-template-current">Set from current</button>
-              <button class="btn btn-default btn-sm" id="palette-template-reset">Reset to default</button>
+              <button class="btn btn-lighter btn-sm margin-right-sm" id="palette-template-current">Set from current</button>
+              <button class="btn btn-lighter btn-sm" id="palette-template-reset">Reset to default</button>
             </div>
-            <button class="btn btn-default btn-sm btn-h-sm" data-help="palette-template-help">
+            <button class="btn btn-lighter btn-sm btn-h-sm" data-help="palette-template-help">
               <i icon="help-circle"></i>
               Help
             </button>
@@ -138,19 +138,19 @@
             <template id="palette-edit-template">
               <div class="setting row expand space-between v-center">
                 <div class="box column align-left">
-                  <p class="setting-title">${item.title}</p>
-                  <p class="setting-description">${item.description}</p>
+                  <p class="setting-title"></p>
+                  <p class="setting-description"></p>
                 </div>
                 <div class="box row v-center">
                   <div class="btn btn-color color-preview margin-right-sm"></div>
-                  <input type="number" data-target="${item.target}" min="0" max="${PYWAL_PALETTE_LENGTH - 1}" />
+                  <input type="number" data-target="" min="0" max="" />
                 </div>
               </div>
             </template>
           </div>
         </section>
         <section class="setting-card card expand space-between margin-bottom-lg">
-          <div class="setting-card-header card-header expand row v-center space-between clickable no-border-bottom">
+          <div class="setting-card-header card-header expand row v-center space-between clickable">
             <div class="box">
               <i icon="template"></i>
               <p class="card-title">Theme template</p>
@@ -160,9 +160,9 @@
           <div class="card-content card-content-header row expand v-center space-between sticky">
             <div class="box">
               <button class="btn btn-primary btn-sm margin-right-sm" id="theme-template-save">Save template</button>
-              <button class="btn btn-default btn-sm" id="theme-template-reset">Reset to default</button>
+              <button class="btn btn-lighter btn-sm" id="theme-template-reset">Reset to default</button>
             </div>
-            <button class="btn btn-default btn-sm btn-h-sm" data-help="theme-template-help">
+            <button class="btn btn-lighter btn-sm btn-h-sm" data-help="theme-template-help">
               <i icon="help-circle"></i>
               Help
             </button>
@@ -206,7 +206,7 @@
           </div>
         </section>
         <section class="setting-card card expand space-between">
-          <div class="setting-card-header card-header expand row v-center space-between clickable no-border-bottom">
+          <div class="setting-card-header card-header expand row v-center space-between clickable">
             <div class="box">
               <i icon="alert-triangle"></i>
               <p class="card-title">Debugging</p>
