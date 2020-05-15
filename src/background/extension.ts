@@ -22,6 +22,7 @@ import {
   VALID_CSS_TARGETS,
   USER_CHROME_TARGET,
   EXTENSION_MESSAGES,
+  DEFAULT_CSS_FONT_SIZE,
   MIN_REQUIRED_DAEMON_VERSION,
 } from '../config/general';
 
@@ -111,7 +112,7 @@ export class Extension {
 
     switch (optionData.option) {
       case EXTENSION_OPTIONS.FONT_SIZE:
-        this.setCssFontSize(optionData);
+        this.setCssFontSize(optionData['size']);
         break;
       case EXTENSION_OPTIONS.DUCKDUCKGO:
         this.setDDGEnabled(optionData);
@@ -277,10 +278,10 @@ export class Extension {
     this.state.setDDGThemeEnabled(enabled);
   }
 
-  private setCssFontSize(optionData: IOptionSetData) {
-    if (optionData.size !== undefined && optionData.size >= 10 && optionData.size <= 20) {
+  private setCssFontSize(fontSize: number) {
+    if (fontSize !== undefined && fontSize >= 10 && fontSize <= 20) {
       // Currently, only userChrome uses the custom font size feature
-      this.nativeApp.requestFontSizeSet(USER_CHROME_TARGET, optionData.size);
+      this.nativeApp.requestFontSizeSet(USER_CHROME_TARGET, fontSize);
     } else {
       UI.sendNotification('Font size error', 'Invalid size or not set', true);
     }
@@ -382,6 +383,15 @@ export class Extension {
 
     if (newState === true) {
       notificationMessage = `${target} was enabled successfully!`;
+
+      // If the user has changed the default font size, we must update it after
+      // the CSS has been enabled.
+      if (target === USER_CHROME_TARGET) {
+        const fontSize = this.state.getCssFontSize();
+        if (fontSize !== DEFAULT_CSS_FONT_SIZE) {
+          this.setCssFontSize(fontSize);
+        }
+      }
     } else {
       notificationMessage = `${target} was disabled successfully!`;
     }

@@ -67,7 +67,7 @@ body {
   --text-focus: #ffffff;
   --accent-primary: #6cadff;
   --accent-secondary: #a1caff;
-  --error-color: red;
+  --error-color: #ff4646;
 }
 
 body.light {

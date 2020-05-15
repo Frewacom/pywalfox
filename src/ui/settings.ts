@@ -328,6 +328,7 @@ function createNotification(data: INotificationData) {
   titleElement.innerText = data.title + ':';
   contentElement.innerText = data.message;
   iconElement.setAttribute('icon', data.error ? 'error' : 'bell');
+  data.error && containerElement.classList.add('error');
 
   closeElement.addEventListener('click', () => notificationContainer.removeChild(containerElement));
 
