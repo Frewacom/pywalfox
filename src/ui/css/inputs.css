@@ -2,7 +2,7 @@ input, .input-container {
   background-color: var(--background);
   border-radius: var(--border-radius-sm);
   height: var(--button-height);
-  padding: 0 var(--spacing-sm);
+  padding: 0 var(--spacing-xsm);
   border: none;
   color: var(--text-focus);
   font-weight: bold;
@@ -17,7 +17,14 @@ input, .input-container {
 
 input[type=number] {
   text-align: center;
-  width: 3rem;
+  width: 2.8rem;
+  -moz-appearance: textfield;
+}
+
+input[type="number"]:hover,
+input[type="number"]:focus,
+.setting:hover input[type="number"] {
+  -moz-appearance: number-input;
 }
 
 select {

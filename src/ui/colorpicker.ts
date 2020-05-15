@@ -20,6 +20,7 @@ export class Colorpicker extends Dialog {
   private pywalColors: IPywalColors;
   private customColors: Partial<IPalette>
   private resetElement: HTMLElement;
+  private resetCustomColor: string;
   private selectedElement: HTMLElement;
   private colorElementLookup: INodeLookup;
 
@@ -33,6 +34,7 @@ export class Colorpicker extends Dialog {
 
     this.pywalColors = null;
     this.resetElement = null;
+    this.resetCustomColor = null;
     this.selectedElement = null;
 
     this.customColors = {};
@@ -145,15 +147,18 @@ export class Colorpicker extends Dialog {
       return;
     }
 
-    // TODO: Add case for custom color
-
-    const resetIndex = this.resetElement.getAttribute('data-color-index');
-    const selectedIndex = this.selectedElement.getAttribute('data-color-index');
-    if (resetIndex !== selectedIndex) {
-      this.updatePaletteColor(this.resetElement);
-      this.highlightSelectedColor(this.resetElement);
-      this.selectedElement = null;
+    if (this.resetElement !== this.customColorButtonContainer) {
+      const resetIndex = this.resetElement.getAttribute('data-color-index');
+      const selectedIndex = this.selectedElement.getAttribute('data-color-index');
+      if (resetIndex === selectedIndex) {
+        // Same color as before, do nothing
+        return;
+      }
     }
+
+    this.updatePaletteColor(this.resetElement, this.resetCustomColor);
+    this.highlightSelectedColor(this.resetElement);
+    this.selectedElement = null;
   }
 
   public setPalette(pywalColors: IPywalColors) {
@@ -210,6 +215,11 @@ export class Colorpicker extends Dialog {
     if (element) {
       this.highlightSelectedColor(element);
       this.resetElement = element;
+      this.resetCustomColor = null;
+
+      if (element === this.customColorButtonContainer) {
+        this.resetCustomColor = color;
+      }
     } else {
       console.error(`Could not find color element with index: ${colorIndex}`);
     }
