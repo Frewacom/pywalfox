@@ -3,6 +3,8 @@ export const PYWAL_PALETTE_LENGTH = 18;
 export const DEFAULT_CSS_FONT_SIZE = 14;
 
 export const NOTIFICATION_TIMEOUT = 5000;
+export const MAX_SIMULTANEOUS_NOTIFICATIONS = 3;
+
 export const ENABLED_BODY_CLASS = 'applied';
 export const DUCKDUCKGO_THEME_ID = 'pywalfox';
 export const INJECT_URL_PATTERN = [ '*://*.duckduckgo.com/*' ];

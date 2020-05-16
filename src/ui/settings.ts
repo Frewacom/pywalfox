@@ -10,6 +10,7 @@ import {
   PYWAL_PALETTE_LENGTH,
   ENABLED_BODY_CLASS,
   NOTIFICATION_TIMEOUT,
+  MAX_SIMULTANEOUS_NOTIFICATIONS,
 } from '../config/general';
 
 import {
@@ -335,6 +336,10 @@ function updateThemeTemplateInputs(template: IThemeTemplate) {
 }
 
 function createNotification(data: INotificationData) {
+  if (notificationContainer.childElementCount >= MAX_SIMULTANEOUS_NOTIFICATIONS) {
+    notificationContainer.removeChild(notificationContainer.firstElementChild);
+  }
+
   const clone = <HTMLElement>notificationTemplate.content.cloneNode(true);
   const containerElement = <HTMLElement>clone.querySelector('.notification');
   const titleElement = <HTMLParagraphElement>clone.querySelector('.notification-title');
