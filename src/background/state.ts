@@ -4,14 +4,15 @@ import { DEFAULT_THEME_DARK, DEFAULT_THEME_LIGHT } from '../config/default-theme
 import {
   IPalette,
   IPywalColors,
+  IColorscheme,
+  IBrowserTheme,
   IExtensionTheme,
   IDuckDuckGoTheme,
-  IColorscheme,
   IColorschemeTemplate,
   IPaletteTemplate,
   IThemeTemplate,
-  ThemeModes,
   IOptionSetData,
+  ThemeModes,
 } from '../definitions';
 
 export interface IExtensionState {
@@ -69,6 +70,14 @@ export class State {
   private async set(newState: {}) {
     Object.assign(this.currentState, newState);
     await browser.storage.local.set(newState);
+  }
+
+  private getProperty(object: { [key: string]: any }, property: string) {
+    if (object !== null && object.hasOwnProperty(property)) {
+      return object[property];
+    }
+
+    return null;
   }
 
   public getEnabled() {
@@ -129,6 +138,10 @@ export class State {
     }
 
     return null;
+  }
+
+  public getPalette() {
+    return this.getProperty(this.currentState.theme.colorscheme, 'palette');
   }
 
   public getExtensionTheme() {
@@ -218,6 +231,18 @@ export class State {
         template: {
           ...this.currentState.theme.template,
           browser: template,
+        },
+      }
+    });
+  }
+
+  public setBrowserTheme(browserTheme: IBrowserTheme) {
+    return this.set({
+      theme: {
+        ...this.currentState.theme,
+        colorscheme: {
+          ...this.currentState.theme.colorscheme,
+          browser: browserTheme,
         },
       }
     });

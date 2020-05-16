@@ -120,7 +120,7 @@ export class Colorpicker extends Dialog {
       return;
     }
 
-    const id = this.target.getAttribute('data-color');
+    const id = this.target.getAttribute('data-target');
     let color: string = customColor;
 
     if (!customColor) {
@@ -189,6 +189,33 @@ export class Colorpicker extends Dialog {
     this.customColors = customColors ? customColors : {};
   }
 
+  public getSelectedDataByTargetId(template: IPaletteTemplate, targetId: string) {
+    let index: number = null;
+    let element: HTMLElement = null;
+    let color: string = null;
+
+    if (this.customColors !== null && this.customColors.hasOwnProperty(targetId)) {
+      color = this.customColors[<PaletteColors>targetId];
+      if (this.colorElementLookup.hasOwnProperty(color)) {
+        element = this.colorElementLookup[color];
+        index = parseInt(element.getAttribute('data-color-index'));
+      } else {
+        element = this.customColorButtonContainer;
+      }
+    } else {
+      index = template[targetId];
+      color = this.pywalColors[index];
+      element = this.colorElementLookup[color];
+
+      if (!element) {
+        console.error(`Could not find color element with index: ${index}`);
+        return { element: null, color, index };
+      }
+    }
+
+    return { element, color, index };
+  }
+
   public setSelectedColorForTarget(template: IPaletteTemplate) {
     if (this.target === null) {
       return;
@@ -199,28 +226,8 @@ export class Colorpicker extends Dialog {
       return;
     }
 
-    const targetColor = this.target.getAttribute('data-color');
-    const colorIndex = template[targetColor];
-
-    let color: string;
-    let element: HTMLElement;
-
-    if (this.customColors !== null && this.customColors.hasOwnProperty(targetColor)) {
-      color = this.customColors[<PaletteColors>targetColor];
-      if (this.colorElementLookup.hasOwnProperty(color)) {
-        element = this.colorElementLookup[color];
-      } else {
-        element = this.customColorButtonContainer;
-      }
-    } else {
-      color = this.pywalColors[colorIndex];
-      element = this.colorElementLookup[color];
-
-      if (!element) {
-        console.error(`Could not find color element with index: ${colorIndex}`);
-        return;
-      }
-    }
+    const targetId = this.target.getAttribute('data-target');
+    const { element, color } = this.getSelectedDataByTargetId(template, targetId);
 
     this.highlightSelectedColor(element);
     this.resetElement = element;

@@ -168,27 +168,27 @@ body.light #theme-select.dialog-arrow[selected]:hover::after {
   filter: none;
 }
 
-button[data-color="background"] {
+.btn-color[data-target="background"] {
   background: var(--background);
 }
 
-button[data-color="backgroundLight"] {
+.btn-color[data-target="backgroundLight"] {
   background: var(--background-light);
 }
 
-button[data-color="text"] {
+.btn-color[data-target="text"] {
   background: var(--text);
 }
 
-button[data-color="textFocus"] {
+.btn-color[data-target="textFocus"] {
   background: var(--text-focus);
 }
 
-button[data-color="accentPrimary"] {
+.btn-color[data-target="accentPrimary"] {
   background: var(--accent-primary);
 }
 
-button[data-color="accentSecondary"] {
+.btn-color[data-target="accentSecondary"] {
   background: var(--accent-secondary);
 }
 

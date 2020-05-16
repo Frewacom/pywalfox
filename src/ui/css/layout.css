@@ -4,7 +4,7 @@
   justify-content: flex-start;
   align-items: center;
   min-height: 100vh;
-  padding-bottom: var(--spacing-xlg);
+  padding-bottom: var(--spacing-md);
   box-sizing: border-box;
 }
 

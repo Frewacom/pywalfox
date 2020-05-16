@@ -268,7 +268,20 @@ function onPaletteTemplateReset(e: Event) {
 }
 
 function onPaletteTemplateUseCurrent(e: Event) {
-
+  for (const color of Object.values(PaletteColors)) {
+    const { index } = colorpicker.getSelectedDataByTargetId(template.palette, color);
+    if (index !== null) {
+      const inputElement = <HTMLInputElement>paletteTemplateInputLookup[color];
+      if (inputElement !== null) {
+        template.palette[color] = index;
+        updatePaletteTemplateInput(inputElement, index);
+      } else {
+        console.error(`Could not find palette template id with target: ${color}`);
+      }
+    } else {
+      console.log(`Palette color '${color}' is set to a custom color and can not be used`);
+    }
+  }
 }
 
 function onThemeTemplateSave(e: Event) {
@@ -285,11 +298,16 @@ function onThemeTemplateReset(e: Event) {
 }
 
 function updateOptionButtonState(optionData: IOptionSetData) {
-  const target: HTMLElement = optionButtonsLookup[optionData.option];
+  const target = <HTMLButtonElement>optionButtonsLookup[optionData.option];
 
   if (target) {
     setOptionEnabled(target, optionData.enabled);
   }
+}
+
+function updatePaletteTemplateInput(element: HTMLInputElement, index: number) {
+  element.value = index.toString();
+  updatePaletteTemplateColorPreview(element, index);
 }
 
 function updatePaletteTemplateInputs(template: IPaletteTemplate) {
@@ -297,8 +315,7 @@ function updatePaletteTemplateInputs(template: IPaletteTemplate) {
     const element = <HTMLInputElement>paletteTemplateInputLookup[key];
     if (element) {
       const index = template[key];
-      element.value = index.toString();
-      updatePaletteTemplateColorPreview(element, index);
+      updatePaletteTemplateInput(element, index);
     } else {
       console.error(`Found unhandled palette template target: ${key}`);
     }
@@ -378,7 +395,7 @@ function createPaletteItem(parent: HTMLElement, base: HTMLTemplateElement, item:
 
   titleElement.innerText = item.title;
   contentElement.innerText = item.description;
-  buttonElement.setAttribute('data-color', item.target);
+  buttonElement.setAttribute('data-target', item.target);
 
   buttonElement.addEventListener('click', onColorClicked);
 

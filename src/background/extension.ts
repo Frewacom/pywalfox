@@ -13,6 +13,7 @@ import {
 import {
   generateColorscheme,
   generateExtensionTheme,
+  generateBrowserTheme,
   generateDDGTheme,
 } from './colorscheme';
 
@@ -320,17 +321,27 @@ export class Extension {
     this.state.setPaletteTemplate(template);
     this.applyUpdatedTemplate();
     UI.sendPaletteTemplateSet(template);
+    UI.sendNotification('Palette template', 'Template was updated successfully');
   }
 
   private setThemeTemplate(message: IExtensionMessage) {
+    const palette = this.state.getPalette();
     let template: IThemeTemplate = message.data;
+
     if (template === null) {
       template = this.getDefaultTemplate().browser;
     }
 
+    if (palette !== null) {
+      // Generate a new browser theme only based on the current palette and the new template
+      const browserTheme = generateBrowserTheme(palette, template);
+      this.setBrowserTheme(browserTheme);
+      this.state.setBrowserTheme(browserTheme);
+    }
+
     this.state.setThemeTemplate(template);
-    this.applyUpdatedTemplate();
     UI.sendThemeTemplateSet(template);
+    UI.sendNotification('Theme template', 'Template was updated successfully');
   }
 
   private createCustomColorPalette(data: Partial<IPalette>) {
