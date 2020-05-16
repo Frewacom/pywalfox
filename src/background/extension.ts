@@ -238,6 +238,10 @@ export class Extension {
       DDG.setTheme(ddgTheme);
     }
 
+    // If the theme already is applied when requesting pywal colors, we must reset the old custom colors
+    // or they will be applied again when setting a new custom color.
+    this.state.setCustomColors(null);
+
     if (customColors) {
       this.state.setCustomColors(customColors);
     }

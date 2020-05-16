@@ -103,12 +103,15 @@ export class Colorpicker extends Dialog {
     return color;
   }
 
-  // TODO: Custom color does not update its value when refetching colors and the dialog is open
+  private updateCustomColorInputValue(color: string) {
+    this.customColorButton.value = Utils.rgbToHex(color);
+  }
+
   private setCustomColor(element: HTMLElement) {
     const color = element.style.backgroundColor;
 
     if (color) {
-      this.customColorButton.value = Utils.rgbToHex(color);
+      this.updateCustomColorInputValue(color);
     }
   }
 
@@ -154,6 +157,8 @@ export class Colorpicker extends Dialog {
         // Same color as before, do nothing
         return;
       }
+    } else {
+      this.updateCustomColorInputValue(this.resetCustomColor);
     }
 
     this.updatePaletteColor(this.resetElement, this.resetCustomColor);
@@ -173,11 +178,11 @@ export class Colorpicker extends Dialog {
         element.style.backgroundColor = "";
       });
 
-      this.customColors = {};
       this.colorElementLookup = {};
     }
 
     this.pywalColors = pywalColors;
+    this.customColors = {};
   }
 
   public setCustomColors(customColors: Partial<IPalette>) {
@@ -210,18 +215,20 @@ export class Colorpicker extends Dialog {
     } else {
       color = this.pywalColors[colorIndex];
       element = this.colorElementLookup[color];
+
+      if (!element) {
+        console.error(`Could not find color element with index: ${colorIndex}`);
+        return;
+      }
     }
 
-    if (element) {
-      this.highlightSelectedColor(element);
-      this.resetElement = element;
-      this.resetCustomColor = null;
+    this.highlightSelectedColor(element);
+    this.resetElement = element;
+    this.resetCustomColor = null;
 
-      if (element === this.customColorButtonContainer) {
-        this.resetCustomColor = color;
-      }
-    } else {
-      console.error(`Could not find color element with index: ${colorIndex}`);
+    if (element === this.customColorButtonContainer) {
+      this.updateCustomColorInputValue(color);
+      this.resetCustomColor = color;
     }
   }
 }

@@ -85,7 +85,12 @@ export async function setInitialThemeClass(themeInfo?: browser.theme.ThemeUpdate
 }
 
 export function rgbToHex(rgb: string) {
-  return '#' + rgb.substr(4, rgb.indexOf(')') - 4).split(',').map((color) => parseInt(color).toString(16)).join('');
+  if (rgb[0] === '#' || !rgb) { return rgb; }
+  const hex = rgb.substr(4, rgb.indexOf(')') - 4).split(',').map((color) => {
+    let str = parseInt(color).toString(16);
+    return str.length === 1 ? str = "0" + str : str;
+  }).join('');
+  return '#' + hex;
 }
 
 export function debounce<F extends (...params: any[]) => void>(fn: F, delay: number) {
