@@ -18,7 +18,8 @@ export class Colorpicker extends Dialog {
   private customColorButtonContainer: HTMLElement;
   private undoButton: HTMLElement;
   private pywalColors: IPywalColors;
-  private customColors: Partial<IPalette>
+  private paletteTemplate: IPaletteTemplate;
+  private customColors: Partial<IPalette>;
   private resetElement: HTMLElement;
   private resetCustomColor: string;
   private selectedElement: HTMLElement;
@@ -33,11 +34,13 @@ export class Colorpicker extends Dialog {
     this.undoButton = document.getElementById('colorpicker-undo');
 
     this.pywalColors = null;
+    this.paletteTemplate = null;
+    this.customColors = {};
+
     this.resetElement = null;
     this.resetCustomColor = null;
     this.selectedElement = null;
 
-    this.customColors = {};
     this.colorElementLookup = {};
 
     this.populateColorGrid();
@@ -98,9 +101,7 @@ export class Colorpicker extends Dialog {
     }
 
     const colorIndex = parseInt(selectedElement.getAttribute('data-color-index'));
-    const color = this.pywalColors[colorIndex];
-
-    return color;
+    return this.pywalColors[colorIndex];
   }
 
   private updateCustomColorInputValue(color: string) {
@@ -145,7 +146,7 @@ export class Colorpicker extends Dialog {
     this.selectedElement = element;
   }
 
-  private onUndo(e: Event) {
+  private onUndo() {
     if (this.selectedElement === null) {
       return;
     }
@@ -166,7 +167,17 @@ export class Colorpicker extends Dialog {
     this.selectedElement = null;
   }
 
-  public setPalette(pywalColors: IPywalColors) {
+  public setData(pywalColors: IPywalColors, customColor: Partial<IPalette>, template: IPaletteTemplate) {
+    this.setPywalColors(pywalColors);
+    this.setCustomColors(customColor);
+    this.setPaletteTemplate(template);
+  }
+
+  public setPywalColors(pywalColors: IPywalColors) {
+    this.customColors = {};
+    this.colorElementLookup = {};
+    this.pywalColors = pywalColors;
+
     if (pywalColors !== null) {
       this.grid.childNodes.forEach((element: HTMLElement, index: number) => {
         const color = pywalColors[index]
@@ -177,19 +188,18 @@ export class Colorpicker extends Dialog {
       this.grid.childNodes.forEach((element: HTMLElement) => {
         element.style.backgroundColor = "";
       });
-
-      this.colorElementLookup = {};
     }
+  }
 
-    this.pywalColors = pywalColors;
-    this.customColors = {};
+  public setPaletteTemplate(template: IPaletteTemplate) {
+    this.paletteTemplate = template;
   }
 
   public setCustomColors(customColors: Partial<IPalette>) {
     this.customColors = customColors ? customColors : {};
   }
 
-  public getSelectedDataByTargetId(template: IPaletteTemplate, targetId: string) {
+  public getSelectedData(targetId: string) {
     let index: number = null;
     let element: HTMLElement = null;
     let color: string = null;
@@ -203,31 +213,30 @@ export class Colorpicker extends Dialog {
         element = this.customColorButtonContainer;
       }
     } else {
-      index = template[targetId];
+      index = this.paletteTemplate[targetId];
       color = this.pywalColors[index];
       element = this.colorElementLookup[color];
+    }
 
-      if (!element) {
-        console.error(`Could not find color element with index: ${index}`);
-        return { element: null, color, index };
-      }
+    if (!element) {
+      console.error(`Could not find color element with index: ${index}`);
     }
 
     return { element, color, index };
   }
 
-  public setSelectedColorForTarget(template: IPaletteTemplate) {
+  public updateSelected() {
     if (this.target === null) {
       return;
     }
 
-    if (template === null || this.pywalColors === null) {
+    if (this.paletteTemplate === null || this.pywalColors === null) {
       this.highlightSelectedColor(null);
       return;
     }
 
     const targetId = this.target.getAttribute('data-target');
-    const { element, color } = this.getSelectedDataByTargetId(template, targetId);
+    const { element, color } = this.getSelectedData(targetId);
 
     this.highlightSelectedColor(element);
     this.resetElement = element;

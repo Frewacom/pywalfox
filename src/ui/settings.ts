@@ -33,18 +33,19 @@ import {
     PaletteColors,
 } from '../definitions';
 
-const versionLabel = <HTMLSpanElement>document.getElementById('version');
 const optionButtons = <NodeListOf<HTMLElement>>document.querySelectorAll('button[data-option]');
 const helpToggleButtons = <NodeListOf<HTMLElement>>document.querySelectorAll('button[data-help]');
 const settingCardHeaders = <NodeListOf<HTMLElement>>document.querySelectorAll('.setting-card-header');
 
 const overlay = <HTMLDivElement>document.getElementById('overlay');
 const fetchButton = <HTMLButtonElement>document.getElementById('fetch');
+const versionLabel = <HTMLSpanElement>document.getElementById('version');
 const disableButton = <HTMLButtonElement>document.getElementById('disable');
 const themeButton = <HTMLButtonElement>document.getElementById('theme-select');
+const fontSizeSaveInput = <HTMLInputElement>document.getElementById('font-size-input');
+const debuggingOutput = <HTMLTextAreaElement>document.getElementById('debugging-output');
 const debuggingVersion = <HTMLParagraphElement>document.getElementById('debugging-version');
 const debuggingConnected = <HTMLParagraphElement>document.getElementById('debugging-connected');
-const debuggingOutput = <HTMLTextAreaElement>document.getElementById('debugging-output');
 
 const paletteContent = <HTMLDivElement>document.getElementById('palette-content');
 const paletteTemplateContent = <HTMLDivElement>document.getElementById('palette-template-content');
@@ -56,10 +57,8 @@ const themeTemplateContent = <HTMLDivElement>document.getElementById('theme-temp
 const themeTemplateSaveButton = <HTMLButtonElement>document.getElementById('theme-template-save');
 const themeTemplateResetButton = <HTMLButtonElement>document.getElementById('theme-template-reset');
 
-const notificationTemplate = <HTMLTemplateElement>document.getElementById('notification-template');
 const notificationContainer = <HTMLDivElement>document.getElementById('notification-container');
-
-const fontSizeSaveInput = <HTMLInputElement>document.getElementById('font-size-input');
+const notificationTemplate = <HTMLTemplateElement>document.getElementById('notification-template');
 
 const colorpicker = new Colorpicker();
 const themepicker = new Themepicker();
@@ -72,16 +71,8 @@ let optionButtonsLookup: INodeLookup = {};
 let paletteTemplateInputLookup: INodeLookup = {};
 let themeTemplateInputLookup: INodeLookup = {};
 
-/**
- * Opens a dialog on the right hand side of the UI.
- *
- * @param {IDialog} dialog - the dialog to open
- * @param {HTMLElement} target - the element that triggered the opening of the dialog
- */
 function openDialog(dialog: Dialog, target: HTMLElement) {
-  const overlayOpen = Utils.isOpen(overlay);
-
-  if (!overlayOpen) {
+  if (!Utils.isOpen(overlay)) {
     Utils.open(overlay);
   }
 
@@ -109,9 +100,9 @@ function closeDialog() {
   }
 }
 
-function setDebuggingInfo(info: IDebuggingInfoData) {
-  debuggingConnected.innerText = info.connected ? 'Connected' : 'Disconnected';
-  debuggingVersion.innerText = info.version == 0 ? 'version not set' : `version ${info.version}`;
+function setDebuggingInfo({ version, connected }: IDebuggingInfoData) {
+  debuggingConnected.innerText = connected ? 'Connected' : 'Disconnected';
+  debuggingVersion.innerText = version == 0 ? 'version not set' : `version ${version}`;
 }
 
 function writeOutput(message: string) {
@@ -119,31 +110,10 @@ function writeOutput(message: string) {
   debuggingOutput.scrollTop = debuggingOutput.scrollHeight; // Scrolls to bottom of textarea
 }
 
-function updatePaletteTemplateColorPreview(element: HTMLElement, index: number) {
-  const previewElement = <HTMLElement>element.previousElementSibling;
-  if (!previewElement) {
-    console.error('Could not find preview element as sibling to:', element);
-    return;
-  }
-
-  if (index < 0 || index >= PYWAL_PALETTE_LENGTH) {
-    console.error(`Could not show color preview, index is invalid: ${index}`);
-    return;
-  }
-
-  if (pywalColors !== null) {
-    previewElement.style.backgroundColor = pywalColors[index];
-  }
-}
-
-function onSettingCardClicked(header: HTMLElement) {
-  Utils.toggleOpen(<HTMLElement>header.parentNode);
-}
-
 function onColorClicked(e: Event) {
   const element = <HTMLElement>e.target;
   openDialog(colorpicker, element);
-  colorpicker.setSelectedColorForTarget(template.palette);
+  colorpicker.updateSelected();
 }
 
 function setOptionEnabled(target: HTMLElement, enabled: boolean) {
@@ -174,28 +144,16 @@ function onOptionClicked(e: Event) {
   Messenger.requestOptionSet(option, newState);
 }
 
-function onOverlayClicked(e: Event) {
-  closeDialog();
-}
-
-function onFetchClicked(e: Event) {
-  Messenger.requestFetch();
-}
-
-function onDisableClicked(e: Event) {
+function onDisableClicked() {
   Messenger.requestDisable();
-  pywalColors = null;
-  colorpicker.setPalette(null);
+  colorpicker.setPywalColors(null);
   colorpicker.setCustomColors(null);
-  colorpicker.setSelectedColorForTarget(null);
+  colorpicker.updateSelected();
   document.body.classList.remove(ENABLED_BODY_CLASS);
+  pywalColors = null;
 }
 
-function onThemeClicked(e: Event) {
-  openDialog(themepicker, themeButton);
-}
-
-function onFontSizeSave(e: Event) {
+function onFontSizeSave() {
   if (fontSizeSaveInput.checkValidity()) {
     const option = fontSizeSaveInput.getAttribute('data-option');
     Messenger.requestOptionSet(option, true, parseInt(fontSizeSaveInput.value));
@@ -205,7 +163,6 @@ function onFontSizeSave(e: Event) {
       message: 'Invalid value, should be between 10-20 pixels',
       error: true
     });
-    return;
   }
 }
 
@@ -234,7 +191,7 @@ function onPaletteTemplateInputChanged(e: Event) {
   if (target.checkValidity()) {
     const index = parseInt(value);
     template.palette[targetId] = index;
-    updatePaletteTemplateColorPreview(target, index);
+    updatePaletteTemplateColorPreview(target, pywalColors, index);
   }
 }
 
@@ -255,7 +212,7 @@ function onThemeTemplateInputChanged(target: HTMLSelectElement) {
   template.browser[targetId] = <PaletteColors>value;
 }
 
-function onPaletteTemplateSave(e: Event) {
+function onPaletteTemplateSave() {
   if (template === null || !template.hasOwnProperty('palette')) {
     console.error(`Template is null or the palette template is not set: ${template}`);
     return;
@@ -264,38 +221,34 @@ function onPaletteTemplateSave(e: Event) {
   Messenger.requestPaletteTemplateSet(template.palette);
 }
 
-function onPaletteTemplateReset(e: Event) {
-  Messenger.requestPaletteTemplateReset();
-}
+function onPaletteTemplateUseCurrent() {
+  for (const targetId of Object.values(PaletteColors)) {
+    const { index } = colorpicker.getSelectedData(targetId);
+    const inputElement = <HTMLInputElement>paletteTemplateInputLookup[targetId];
 
-function onPaletteTemplateUseCurrent(e: Event) {
-  for (const color of Object.values(PaletteColors)) {
-    const { index } = colorpicker.getSelectedDataByTargetId(template.palette, color);
-    if (index !== null) {
-      const inputElement = <HTMLInputElement>paletteTemplateInputLookup[color];
-      if (inputElement !== null) {
-        template.palette[color] = index;
-        updatePaletteTemplateInput(inputElement, index);
-      } else {
-        console.error(`Could not find palette template id with target: ${color}`);
-      }
-    } else {
-      console.log(`Palette color '${color}' is set to a custom color and can not be used`);
+    if (index === null) {
+      console.log(`Palette color '${targetId}' is set to a custom color and can not be used`);
+      continue;
     }
+
+    if (inputElement === null) {
+      console.error(`Could not find palette template id with target: ${targetId}`);
+      return;
+    }
+
+    updatePaletteTemplateColorPreview(inputElement, pywalColors, index);
+    inputElement.value = index.toString();
+    template.palette[targetId] = index;
   }
 }
 
-function onThemeTemplateSave(e: Event) {
+function onThemeTemplateSave() {
   if (template === null || !template.hasOwnProperty('browser')) {
     console.error(`Template is null or the browser template is not set: ${template}`);
     return;
   }
 
   Messenger.requestThemeTemplateSet(template.browser);
-}
-
-function onThemeTemplateReset(e: Event) {
-  Messenger.requestThemeTemplateReset();
 }
 
 function updateOptionButtonState(optionData: IOptionSetData) {
@@ -306,28 +259,41 @@ function updateOptionButtonState(optionData: IOptionSetData) {
   }
 }
 
-function updatePaletteTemplateInput(element: HTMLInputElement, index: number) {
-  element.value = index.toString();
-  updatePaletteTemplateColorPreview(element, index);
+function updatePaletteTemplateColorPreview(element: HTMLElement, updatedPywalColors: IPywalColors, index: number) {
+  const previewElement = <HTMLElement>element.previousElementSibling;
+  if (!previewElement) {
+    console.error('Could not find preview element as sibling to:', element);
+    return;
+  }
+
+  if (index < 0 || index >= PYWAL_PALETTE_LENGTH) {
+    console.error(`Could not show color preview, index is invalid: ${index}`);
+    return;
+  }
+
+  if (updatedPywalColors !== null) {
+    previewElement.style.backgroundColor = updatedPywalColors[index];
+  }
 }
 
-function updatePaletteTemplateInputs(template: IPaletteTemplate) {
-  for (const key in template) {
+function updatePaletteTemplateInputs(updatedTemplate: IPaletteTemplate, updatedPywalColors: IPywalColors) {
+  for (const key in updatedTemplate) {
     const element = <HTMLInputElement>paletteTemplateInputLookup[key];
     if (element) {
-      const index = template[key];
-      updatePaletteTemplateInput(element, index);
+      const index = updatedTemplate[key];
+      element.value = index.toString();
+      updatePaletteTemplateColorPreview(element, updatedPywalColors, index);
     } else {
       console.error(`Found unhandled palette template target: ${key}`);
     }
   }
 }
 
-function updateThemeTemplateInputs(template: IThemeTemplate) {
-  for (const key in template) {
+function updateThemeTemplateInputs(updatedTemplate: IThemeTemplate) {
+  for (const key in updatedTemplate) {
     const element = <HTMLSelectElement>themeTemplateInputLookup[key];
     if (element) {
-      const defaultValue = template[key];
+      const defaultValue = updatedTemplate[key];
       element.value = defaultValue;
     } else {
       console.error(`Found unhandled theme template target: ${key}`);
@@ -340,6 +306,7 @@ function createNotification(data: INotificationData) {
     notificationContainer.removeChild(notificationContainer.firstElementChild);
   }
 
+  const { title, message, error } = data;
   const clone = <HTMLElement>notificationTemplate.content.cloneNode(true);
   const containerElement = <HTMLElement>clone.querySelector('.notification');
   const titleElement = <HTMLParagraphElement>clone.querySelector('.notification-title');
@@ -347,10 +314,10 @@ function createNotification(data: INotificationData) {
   const iconElement = <HTMLElement>clone.querySelector('i');
   const closeElement = <HTMLButtonElement>clone.querySelector('button');
 
-  titleElement.innerText = data.title + ':';
-  contentElement.innerText = data.message;
-  iconElement.setAttribute('icon', data.error ? 'error' : 'bell');
-  data.error && containerElement.classList.add('error');
+  titleElement.innerText = title + ':';
+  contentElement.innerText = message;
+  iconElement.setAttribute('icon', error ? 'error' : 'bell');
+  error && containerElement.classList.add('error');
 
   closeElement.addEventListener('click', () => notificationContainer.removeChild(containerElement));
 
@@ -453,18 +420,6 @@ async function setCurrentTheme(themeInfo?: browser.theme.ThemeUpdateInfo) {
 }
 
 function setInitialData(data: IInitialData) {
-  template = data.template;
-  pywalColors = data.pywalColors;
-
-  colorpicker.setPalette(data.pywalColors);
-  colorpicker.setCustomColors(data.customColors);
-  colorpicker.setSelectedColorForTarget(data.template.palette);
-
-  updatePaletteTemplateInputs(data.template.palette);
-  updateThemeTemplateInputs(data.template.browser);
-
-  fontSizeSaveInput.value = data.fontSize.toString();
-
   if (data.enabled) {
     themepicker.setSelectedMode(data.themeMode);
     document.body.classList.add(ENABLED_BODY_CLASS);
@@ -474,74 +429,85 @@ function setInitialData(data: IInitialData) {
     updateOptionButtonState(optionData);
   }
 
+  fontSizeSaveInput.value = data.fontSize.toString();
+  colorpicker.setData(data.pywalColors, data.customColors, data.template.palette);
+  colorpicker.updateSelected();
+
+  updatePaletteTemplateInputs(data.template.palette, data.pywalColors);
+  updateThemeTemplateInputs(data.template.browser);
   setDebuggingInfo(data.debuggingInfo);
+
+  pywalColors = data.pywalColors;
+  template = data.template;
 }
 
-function handleExtensionMessage(message: IExtensionMessage) {
-  switch (message.action) {
+function handleExtensionMessage({ action, data }: IExtensionMessage) {
+  switch (action) {
     case EXTENSION_MESSAGES.INITIAL_DATA_SET:
-      setInitialData(message.data);
+      setInitialData(data);
       break;
     case EXTENSION_MESSAGES.PYWAL_COLORS_SET:
-      pywalColors = message.data;
-      colorpicker.setPalette(pywalColors);
+      colorpicker.setPywalColors(data);
       colorpicker.setCustomColors(null);
-      colorpicker.setSelectedColorForTarget(template.palette);
-      updatePaletteTemplateInputs(template.palette);
+      colorpicker.updateSelected();
+      updatePaletteTemplateInputs(template.palette, data);
       document.body.classList.add(ENABLED_BODY_CLASS);
+      pywalColors = data;
       break;
     case EXTENSION_MESSAGES.CUSTOM_COLORS_SET:
-      colorpicker.setCustomColors(message.data);
+      colorpicker.setCustomColors(data);
+      colorpicker.updateSelected();
       break;
     case EXTENSION_MESSAGES.TEMPLATE_SET:
-      template = message.data;
-      updatePaletteTemplateInputs(template.palette);
-      updateThemeTemplateInputs(template.browser);
-      colorpicker.setSelectedColorForTarget(template.palette);
+      colorpicker.setPaletteTemplate(data.palette);
+      colorpicker.updateSelected();
+      updateThemeTemplateInputs(data.browser);
+      updatePaletteTemplateInputs(data.palette, pywalColors);
       break;
     case EXTENSION_MESSAGES.PALETTE_TEMPLATE_SET:
-      const paletteTemplate = message.data;
-      colorpicker.setSelectedColorForTarget(paletteTemplate);
-      updatePaletteTemplateInputs(paletteTemplate);
-      template.palette = paletteTemplate;
+      colorpicker.setPaletteTemplate(data);
+      colorpicker.updateSelected();
+      updatePaletteTemplateInputs(data, pywalColors);
+      template.palette = data;
       break;
     case EXTENSION_MESSAGES.THEME_TEMPLATE_SET:
-      const themeTemplate = message.data;
-      updateThemeTemplateInputs(themeTemplate);
-      template.browser = themeTemplate;
+      updateThemeTemplateInputs(data);
+      template.browser = data;
       break;
     case EXTENSION_MESSAGES.THEME_MODE_SET:
-      themepicker.setSelectedMode(message.data);
+      themepicker.setSelectedMode(data);
       break;
     case EXTENSION_MESSAGES.OPTION_SET:
-      updateOptionButtonState(message.data);
+      updateOptionButtonState(data);
       break;
     case EXTENSION_MESSAGES.NOTIFCATION:
-      createNotification(message.data);
+      createNotification(data);
       break;
     case EXTENSION_MESSAGES.DEBUGGING_OUTPUT:
-      writeOutput(message.data);
+      writeOutput(data);
       break;
     case EXTENSION_MESSAGES.DEBUGGING_INFO_SET:
-      setDebuggingInfo(message.data);
+      setDebuggingInfo(data);
       break;
   }
 }
 
 function setupListeners() {
-  overlay.addEventListener('click', onOverlayClicked);
-  fetchButton.addEventListener('click', onFetchClicked);
-  themeButton.addEventListener('click', onThemeClicked);
+  overlay.addEventListener('click', closeDialog);
   disableButton.addEventListener('click', onDisableClicked);
+  fetchButton.addEventListener('click', Messenger.requestFetch);
+  themeButton.addEventListener('click', () => openDialog(themepicker, themeButton));
   fontSizeSaveInput.addEventListener('change', Utils.debounce(onFontSizeSave, 500));
+
   themeTemplateSaveButton.addEventListener('click', onThemeTemplateSave);
-  themeTemplateResetButton.addEventListener('click', onThemeTemplateReset);
+  themeTemplateResetButton.addEventListener('click', Messenger.requestThemeTemplateReset);
+
   paletteTemplateSaveButton.addEventListener('click', onPaletteTemplateSave);
-  paletteTemplateResetButton.addEventListener('click', onPaletteTemplateReset);
   paletteTemplateCurrentButton.addEventListener('click', onPaletteTemplateUseCurrent);
+  paletteTemplateResetButton.addEventListener('click', Messenger.requestPaletteTemplateReset);
 
   helpToggleButtons.forEach((button: HTMLElement) => button.addEventListener('click', () => onHelpToggle(button)));
-  settingCardHeaders.forEach((header: HTMLElement) => header.addEventListener('click', () => onSettingCardClicked(header)));
+  settingCardHeaders.forEach((header: HTMLElement) => header.addEventListener('click', () => Utils.toggleOpen(header.parentElement)));
   optionButtons.forEach((button: HTMLElement) => {
     const option = button.getAttribute('data-option');
     button.addEventListener('click', onOptionClicked);
@@ -562,5 +528,5 @@ createPaletteContent();
 createThemeTemplateContent();
 
 setCurrentTheme();
-Utils.setVersionLabel(versionLabel);
 Messenger.requestInitialData();
+Utils.setVersionLabel(versionLabel);
