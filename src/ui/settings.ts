@@ -358,7 +358,12 @@ function createNotification(data: INotificationData) {
 
   containerElement.classList.add('fadeout');
   setTimeout(() => containerElement.classList.remove('fadeout'), 50);
-  setTimeout(() => notificationContainer.removeChild(containerElement), NOTIFICATION_TIMEOUT);
+  setTimeout(() => {
+    if (notificationContainer.contains(containerElement)) {
+      // The notification might already be deleted if the MAX_SIMULTANEOUS_NOTIFICATIONS treshold is reached
+      notificationContainer.removeChild(containerElement)
+    }
+  }, NOTIFICATION_TIMEOUT);
 }
 
 function createThemeTemplateContent() {
@@ -484,6 +489,9 @@ function handleExtensionMessage(message: IExtensionMessage) {
       colorpicker.setSelectedColorForTarget(template.palette);
       updatePaletteTemplateInputs(template.palette);
       document.body.classList.add(ENABLED_BODY_CLASS);
+      break;
+    case EXTENSION_MESSAGES.CUSTOM_COLORS_SET:
+      colorpicker.setCustomColors(message.data);
       break;
     case EXTENSION_MESSAGES.TEMPLATE_SET:
       template = message.data;

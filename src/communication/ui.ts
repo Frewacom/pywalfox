@@ -1,6 +1,7 @@
 import { EXTENSION_MESSAGES } from '../config/general';
 
 import {
+  IPalette,
   IInitialData,
   IPywalColors,
   IColorschemeTemplate,
@@ -64,3 +65,6 @@ export function sendThemeTemplateSet(template: IThemeTemplate) {
   sendMessage({ action: EXTENSION_MESSAGES.THEME_TEMPLATE_SET, data: template });
 }
 
+export function sendCustomColors(customColors: Partial<IPalette>) {
+  sendMessage({ action: EXTENSION_MESSAGES.CUSTOM_COLORS_SET, data: customColors });
+}

@@ -215,17 +215,6 @@ export class Extension {
     UI.sendDebuggingOutput('Theme was disabled');
   }
 
-  private applyUpdatedTemplate() {
-    const customColors = this.state.getCustomColors();
-    const pywalColors = this.state.getPywalColors();
-
-    if (!pywalColors) {
-      return;
-    }
-
-    this.updateThemes(pywalColors, customColors);
-  }
-
   private updateThemes(pywalColors: IPywalColors, customColors?: Partial<IPalette>) {
     const template = this.state.getTemplate();
     const colorscheme = generateColorscheme(pywalColors, customColors, template);
@@ -250,6 +239,24 @@ export class Extension {
     this.state.setThemes(pywalColors, colorscheme, extensionTheme, ddgTheme);
     this.state.setApplied(true);
     !this.state.getEnabled() && this.state.setEnabled(true);
+  }
+
+  private applyUpdatedPaletteTemplate(template: IPaletteTemplate) {
+    const customColors = this.state.getCustomColors();
+    const pywalColors = this.state.getPywalColors();
+
+    if (!pywalColors) {
+      return;
+    }
+
+    for (const color in customColors) {
+      if (pywalColors[template[color]] === customColors[color]) {
+        delete customColors[color];
+      }
+    }
+
+    this.updateThemes(pywalColors, customColors);
+    UI.sendCustomColors(customColors);
   }
 
   private setBrowserTheme(browserTheme: IBrowserTheme) {
@@ -319,7 +326,7 @@ export class Extension {
     }
 
     this.state.setPaletteTemplate(template);
-    this.applyUpdatedTemplate();
+    this.applyUpdatedPaletteTemplate(template);
     UI.sendPaletteTemplateSet(template);
     UI.sendNotification('Palette template', 'Template was updated successfully');
   }

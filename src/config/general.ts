@@ -48,6 +48,8 @@ export const EXTENSION_MESSAGES = {
   THEME_TEMPLATE_GET: 'theme:template:get',
   PYWAL_COLORS_GET: 'pywal:colors:get',
   PYWAL_COLORS_SET: 'pywal:colors:set',
+  CUSTOM_COLORS_GET: 'custom:colors:get',
+  CUSTOM_COLORS_SET: 'custom:colors:set',
   OPTION_GET: 'option:get',
   OPTION_SET: 'option:set',
   FONT_SIZE_SET: 'font:size:set',
