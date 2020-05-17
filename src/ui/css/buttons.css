@@ -104,6 +104,10 @@ body.light .btn-control {
   filter: none;
 }
 
+body.light .btn-lighter {
+  background-color: var(--lighter-background-hover);
+}
+
 .btn-darker {
   background-color: var(--background);
   color: var(--text-focus);

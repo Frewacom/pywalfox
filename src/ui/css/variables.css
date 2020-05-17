@@ -78,7 +78,7 @@ body.light {
 
   --border-color: rgba(0,0,0,0.15);
   --lighter-background: rgba(0,0,0,0.05);
-  --lighter-background-hover: rgba(0,0,0,0.03);
+  --lighter-background-hover: rgba(0,0,0,0.1);
   --darker-background: var(--lighter-background);
 
   --box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);

@@ -65,11 +65,7 @@ header {
 }
 
 body.light #logo > span {
-  padding: 0 var(--spacing-xsm);
-  margin-left: var(--spacing-xxsm);
   color: var(--text-focus);
-  background-color: var(--accent-primary);
-  border-radius: var(--border-radius);
 }
 
 .palette-card-container {
