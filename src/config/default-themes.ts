@@ -54,8 +54,8 @@ export const DEFAULT_PALETTE_TEMPLATE_LIGHT = {
   backgroundLight: 16,
   text: 17,
   textFocus: 0,
-  accentPrimary: 1,
-  accentSecondary: 2,
+  accentPrimary: 9,
+  accentSecondary: 5,
 };
 
 export const DEFAULT_BROWSER_TEMPLATE_LIGHT = {
