@@ -21,8 +21,9 @@ export interface IExtensionState {
   connected: boolean;
   updateMuted: boolean;
   theme: {
-    isApplied: boolean;
     mode: ThemeModes;
+    isDay: boolean;
+    isApplied: boolean;
     pywalColors: IPywalColors;
     customColors: Partial<IPalette>;
     colorscheme: IColorscheme;
@@ -45,11 +46,12 @@ export class State {
   constructor() {
     this.initialState = {
       version: 0.0,
-      enabled: false,
+      enabled: false, // TODO: Is this state variable really needed, or is 'isApplied' sufficent?
       connected: false,
       updateMuted: false,
       theme: {
         mode: ThemeModes.Dark,
+        isDay: false,
         isApplied: false,
         pywalColors: null,
         customColors: null,
@@ -78,6 +80,19 @@ export class State {
     }
 
     return null;
+  }
+
+  public getInitialData() {
+    return {
+      pywalColors: this.getPywalColors(),
+      template: this.getTemplate(),
+      customColors: this.getCustomColors(),
+      themeMode: this.getThemeMode(),
+      debuggingInfo: this.getDebuggingInfo(),
+      enabled: this.getEnabled(),
+      options: this.getOptionsData(),
+      fontSize: this.getCssFontSize(),
+    };
   }
 
   public getEnabled() {
@@ -113,6 +128,10 @@ export class State {
     // TODO: Add case for Auto theme type
     const themeMode = this.currentState.theme.mode;
     return themeMode === ThemeModes.Dark ? DEFAULT_THEME_DARK : DEFAULT_THEME_LIGHT;
+  }
+
+  public getIsDay() {
+    return this.currentState.theme.isDay;
   }
 
   public getThemeMode() {
@@ -195,7 +214,7 @@ export class State {
       theme: {
         ...this.currentState.theme,
         isApplied,
-      }
+      },
     });
   }
 
@@ -204,35 +223,35 @@ export class State {
   }
 
   public setCustomColors(customColors: Partial<IPalette>) {
-    this.set({
+    return this.set({
       theme: {
         ...this.currentState.theme,
         customColors,
-      }
+      },
     });
   }
 
   public setPaletteTemplate(template: IPaletteTemplate) {
-    this.set({
+    return this.set({
       theme: {
         ...this.currentState.theme,
         template: {
           ...this.currentState.theme.template,
           palette: template,
         },
-      }
+      },
     });
   }
 
   public setThemeTemplate(template: IThemeTemplate) {
-    this.set({
+    return this.set({
       theme: {
         ...this.currentState.theme,
         template: {
           ...this.currentState.theme.template,
           browser: template,
         },
-      }
+      },
     });
   }
 
@@ -244,7 +263,7 @@ export class State {
           ...this.currentState.theme.colorscheme,
           browser: browserTheme,
         },
-      }
+      },
     });
   }
 
@@ -261,21 +280,21 @@ export class State {
         colorscheme: colorscheme,
         extension: extensionTheme,
         ddg: ddgTheme,
-      }
+      },
     });
   }
 
   public setCssEnabled(target: string, enabled: boolean) {
-    this.set({
+    return this.set({
       options: {
         ...this.currentState.options,
         [target]: enabled,
-      }
+      },
     });
   }
 
   public setCssFontSize(size: number) {
-    this.set({
+    return this.set({
       options: {
         ...this.currentState.options,
         fontSize: size,
@@ -285,21 +304,21 @@ export class State {
 
   public setThemeMode(mode: ThemeModes) {
     // TODO: Apply the correct template based on the current mode
-    this.set({
+    return this.set({
       theme: {
         ...this.currentState.theme,
         mode: mode,
-        template: mode === ThemeModes.Dark ? DEFAULT_THEME_DARK : DEFAULT_THEME_LIGHT
-      }
+        template: mode === ThemeModes.Dark ? DEFAULT_THEME_DARK : DEFAULT_THEME_LIGHT,
+      },
     });
   }
 
   public setDDGThemeEnabled(enabled: boolean) {
-    this.set({
+    return this.set({
       options: {
         ...this.currentState.options,
-        duckduckgo: enabled
-      }
+        duckduckgo: enabled,
+      },
     });
   }
 

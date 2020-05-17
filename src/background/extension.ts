@@ -62,32 +62,6 @@ export class Extension {
 
     browser.runtime.onMessage.addListener(this.onMessage.bind(this));
     browser.browserAction.onClicked.addListener(() => this.settingsPage.open());
-    /* TODO: Setup listener for theme updates and update 'isApplied'
-     *       This should fix an issue where if you select light mode, resets the theme and
-     *       fetches colors again, dark mode is selected instead of light mode
-     */
-  }
-
-  private getInitialData() {
-    const pywalColors = this.state.getPywalColors();
-    const template = this.state.getTemplate();
-    const customColors = this.state.getCustomColors();
-    const themeMode = this.state.getThemeMode();
-    const debuggingInfo = this.state.getDebuggingInfo();
-    const enabled = this.state.getEnabled();
-    const options = this.state.getOptionsData();
-    const fontSize = this.state.getCssFontSize();
-
-    return {
-      pywalColors,
-      template,
-      themeMode,
-      customColors,
-      debuggingInfo,
-      enabled,
-      options,
-      fontSize,
-    };
   }
 
   private getDefaultTemplate() {
@@ -128,23 +102,16 @@ export class Extension {
   }
 
   /* Handles incoming messages from the UI and other content scripts. */
-  private onMessage(message: IExtensionMessage) {
-    switch (message.action) {
+  private onMessage({ action, data }: IExtensionMessage) {
+    switch (action) {
       case EXTENSION_MESSAGES.INITIAL_DATA_GET:
-        const initialData = this.getInitialData();
-        UI.sendInitialData(initialData);
+        UI.sendInitialData(this.state.getInitialData());
         break;
       case EXTENSION_MESSAGES.DDG_THEME_GET:
-        const isEnabled = this.state.getDDGThemeEnabled();
-        if (isEnabled) {
-          const theme = this.state.getDDGTheme();
-          theme ? DDG.setTheme(theme): DDG.resetTheme();
-        } else {
-          DDG.resetTheme();
-        }
+        this.setDDGTheme();
         break;
       case EXTENSION_MESSAGES.PYWAL_COLORS_GET:
-        var pywalColors = this.state.getPywalColors();
+        const pywalColors = this.state.getPywalColors();
         pywalColors && UI.sendPywalColors(pywalColors);
         break;
       case EXTENSION_MESSAGES.TEMPLATE_GET:
@@ -152,20 +119,16 @@ export class Extension {
         template && UI.sendTemplate(template);
         break;
       case EXTENSION_MESSAGES.PALETTE_TEMPLATE_SET:
-        this.setPaletteTemplate(message);
+        this.setPaletteTemplate(data);
         break;
       case EXTENSION_MESSAGES.THEME_TEMPLATE_SET:
-        this.setThemeTemplate(message);
+        this.setThemeTemplate(data);
         break;
       case EXTENSION_MESSAGES.THEME_MODE_GET:
-        const mode = this.state.getThemeMode();
-        UI.sendThemeMode(mode);
+        UI.sendThemeMode(this.state.getThemeMode());
         break;
       case EXTENSION_MESSAGES.THEME_MODE_SET:
-        this.state.setThemeMode(message.data);
-        this.state.setCustomColors(null);
-        var pywalColors = this.state.getPywalColors();
-        pywalColors && this.updateThemes(pywalColors);
+        this.setThemeMode(data);
         break;
       case EXTENSION_MESSAGES.THEME_FETCH:
         this.nativeApp.requestColorscheme();
@@ -174,18 +137,13 @@ export class Extension {
         this.resetThemes();
         break;
       case EXTENSION_MESSAGES.PALETTE_COLOR_SET:
-        var pywalColors = this.state.getPywalColors();
-        if (pywalColors !== null) {
-          const customPalette = this.createCustomColorPalette(message.data);
-          this.updateThemes(pywalColors, customPalette);
-        }
+        this.setPaletteColor(data);
         break;
       case EXTENSION_MESSAGES.DEBUGGING_INFO_GET:
-        const info = this.state.getDebuggingInfo();
-        UI.sendDebuggingInfo(info);
+        UI.sendDebuggingInfo(this.state.getDebuggingInfo());
         break;
       case EXTENSION_MESSAGES.OPTION_SET:
-        this.setOption(message.data);
+        this.setOption(data);
         break;
       case EXTENSION_MESSAGES.UPDATE_PAGE_MUTE:
         this.state.setUpdateMuted(true);
@@ -232,13 +190,10 @@ export class Extension {
     // or they will be applied again when setting a new custom color.
     this.state.setCustomColors(null);
 
-    if (customColors) {
-      this.state.setCustomColors(customColors);
-    }
-
     this.state.setThemes(pywalColors, colorscheme, extensionTheme, ddgTheme);
+    this.state.setCustomColors(customColors ? customColors : null);
+    this.state.setEnabled(true);
     this.state.setApplied(true);
-    !this.state.getEnabled() && this.state.setEnabled(true);
   }
 
   private applyUpdatedPaletteTemplate(template: IPaletteTemplate) {
@@ -290,6 +245,17 @@ export class Extension {
     this.state.setDDGThemeEnabled(enabled);
   }
 
+  private setDDGTheme() {
+    const theme = this.state.getDDGTheme();
+    const isEnabled = this.state.getDDGThemeEnabled();
+
+    if (isEnabled && theme) {
+      DDG.setTheme(theme);
+    } else {
+      DDG.resetTheme();
+    }
+  }
+
   private setCssFontSize(fontSize: number) {
     if (fontSize !== undefined && fontSize >= 10 && fontSize <= 20) {
       // Currently, only userChrome uses the custom font size feature
@@ -308,47 +274,62 @@ export class Extension {
    */
   private setSavedBrowserTheme() {
     const browserTheme = this.state.getBrowserTheme();
-    if (browserTheme !== null) {
+    const hasSavedTheme = browserTheme === null ? false : true;
+
+    if (hasSavedTheme) {
       const extensionTheme = this.state.getExtensionTheme();
       this.setBrowserTheme(browserTheme);
       this.updateExtensionPagesTheme(extensionTheme);
       console.log('Saved browser theme was applied');
-      this.state.setApplied(true);
-    } else {
-      this.state.setApplied(false);
     }
+
+    this.state.setApplied(hasSavedTheme);
   }
 
-  private setPaletteTemplate(message: IExtensionMessage) {
-    let template: IPaletteTemplate = message.data;
-    if (template === null) {
-      template = this.getDefaultTemplate().palette;
+  private async setThemeMode(mode: ThemeModes) {
+    const pywalColors = this.state.getPywalColors();
+    await this.state.setThemeMode(mode);
+    pywalColors && this.updateThemes(pywalColors);
+  }
+
+  private setPaletteTemplate(template: IPaletteTemplate) {
+    let updatedTemplate: IPaletteTemplate = template;
+    if (updatedTemplate === null) {
+      updatedTemplate = this.getDefaultTemplate().palette;
     }
 
-    this.state.setPaletteTemplate(template);
-    this.applyUpdatedPaletteTemplate(template);
-    UI.sendPaletteTemplateSet(template);
+    this.state.setPaletteTemplate(updatedTemplate);
+    this.applyUpdatedPaletteTemplate(updatedTemplate);
+    UI.sendPaletteTemplateSet(updatedTemplate);
     UI.sendNotification('Palette template', 'Template was updated successfully');
   }
 
-  private setThemeTemplate(message: IExtensionMessage) {
+  private setThemeTemplate(template: IThemeTemplate) {
     const palette = this.state.getPalette();
-    let template: IThemeTemplate = message.data;
+    let updatedTemplate: IThemeTemplate = template;
 
-    if (template === null) {
-      template = this.getDefaultTemplate().browser;
+    if (updatedTemplate === null) {
+      updatedTemplate = this.getDefaultTemplate().browser;
     }
 
     if (palette !== null) {
       // Generate a new browser theme only based on the current palette and the new template
-      const browserTheme = generateBrowserTheme(palette, template);
+      const browserTheme = generateBrowserTheme(palette, updatedTemplate);
       this.setBrowserTheme(browserTheme);
       this.state.setBrowserTheme(browserTheme);
     }
 
-    this.state.setThemeTemplate(template);
-    UI.sendThemeTemplateSet(template);
+    this.state.setThemeTemplate(updatedTemplate);
+    UI.sendThemeTemplateSet(updatedTemplate);
     UI.sendNotification('Theme template', 'Template was updated successfully');
+  }
+
+  private setPaletteColor(palette: Partial<IPalette>) {
+    const pywalColors = this.state.getPywalColors();
+    if (pywalColors !== null) {
+      const customPalette = this.createCustomColorPalette(palette);
+      this.updateThemes(pywalColors, customPalette);
+    }
   }
 
   private createCustomColorPalette(data: Partial<IPalette>) {
@@ -380,10 +361,6 @@ export class Extension {
   }
 
   private nativeAppConnected() {
-    if (this.state.getEnabled() && !this.state.getApplied()) {
-      this.nativeApp.requestColorscheme();
-    }
-
     this.state.setConnected(true);
   }
 
@@ -401,7 +378,7 @@ export class Extension {
 
   private cssToggleSuccess(target: string) {
     const newState = this.state.getCssEnabled(target) ? false : true;
-    let notificationMessage: string;
+    let notificationMessage: string = `${target} was disabled successfully!`;
 
     if (newState === true) {
       notificationMessage = `${target} was enabled successfully!`;
@@ -414,8 +391,6 @@ export class Extension {
           this.setCssFontSize(fontSize);
         }
       }
-    } else {
-      notificationMessage = `${target} was disabled successfully!`;
     }
 
     UI.sendOptionSet(target, newState);
@@ -440,11 +415,12 @@ export class Extension {
   }
 
   public async start() {
-    /* browser.storage.local.clear(); // debugging */
     await this.state.load();
     this.settingsPage = new ExtensionPage(EXTENSION_PAGES.SETTINGS);
     this.updatePage = new ExtensionPage(EXTENSION_PAGES.UPDATE);
 
+    // Run this after creating the extension pages so that the themes can be
+    // set if the pages were reopened on launch.
     if (this.state.getEnabled()) {
       this.setSavedBrowserTheme();
     }

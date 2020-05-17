@@ -62,28 +62,6 @@ export function toggleOpen(element: HTMLElement) {
   toggleAttribute(element, 'open');
 }
 
-export async function setInitialThemeClass(themeInfo?: browser.theme.ThemeUpdateInfo) {
-  let theme: any;
-  if (themeInfo) {
-    theme = themeInfo.theme;
-  } else {
-    theme = await browser.theme.getCurrent();
-  }
-
-  if (Object.keys(theme).length > 0 && theme['colors'] !== null) {
-    // Seems like there is no better way of identifying themes
-    if (theme.colors.toolbar_field === '#fff' || theme.colors.toolbar_field === '#ffffff') {
-      document.body.classList.add('light');
-      document.body.classList.remove('dark');
-      return ThemeModes.Light;
-    }
-  }
-
-  document.body.classList.add('dark');
-  document.body.classList.remove('light');
-  return ThemeModes.Dark;
-}
-
 export function rgbToHex(rgb: string) {
   if (rgb[0] === '#' || !rgb) { return rgb; }
   const hex = rgb.substr(4, rgb.indexOf(')') - 4).split(',').map((color) => {

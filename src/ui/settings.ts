@@ -100,6 +100,10 @@ function closeDialog() {
   }
 }
 
+function toggleEnabledBodyClass() {
+  document.body.classList.toggle(ENABLED_BODY_CLASS);
+}
+
 function setDebuggingInfo({ version, connected }: IDebuggingInfoData) {
   debuggingConnected.innerText = connected ? 'Connected' : 'Disconnected';
   debuggingVersion.innerText = version == 0 ? 'version not set' : `version ${version}`;
@@ -149,7 +153,7 @@ function onDisableClicked() {
   colorpicker.setPywalColors(null);
   colorpicker.setCustomColors(null);
   colorpicker.updateSelected();
-  document.body.classList.remove(ENABLED_BODY_CLASS);
+  toggleEnabledBodyClass();
   pywalColors = null;
 }
 
@@ -412,17 +416,11 @@ function createPaletteContent() {
   });
 }
 
-async function setCurrentTheme(themeInfo?: browser.theme.ThemeUpdateInfo) {
-  if (pywalColors === null) {
-    const selectedMode = await Utils.setInitialThemeClass(themeInfo);
-    themepicker.setSelectedMode(selectedMode);
-  }
-}
-
 function setInitialData(data: IInitialData) {
+  themepicker.setSelectedMode(data.themeMode);
+
   if (data.enabled) {
-    themepicker.setSelectedMode(data.themeMode);
-    document.body.classList.add(ENABLED_BODY_CLASS);
+    toggleEnabledBodyClass();
   }
 
   for (const optionData of data.options) {
@@ -519,7 +517,6 @@ function setupListeners() {
     }
   });
 
-  browser.theme.onUpdated.addListener(setCurrentTheme);
   browser.runtime.onMessage.addListener(handleExtensionMessage);
 }
 
@@ -527,6 +524,5 @@ setupListeners();
 createPaletteContent();
 createThemeTemplateContent();
 
-setCurrentTheme();
 Messenger.requestInitialData();
 Utils.setVersionLabel(versionLabel);
