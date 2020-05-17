@@ -124,9 +124,6 @@ export class Extension {
       case EXTENSION_MESSAGES.THEME_TEMPLATE_SET:
         this.setThemeTemplate(data);
         break;
-      case EXTENSION_MESSAGES.THEME_MODE_GET:
-        UI.sendThemeMode(this.state.getThemeMode());
-        break;
       case EXTENSION_MESSAGES.THEME_MODE_SET:
         this.setThemeMode(data);
         break;
@@ -241,7 +238,7 @@ export class Extension {
       DDG.resetTheme();
     }
 
-    UI.sendOptionSet(optionData.option, optionData.enabled);
+    UI.sendOption(optionData.option, optionData.enabled);
     this.state.setDDGThemeEnabled(enabled);
   }
 
@@ -286,10 +283,27 @@ export class Extension {
     this.state.setApplied(hasSavedTheme);
   }
 
+  private async onThemeChangeTrigger(isDay: boolean) {
+    console.log(`Theme update triggered by automatic theme mode. Is day: ${isDay}`);
+    await this.state.setIsDay(isDay);
+    this.setThemeMode(this.state.getThemeMode());
+  }
+
   private async setThemeMode(mode: ThemeModes) {
+    await this.state.setThemeMode(mode); // Must wait for this to finish
+
     const pywalColors = this.state.getPywalColors();
-    await this.state.setThemeMode(mode);
-    pywalColors && this.updateThemes(pywalColors);
+    const template = this.state.getTemplate();
+    const customColors = this.state.getCustomColors();
+    pywalColors && this.updateThemes(pywalColors, customColors);
+
+    if (mode === ThemeModes.Auto) {
+      UI.sendThemeMode(this.state.getTemplateThemeMode(), false);
+    }
+
+    UI.sendPaletteTemplate(template.palette);
+    UI.sendThemeTemplate(template.browser);
+    UI.sendCustomColors(customColors);
   }
 
   private setPaletteTemplate(template: IPaletteTemplate) {
@@ -300,7 +314,7 @@ export class Extension {
 
     this.state.setPaletteTemplate(updatedTemplate);
     this.applyUpdatedPaletteTemplate(updatedTemplate);
-    UI.sendPaletteTemplateSet(updatedTemplate);
+    UI.sendPaletteTemplate(updatedTemplate);
     UI.sendNotification('Palette template', 'Template was updated successfully');
   }
 
@@ -320,7 +334,7 @@ export class Extension {
     }
 
     this.state.setThemeTemplate(updatedTemplate);
-    UI.sendThemeTemplateSet(updatedTemplate);
+    UI.sendThemeTemplate(updatedTemplate);
     UI.sendNotification('Theme template', 'Template was updated successfully');
   }
 
@@ -393,20 +407,20 @@ export class Extension {
       }
     }
 
-    UI.sendOptionSet(target, newState);
+    UI.sendOption(target, newState);
     UI.sendNotification('Restart needed', notificationMessage);
     this.state.setCssEnabled(target, newState);
   }
 
   private cssToggleFailed(target: string, error: string) {
     const currentState = this.state.getCssEnabled(target);
-    UI.sendOptionSet(target, currentState);
+    UI.sendOption(target, currentState);
     UI.sendNotification('Custom CSS', error);
   }
 
   private cssFontSizeSetSuccess(size: number) {
     UI.sendNotification('Restart needed', 'Updated base font size successfully');
-    UI.sendFontSizeSet(size);
+    UI.sendFontSize(size);
     this.state.setCssFontSize(size);
   }
 

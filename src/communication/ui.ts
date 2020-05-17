@@ -11,6 +11,7 @@ import {
   IDebuggingInfoData,
   IOptionSetData,
   INotificationData,
+  IThemeModeSetData,
 } from '../definitions';
 
 function sendMessage(data: any) {
@@ -44,24 +45,25 @@ export function sendTemplate(template: IColorschemeTemplate) {
   sendMessage({ action: EXTENSION_MESSAGES.TEMPLATE_SET, data: template });
 }
 
-export function sendThemeMode(mode: ThemeModes) {
-  sendMessage({ action: EXTENSION_MESSAGES.THEME_MODE_SET, data: mode });
+export function sendThemeMode(mode: ThemeModes, updateSelected: boolean) {
+  const themeModeData: IThemeModeSetData = { mode, updateSelected };
+  sendMessage({ action: EXTENSION_MESSAGES.THEME_MODE_SET, data: themeModeData });
 }
 
-export function sendOptionSet(option: string, enabled: boolean) {
+export function sendOption(option: string, enabled: boolean) {
   const optionData: IOptionSetData = { option, enabled };
   sendMessage({ action: EXTENSION_MESSAGES.OPTION_SET, data: optionData });
 }
 
-export function sendFontSizeSet(size: number) {
+export function sendFontSize(size: number) {
   sendMessage({ action: EXTENSION_MESSAGES.FONT_SIZE_SET, data: size });
 }
 
-export function sendPaletteTemplateSet(template: IPaletteTemplate) {
+export function sendPaletteTemplate(template: IPaletteTemplate) {
   sendMessage({ action: EXTENSION_MESSAGES.PALETTE_TEMPLATE_SET, data: template });
 }
 
-export function sendThemeTemplateSet(template: IThemeTemplate) {
+export function sendThemeTemplate(template: IThemeTemplate) {
   sendMessage({ action: EXTENSION_MESSAGES.THEME_TEMPLATE_SET, data: template });
 }
 

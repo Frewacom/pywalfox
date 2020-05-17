@@ -114,6 +114,16 @@ export interface IColorschemeTemplate {
   browser: IThemeTemplate;
 }
 
+export interface IColorschemeTemplates {
+  [ThemeModes.Light]: IColorschemeTemplate;
+  [ThemeModes.Dark]: IColorschemeTemplate;
+}
+
+export interface ICustomColors {
+  [ThemeModes.Light]: Partial<IPalette>;
+  [ThemeModes.Dark]: Partial<IPalette>;
+}
+
 export interface IExtensionMessage {
   action: string;
   data?: any;
@@ -181,6 +191,11 @@ export interface INotificationData {
   title: string;
   message: string;
   error: boolean;
+}
+
+export interface IThemeModeSetData {
+  mode: ThemeModes;
+  updateSelected: boolean;
 }
 
 export interface ITemplateItem {

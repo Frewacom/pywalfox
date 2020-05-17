@@ -52,26 +52,24 @@ export class Themepicker extends Dialog {
     this.selected = target;
   }
 
-  private toggleBodyClass(mode: ThemeModes) {
-    let className = mode;
+  public setBodyClass(mode: ThemeModes) {
     if (mode === ThemeModes.Auto) {
-      // TODO: If auto, we need to get the current theme from background script
-      className = ThemeModes.Dark;
+      return;
     }
 
     if (this.currentClassName) {
       document.body.classList.remove(this.currentClassName);
     }
 
-    document.body.classList.add(className);
-    this.currentClassName = className;
+    this.currentClassName = mode;
+    document.body.classList.add(this.currentClassName);
   }
 
   private onSetMode(target: HTMLElement) {
     const mode = <ThemeModes>target.getAttribute('data-theme');
-    this.toggleBodyClass(mode);
-    this.selectMode(target, mode);
     requestThemeModeSet(mode);
+    this.setBodyClass(mode);
+    this.selectMode(target, mode);
   }
 
   public setSelectedMode(mode: ThemeModes) {
@@ -82,6 +80,6 @@ export class Themepicker extends Dialog {
       console.error(`Could not find target button associated with the mode: ${mode}`);
     }
 
-    this.toggleBodyClass(mode);
+    this.setBodyClass(mode);
   }
 }

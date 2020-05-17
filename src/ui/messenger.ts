@@ -32,10 +32,6 @@ export function requestDisable() {
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.THEME_DISABLE });
 }
 
-export function requestThemeMode() {
-  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.THEME_MODE_GET });
-}
-
 export function requestThemeModeSet(mode: ThemeModes) {
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.THEME_MODE_SET, data: mode });
 }

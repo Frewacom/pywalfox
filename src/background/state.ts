@@ -8,7 +8,8 @@ import {
   IBrowserTheme,
   IExtensionTheme,
   IDuckDuckGoTheme,
-  IColorschemeTemplate,
+  ICustomColors,
+  IColorschemeTemplates,
   IPaletteTemplate,
   IThemeTemplate,
   IOptionSetData,
@@ -25,11 +26,11 @@ export interface IExtensionState {
     isDay: boolean;
     isApplied: boolean;
     pywalColors: IPywalColors;
-    customColors: Partial<IPalette>;
     colorscheme: IColorscheme;
     extension: IExtensionTheme;
-    ddg: IDuckDuckGoTheme;
-    template: IColorschemeTemplate;
+    duckduckgo: IDuckDuckGoTheme;
+    customColors: ICustomColors;
+    templates: IColorschemeTemplates;
   };
   options: {
     userChrome: boolean;
@@ -54,11 +55,17 @@ export class State {
         isDay: false,
         isApplied: false,
         pywalColors: null,
-        customColors: null,
         colorscheme: null,
         extension: null,
-        ddg: null,
-        template: DEFAULT_THEME_DARK,
+        duckduckgo: null,
+        customColors: {
+          [ThemeModes.Light]: {},
+          [ThemeModes.Dark]: {},
+        },
+        templates: {
+          [ThemeModes.Light]: DEFAULT_THEME_LIGHT,
+          [ThemeModes.Dark]: DEFAULT_THEME_DARK,
+        },
       },
       options: {
         userChrome: false,
@@ -75,8 +82,10 @@ export class State {
   }
 
   private getProperty(object: { [key: string]: any }, property: string) {
-    if (object !== null && object.hasOwnProperty(property)) {
-      return object[property];
+    if (object) {
+      if (object.hasOwnProperty(property)) {
+        return object[property];
+      }
     }
 
     return null;
@@ -92,6 +101,13 @@ export class State {
       enabled: this.getEnabled(),
       options: this.getOptionsData(),
       fontSize: this.getCssFontSize(),
+    };
+  }
+
+  public getDebuggingInfo() {
+    return {
+      connected: this.currentState.connected,
+      version: this.currentState.version
     };
   }
 
@@ -111,23 +127,8 @@ export class State {
     return this.currentState.updateMuted;
   }
 
-  public getDebuggingInfo() {
-    return {
-      connected: this.currentState.connected,
-      version: this.currentState.version
-    };
-  }
-
   public getTemplate() {
-    const userTemplate = this.currentState.theme.template;
-
-    if (userTemplate) {
-      return userTemplate;
-    }
-
-    // TODO: Add case for Auto theme type
-    const themeMode = this.currentState.theme.mode;
-    return themeMode === ThemeModes.Dark ? DEFAULT_THEME_DARK : DEFAULT_THEME_LIGHT;
+    return this.getProperty(this.currentState.theme.templates, this.getTemplateThemeMode());
   }
 
   public getIsDay() {
@@ -138,12 +139,22 @@ export class State {
     return this.currentState.theme.mode;
   }
 
+  public getTemplateThemeMode() {
+    const themeMode = this.getThemeMode();
+
+    if (themeMode === ThemeModes.Auto) {
+      return this.getIsDay() ? ThemeModes.Light : ThemeModes.Dark;
+    }
+
+    return themeMode;
+  }
+
   public getPywalColors() {
     return this.currentState.theme.pywalColors;
   }
 
   public getCustomColors() {
-    return this.currentState.theme.customColors;
+    return this.currentState.theme.customColors[this.getTemplateThemeMode()];
   }
 
   public getColorscheme() {
@@ -151,16 +162,11 @@ export class State {
   }
 
   public getBrowserTheme() {
-    const colorscheme = this.getColorscheme();
-    if (colorscheme !== null && colorscheme.hasOwnProperty('browser')) {
-      return colorscheme.browser;
-    }
-
-    return null;
+    return this.getProperty(this.getColorscheme(), 'browser');
   }
 
   public getPalette() {
-    return this.getProperty(this.currentState.theme.colorscheme, 'palette');
+    return this.getProperty(this.getColorscheme(), 'palette');
   }
 
   public getExtensionTheme() {
@@ -168,7 +174,7 @@ export class State {
   }
 
   public getDDGTheme() {
-    return this.currentState.theme.ddg;
+    return this.currentState.theme.duckduckgo;
   }
 
   public getDDGThemeEnabled() {
@@ -176,11 +182,7 @@ export class State {
   }
 
   public getCssEnabled(target: string) {
-    if (this.currentState.options.hasOwnProperty(target)) {
-      return this.currentState.options[target];
-    }
-
-    return false;
+    return this.getProperty(this.currentState.options, target);
   }
 
   public getCssFontSize() {
@@ -223,33 +225,48 @@ export class State {
   }
 
   public setCustomColors(customColors: Partial<IPalette>) {
+    const currentThemeMode = this.getTemplateThemeMode();
+
     return this.set({
       theme: {
         ...this.currentState.theme,
-        customColors,
+        customColors: {
+          ...this.currentState.theme.customColors,
+          [currentThemeMode]: customColors,
+        },
       },
     });
   }
 
   public setPaletteTemplate(template: IPaletteTemplate) {
+    const currentThemeMode = this.getTemplateThemeMode();
+
     return this.set({
       theme: {
         ...this.currentState.theme,
-        template: {
-          ...this.currentState.theme.template,
-          palette: template,
+        templates: {
+          ...this.currentState.theme.templates,
+          [currentThemeMode]: {
+            ...this.currentState.theme.templates[currentThemeMode],
+            palette: template,
+          },
         },
       },
     });
   }
 
   public setThemeTemplate(template: IThemeTemplate) {
+    const currentThemeMode = this.getTemplateThemeMode();
+
     return this.set({
       theme: {
         ...this.currentState.theme,
-        template: {
-          ...this.currentState.theme.template,
-          browser: template,
+        templates: {
+          ...this.currentState.theme.templates,
+          [currentThemeMode]: {
+            ...this.currentState.theme.templates[currentThemeMode],
+            browser: template,
+          },
         },
       },
     });
@@ -279,7 +296,7 @@ export class State {
         pywalColors: pywalColors,
         colorscheme: colorscheme,
         extension: extensionTheme,
-        ddg: ddgTheme,
+        duckduckgo: ddgTheme,
       },
     });
   }
@@ -303,12 +320,19 @@ export class State {
   }
 
   public setThemeMode(mode: ThemeModes) {
-    // TODO: Apply the correct template based on the current mode
     return this.set({
       theme: {
         ...this.currentState.theme,
-        mode: mode,
-        template: mode === ThemeModes.Dark ? DEFAULT_THEME_DARK : DEFAULT_THEME_LIGHT,
+        mode,
+      },
+    });
+  }
+
+  public setIsDay(isDay: boolean) {
+    return this.set({
+      theme: {
+        ...this.currentState.theme,
+        isDay,
       },
     });
   }

@@ -473,7 +473,11 @@ function handleExtensionMessage({ action, data }: IExtensionMessage) {
       template.browser = data;
       break;
     case EXTENSION_MESSAGES.THEME_MODE_SET:
-      themepicker.setSelectedMode(data);
+      if (data.updateSelected) {
+        themepicker.setSelectedMode(data);
+      } else {
+        themepicker.setBodyClass(data.mode);
+      }
       break;
     case EXTENSION_MESSAGES.OPTION_SET:
       updateOptionButtonState(data);
