@@ -39,7 +39,7 @@ select {
   font-size: var(--font-size-sm);
   -moz-appearance: none;
   outline: none;
-  background-image: linear-gradient(var(--background), var(--background)), url('../icons/chevron.svg');
+  background-image: url('../icons/chevron.svg');
   background-position: calc(100% - var(--spacing-sm));
   background-repeat: no-repeat;
   background-size: 1.2rem;
@@ -48,7 +48,6 @@ select {
 }
 
 body.light select {
-  background-image: url('../icons/chevron.svg');
   background-blend-mode: difference;
 }
 

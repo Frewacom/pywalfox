@@ -4,9 +4,9 @@ export const DEFAULT_PALETTE_TEMPLATE_DARK = {
   background: 0,
   backgroundLight: 17,
   text: 15,
-  accentPrimary: 1,
-  accentSecondary: 2,
   textFocus: 16,
+  accentPrimary: 9,
+  accentSecondary: 5,
 };
 
 export const DEFAULT_BROWSER_TEMPLATE_DARK = {
@@ -50,12 +50,12 @@ export const DEFAULT_BROWSER_TEMPLATE_DARK = {
 };
 
 export const DEFAULT_PALETTE_TEMPLATE_LIGHT = {
-  background: 15,
+  background: 7,
   backgroundLight: 16,
   text: 17,
+  textFocus: 0,
   accentPrimary: 1,
   accentSecondary: 2,
-  textFocus: 0,
 };
 
 export const DEFAULT_BROWSER_TEMPLATE_LIGHT = {
