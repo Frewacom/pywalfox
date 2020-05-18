@@ -77,7 +77,7 @@ export const DEFAULT_BROWSER_TEMPLATE_LIGHT = {
   toolbar_field_border_focus: PaletteColors.BackgroundLight,
   toolbar_field_separator: PaletteColors.Background,
   toolbar_field_highlight: PaletteColors.AccentPrimary,
-  toolbar_field_highlight_text: PaletteColors.Background,
+  toolbar_field_highlight_text: PaletteColors.TextFocus,
   toolbar_bottom_separator: PaletteColors.Background,
   toolbar_top_separator: PaletteColors.Background,
   toolbar_vertical_separator: PaletteColors.BackgroundLight,
@@ -98,12 +98,36 @@ export const DEFAULT_BROWSER_TEMPLATE_LIGHT = {
   button_background_active: PaletteColors.Background,
 };
 
+export const DEFAULT_DDG_THEME_DARK = {
+  background: PaletteColors.Background,
+  headerBackground: PaletteColors.Background,
+  resultTitle: PaletteColors.TextFocus,
+  resultDescription: PaletteColors.Text,
+  resultLink: PaletteColors.AccentSecondary,
+  resultLinkVisited: PaletteColors.AccentPrimary,
+  hover: PaletteColors.BackgroundLight,
+  modifier: 0.2,
+};
+
+export const DEFAULT_DDG_THEME_LIGHT = {
+  background: PaletteColors.BackgroundLight,
+  headerBackground: PaletteColors.BackgroundLight,
+  resultTitle: PaletteColors.TextFocus,
+  resultDescription: PaletteColors.Text,
+  resultLink: PaletteColors.AccentSecondary,
+  resultLinkVisited: PaletteColors.AccentPrimary,
+  hover: PaletteColors.BackgroundLight,
+  modifier: -0.3,
+};
+
 export const DEFAULT_THEME_DARK = {
   palette: DEFAULT_PALETTE_TEMPLATE_DARK,
   browser: DEFAULT_BROWSER_TEMPLATE_DARK,
+  duckduckgo: DEFAULT_DDG_THEME_DARK,
 };
 
 export const DEFAULT_THEME_LIGHT = {
   palette: DEFAULT_PALETTE_TEMPLATE_LIGHT,
   browser: DEFAULT_BROWSER_TEMPLATE_LIGHT,
+  duckduckgo: DEFAULT_DDG_THEME_LIGHT,
 };

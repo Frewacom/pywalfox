@@ -1,13 +1,13 @@
 import { DUCKDUCKGO_THEME_ID } from '../config/general';
-import { changeColorBrightness } from '../utils/colors';
+import { changeLuminance } from '../utils/colors';
 
 import {
   PaletteColors,
   IPalette,
   IPywalColors,
-  IColorscheme,
   IThemeTemplate,
   IColorschemeTemplate,
+  IDuckDuckGoThemeTemplate,
 } from '../definitions';
 
 
@@ -28,8 +28,10 @@ export function generateColorscheme(
 
   return {
     hash: createPaletteHash(palette),
-    palette: palette,
+    palette,
     browser: generateBrowserTheme(palette, template.browser),
+    duckduckgo: generateDDGTheme(palette, template.duckduckgo),
+    extension: generateExtensionTheme(palette),
   };
 }
 
@@ -75,41 +77,37 @@ export function generateBrowserTheme(palette: IPalette, template: IThemeTemplate
   };
 }
 
-export function generateExtensionTheme(colorscheme: IColorscheme) {
-  let css: string = 'body, body.light, body.dark {';
-  css += `--background: ${colorscheme.palette.background};`;
-  css += `--background-light: ${colorscheme.palette.backgroundLight};`;
-  css += `--text: ${colorscheme.palette.text};`;
-  css += `--accent-primary: ${colorscheme.palette.accentPrimary};`;
-  css += `--accent-secondary: ${colorscheme.palette.accentSecondary};`;
-  css += `--text-focus: ${colorscheme.palette.textFocus};`;
+export function generateDDGTheme(palette: IPalette, template: IDuckDuckGoThemeTemplate) {
+  const modifier = template.modifier;
+
+  return {
+    'k7':  stripHashSymbol(palette[template.background]),
+    'kj':  stripHashSymbol(palette[template.headerBackground]),
+    'k9':  stripHashSymbol(palette[template.resultTitle]),
+    'k8':  stripHashSymbol(palette[template.resultDescription]),
+    'kx':  stripHashSymbol(changeLuminance(palette[template.resultLink], modifier)),
+    'kaa': stripHashSymbol(changeLuminance(palette[template.resultLinkVisited], modifier)),
+    'k21': stripHashSymbol(palette[template.hover]),
+    'kae': DUCKDUCKGO_THEME_ID,
+  };
+}
+
+export function generateExtensionTheme(palette: IPalette) {
+  // String concatenations is used to avoid spaces and escape sequences
+  let css: string = 'body,body.light,body.dark{';
+  css += `--background: ${palette.background};`;
+  css += `--background-light: ${palette.backgroundLight};`;
+  css += `--text: ${palette.text};`;
+  css += `--accent-primary: ${palette.accentPrimary};`;
+  css += `--accent-secondary: ${palette.accentSecondary};`;
+  css += `--text-focus: ${palette.textFocus};`;
   css += '}';
 
   return css;
 }
 
-/**
- * Generates the DuckDuckGo theme.
- *
- * @returns {IDuckDuckGoTheme} The cookies used to set the DuckDuckGo theme
- */
-export function generateDDGTheme(colorscheme: IColorscheme) {
-  const linkColor = changeColorBrightness(colorscheme.palette.accentSecondary, 0.2);
-  const visitedLinkColor = changeColorBrightness(colorscheme.palette.accentPrimary, 0.2);
-
-  return {
-    hash: colorscheme.hash,
-    colors: [
-      { id: 'k7',  value: stripHashSymbol(colorscheme.palette.background) },      // Background
-      { id: 'kj',  value: stripHashSymbol(colorscheme.palette.background) },      // Header background
-      { id: 'k9',  value: stripHashSymbol(colorscheme.palette.textFocus) },       // Result link title
-      { id: 'kx',  value: stripHashSymbol(linkColor) },                           // Result link url
-      { id: 'kaa', value: stripHashSymbol(visitedLinkColor) },                    // Result visited link title
-      { id: 'k8',  value: stripHashSymbol(colorscheme.palette.text) },            // Result description
-      { id: 'k21', value: stripHashSymbol(colorscheme.palette.backgroundLight) }, // Result hover, dropdown, etc.
-      { id: 'kae', value: DUCKDUCKGO_THEME_ID },                                  // The theme name
-    ],
-  };
+function stripHashSymbol(color: string) {
+  return color.substring(1);
 }
 
 /**
@@ -117,7 +115,7 @@ export function generateDDGTheme(colorscheme: IColorscheme) {
  * used to detect when the theme has been changed.
  *
  * @param {IPalette} palette
- * @returns {IPaletteHash} the hash based on palette
+ * @returns {string} the hash based on palette
  */
 function createPaletteHash(palette: IPalette) {
   const colors = Object.keys(palette);
@@ -129,17 +127,6 @@ function createPaletteHash(palette: IPalette) {
   }
 
   return hash;
-}
-
-/**
- * Removes the '#' symbol from a color.
- * This is used because DDG does not support colors starting with '#'.
- *
- * @param {string} color
- * @returns {string} color with the first '#' removed
- */
-function stripHashSymbol(color: string) {
-  return color.substring(1);
 }
 
 

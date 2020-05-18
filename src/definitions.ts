@@ -21,6 +21,11 @@ export enum PaletteColors {
   TextFocus = 'textFocus',
 }
 
+export enum CSSTargets {
+  UserChrome = 'userChrome',
+  UserContent = 'userContent',
+}
+
 export enum ThemeModes {
   Dark = 'dark',
   Light = 'light',
@@ -83,24 +88,21 @@ export interface IBrowserTheme {
   button_background_active: string;
 }
 
-export interface IColorObject {
-  id: string;
-  value: string;
-}
-
 export type IExtensionTheme = string;
 
 export interface IDuckDuckGoTheme {
-  hash: IPaletteHash;
-  colors: IColorObject[];
+  [key: string]: string;
 }
 
 export interface IColorscheme {
   hash: IPaletteHash;
   palette: IPalette;
   browser: IBrowserTheme;
+  duckduckgo: IDuckDuckGoTheme;
+  extension: IExtensionTheme;
 }
 
+// TODO: Set the available keys that can be used for template definitions
 export interface IPaletteTemplate {
   [key: string]: number;
 }
@@ -109,9 +111,21 @@ export interface IThemeTemplate {
   [key: string]: PaletteColors;
 }
 
+export interface IDuckDuckGoThemeTemplate {
+  background: PaletteColors;
+  headerBackground: PaletteColors;
+  resultTitle: PaletteColors;
+  resultDescription: PaletteColors;
+  resultLink: PaletteColors;
+  resultLinkVisited: PaletteColors;
+  hover: PaletteColors;
+  modifier: number;
+}
+
 export interface IColorschemeTemplate {
   palette: IPaletteTemplate;
   browser: IThemeTemplate;
+  duckduckgo: IDuckDuckGoThemeTemplate;
 }
 
 export interface IColorschemeTemplates {
@@ -119,9 +133,19 @@ export interface IColorschemeTemplates {
   [ThemeModes.Dark]: IColorschemeTemplate;
 }
 
+export type TemplateTypes = IPaletteTemplate | IThemeTemplate | IDuckDuckGoThemeTemplate;
+export type ColorschemeTypes = IPalette | IPaletteHash | IBrowserTheme | IDuckDuckGoTheme | IExtensionTheme;
+
 export interface ICustomColors {
   [ThemeModes.Light]: Partial<IPalette>;
   [ThemeModes.Dark]: Partial<IPalette>;
+}
+
+export interface IExtensionOptions {
+  [CSSTargets.UserChrome]: boolean;
+  [CSSTargets.UserContent]: boolean;
+  fontSize: number;
+  duckduckgo: boolean;
 }
 
 export interface IExtensionMessage {
@@ -172,12 +196,12 @@ export interface INodeLookup {
 }
 
 export interface IInitialData {
+  isApplied: boolean;
   pywalColors: IPywalColors;
   template: IColorschemeTemplate;
   customColors: Partial<IPalette>;
   themeMode: ThemeModes;
   debuggingInfo: IDebuggingInfoData;
-  enabled: boolean;
   options: IOptionSetData[];
   fontSize: number;
 }
@@ -196,6 +220,11 @@ export interface INotificationData {
 export interface IThemeModeSetData {
   mode: ThemeModes;
   updateSelected: boolean;
+}
+
+export interface IDuckDuckGoThemeSetData {
+  hash: IPaletteHash;
+  theme: IDuckDuckGoTheme;
 }
 
 export interface ITemplateItem {

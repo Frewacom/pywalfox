@@ -21,23 +21,24 @@ function resetTheme() {
   setHash('');
 }
 
-function applyTheme(theme: IDuckDuckGoTheme) {
+
+function applyTheme(hash: string, theme: IDuckDuckGoTheme) {
   console.log('Applying Pywalfox theme');
-  for (const color of theme.colors) {
-    window.wrappedJSObject.DDG.settings.set(color.id, color.value);
+  for (const id of Object.keys(theme)) {
+    window.wrappedJSObject.DDG.settings.set(id, theme[id]);
   }
 
-  setHash(theme.hash);
+  setHash(hash);
 }
 
-function onMessage(message: IExtensionMessage) {
+function onMessage({ action, data }: IExtensionMessage) {
   const currentTheme = getCurrentTheme();
-  switch (message.action) {
+  switch (action) {
     case EXTENSION_MESSAGES.DDG_THEME_SET:
-      const theme = message.data;
-      const hash = getHash();
-      if (currentTheme !== DUCKDUCKGO_THEME_ID || hash !== theme.hash) {
-        applyTheme(theme);
+      const { hash, theme } = data;
+      const currentHash = getHash();
+      if (currentTheme !== DUCKDUCKGO_THEME_ID || currentHash !== hash) {
+        applyTheme(hash, theme);
       }
       break;
     case EXTENSION_MESSAGES.DDG_THEME_RESET:
@@ -46,7 +47,7 @@ function onMessage(message: IExtensionMessage) {
       }
       break;
     default:
-      console.error(`Received unhandled action: ${message.action}`);
+      console.error(`Received unhandled action: ${action}`);
   }
 }
 

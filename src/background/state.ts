@@ -3,22 +3,26 @@ import { DEFAULT_THEME_DARK, DEFAULT_THEME_LIGHT } from '../config/default-theme
 
 import {
   IPalette,
+  IPaletteHash,
   IPywalColors,
   IColorscheme,
   IBrowserTheme,
-  IExtensionTheme,
-  IDuckDuckGoTheme,
   ICustomColors,
-  IColorschemeTemplates,
-  IPaletteTemplate,
+  IExtensionOptions,
   IThemeTemplate,
+  IPaletteTemplate,
+  IColorschemeTemplate,
+  IColorschemeTemplates,
+  IDuckDuckGoThemeTemplate,
   IOptionSetData,
+  CSSTargets,
   ThemeModes,
+  TemplateTypes,
+  ColorschemeTypes,
 } from '../definitions';
 
 export interface IExtensionState {
   version: number,
-  enabled: boolean;
   connected: boolean;
   updateMuted: boolean;
   theme: {
@@ -27,17 +31,10 @@ export interface IExtensionState {
     isApplied: boolean;
     pywalColors: IPywalColors;
     colorscheme: IColorscheme;
-    extension: IExtensionTheme;
-    duckduckgo: IDuckDuckGoTheme;
     customColors: ICustomColors;
     templates: IColorschemeTemplates;
   };
-  options: {
-    userChrome: boolean;
-    userContent: boolean;
-    fontSize: number;
-    duckduckgo: boolean;
-  };
+  options: IExtensionOptions;
 }
 
 export class State {
@@ -47,7 +44,6 @@ export class State {
   constructor() {
     this.initialState = {
       version: 0.0,
-      enabled: false, // TODO: Is this state variable really needed, or is 'isApplied' sufficent?
       connected: false,
       updateMuted: false,
       theme: {
@@ -56,8 +52,6 @@ export class State {
         isApplied: false,
         pywalColors: null,
         colorscheme: null,
-        extension: null,
-        duckduckgo: null,
         customColors: {
           [ThemeModes.Light]: {},
           [ThemeModes.Dark]: {},
@@ -81,6 +75,44 @@ export class State {
     await browser.storage.local.set(newState);
   }
 
+  private setIndividualTemplate(key: keyof IColorschemeTemplate, template: TemplateTypes) {
+    const currentThemeMode = this.getTemplateThemeMode();
+
+    return this.set({
+      theme: {
+        ...this.currentState.theme,
+        templates: {
+          ...this.currentState.theme.templates,
+          [currentThemeMode]: {
+            ...this.currentState.theme.templates[currentThemeMode],
+            [key]: template,
+          },
+        },
+      },
+    });
+  }
+
+  private setColorschemeProperty(property: keyof IColorscheme, value: ColorschemeTypes) {
+    return this.set({
+      theme: {
+        ...this.currentState.theme,
+        colorscheme: {
+          ...this.currentState.theme.colorscheme,
+          [property]: value,
+        },
+      },
+    });
+  }
+
+  private setOption(option: keyof IExtensionOptions, value: any) {
+    return this.set({
+      options: {
+        ...this.currentState.options,
+        [option]: value,
+      },
+    });
+  }
+
   private getProperty(object: { [key: string]: any }, property: string) {
     if (object) {
       if (object.hasOwnProperty(property)) {
@@ -93,12 +125,12 @@ export class State {
 
   public getInitialData() {
     return {
+      isApplied: this.getApplied(),
       pywalColors: this.getPywalColors(),
       template: this.getTemplate(),
       customColors: this.getCustomColors(),
       themeMode: this.getThemeMode(),
       debuggingInfo: this.getDebuggingInfo(),
-      enabled: this.getEnabled(),
       options: this.getOptionsData(),
       fontSize: this.getCssFontSize(),
     };
@@ -109,10 +141,6 @@ export class State {
       connected: this.currentState.connected,
       version: this.currentState.version
     };
-  }
-
-  public getEnabled() {
-    return this.currentState.enabled;
   }
 
   public getApplied() {
@@ -161,20 +189,24 @@ export class State {
     return this.currentState.theme.colorscheme;
   }
 
-  public getBrowserTheme() {
-    return this.getProperty(this.getColorscheme(), 'browser');
+  public getPaletteHash() {
+    return this.getProperty(this.getColorscheme(), 'hash');
   }
 
   public getPalette() {
     return this.getProperty(this.getColorscheme(), 'palette');
   }
 
+  public getBrowserTheme() {
+    return this.getProperty(this.getColorscheme(), 'browser');
+  }
+
   public getExtensionTheme() {
-    return this.currentState.theme.extension;
+    return this.getProperty(this.getColorscheme(), 'extension');
   }
 
   public getDDGTheme() {
-    return this.currentState.theme.duckduckgo;
+    return this.getProperty(this.getColorscheme(), 'duckduckgo');
   }
 
   public getDDGThemeEnabled() {
@@ -207,8 +239,40 @@ export class State {
     return this.set({ connected });
   }
 
-  public setEnabled(enabled: boolean) {
-    return this.set({ enabled });
+  public setUpdateMuted(muted: boolean) {
+    return this.set({ updateMuted: muted });
+  }
+
+  public setPaletteTemplate(template: IPaletteTemplate) {
+    return this.setIndividualTemplate('palette', template);
+  }
+
+  public setThemeTemplate(template: IThemeTemplate) {
+    return this.setIndividualTemplate('browser', template);
+  }
+
+  public setDDGThemeTemplate(template: IDuckDuckGoThemeTemplate) {
+    return this.setIndividualTemplate('duckduckgo', template);
+  }
+
+  public setPaletteHash(hash: IPaletteHash) {
+    return this.setColorschemeProperty('hash', hash);
+  }
+
+  public setBrowserTheme(browserTheme: IBrowserTheme) {
+    return this.setColorschemeProperty('browser', browserTheme);
+  }
+
+  public setDDGThemeEnabled(enabled: boolean) {
+    return this.setOption('duckduckgo', enabled);
+  }
+
+  public setCssEnabled(target: CSSTargets, enabled: boolean) {
+    return this.setOption(target, enabled);
+  }
+
+  public setCssFontSize(size: number) {
+    return this.setOption('fontSize', size);
   }
 
   public setApplied(isApplied: boolean) {
@@ -218,10 +282,6 @@ export class State {
         isApplied,
       },
     });
-  }
-
-  public setUpdateMuted(muted: boolean) {
-    return this.set({ updateMuted: muted });
   }
 
   public setCustomColors(customColors: Partial<IPalette>) {
@@ -238,84 +298,13 @@ export class State {
     });
   }
 
-  public setPaletteTemplate(template: IPaletteTemplate) {
-    const currentThemeMode = this.getTemplateThemeMode();
-
-    return this.set({
-      theme: {
-        ...this.currentState.theme,
-        templates: {
-          ...this.currentState.theme.templates,
-          [currentThemeMode]: {
-            ...this.currentState.theme.templates[currentThemeMode],
-            palette: template,
-          },
-        },
-      },
-    });
-  }
-
-  public setThemeTemplate(template: IThemeTemplate) {
-    const currentThemeMode = this.getTemplateThemeMode();
-
-    return this.set({
-      theme: {
-        ...this.currentState.theme,
-        templates: {
-          ...this.currentState.theme.templates,
-          [currentThemeMode]: {
-            ...this.currentState.theme.templates[currentThemeMode],
-            browser: template,
-          },
-        },
-      },
-    });
-  }
-
-  public setBrowserTheme(browserTheme: IBrowserTheme) {
-    return this.set({
-      theme: {
-        ...this.currentState.theme,
-        colorscheme: {
-          ...this.currentState.theme.colorscheme,
-          browser: browserTheme,
-        },
-      },
-    });
-  }
-
-  public setThemes(
-    pywalColors: IPywalColors,
-    colorscheme: IColorscheme,
-    extensionTheme: IExtensionTheme,
-    ddgTheme: IDuckDuckGoTheme
-  ) {
+  public setColors(pywalColors: IPywalColors, colorscheme: IColorscheme) {
     return this.set({
       theme: {
         ...this.currentState.theme,
         pywalColors: pywalColors,
         colorscheme: colorscheme,
-        extension: extensionTheme,
-        duckduckgo: ddgTheme,
       },
-    });
-  }
-
-  public setCssEnabled(target: string, enabled: boolean) {
-    return this.set({
-      options: {
-        ...this.currentState.options,
-        [target]: enabled,
-      },
-    });
-  }
-
-  public setCssFontSize(size: number) {
-    return this.set({
-      options: {
-        ...this.currentState.options,
-        fontSize: size,
-      }
     });
   }
 
@@ -333,15 +322,6 @@ export class State {
       theme: {
         ...this.currentState.theme,
         isDay,
-      },
-    });
-  }
-
-  public setDDGThemeEnabled(enabled: boolean) {
-    return this.set({
-      options: {
-        ...this.currentState.options,
-        duckduckgo: enabled,
       },
     });
   }

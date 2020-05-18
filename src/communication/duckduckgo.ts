@@ -1,5 +1,11 @@
 import { EXTENSION_MESSAGES, INJECT_URL_PATTERN } from '../config/general';
-import { IDuckDuckGoTheme, IExtensionMessage } from '../definitions';
+
+import {
+  IDuckDuckGoTheme,
+  IExtensionMessage,
+  IPaletteHash,
+  IDuckDuckGoThemeSetData
+} from '../definitions';
 
 async function sendMessage(message: IExtensionMessage) {
   const tabs = await browser.tabs.query({ url: INJECT_URL_PATTERN });
@@ -12,8 +18,9 @@ export function requestTheme() {
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.DDG_THEME_GET });
 }
 
-export function setTheme(theme: IDuckDuckGoTheme) {
-  sendMessage({ action: EXTENSION_MESSAGES.DDG_THEME_SET, data: theme });
+export function setTheme(hash: IPaletteHash, theme: IDuckDuckGoTheme) {
+  const data: IDuckDuckGoThemeSetData = { hash, theme };
+  sendMessage({ action: EXTENSION_MESSAGES.DDG_THEME_SET, data });
 }
 
 export function resetTheme() {

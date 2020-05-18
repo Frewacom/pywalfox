@@ -100,7 +100,7 @@ function closeDialog() {
   }
 }
 
-function toggleEnabledBodyClass() {
+function toggleIsAppliedBodyClass() {
   document.body.classList.toggle(ENABLED_BODY_CLASS);
 }
 
@@ -153,7 +153,7 @@ function onDisableClicked() {
   colorpicker.setPywalColors(null);
   colorpicker.setCustomColors(null);
   colorpicker.updateSelected();
-  toggleEnabledBodyClass();
+  toggleIsAppliedBodyClass();
   pywalColors = null;
 }
 
@@ -419,8 +419,8 @@ function createPaletteContent() {
 function setInitialData(data: IInitialData) {
   themepicker.setSelectedMode(data.themeMode);
 
-  if (data.enabled) {
-    toggleEnabledBodyClass();
+  if (data.isApplied) {
+    toggleIsAppliedBodyClass();
   }
 
   for (const optionData of data.options) {

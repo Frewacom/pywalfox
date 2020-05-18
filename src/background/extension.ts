@@ -1,28 +1,27 @@
 import {
   IPalette,
   IPywalColors,
+  IColorscheme,
   IBrowserTheme,
   IThemeTemplate,
   IOptionSetData,
   IExtensionTheme,
   IPaletteTemplate,
   IExtensionMessage,
+  IExtensionOptions,
   ITimeIntervalEndpoint,
   ThemeModes,
+  CSSTargets,
 } from '../definitions';
 
 import {
   generateColorscheme,
-  generateExtensionTheme,
   generateBrowserTheme,
-  generateDDGTheme,
 } from './colorscheme';
 
 import {
   EXTENSION_PAGES,
   EXTENSION_OPTIONS,
-  VALID_CSS_TARGETS,
-  USER_CHROME_TARGET,
   EXTENSION_MESSAGES,
   DEFAULT_CSS_FONT_SIZE,
   MIN_REQUIRED_DAEMON_VERSION,
@@ -89,7 +88,7 @@ export class Extension {
 
     switch (optionData.option) {
       case EXTENSION_OPTIONS.FONT_SIZE:
-        this.setCssFontSize(optionData['size']);
+        this.setCssFontSize(optionData);
         break;
       case EXTENSION_OPTIONS.DUCKDUCKGO:
         this.setDDGEnabled(optionData);
@@ -164,10 +163,9 @@ export class Extension {
       DDG.resetTheme();
     }
 
-    this.state.setThemes(null, null, null, null);
+    this.state.setColors(null, null);
     this.state.setCustomColors(null);
     this.state.setApplied(false);
-    this.state.setEnabled(false);
 
     UI.sendDebuggingOutput('Theme was disabled');
   }
@@ -175,29 +173,22 @@ export class Extension {
   private updateThemes(pywalColors: IPywalColors, customColors?: Partial<IPalette>) {
     const template = this.state.getTemplate();
     const colorscheme = generateColorscheme(pywalColors, customColors, template);
-    const extensionTheme = generateExtensionTheme(colorscheme);
-    const ddgTheme = generateDDGTheme(colorscheme);
 
     this.setBrowserTheme(colorscheme.browser);
-    this.updateExtensionPagesTheme(extensionTheme);
+    this.updateExtensionPagesTheme(colorscheme.extension);
 
     if (this.state.getDDGThemeEnabled()) {
-      DDG.setTheme(ddgTheme);
+      DDG.setTheme(colorscheme.hash, colorscheme.duckduckgo);
     }
 
-    // If the theme already is applied when requesting pywal colors, we must reset the old custom colors
-    // or they will be applied again when setting a new custom color.
-    this.state.setCustomColors(null);
-
-    this.state.setThemes(pywalColors, colorscheme, extensionTheme, ddgTheme);
+    this.state.setColors(pywalColors, colorscheme);
     this.state.setCustomColors(customColors ? customColors : null);
-    this.state.setEnabled(true);
     this.state.setApplied(true);
   }
 
   private applyUpdatedPaletteTemplate(template: IPaletteTemplate) {
-    const customColors = this.state.getCustomColors();
     const pywalColors = this.state.getPywalColors();
+    const customColors = this.state.getCustomColors();
 
     if (!pywalColors) {
       return;
@@ -213,52 +204,54 @@ export class Extension {
     UI.sendCustomColors(customColors);
   }
 
+  private applyDuckDuckGoTheme() {
+    const colorscheme = this.state.getColorscheme();
+    if (colorscheme) {
+      DDG.setTheme(colorscheme.hash, colorscheme.duckduckgo);
+    }
+  }
+
   private setBrowserTheme(browserTheme: IBrowserTheme) {
     browser.theme.update({ colors: browserTheme });
   }
 
-  private setCustomCSSEnabled(optionData: IOptionSetData) {
-    const target = optionData.option;
-    const enabled = optionData.enabled;
-    if (VALID_CSS_TARGETS.includes(target)) {
-      this.nativeApp.requestCssEnabled(target, enabled);
-    } else {
-      UI.sendDebuggingOutput(`Could not enable CSS target "${target}". Invalid target`);
-    }
-  }
-
-  private setDDGEnabled(optionData: IOptionSetData) {
-    const enabled = optionData.enabled;
+  private setDDGEnabled({ option, enabled }: IOptionSetData) {
     const isEnabled = this.state.getDDGThemeEnabled();
 
     if (enabled && !isEnabled) {
-      const ddgTheme = this.state.getDDGTheme();
-      if (ddgTheme) {
-        DDG.setTheme(ddgTheme);
-      }
+      this.applyDuckDuckGoTheme();
     } else if (!enabled && isEnabled) {
       DDG.resetTheme();
     }
 
-    UI.sendOption(optionData.option, optionData.enabled);
+    UI.sendOption(option, enabled);
     this.state.setDDGThemeEnabled(enabled);
   }
 
   private setDDGTheme() {
-    const theme = this.state.getDDGTheme();
     const isEnabled = this.state.getDDGThemeEnabled();
 
-    if (isEnabled && theme) {
-      DDG.setTheme(theme);
+    if (isEnabled) {
+      this.applyDuckDuckGoTheme();
     } else {
       DDG.resetTheme();
     }
   }
 
-  private setCssFontSize(fontSize: number) {
-    if (fontSize !== undefined && fontSize >= 10 && fontSize <= 20) {
+  private setCustomCSSEnabled({ option, enabled }: IOptionSetData) {
+    if (Object.values(CSSTargets).includes(<CSSTargets>option)) {
+      this.nativeApp.requestCssEnabled(option, enabled);
+    } else {
+      let action = enabled ? 'enable' : 'disable';
+      UI.sendNotification('Custom CSS', `Could not ${action} CSS target "${option}". Invalid target`, true);
+      UI.sendOption(option, !enabled);
+    }
+  }
+
+  private setCssFontSize({ size }: IOptionSetData) {
+    if (size !== undefined && size >= 10 && size <= 20) {
       // Currently, only userChrome uses the custom font size feature
-      this.nativeApp.requestFontSizeSet(USER_CHROME_TARGET, fontSize);
+      this.nativeApp.requestFontSizeSet(CSSTargets.UserChrome, size);
     } else {
       UI.sendNotification('Font size error', 'Invalid size or not set', true);
     }
@@ -271,18 +264,11 @@ export class Extension {
    *
    * In all other cases, use 'updateThemes'.
    */
-  private setSavedBrowserTheme() {
-    const browserTheme = this.state.getBrowserTheme();
-    const hasSavedTheme = browserTheme === null ? false : true;
-
-    if (hasSavedTheme) {
-      const extensionTheme = this.state.getExtensionTheme();
-      this.setBrowserTheme(browserTheme);
-      this.updateExtensionPagesTheme(extensionTheme);
-      console.log('Saved browser theme was applied');
-    }
-
-    this.state.setApplied(hasSavedTheme);
+  private setSavedColorscheme(colorscheme: IColorscheme) {
+    console.log('Applying saved colorscheme');
+    this.setBrowserTheme(colorscheme.browser);
+    this.updateExtensionPagesTheme(colorscheme.extension);
+    this.state.setApplied(true);
   }
 
   private async onThemeChangeTrigger(isDay: boolean) {
@@ -322,7 +308,7 @@ export class Extension {
 
   private setThemeTemplate(template: IThemeTemplate) {
     const palette = this.state.getPalette();
-    let updatedTemplate: IThemeTemplate = template;
+    let updatedTemplate = template;
 
     if (updatedTemplate === null) {
       updatedTemplate = this.getDefaultTemplate().browser;
@@ -392,7 +378,7 @@ export class Extension {
     this.updateThemes(pywalColors);
   }
 
-  private cssToggleSuccess(target: string) {
+  private cssToggleSuccess(target: CSSTargets) {
     const newState = this.state.getCssEnabled(target) ? false : true;
     let notificationMessage: string = `${target} was disabled successfully!`;
 
@@ -401,7 +387,7 @@ export class Extension {
 
       // If the user has changed the default font size, we must update it after
       // the CSS has been enabled.
-      if (target === USER_CHROME_TARGET) {
+      if (target === CSSTargets.UserChrome) {
         const fontSize = this.state.getCssFontSize();
         if (fontSize !== DEFAULT_CSS_FONT_SIZE) {
           this.setCssFontSize(fontSize);
@@ -437,8 +423,9 @@ export class Extension {
 
     // Run this after creating the extension pages so that the themes can be
     // set if the pages were reopened on launch.
-    if (this.state.getEnabled()) {
-      this.setSavedBrowserTheme();
+    const savedColorscheme = this.state.getColorscheme();
+    if (savedColorscheme !== null) {
+      this.setSavedColorscheme(savedColorscheme);
     }
 
     this.nativeApp.connect();

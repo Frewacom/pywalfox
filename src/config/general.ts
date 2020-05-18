@@ -1,3 +1,5 @@
+import { CSSTargets } from '../definitions';
+
 export const MIN_REQUIRED_DAEMON_VERSION = 2.0;
 export const PYWAL_PALETTE_LENGTH = 18;
 export const DEFAULT_CSS_FONT_SIZE = 14;
@@ -13,14 +15,6 @@ export const EXTENSION_PAGES = {
   UPDATE: 'dist/update.html',
   SETTINGS: 'dist/settings.html',
 };
-
-export const USER_CHROME_TARGET = 'userChrome';
-export const USER_CONTENT_TARGET = 'userContent';
-
-export const VALID_CSS_TARGETS = [
-  USER_CHROME_TARGET,
-  USER_CONTENT_TARGET,
-];
 
 export const EXTERNAL_MESSAGES = {
   COLORSCHEME: 'colors',
@@ -69,7 +63,7 @@ export const EXTENSION_MESSAGES = {
 
 export const EXTENSION_OPTIONS = {
   FONT_SIZE: 'fontSize',
-  USER_CHROME: USER_CHROME_TARGET,
-  USER_CONTENT: USER_CONTENT_TARGET,
+  USER_CHROME: CSSTargets.UserChrome,
+  USER_CONTENT: CSSTargets.UserContent,
   DUCKDUCKGO: 'duckduckgo',
 };

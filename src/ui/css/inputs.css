@@ -52,5 +52,5 @@ body.light select {
 }
 
 select:hover {
-  filter: var(--brightness-filter);
+  filter: var(--brightness-filter-dark);
 }
