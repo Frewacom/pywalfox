@@ -2,11 +2,12 @@ import {
   IPalette,
   IPywalColors,
   IBrowserTheme,
-  IExtensionTheme,
-  IExtensionMessage,
-  IOptionSetData,
-  IPaletteTemplate,
   IThemeTemplate,
+  IOptionSetData,
+  IExtensionTheme,
+  IPaletteTemplate,
+  IExtensionMessage,
+  ITimeIntervalEndpoint,
   ThemeModes,
 } from '../definitions';
 
@@ -34,6 +35,7 @@ import {
 
 import { State } from './state';
 import { NativeApp } from './native-app';
+import { isDayTime } from '../utils/time';
 import { ExtensionPage } from './extension-page';
 
 import * as UI from '../communication/ui';

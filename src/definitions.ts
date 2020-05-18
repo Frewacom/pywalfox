@@ -204,6 +204,11 @@ export interface ITemplateItem {
   target: string;
 }
 
+export interface ITimeIntervalEndpoint {
+  hour: number;
+  minute: number;
+}
+
 /**
  * Expose 'wrappedJSObject' from the 'window' namespace.
  *
