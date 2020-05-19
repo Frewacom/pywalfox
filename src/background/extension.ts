@@ -15,6 +15,7 @@ import {
 } from '../definitions';
 
 import {
+  extendPywalColors,
   generateColorscheme,
   generateBrowserTheme,
 } from './colorscheme';
@@ -373,9 +374,10 @@ export class Extension {
   }
 
   private onPywalColorsReceived(pywalColors: IPywalColors) {
+    const colors = extendPywalColors(pywalColors);
     UI.sendDebuggingOutput('Pywal colors was fetched from daemon and applied successfully');
-    UI.sendPywalColors(pywalColors);
-    this.updateThemes(pywalColors);
+    UI.sendPywalColors(colors);
+    this.updateThemes(colors);
   }
 
   private cssToggleSuccess(target: CSSTargets) {

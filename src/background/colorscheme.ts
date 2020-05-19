@@ -1,5 +1,6 @@
-import { DUCKDUCKGO_THEME_ID } from '../config/general';
 import { changeLuminance } from '../utils/colors';
+import { DUCKDUCKGO_THEME_ID } from '../config/general';
+import { EXTENDED_PYWAL_COLORS } from '../config/default-themes';
 
 import {
   PaletteColors,
@@ -10,20 +11,36 @@ import {
   IDuckDuckGoThemeTemplate,
 } from '../definitions';
 
+export function extendPywalColors(pywalColors: IPywalColors) {
+  const colors = pywalColors;
+
+  for (const color of EXTENDED_PYWAL_COLORS) {
+    const { targetIndex, colorString, colorIndex, modifier } = color;
+    if (color.hasOwnProperty('colorIndex') && color.hasOwnProperty('modifier')) {
+      colors.splice(targetIndex, 0, changeLuminance(colors[colorIndex], modifier));
+    } else if (color.hasOwnProperty('colorString')) {
+      colors.splice(targetIndex, 0, colorString);
+    } else {
+      console.warn(`Invalid extended pywal color. Missing required properties for targetIndex: ${targetIndex}`);
+    }
+  }
+
+  return colors;
+}
 
 export function generateColorscheme(
-  pywalColors: IPywalColors,
+  pywalPalette: IPywalColors,
   customColors: Partial<IPalette>,
   template: IColorschemeTemplate
 ) {
   // Override the templated palette with any custom colors set by the user
   const palette = Object.assign({
-    background: pywalColors[template.palette.background],
-    text: pywalColors[template.palette.text],
-    textFocus: pywalColors[template.palette.textFocus],
-    backgroundLight: pywalColors[template.palette.backgroundLight],
-    accentPrimary: pywalColors[template.palette.accentPrimary],
-    accentSecondary: pywalColors[template.palette.accentSecondary],
+    background: pywalPalette[template.palette.background],
+    text: pywalPalette[template.palette.text],
+    textFocus: pywalPalette[template.palette.textFocus],
+    backgroundLight: pywalPalette[template.palette.backgroundLight],
+    accentPrimary: pywalPalette[template.palette.accentPrimary],
+    accentSecondary: pywalPalette[template.palette.accentSecondary],
   }, customColors);
 
   return {

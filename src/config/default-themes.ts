@@ -1,15 +1,36 @@
-import { PaletteColors } from '../definitions';
+import {
+  PaletteColors,
+  IThemeTemplate,
+  IPaletteTemplate,
+  IColorschemeTemplate,
+  IDuckDuckGoThemeTemplate,
+  IExtendedPywalColors,
+} from '../definitions';
 
-export const DEFAULT_PALETTE_TEMPLATE_DARK = {
+export const EXTENDED_PYWAL_COLORS: IExtendedPywalColors = [
+  { targetIndex: 16, colorIndex: 0, modifier: 1.4 },
+  { targetIndex: 17, colorString: '#ffffff' },
+];
+
+export const DEFAULT_PALETTE_TEMPLATE_DARK: IPaletteTemplate = {
   background: 0,
-  backgroundLight: 17,
+  backgroundLight: 16,
   text: 15,
-  textFocus: 16,
+  textFocus: 17,
   accentPrimary: 9,
   accentSecondary: 5,
 };
 
-export const DEFAULT_BROWSER_TEMPLATE_DARK = {
+export const DEFAULT_PALETTE_TEMPLATE_LIGHT: IPaletteTemplate = {
+  background: 7,
+  backgroundLight: 17,
+  text: 16,
+  textFocus: 0,
+  accentPrimary: 9,
+  accentSecondary: 5,
+};
+
+export const DEFAULT_BROWSER_TEMPLATE_DARK: IThemeTemplate = {
   icons: PaletteColors.AccentPrimary,
   icons_attention: PaletteColors.AccentSecondary,
   frame: PaletteColors.Background,
@@ -49,16 +70,7 @@ export const DEFAULT_BROWSER_TEMPLATE_DARK = {
   button_background_active: PaletteColors.Background,
 };
 
-export const DEFAULT_PALETTE_TEMPLATE_LIGHT = {
-  background: 7,
-  backgroundLight: 16,
-  text: 17,
-  textFocus: 0,
-  accentPrimary: 9,
-  accentSecondary: 5,
-};
-
-export const DEFAULT_BROWSER_TEMPLATE_LIGHT = {
+export const DEFAULT_BROWSER_TEMPLATE_LIGHT: IThemeTemplate = {
   icons: PaletteColors.AccentPrimary,
   icons_attention: PaletteColors.AccentSecondary,
   frame: PaletteColors.Background,
@@ -98,7 +110,7 @@ export const DEFAULT_BROWSER_TEMPLATE_LIGHT = {
   button_background_active: PaletteColors.Background,
 };
 
-export const DEFAULT_DDG_THEME_DARK = {
+export const DEFAULT_DDG_THEME_DARK: IDuckDuckGoThemeTemplate = {
   background: PaletteColors.Background,
   headerBackground: PaletteColors.Background,
   resultTitle: PaletteColors.TextFocus,
@@ -109,7 +121,7 @@ export const DEFAULT_DDG_THEME_DARK = {
   modifier: 0.2,
 };
 
-export const DEFAULT_DDG_THEME_LIGHT = {
+export const DEFAULT_DDG_THEME_LIGHT: IDuckDuckGoThemeTemplate = {
   background: PaletteColors.BackgroundLight,
   headerBackground: PaletteColors.BackgroundLight,
   resultTitle: PaletteColors.TextFocus,
@@ -120,13 +132,13 @@ export const DEFAULT_DDG_THEME_LIGHT = {
   modifier: -0.3,
 };
 
-export const DEFAULT_THEME_DARK = {
+export const DEFAULT_THEME_DARK: IColorschemeTemplate = {
   palette: DEFAULT_PALETTE_TEMPLATE_DARK,
   browser: DEFAULT_BROWSER_TEMPLATE_DARK,
   duckduckgo: DEFAULT_DDG_THEME_DARK,
 };
 
-export const DEFAULT_THEME_LIGHT = {
+export const DEFAULT_THEME_LIGHT: IColorschemeTemplate = {
   palette: DEFAULT_PALETTE_TEMPLATE_LIGHT,
   browser: DEFAULT_BROWSER_TEMPLATE_LIGHT,
   duckduckgo: DEFAULT_DDG_THEME_LIGHT,

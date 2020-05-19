@@ -1,6 +1,7 @@
 import { RESPONSE_TIMEOUT, NATIVE_MESSAGES } from '../../config/native';
 
 import {
+  IPywalColors,
   INativeAppMessage,
   INativeAppRequest,
   INativeAppMessageCallbacks
@@ -38,7 +39,37 @@ export class NativeApp {
     }
 
     this.logError(`Recieved invalid message from native app. The 'data' field is undefined.`);
-    return false;
+    return null;
+  }
+
+  private async onMessage(message: INativeAppMessage) {
+    console.debug(message);
+    switch(message.action) {
+      case NATIVE_MESSAGES.VERSION:
+        this.onVersionResponse(message);
+        break;
+      case NATIVE_MESSAGES.OUTPUT:
+        const output: string = this.getData(message);
+        output && this.callbacks.output(output);
+        break;
+      case NATIVE_MESSAGES.COLORSCHEME:
+        const colorscheme: IPywalColors = this.getData(message);
+        colorscheme && this.callbacks.colorscheme(colorscheme);
+        break;
+      case NATIVE_MESSAGES.CSS_ENABLE: /* fallthrough */
+      case NATIVE_MESSAGES.CSS_DISABLE:
+        this.onCssToggleResponse(message);
+        break;
+      case NATIVE_MESSAGES.CSS_FONT_SIZE:
+        this.onCssFontSizeResponse(message);
+        break;
+      case NATIVE_MESSAGES.INVALID_ACTION:
+        this.logError(`Native app recieved unhandled message action: ${message.action}`);
+        break;
+      default:
+        this.logError(`Received unhandled message action: ${message.action}`);
+        break;
+    }
   }
 
   private onVersionResponse(message: INativeAppMessage) {
@@ -74,36 +105,6 @@ export class NativeApp {
     } else {
       const error = message['error'];
       this.callbacks.cssFontSizeSetFailed(error);
-    }
-  }
-
-  private async onMessage(message: INativeAppMessage) {
-    console.debug(message);
-    switch(message.action) {
-      case NATIVE_MESSAGES.VERSION:
-        this.onVersionResponse(message);
-        break;
-      case NATIVE_MESSAGES.OUTPUT:
-        const output = this.getData(message);
-        output && this.callbacks.output(output);
-        break;
-      case NATIVE_MESSAGES.COLORSCHEME:
-        const colorscheme = this.getData(message);
-        colorscheme && this.callbacks.colorscheme(colorscheme);
-        break;
-      case NATIVE_MESSAGES.CSS_ENABLE: /* fallthrough */
-      case NATIVE_MESSAGES.CSS_DISABLE:
-        this.onCssToggleResponse(message);
-        break;
-      case NATIVE_MESSAGES.CSS_FONT_SIZE:
-        this.onCssFontSizeResponse(message);
-        break;
-      case NATIVE_MESSAGES.INVALID_ACTION:
-        this.logError(`Native app recieved unhandled message action: ${message.action}`);
-        break;
-      default:
-        this.logError(`Received unhandled message action: ${message.action}`);
-        break;
     }
   }
 
