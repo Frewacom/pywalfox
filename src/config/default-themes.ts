@@ -8,10 +8,10 @@ import {
 } from '../definitions';
 
 export const EXTENDED_PYWAL_COLORS: IExtendedPywalColors = [
-  { targetIndex: 16, colorIndex: 0, modifier: 1.4 },
+  { targetIndex: 16, colorIndex: 0, modifier: 1.25 },
   { targetIndex: 17, colorString: '#ffffff' },
-  { targetIndex: 18, colorIndex: 0, modifier: 2.5 },
-  { targetIndex: 19, colorIndex: 7, modifier: 0.15 },
+  { targetIndex: 18, colorIndex: 0, modifier: 1.85 },
+  { targetIndex: 19, colorIndex: 7, modifier: 0.1, min: 200, max: 225 },
 ];
 
 export const DEFAULT_PALETTE_TEMPLATE_DARK: IPaletteTemplate = {
@@ -25,9 +25,9 @@ export const DEFAULT_PALETTE_TEMPLATE_DARK: IPaletteTemplate = {
 };
 
 export const DEFAULT_PALETTE_TEMPLATE_LIGHT: IPaletteTemplate = {
-  background: 7,
+  background: 19,
   backgroundLight: 17,
-  backgroundExtra: 19,
+  backgroundExtra: 7,
   accentPrimary: 4,
   accentSecondary: 5,
   text: 16,

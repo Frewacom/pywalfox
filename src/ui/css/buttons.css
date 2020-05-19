@@ -265,6 +265,7 @@ body.light .btn-dialog[selected] > i {
 .btn-header {
   border-radius: var(--border-radius);
   color: var(--text-focus);
+  box-shadow: var(--box-shadow-card);
 }
 
 .btn-primary {

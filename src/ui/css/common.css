@@ -64,11 +64,6 @@ header {
   font-size: calc(var(--font-size-lg) * 0.8);
 }
 
-body.light #logo > span {
-  color: var(--accent-primary);
-  filter: brightness(50%);
-}
-
 .palette-card-container {
   width: 100%;
 }

@@ -16,6 +16,8 @@ export interface IExtendedPywalColorBase {
   colorString?: string;
   colorIndex?: number;
   modifier?: number;
+  min?: number;
+  max?: number;
 }
 
 export interface IModifiedPywalColor extends IExtendedPywalColorBase {

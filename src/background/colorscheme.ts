@@ -1,4 +1,4 @@
-import { changeLuminance } from '../utils/colors';
+import { changeLuminance, normalizeLuminance } from '../utils/colors';
 import { DUCKDUCKGO_THEME_ID } from '../config/general';
 import { EXTENDED_PYWAL_COLORS } from '../config/default-themes';
 
@@ -15,9 +15,13 @@ export function extendPywalColors(pywalColors: IPywalColors) {
   const colors = pywalColors;
 
   for (const color of EXTENDED_PYWAL_COLORS) {
-    const { targetIndex, colorString, colorIndex, modifier } = color;
+    const { targetIndex, colorString, colorIndex, modifier, min, max } = color;
     if (color.hasOwnProperty('colorIndex') && color.hasOwnProperty('modifier')) {
-      colors.splice(targetIndex, 0, changeLuminance(colors[colorIndex], modifier));
+      if (color.hasOwnProperty('min') && color.hasOwnProperty('max')) {
+        colors.splice(targetIndex, 0, normalizeLuminance(colors[colorIndex], modifier, min, max));
+      } else {
+        colors.splice(targetIndex, 0, changeLuminance(colors[colorIndex], modifier));
+      }
     } else if (color.hasOwnProperty('colorString')) {
       colors.splice(targetIndex, 0, colorString);
     } else {
