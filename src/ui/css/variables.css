@@ -64,6 +64,7 @@ body {
 
   --background: #252525;
   --background-light: #444444;
+  --background-extra: #333333;
   --text: #ffffff;
   --text-focus: #ffffff;
   --accent-primary: #6cadff;
@@ -74,6 +75,7 @@ body {
 body.light {
   --background: #EDEDF0;
   --background-light: #ffffff;
+  --background-extra: #eeeeee;
   --text: #333;
   --text-focus: #252525;
 

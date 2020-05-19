@@ -71,8 +71,8 @@
     width: 25rem;
     margin: 0;
     margin-right: var(--spacing-sm);
-    row-gap: var(--spacing-sm);
-    column-gap: var(--spacing-sm);
+    row-gap: var(--spacing-xsm);
+    column-gap: var(--spacing-xsm);
   }
 
   .dialog-arrow[selected]::after {
@@ -80,8 +80,8 @@
   }
 
   .btn-palette-color {
-    height: var(--button-height-md);
-    max-width: var(--button-height-md);
+    height: var(--button-height-sm);
+    max-width: var(--button-height-sm);
   }
 
   #colorpicker-buttons {

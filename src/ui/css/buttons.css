@@ -196,6 +196,10 @@ body.light #theme-select.dialog-arrow[selected]:hover::after {
   background: var(--accent-secondary);
 }
 
+.btn-color[data-target="backgroundExtra"] {
+  background: var(--background-extra);
+}
+
 .btn-palette-color {
   height: var(--button-height-sm);
   border-radius: var(--border-radius-sm);
@@ -235,7 +239,7 @@ body.light .btn-palette-color {
 }
 
 body.light .btn-dialog[selected] {
-  color: var(--text-focus);
+  color: var(--background-light);
 }
 
 .btn-dialog[selected]:hover {
@@ -252,6 +256,10 @@ body.light .btn-dialog > i {
 
 .btn-dialog[selected] > i {
   filter: invert(100%);
+}
+
+body.light .btn-dialog[selected] > i {
+  filter: none;
 }
 
 .btn-header {
@@ -276,7 +284,7 @@ body.light .btn-dialog > i {
 
 body.light .btn-primary,
 body.light .btn-secondary {
-  color: var(--text-focus);
+  color: var(--background-light);
 }
 
 .btn-default {

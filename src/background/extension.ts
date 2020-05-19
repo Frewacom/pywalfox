@@ -8,7 +8,6 @@ import {
   IExtensionTheme,
   IPaletteTemplate,
   IExtensionMessage,
-  IExtensionOptions,
   ITimeIntervalEndpoint,
   ThemeModes,
   CSSTargets,

@@ -1,12 +1,13 @@
-import { ITemplateItem } from '../definitions';
+import { ITemplateItem, PaletteColors } from '../definitions';
 
 export const PALETTE_TEMPLATE_DATA: ITemplateItem[] = [
-  { title: 'Background', description: 'Main background color', target: 'background' },
-  { title: 'Background light', description: 'Secondary background color', target: 'backgroundLight' },
-  { title: 'Text', description: 'Main text color', target: 'text' },
-  { title: 'Text focus', description: 'Text used in the current tab, etc.', target: 'textFocus' },
-  { title: 'Accent primary', description: 'Main accent color, used for icons', target: 'accentPrimary' },
-  { title: 'Accent secondary', description: 'Mainly used for hovers and highlights', target: 'accentSecondary' },
+  { title: 'Background', description: 'Main background color', target: PaletteColors.Background },
+  { title: 'Background light', description: 'Secondary background color', target: PaletteColors.BackgroundLight },
+  { title: 'Background extra', description: 'Additional contrasting background color', target: PaletteColors.BackgroundExtra },
+  { title: 'Text', description: 'Main text color', target: PaletteColors.Text },
+  { title: 'Text focus', description: 'Text used in the current tab, etc.', target: PaletteColors.TextFocus },
+  { title: 'Accent primary', description: 'Main accent color, used for icons', target: PaletteColors.AccentPrimary },
+  { title: 'Accent secondary', description: 'Mainly used for hovers and highlights', target: PaletteColors.AccentSecondary },
 ];
 
 export const THEME_TEMPLATE_DATA: ITemplateItem[] = [

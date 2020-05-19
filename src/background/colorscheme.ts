@@ -36,11 +36,12 @@ export function generateColorscheme(
   // Override the templated palette with any custom colors set by the user
   const palette = Object.assign({
     background: pywalPalette[template.palette.background],
-    text: pywalPalette[template.palette.text],
-    textFocus: pywalPalette[template.palette.textFocus],
     backgroundLight: pywalPalette[template.palette.backgroundLight],
+    backgroundExtra: pywalPalette[template.palette.backgroundExtra],
     accentPrimary: pywalPalette[template.palette.accentPrimary],
     accentSecondary: pywalPalette[template.palette.accentSecondary],
+    text: pywalPalette[template.palette.text],
+    textFocus: pywalPalette[template.palette.textFocus],
   }, customColors);
 
   return {
@@ -114,6 +115,7 @@ export function generateExtensionTheme(palette: IPalette) {
   let css: string = 'body,body.light,body.dark{';
   css += `--background: ${palette.background};`;
   css += `--background-light: ${palette.backgroundLight};`;
+  css += `--background-extra: ${palette.backgroundExtra};`;
   css += `--text: ${palette.text};`;
   css += `--accent-primary: ${palette.accentPrimary};`;
   css += `--accent-secondary: ${palette.accentSecondary};`;

@@ -22,7 +22,8 @@ input[type="number"] {
 }
 
 input[type="time"] {
-  padding: 0 var(--spacing-sm);
+  padding-left: var(--spacing);
+  padding-right: 0;
 }
 
 input[type="number"]:hover,

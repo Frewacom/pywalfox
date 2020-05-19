@@ -32,6 +32,7 @@ export type IPaletteHash = string;
 export enum PaletteColors {
   Background = 'background',
   BackgroundLight = 'backgroundLight',
+  BackgroundExtra = 'backgroundExtra',
   AccentPrimary = 'accentPrimary',
   AccentSecondary = 'accentSecondary',
   Text = 'text',
@@ -52,6 +53,7 @@ export enum ThemeModes {
 export interface IPalette {
   [PaletteColors.Background]: string;
   [PaletteColors.BackgroundLight]: string;
+  [PaletteColors.BackgroundExtra]: string;
   [PaletteColors.AccentPrimary]: string;
   [PaletteColors.AccentSecondary]: string;
   [PaletteColors.Text]: string;

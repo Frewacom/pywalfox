@@ -76,5 +76,9 @@
 }
 
 body.light .notification {
-  color: var(--text-focus);
+  color: var(--background-light);
+}
+
+body.light .notification > i {
+  filter: none;
 }
