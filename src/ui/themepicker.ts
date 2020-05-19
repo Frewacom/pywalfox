@@ -50,10 +50,20 @@ export class Themepicker extends Dialog {
 
     Utils.select(target);
     this.selected = target;
+
+    this.setBodyClass(mode);
+    this.removeAutoBodyClassIfNotEnabled(mode);
+  }
+
+  private removeAutoBodyClassIfNotEnabled(mode: ThemeModes) {
+    if (mode !== ThemeModes.Auto) {
+      document.body.classList.remove('auto');
+    }
   }
 
   public setBodyClass(mode: ThemeModes) {
     if (mode === ThemeModes.Auto) {
+      document.body.classList.add('auto');
       return;
     }
 
@@ -68,7 +78,6 @@ export class Themepicker extends Dialog {
   private onSetMode(target: HTMLElement) {
     const mode = <ThemeModes>target.getAttribute('data-theme');
     requestThemeModeSet(mode);
-    this.setBodyClass(mode);
     this.selectMode(target, mode);
   }
 
@@ -79,7 +88,5 @@ export class Themepicker extends Dialog {
     } else {
       console.error(`Could not find target button associated with the mode: ${mode}`);
     }
-
-    this.setBodyClass(mode);
   }
 }

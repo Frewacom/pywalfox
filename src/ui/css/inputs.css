@@ -1,5 +1,5 @@
 input, .input-container {
-  background-color: var(--background);
+  background-color: var(--button-background);
   border-radius: var(--border-radius-sm);
   height: var(--button-height);
   padding: 0 var(--spacing-xsm);
@@ -15,10 +15,14 @@ input, .input-container {
   box-shadow: var(--box-shadow);
 }
 
-input[type=number] {
+input[type="number"] {
   text-align: center;
   width: 2.8rem;
   -moz-appearance: textfield;
+}
+
+input[type="time"] {
+  padding: 0 var(--spacing-sm);
 }
 
 input[type="number"]:hover,
@@ -28,7 +32,7 @@ input[type="number"]:focus,
 }
 
 select {
-  background-color: var(--background);
+  background-color: var(--button-background);
   border-radius: var(--border-radius-sm);
   border: none;
   padding: var(--spacing-sm);

@@ -95,6 +95,16 @@
               </div>
               <button class="btn btn-darker" data-option="userContent" async>No</button>
             </div>
+            <div class="setting row expand space-between v-center no-highlight" id="auto-time-interval-option">
+              <div class="box column align-left">
+                <p class="setting-title">Auto mode time interval</p>
+                <p class="setting-description">Light theme will be enabled in the selected interval</p>
+              </div>
+              <div class="box">
+                <input type="time" id="auto-time-start-input" class="margin-right-sm" step="60" required data-option="autoTimeStart">
+                <input type="time" id="auto-time-end-input" step="60" required data-option="autoTimeEnd">
+              </div>
+            </div>
           </div>
         </section>
         <section class="setting-card card expand space-between margin-bottom-lg">

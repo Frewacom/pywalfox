@@ -109,7 +109,7 @@ body.light .btn-lighter {
 }
 
 .btn-darker {
-  background-color: var(--background);
+  background-color: var(--button-background);
   color: var(--text-focus);
   border-radius: var(--border-radius-sm);
   width: 4em;

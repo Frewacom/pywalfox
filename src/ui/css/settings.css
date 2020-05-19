@@ -67,3 +67,11 @@ body.light .setting[selected] {
 #user-chrome-option[selected] + #font-size-option {
   display: flex;
 }
+
+#auto-time-interval-option {
+  display: none;
+}
+
+body.auto #auto-time-interval-option {
+  display: flex;
+}

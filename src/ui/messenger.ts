@@ -5,23 +5,12 @@ import {
   IOptionSetData,
   IPaletteTemplate,
   IThemeTemplate,
+  ITimeIntervalEndpoint,
   ThemeModes,
 } from '../definitions';
 
 export function requestInitialData() {
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.INITIAL_DATA_GET });
-}
-
-export function requestDebuggingInfo() {
-  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.DEBUGGING_INFO_GET });
-}
-
-export function requestPywalColors() {
-  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.PYWAL_COLORS_GET });
-}
-
-export function requestTemplate() {
-  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.TEMPLATE_GET });
 }
 
 export function requestFetch() {
@@ -41,8 +30,16 @@ export function requestPaletteColorSet(id: string, color: string) {
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.PALETTE_COLOR_SET, data: paletteColorData });
 }
 
-export function requestOptionSet(option: string, enabled: boolean, size?: number) {
-  const optionData: IOptionSetData = { option, enabled, size };
+export function requestFontSizeSet(option: string, size: number) {
+  requestOptionSet(option, true, size);
+}
+
+export function requestAutoTimeSet(option: string, time: ITimeIntervalEndpoint) {
+  requestOptionSet(option, true, time);
+}
+
+export function requestOptionSet(option: string, enabled: boolean, value?: any) {
+  const optionData: IOptionSetData = { option, enabled, value };
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.OPTION_SET, data: optionData });
 }
 

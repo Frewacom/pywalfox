@@ -65,7 +65,8 @@ header {
 }
 
 body.light #logo > span {
-  color: var(--text-focus);
+  color: var(--accent-primary);
+  filter: brightness(50%);
 }
 
 .palette-card-container {
@@ -137,5 +138,3 @@ body.light #debugging-output, body.light code {
   box-shadow: var(--box-shadow);
 }
 
-code {
-}

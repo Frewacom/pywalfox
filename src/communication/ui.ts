@@ -1,10 +1,11 @@
-import { EXTENSION_MESSAGES } from '../config/general';
+import { EXTENSION_MESSAGES, EXTENSION_OPTIONS } from '../config/general';
 
 import {
   IPalette,
   IInitialData,
   IPywalColors,
   IColorschemeTemplate,
+  ITimeIntervalEndpoint,
   IPaletteTemplate,
   IThemeTemplate,
   ThemeModes,
@@ -50,13 +51,21 @@ export function sendThemeMode(mode: ThemeModes, updateSelected: boolean) {
   sendMessage({ action: EXTENSION_MESSAGES.THEME_MODE_SET, data: themeModeData });
 }
 
-export function sendOption(option: string, enabled: boolean) {
-  const optionData: IOptionSetData = { option, enabled };
+export function sendOption(option: string, enabled: boolean, value?: any) {
+  const optionData: IOptionSetData = { option, enabled, value };
   sendMessage({ action: EXTENSION_MESSAGES.OPTION_SET, data: optionData });
 }
 
 export function sendFontSize(size: number) {
-  sendMessage({ action: EXTENSION_MESSAGES.FONT_SIZE_SET, data: size });
+  sendOption(EXTENSION_OPTIONS.FONT_SIZE, true, size);
+}
+
+export function sendAutoTimeStart(start: ITimeIntervalEndpoint) {
+  sendOption(EXTENSION_OPTIONS.AUTO_TIME_START, true, start);
+}
+
+export function sendAutoTimeEnd(end: ITimeIntervalEndpoint) {
+  sendOption(EXTENSION_OPTIONS.AUTO_TIME_END, true, end);
 }
 
 export function sendPaletteTemplate(template: IPaletteTemplate) {

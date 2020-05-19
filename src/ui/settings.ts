@@ -6,6 +6,7 @@ import { Colorpicker } from './colorpicker';
 import { Themepicker } from './themepicker';
 
 import {
+  EXTENSION_OPTIONS,
   EXTENSION_MESSAGES,
   PYWAL_PALETTE_LENGTH,
   ENABLED_BODY_CLASS,
@@ -21,6 +22,7 @@ import {
 import {
     IExtensionMessage,
     IColorschemeTemplate,
+    ITimeIntervalEndpoint,
     IPaletteTemplate,
     IThemeTemplate,
     IInitialData,
@@ -43,6 +45,8 @@ const versionLabel = <HTMLSpanElement>document.getElementById('version');
 const disableButton = <HTMLButtonElement>document.getElementById('disable');
 const themeButton = <HTMLButtonElement>document.getElementById('theme-select');
 const fontSizeSaveInput = <HTMLInputElement>document.getElementById('font-size-input');
+const autoTimeStartInput = <HTMLInputElement>document.getElementById('auto-time-start-input');
+const autoTimeEndInput = <HTMLInputElement>document.getElementById('auto-time-end-input');
 const debuggingOutput = <HTMLTextAreaElement>document.getElementById('debugging-output');
 const debuggingVersion = <HTMLParagraphElement>document.getElementById('debugging-version');
 const debuggingConnected = <HTMLParagraphElement>document.getElementById('debugging-connected');
@@ -160,13 +164,59 @@ function onDisableClicked() {
 function onFontSizeSave() {
   if (fontSizeSaveInput.checkValidity()) {
     const option = fontSizeSaveInput.getAttribute('data-option');
-    Messenger.requestOptionSet(option, true, parseInt(fontSizeSaveInput.value));
+    Messenger.requestFontSizeSet(option, parseInt(fontSizeSaveInput.value));
   } else {
     createNotification({
       title: 'Custom font size',
       message: 'Invalid value, should be between 10-20 pixels',
       error: true
     });
+  }
+}
+
+function validateAutoTimeInterval() {
+  const startValue = autoTimeStartInput.value;
+  const endValue = autoTimeEndInput.value;
+
+  if (startValue < endValue) {
+    return true;
+  }
+
+  createNotification({ title: 'Auto mode', message: 'Start time is greater than end time', error: true });
+  return false;
+}
+
+function createTimeIntervalObject(value: string) {
+  const valueList = value.split(':');
+  if (valueList.length !== 2) {
+    console.error(`Could not create time interval object for ${value}`);
+    return null;
+  }
+
+  const intervalObject: ITimeIntervalEndpoint = {
+    hour: parseInt(valueList[0]),
+    minute: parseInt(valueList[1]),
+    stringFormat: value
+  };
+
+  return intervalObject;
+}
+
+function onAutoTimeStartSave() {
+  if (validateAutoTimeInterval()) {
+    const intervalObject = createTimeIntervalObject(autoTimeStartInput.value);
+    if (intervalObject !== null) {
+      Messenger.requestAutoTimeSet(EXTENSION_OPTIONS.AUTO_TIME_START, intervalObject);
+    }
+  }
+}
+
+function onAutoTimeEndSave() {
+  if (validateAutoTimeInterval()) {
+    const intervalObject = createTimeIntervalObject(autoTimeEndInput.value);
+    if (intervalObject !== null) {
+      Messenger.requestAutoTimeSet(EXTENSION_OPTIONS.AUTO_TIME_END, intervalObject);
+    }
   }
 }
 
@@ -255,11 +305,22 @@ function onThemeTemplateSave() {
   Messenger.requestThemeTemplateSet(template.browser);
 }
 
-function updateOptionButtonState(optionData: IOptionSetData) {
-  const target = <HTMLButtonElement>optionButtonsLookup[optionData.option];
-
-  if (target) {
-    setOptionEnabled(target, optionData.enabled);
+function updateOptionState({ option, enabled, value }: IOptionSetData) {
+  switch (option) {
+    case EXTENSION_OPTIONS.FONT_SIZE:
+      fontSizeSaveInput.value = value.toString();
+      break;
+    case EXTENSION_OPTIONS.AUTO_TIME_START:
+      autoTimeStartInput.value = value.stringFormat;
+      break;
+    case EXTENSION_OPTIONS.AUTO_TIME_END:
+      autoTimeEndInput.value = value.stringFormat;
+      break;
+    default:
+      const target = <HTMLButtonElement>optionButtonsLookup[option];
+      if (target) {
+        setOptionEnabled(target, enabled);
+      }
   }
 }
 
@@ -418,16 +479,16 @@ function createPaletteContent() {
 
 function setInitialData(data: IInitialData) {
   themepicker.setSelectedMode(data.themeMode);
+  themepicker.setBodyClass(data.templateThemeMode);
 
   if (data.isApplied) {
     toggleIsAppliedBodyClass();
   }
 
   for (const optionData of data.options) {
-    updateOptionButtonState(optionData);
+    updateOptionState(optionData);
   }
 
-  fontSizeSaveInput.value = data.fontSize.toString();
   colorpicker.setData(data.pywalColors, data.customColors, data.template.palette);
   colorpicker.updateSelected();
 
@@ -480,7 +541,7 @@ function handleExtensionMessage({ action, data }: IExtensionMessage) {
       }
       break;
     case EXTENSION_MESSAGES.OPTION_SET:
-      updateOptionButtonState(data);
+      updateOptionState(data);
       break;
     case EXTENSION_MESSAGES.NOTIFCATION:
       createNotification(data);
@@ -500,6 +561,8 @@ function setupListeners() {
   fetchButton.addEventListener('click', Messenger.requestFetch);
   themeButton.addEventListener('click', () => openDialog(themepicker, themeButton));
   fontSizeSaveInput.addEventListener('change', Utils.debounce(onFontSizeSave, 500));
+  autoTimeStartInput.addEventListener('change', Utils.debounce(onAutoTimeStartSave, 500));
+  autoTimeEndInput.addEventListener('change', Utils.debounce(onAutoTimeEndSave, 500));
 
   themeTemplateSaveButton.addEventListener('click', onThemeTemplateSave);
   themeTemplateResetButton.addEventListener('click', Messenger.requestThemeTemplateReset);

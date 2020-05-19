@@ -163,6 +163,8 @@ export interface IExtensionOptions {
   [CSSTargets.UserContent]: boolean;
   fontSize: number;
   duckduckgo: boolean;
+  autoTimeStart: ITimeIntervalEndpoint;
+  autoTimeEnd: ITimeIntervalEndpoint;
 }
 
 export interface IExtensionMessage {
@@ -173,7 +175,7 @@ export interface IExtensionMessage {
 export interface IOptionSetData {
   option: string;
   enabled: boolean;
-  size?: number;
+  value?: any;
 }
 
 /* Interface for the messages received from the native messaging host. */
@@ -218,9 +220,11 @@ export interface IInitialData {
   template: IColorschemeTemplate;
   customColors: Partial<IPalette>;
   themeMode: ThemeModes;
+  templateThemeMode: ThemeModes;
   debuggingInfo: IDebuggingInfoData;
   options: IOptionSetData[];
   fontSize: number;
+  autoTimeInterval: ITimeIntervalEndpoint[];
 }
 
 export interface IDebuggingInfoData {
@@ -253,6 +257,7 @@ export interface ITemplateItem {
 export interface ITimeIntervalEndpoint {
   hour: number;
   minute: number;
+  stringFormat: string;
 }
 
 /**

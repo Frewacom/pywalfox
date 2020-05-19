@@ -98,6 +98,10 @@ export class Extension {
       case EXTENSION_OPTIONS.USER_CONTENT:
         this.setCustomCSSEnabled(optionData);
         break;
+      case EXTENSION_OPTIONS.AUTO_TIME_START: /* Fallthrough */
+      case EXTENSION_OPTIONS.AUTO_TIME_END:
+        this.setAutoTimeInterval(optionData);
+        break;
       default:
         UI.sendDebuggingOutput(`Received unhandled option: ${optionData.option}`);
     }
@@ -111,14 +115,6 @@ export class Extension {
         break;
       case EXTENSION_MESSAGES.DDG_THEME_GET:
         this.setDDGTheme();
-        break;
-      case EXTENSION_MESSAGES.PYWAL_COLORS_GET:
-        const pywalColors = this.state.getPywalColors();
-        pywalColors && UI.sendPywalColors(pywalColors);
-        break;
-      case EXTENSION_MESSAGES.TEMPLATE_GET:
-        const template = this.state.getTemplate();
-        template && UI.sendTemplate(template);
         break;
       case EXTENSION_MESSAGES.PALETTE_TEMPLATE_SET:
         this.setPaletteTemplate(data);
@@ -137,9 +133,6 @@ export class Extension {
         break;
       case EXTENSION_MESSAGES.PALETTE_COLOR_SET:
         this.setPaletteColor(data);
-        break;
-      case EXTENSION_MESSAGES.DEBUGGING_INFO_GET:
-        UI.sendDebuggingInfo(this.state.getDebuggingInfo());
         break;
       case EXTENSION_MESSAGES.OPTION_SET:
         this.setOption(data);
@@ -249,10 +242,10 @@ export class Extension {
     }
   }
 
-  private setCssFontSize({ size }: IOptionSetData) {
-    if (size !== undefined && size >= 10 && size <= 20) {
+  private setCssFontSize({ value }: IOptionSetData) {
+    if (value !== undefined && value >= 10 && value <= 20) {
       // Currently, only userChrome uses the custom font size feature
-      this.nativeApp.requestFontSizeSet(CSSTargets.UserChrome, size);
+      this.nativeApp.requestFontSizeSet(CSSTargets.UserChrome, value);
     } else {
       UI.sendNotification('Font size error', 'Invalid size or not set', true);
     }
@@ -333,6 +326,19 @@ export class Extension {
       const customPalette = this.createCustomColorPalette(palette);
       this.updateThemes(pywalColors, customPalette);
     }
+  }
+
+  private setAutoTimeInterval({ option, value }: IOptionSetData) {
+    // TODO: Update the auto mode check timeout to use the new interval
+    if (option === EXTENSION_OPTIONS.AUTO_TIME_START) {
+      this.state.setAutoTimeStart(value);
+      UI.sendAutoTimeStart(value);
+    } else {
+      this.state.setAutoTimeEnd(value);
+      UI.sendAutoTimeEnd(value);
+    }
+
+    UI.sendNotification('Auto mode', 'Light theme time interval was updated successfully');
   }
 
   private createCustomColorPalette(data: Partial<IPalette>) {

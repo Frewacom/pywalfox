@@ -14,6 +14,7 @@ import {
   IColorschemeTemplate,
   IColorschemeTemplates,
   IDuckDuckGoThemeTemplate,
+  ITimeIntervalEndpoint,
   IOptionSetData,
   CSSTargets,
   ThemeModes,
@@ -66,6 +67,8 @@ export class State {
         userContent: false,
         fontSize: DEFAULT_CSS_FONT_SIZE,
         duckduckgo: false,
+        autoTimeStart: { hour: 10, minute: 0, stringFormat: '10:00' },
+        autoTimeEnd: { hour: 19, minute: 0, stringFormat: '19:00' },
       }
     };
   }
@@ -130,9 +133,11 @@ export class State {
       template: this.getTemplate(),
       customColors: this.getCustomColors(),
       themeMode: this.getThemeMode(),
+      templateThemeMode: this.getTemplateThemeMode(),
       debuggingInfo: this.getDebuggingInfo(),
       options: this.getOptionsData(),
       fontSize: this.getCssFontSize(),
+      autoTimeInterval: this.getAutoTimeInterval(),
     };
   }
 
@@ -221,11 +226,22 @@ export class State {
     return this.currentState.options.fontSize;
   }
 
+  public getAutoTimeInterval() {
+    return [
+      this.currentState.options.autoTimeStart,
+      this.currentState.options.autoTimeEnd
+    ];
+  }
+
   public getOptionsData() {
     let data: IOptionSetData[] = [];
     for (const key in this.currentState.options) {
       const value = this.currentState.options[key];
-      data.push({ option: key, enabled: value });
+      if (typeof value === 'boolean') {
+        data.push({ option: key, enabled: value });
+      } else {
+        data.push({ option: key, enabled: true, value });
+      }
     }
 
     return data;
@@ -322,6 +338,24 @@ export class State {
       theme: {
         ...this.currentState.theme,
         isDay,
+      },
+    });
+  }
+
+  public setAutoTimeStart(start: ITimeIntervalEndpoint) {
+    return this.set({
+      options: {
+        ...this.currentState.options,
+        autoTimeStart: start,
+      },
+    });
+  }
+
+  public setAutoTimeEnd(end: ITimeIntervalEndpoint) {
+    return this.set({
+      options: {
+        ...this.currentState.options,
+        autoTimeEnd: end,
       },
     });
   }

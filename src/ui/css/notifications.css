@@ -29,6 +29,11 @@
 
 .notification.error {
   background-color: var(--error-color);
+  color: white;
+}
+
+.notification.error i {
+  filter: none;
 }
 
 .notification.fadeout {
