@@ -18,6 +18,15 @@
   position: relative;
 }
 
+.box {
+  display: flex;
+  flex-direction: inherit;
+  justify-content: inherit;
+  align-items: inherit;
+  width: auto;
+  height: auto;
+}
+
 .expand {
   width: 100%;
 }
@@ -49,15 +58,6 @@
   border-left: 2px solid var(--accent-secondary);
   border-bottom: 2px solid var(--accent-secondary);
   bottom: 20%;
-}
-
-.box {
-  display: flex;
-  flex-direction: inherit;
-  justify-content: inherit;
-  align-items: inherit;
-  width: auto;
-  height: auto;
 }
 
 .space-between {

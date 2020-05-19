@@ -9,21 +9,23 @@
   <body>
     <div class="wrapper">
       <div id="overlay" class="clickable"></div>
-      <header class="container row v-center space-between margin-v-sm">
-        <div class="box">
-          <h1 id="logo">Pywalfox<span id="version">v2.0.0</span></h1>
+      <header class="container row v-center margin-v-sm">
+        <div class="box row expand space-between">
+          <div class="box">
+            <h1 id="logo">Pywalfox<span id="version">v2.0.0</span></h1>
+          </div>
+          <div class="box" id="header-buttons">
+            <button class="btn btn-default btn-header margin-right-sm" id="disable">Disable theme</button>
+            <button class="btn btn-primary btn-header" id="fetch">Fetch pywal colors</button>
+            <div class="separator"></div>
+            <button class="btn btn-default btn-header dialog-arrow" id="theme-select"></button>
+          </div>
         </div>
-        <div class="box" id="header-buttons">
-          <button class="btn btn-default btn-header margin-right-sm" id="disable">Disable theme</button>
-          <button class="btn btn-primary btn-header" id="fetch">Fetch pywal colors</button>
-          <div class="separator"></div>
-          <button class="btn btn-default btn-header dialog-arrow" id="theme-select"></button>
-          <aside class="dialog" id="themepicker">
-            <button class="btn btn-sm btn-dialog margin-bottom-xsm" data-theme="dark"><i icon="moon"></i>Dark</button>
-            <button class="btn btn-sm btn-dialog margin-bottom-xsm" data-theme="light"><i icon="sun"></i>Light</button>
-            <button class="btn btn-sm btn-dialog" data-theme="auto"><i icon="auto"></i>Auto</button>
-          </aside>
-        </div>
+        <aside class="dialog" id="themepicker">
+          <button class="btn btn-sm btn-dialog margin-bottom-xsm" data-theme="dark"><i icon="moon"></i>Dark</button>
+          <button class="btn btn-sm btn-dialog margin-bottom-xsm" data-theme="light"><i icon="sun"></i>Light</button>
+          <button class="btn btn-sm btn-dialog" data-theme="auto"><i icon="auto"></i>Auto</button>
+        </aside>
       </header>
       <main class="container">
         <div class="box column expand palette-card-container">
