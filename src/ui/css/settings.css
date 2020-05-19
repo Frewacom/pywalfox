@@ -11,7 +11,7 @@
 }
 
 body.light .setting:hover,
-body.light .setting[selected] {
+body.light .setting[selected]:not(.no-highlight) {
   box-shadow: var(--box-shadow);
 }
 

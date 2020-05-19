@@ -120,7 +120,7 @@ body.light .btn-lighter {
 }
 
 .btn-darker[selected] {
-  background-color: var(--text-focus);
+  background-color: var(--text);
   color: var(--background);
 }
 

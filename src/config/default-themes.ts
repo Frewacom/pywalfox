@@ -17,7 +17,7 @@ export const DEFAULT_PALETTE_TEMPLATE_DARK: IPaletteTemplate = {
   backgroundLight: 16,
   text: 15,
   textFocus: 17,
-  accentPrimary: 4,
+  accentPrimary: 10,
   accentSecondary: 5,
 };
 

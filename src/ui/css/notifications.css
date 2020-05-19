@@ -13,7 +13,7 @@
 
 .notification {
   display: flex;
-  background-color: var(--accent-secondary);
+  background-color: var(--accent-primary);
   padding: var(--spacing-md) var(--spacing);
   width: var(--content-width);
   bottom: var(--spacing-lg);
