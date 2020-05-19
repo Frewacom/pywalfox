@@ -12,12 +12,12 @@
 
 Introducing **Pywalfox**, an [add-on for Firefox](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/) that themes the browser using your Pywal colors through the official Firefox Theme API! 
 With Pywalfox you can:
-- Customize the colors of almost every UI element
-- Automatically theme DuckDuckGo :duck: (optional)
-- Have bold text, styled dropdowns and much more (optional)
-- Easily update the browser theme using the add-on and/or your terminal
+- [x] Customize the colors of almost every UI element
+- [x] Automatically theme DuckDuckGo :duck: (optional)
+- [x] Have bold text, styled dropdowns and much more (optional)
+- [x] Easily update the browser theme using the add-on and/or your terminal
 
-<img src="https://i.imgur.com/tZybQsU.gif"/>
+![](images/demo.gif)
 
 ## Requirements
 - Python (both 2.7.x and 3.x versions are supported)
