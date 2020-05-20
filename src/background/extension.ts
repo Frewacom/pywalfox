@@ -267,10 +267,10 @@ export class Extension {
   }
 
   private async onThemeChangeTrigger(isDay: boolean) {
-    console.log(`Theme update triggered by automatic theme mode. Is day: ${isDay}`);
     await this.state.setIsDay(isDay);
     this.updateThemeForCurrentMode();
     UI.sendThemeMode(this.state.getTemplateThemeMode(), false);
+    UI.sendDebuggingOutput(`Theme update triggered by automatic theme mode. Is day: ${isDay}`);
   }
 
   private updateThemeForCurrentMode() {

@@ -13,18 +13,18 @@ p {
   font-weight: normal;
 }
 
+.bold-text {
+  font-weight: bold;
+}
+
 a {
   color: var(--text-focus);
-  text-decoration: none;
-  font-size: var(--font-size-sm);
-  outline: none;
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--border-radius-sm);
-  box-shadow: var(--box-shadow);
+  font-size: var(--font-size);
+  font-weight: bold;
 }
 
 a:hover {
-  filter: brightness(80%);
+  filter: var(--brightness-filter);
 }
 
 header {
@@ -72,7 +72,13 @@ header {
   height: 2em;
   width: 2px;
   background-color: var(--background-light);
-  margin: 0em var(--spacing-sm);
+  margin: 0 var(--spacing-sm);
+}
+
+.h-separator {
+  height: 2px;
+  margin: var(--spacing-sm) 0;
+  background-color: var(--border-color);
 }
 
 body.light .separator {
@@ -108,7 +114,7 @@ body.applied .color-preview {
 }
 
 body.light #debugging-version {
-  color: var(--text-focus);
+  color: var(--background-light);
 }
 
 code,

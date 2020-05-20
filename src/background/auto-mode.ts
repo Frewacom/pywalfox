@@ -21,64 +21,87 @@ export class AutoMode {
     this.isDay = null;
   }
 
+  private minuteNumberToMs(minute: number, currentSecond: number) {
+    return Math.abs(minute * 60 * 1000 - (currentSecond * 1000));
+  }
+
   private checkIfDayTime(startTime: ITimeIntervalEndpoint, endTime: ITimeIntervalEndpoint) {
     const currentDate = new Date();
     const currentHour = currentDate.getUTCHours();
     const currentMinute = currentDate.getUTCMinutes();
-    let modifiedTimeoutDelay: number = null;
+    const currentSecond = currentDate.getUTCSeconds();
+    let timeoutDelay = AUTO_MODE_INTERVAL_MS;
     let result = false;
 
-    // No case for when startTime.hour === endTime.hour, but is should not be needed either
     if (currentHour > startTime.hour && currentHour < endTime.hour) {
-      // TODO: Add modifiedTimeoutDelay
+      if (currentHour === (endTime.hour - 1) && endTime.minute <= AUTO_MODE_INTERVAL_MS) {
+        const difference = (60 + endTime.minute) - currentMinute;
+        if (difference < AUTO_MODE_INTERVAL_MS && difference !== 0) {
+          timeoutDelay = this.minuteNumberToMs(difference, currentSecond);
+        }
+      }
       result = true;
-    } else if (currentHour === startTime.hour && currentMinute >= startTime.minute) {
+    } else if (currentHour === startTime.hour) {
+      if (currentMinute >= startTime.minute) {
+        result = true;
+      } else {
+        const difference = startTime.minute - currentMinute;
+        if (difference < AUTO_MODE_INTERVAL_MS) {
+          timeoutDelay = this.minuteNumberToMs(difference, currentSecond);
+        }
+      }
+    } else if (currentHour === endTime.hour && currentMinute < endTime.minute) {
+      const difference = endTime.minute - currentMinute;
+      if (difference < AUTO_MODE_INTERVAL_MS && difference !== 0) {
+        timeoutDelay = this.minuteNumberToMs(difference, currentSecond);
+      }
       result = true;
-    } else if (currentHour === endTime.hour && currentMinute <= endTime.minute) {
-      result = true;
-      // TODO: Add modifiedTimeoutDelay
     }
 
     return {
       result,
-      modifiedTimeoutDelay,
+      timeoutDelay,
     };
   }
 
   private deleteCurrentTimeout() {
     if (this.checkTimeout !== null) {
       clearTimeout(this.checkTimeout);
+      this.checkTimeout = null;
     }
   }
 
   private update() {
-    console.log('Running auto-mode update');
-    const { result, modifiedTimeoutDelay } = this.checkIfDayTime(this.startTime, this.endTime);
+    const { result, timeoutDelay } = this.checkIfDayTime(this.startTime, this.endTime);
 
     if (result === this.isDay) {
-      console.log('No need for update')
       return;
     }
 
-    this.deleteCurrentTimeout();
     this.callback(result);
-    this.checkTimeout = window.setTimeout(this.update.bind(this), AUTO_MODE_INTERVAL_MS);
+    this.checkTimeout = window.setTimeout(this.update.bind(this), timeoutDelay);
+    this.isDay = result;
+  }
+
+  private applyUpdatedInterval() {
+    this.deleteCurrentTimeout();
+    this.update();
   }
 
   public start(startTime: ITimeIntervalEndpoint, endTime: ITimeIntervalEndpoint) {
     this.startTime = startTime;
     this.endTime = endTime;
-    this.update();
+    this.applyUpdatedInterval();
   }
 
   public setStartTime(startTime: ITimeIntervalEndpoint) {
     this.startTime = startTime;
-    this.update();
+    this.applyUpdatedInterval();
   }
 
   public setEndTime(endTime: ITimeIntervalEndpoint) {
     this.endTime = endTime;
-    this.update();
+    this.applyUpdatedInterval();
   }
 
   public stop() {

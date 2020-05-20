@@ -7,7 +7,7 @@ body {
 
   --border-radius: 4px;
   --border-radius-sm: 2px;
-  --border-color: rgba(255,255,255, 0.08);
+  --border-color: var(--background-extra);
 
   --spinner-width: 0.8rem;
   --spinner-thickness: 0.15rem;
@@ -67,8 +67,8 @@ body {
   --background-extra: #333333;
   --text: #ffffff;
   --text-focus: #ffffff;
-  --accent-primary: #6cadff;
-  --accent-secondary: #a1caff;
+  --accent-primary: #658bff;
+  --accent-secondary: #969dff;
   --error-color: #fd2e2e;
 }
 
@@ -76,6 +76,8 @@ body.light {
   --background: #EDEDF0;
   --background-light: #ffffff;
   --background-extra: #eeeeee;
+  --accent-primary: #4c68ff;
+  --accent-secondary: #6575cc;
   --text: #333;
   --text-focus: #252525;
 
