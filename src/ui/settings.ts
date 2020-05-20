@@ -193,9 +193,13 @@ function createTimeIntervalObject(value: string) {
     return null;
   }
 
+  const dateObject = new Date();
+  dateObject.setHours(parseInt(valueList[0]));
+  dateObject.setMinutes(parseInt(valueList[1]));
+
   const intervalObject: ITimeIntervalEndpoint = {
-    hour: parseInt(valueList[0]),
-    minute: parseInt(valueList[1]),
+    hour: dateObject.getUTCHours(),
+    minute: dateObject.getUTCMinutes(),
     stringFormat: value
   };
 

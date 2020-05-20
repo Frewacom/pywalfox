@@ -83,6 +83,7 @@ export class Themepicker extends Dialog {
 
   public setSelectedMode(mode: ThemeModes) {
     const targetButton: HTMLElement = this.modeLookup[mode];
+    console.log(targetButton);
     if (targetButton) {
       this.selectMode(targetButton, mode);
     } else {

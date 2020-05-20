@@ -227,10 +227,10 @@ export class State {
   }
 
   public getAutoTimeInterval() {
-    return [
-      this.currentState.options.autoTimeStart,
-      this.currentState.options.autoTimeEnd
-    ];
+    return {
+      start: this.currentState.options.autoTimeStart,
+      end: this.currentState.options.autoTimeEnd
+    };
   }
 
   public getOptionsData() {

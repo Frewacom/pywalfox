@@ -228,7 +228,7 @@ export interface IInitialData {
   debuggingInfo: IDebuggingInfoData;
   options: IOptionSetData[];
   fontSize: number;
-  autoTimeInterval: ITimeIntervalEndpoint[];
+  autoTimeInterval: ITimeIntervalEndpoints
 }
 
 export interface IDebuggingInfoData {
@@ -263,6 +263,13 @@ export interface ITimeIntervalEndpoint {
   minute: number;
   stringFormat: string;
 }
+
+export interface ITimeIntervalEndpoints {
+  start: ITimeIntervalEndpoint,
+  end: ITimeIntervalEndpoint,
+}
+
+export type IAutoModeTriggerCallback = (isDay: boolean) => void;
 
 /**
  * Expose 'wrappedJSObject' from the 'window' namespace.

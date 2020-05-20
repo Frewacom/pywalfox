@@ -34,7 +34,7 @@ import {
 
 import { State } from './state';
 import { NativeApp } from './native-app';
-import { isDayTime } from '../utils/time';
+import { AutoMode } from './auto-mode';
 import { ExtensionPage } from './extension-page';
 
 import * as UI from '../communication/ui';
@@ -45,9 +45,11 @@ export class Extension {
   private nativeApp: NativeApp;
   private settingsPage: ExtensionPage;
   private updatePage: ExtensionPage;
+  private autoMode: AutoMode;
 
   constructor() {
     this.state = new State();
+    this.autoMode = new AutoMode(this.onThemeChangeTrigger.bind(this));
     this.nativeApp = new NativeApp({
       connected: this.nativeAppConnected.bind(this),
       updateNeeded: this.updateNeeded.bind(this),
@@ -163,7 +165,7 @@ export class Extension {
     UI.sendDebuggingOutput('Theme was disabled');
   }
 
-  private updateThemes(pywalColors: IPywalColors, customColors?: Partial<IPalette>) {
+  private setThemes(pywalColors: IPywalColors, customColors?: Partial<IPalette>) {
     const template = this.state.getTemplate();
     const colorscheme = generateColorscheme(pywalColors, customColors, template);
 
@@ -193,7 +195,7 @@ export class Extension {
       }
     }
 
-    this.updateThemes(pywalColors, customColors);
+    this.setThemes(pywalColors, customColors);
     UI.sendCustomColors(customColors);
   }
 
@@ -255,7 +257,7 @@ export class Extension {
    * This is used when launching the background script to increase the speed
    * at which the theme is applied.
    *
-   * In all other cases, use 'updateThemes'.
+   * In all other cases, use 'setThemes'.
    */
   private setSavedColorscheme(colorscheme: IColorscheme) {
     console.log('Applying saved colorscheme');
@@ -267,24 +269,37 @@ export class Extension {
   private async onThemeChangeTrigger(isDay: boolean) {
     console.log(`Theme update triggered by automatic theme mode. Is day: ${isDay}`);
     await this.state.setIsDay(isDay);
-    this.setThemeMode(this.state.getThemeMode());
+    this.updateThemeForCurrentMode();
+    UI.sendThemeMode(this.state.getTemplateThemeMode(), false);
   }
 
-  private async setThemeMode(mode: ThemeModes) {
-    await this.state.setThemeMode(mode); // Must wait for this to finish
-
+  private updateThemeForCurrentMode() {
     const pywalColors = this.state.getPywalColors();
     const template = this.state.getTemplate();
     const customColors = this.state.getCustomColors();
-    pywalColors && this.updateThemes(pywalColors, customColors);
-
-    if (mode === ThemeModes.Auto) {
-      UI.sendThemeMode(this.state.getTemplateThemeMode(), false);
-    }
+    pywalColors && this.setThemes(pywalColors, customColors);
 
     UI.sendPaletteTemplate(template.palette);
     UI.sendThemeTemplate(template.browser);
     UI.sendCustomColors(customColors);
+  }
+
+  private async setThemeMode(mode: ThemeModes) {
+    const currentMode = this.state.getThemeMode();
+    if (currentMode === mode) {
+      return;
+    }
+
+    await this.state.setThemeMode(mode); // Must wait for this to finish
+    this.updateThemeForCurrentMode();
+
+    if (mode === ThemeModes.Auto) {
+      const { start, end } = this.state.getAutoTimeInterval();
+      this.autoMode.start(start, end);
+      UI.sendThemeMode(this.state.getTemplateThemeMode(), false);
+    } else {
+      UI.sendThemeMode(mode, true);
+    }
   }
 
   private setPaletteTemplate(template: IPaletteTemplate) {
@@ -323,17 +338,18 @@ export class Extension {
     const pywalColors = this.state.getPywalColors();
     if (pywalColors !== null) {
       const customPalette = this.createCustomColorPalette(palette);
-      this.updateThemes(pywalColors, customPalette);
+      this.setThemes(pywalColors, customPalette);
     }
   }
 
   private setAutoTimeInterval({ option, value }: IOptionSetData) {
-    // TODO: Update the auto mode check timeout to use the new interval
     if (option === EXTENSION_OPTIONS.AUTO_TIME_START) {
       this.state.setAutoTimeStart(value);
+      this.autoMode.setStartTime(value);
       UI.sendAutoTimeStart(value);
     } else {
       this.state.setAutoTimeEnd(value);
+      this.autoMode.setEndTime(value);
       UI.sendAutoTimeEnd(value);
     }
 
@@ -382,7 +398,7 @@ export class Extension {
     const colors = extendPywalColors(pywalColors);
     UI.sendDebuggingOutput('Pywal colors was fetched from daemon and applied successfully');
     UI.sendPywalColors(colors);
-    this.updateThemes(colors);
+    this.setThemes(colors);
   }
 
   private cssToggleSuccess(target: CSSTargets) {
@@ -425,13 +441,21 @@ export class Extension {
 
   public async start() {
     await this.state.load();
+
+    const savedColorscheme = this.state.getColorscheme();
+    const currentThemeMode = this.state.getThemeMode();
+
     this.settingsPage = new ExtensionPage(EXTENSION_PAGES.SETTINGS);
     this.updatePage = new ExtensionPage(EXTENSION_PAGES.UPDATE);
 
     // Run this after creating the extension pages so that the themes can be
     // set if the pages were reopened on launch.
-    const savedColorscheme = this.state.getColorscheme();
     if (savedColorscheme !== null) {
+      if (currentThemeMode === ThemeModes.Auto) {
+        const { start, end } = this.state.getAutoTimeInterval();
+        this.autoMode.start(start, end);
+      }
+
       this.setSavedColorscheme(savedColorscheme);
     }
 
