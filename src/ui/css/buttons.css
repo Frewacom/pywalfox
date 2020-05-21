@@ -16,6 +16,7 @@
   box-sizing: border-box;
   line-height: 1rem;
   box-shadow: var(--box-shadow);
+  text-decoration: none;
 }
 
 .btn > i {

@@ -539,7 +539,7 @@ function handleExtensionMessage({ action, data }: IExtensionMessage) {
       break;
     case EXTENSION_MESSAGES.THEME_MODE_SET:
       if (data.updateSelected) {
-        themepicker.setSelectedMode(data);
+        themepicker.setSelectedMode(data.mode);
       } else {
         themepicker.setBodyClass(data.mode);
       }
