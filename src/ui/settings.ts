@@ -200,7 +200,7 @@ function createTimeIntervalObject(value: string) {
   const intervalObject: ITimeIntervalEndpoint = {
     hour: dateObject.getUTCHours(),
     minute: dateObject.getUTCMinutes(),
-    stringFormat: value
+    stringFormat: value,
   };
 
   return intervalObject;

@@ -22,7 +22,6 @@
     "lint": "web-ext lint"
   },
   "devDependencies": {
-    "@rollup/plugin-typescript": "^4.1.2",
     "@types/firefox-webext-browser": "^70.0.1",
     "bestzip": "^2.1.5",
     "npm-run-all": "^4.1.5",
@@ -32,6 +31,7 @@
     "rollup-plugin-clear": "^2.0.7",
     "rollup-plugin-copy": "^3.3.0",
     "rollup-plugin-postcss": "^3.1.1",
+    "rollup-plugin-typescript2": "^0.27.1",
     "tslib": "^2.0.0",
     "typescript": "^3.9.3",
     "web-ext": "^4.1.0"

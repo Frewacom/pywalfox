@@ -252,13 +252,6 @@ export class Extension {
     }
   }
 
-  /**
-   * Fetches the browser- and extension theme from state and applies it, if set.
-   * This is used when launching the background script to increase the speed
-   * at which the theme is applied.
-   *
-   * In all other cases, use 'setThemes'.
-   */
   private setSavedColorscheme(colorscheme: IColorscheme) {
     console.log('Applying saved colorscheme');
     this.setBrowserTheme(colorscheme.browser);

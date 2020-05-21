@@ -2,7 +2,7 @@ import path from 'path';
 import copy from 'rollup-plugin-copy';
 import clear from 'rollup-plugin-clear';
 import postcss from 'rollup-plugin-postcss';
-import typescript from '@rollup/plugin-typescript';
+import typescript from 'rollup-plugin-typescript2';
 
 import cssimport from 'postcss-import';
 import urlresolve from 'postcss-url';
@@ -14,7 +14,7 @@ export default [
     input: 'src/background/index.ts',
     output: {
       file: 'extension/dist/background.js',
-      format: 'esm',
+      format: 'es',
     },
     plugins: [
       clear({ targets: ['extension/dist', 'artifacts'] }),
