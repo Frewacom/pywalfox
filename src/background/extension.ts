@@ -55,8 +55,9 @@ export class Extension {
       updateNeeded: this.updateNeeded.bind(this),
       disconnected: this.nativeAppDisconnected.bind(this),
       version: this.validateVersion.bind(this),
-      output: UI.sendDebuggingOutput,
-      colorscheme: this.onPywalColorsReceived.bind(this),
+      output: UI.sendDebuggingOutput.bind(this),
+      pywalColorsFetchSuccess: this.onPywalColorsFetchSuccess.bind(this),
+      pywalColorsFetchFailed: this.onPywalColorsFetchFailed.bind(this),
       cssToggleSuccess: this.cssToggleSuccess.bind(this),
       cssToggleFailed: this.cssToggleFailed.bind(this),
       cssFontSizeSetSuccess: this.cssFontSizeSetSuccess.bind(this),
@@ -127,7 +128,7 @@ export class Extension {
         this.setThemeMode(data);
         break;
       case EXTENSION_MESSAGES.THEME_FETCH:
-        this.nativeApp.requestColorscheme();
+        this.nativeApp.requestPywalColors();
         break;
       case EXTENSION_MESSAGES.THEME_DISABLE:
         this.resetThemes();
@@ -387,11 +388,15 @@ export class Extension {
     this.state.setConnected(false);
   }
 
-  private onPywalColorsReceived(pywalColors: IPywalColors) {
+  private onPywalColorsFetchSuccess(pywalColors: IPywalColors) {
     const colors = extendPywalColors(pywalColors);
     UI.sendDebuggingOutput('Pywal colors was fetched from daemon and applied successfully');
     UI.sendPywalColors(colors);
     this.setThemes(colors);
+  }
+
+  private onPywalColorsFetchFailed(error: string) {
+    UI.sendNotification('Pywal colors', error, true);
   }
 
   private cssToggleSuccess(target: CSSTargets) {

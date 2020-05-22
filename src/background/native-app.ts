@@ -1,11 +1,11 @@
-import { RESPONSE_TIMEOUT, NATIVE_MESSAGES } from '../../config/native';
+import { RESPONSE_TIMEOUT, NATIVE_MESSAGES } from '../config/native';
 
 import {
   IPywalColors,
   INativeAppMessage,
   INativeAppRequest,
   INativeAppMessageCallbacks
-} from '../../definitions';
+} from '../definitions';
 
 /**
  * Implements the communcation with the native messaging host.
@@ -14,8 +14,6 @@ import {
  * Based on the native messaging protocol, allowing extensions to communicate with
  * user's computer and share resources that are otherwise inaccessible by the browser.
  * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging
- *
- * @param callbacks - the callbacks to be used when a message is received
  */
 export class NativeApp {
   private isConnected: boolean;
@@ -49,12 +47,10 @@ export class NativeApp {
         this.onVersionResponse(message);
         break;
       case NATIVE_MESSAGES.OUTPUT:
-        const output: string = this.getData(message);
-        output && this.callbacks.output(output);
+        this.onDebuggingOutput(message);
         break;
-      case NATIVE_MESSAGES.COLORSCHEME:
-        const colorscheme: IPywalColors = this.getData(message);
-        colorscheme && this.callbacks.colorscheme(colorscheme);
+      case NATIVE_MESSAGES.PYWAL_COLORS:
+        this.onPywalColorsResponse(message);
         break;
       case NATIVE_MESSAGES.CSS_ENABLE: /* fallthrough */
       case NATIVE_MESSAGES.CSS_DISABLE:
@@ -83,29 +79,54 @@ export class NativeApp {
     clearTimeout(this.versionCheckTimeout);
   }
 
+  private onPywalColorsResponse(message: INativeAppMessage) {
+    if (message.success) {
+      const colors: IPywalColors = this.getData(message);
+
+      if (!colors) {
+        this.logError('Pywal colors was read successfully, but no colors was received');
+        return;
+      }
+
+      this.callbacks.pywalColorsFetchSuccess(colors);
+    } else {
+      this.callbacks.pywalColorsFetchFailed(message.error);
+    }
+  }
+
   private onCssToggleResponse(message: INativeAppMessage) {
     const target = this.getData(message);
 
-    if (!target) {
-      this.logError(`Custom CSS was applied successfully, but no target was specified`);
-      return;
-    }
-
     if (message.success) {
+      if (!target) {
+        this.logError('Custom CSS was applied successfully, but the target was not specified');
+        return;
+      }
+
       this.callbacks.cssToggleSuccess(target);
     } else {
-      const error = message['error'];
-      this.callbacks.cssToggleFailed(target, error);
+      this.callbacks.cssToggleFailed(target, message.error);
     }
   }
 
   private onCssFontSizeResponse(message: INativeAppMessage) {
     if (message.success) {
-      this.callbacks.cssFontSizeSetSuccess(parseInt(message.data));
+      const updatedFontSize = this.getData(message);
+
+      if (!updatedFontSize) {
+        this.logError(`Font size was updated successfully, but the updated font size was not specified`);
+        return;
+      }
+
+      this.callbacks.cssFontSizeSetSuccess(parseInt(updatedFontSize));
     } else {
-      const error = message['error'];
-      this.callbacks.cssFontSizeSetFailed(error);
+      this.callbacks.cssFontSizeSetFailed(message.error);
     }
+  }
+
+  private onDebuggingOutput(message: INativeAppMessage) {
+    const output: string = this.getData(message);
+    output && this.callbacks.output(output);
   }
 
   private async onDisconnect(port: browser.runtime.Port) {
@@ -139,8 +160,8 @@ export class NativeApp {
     this.sendMessage({ action: NATIVE_MESSAGES.VERSION });
   }
 
-  public requestColorscheme() {
-    this.sendMessage({ action: NATIVE_MESSAGES.COLORSCHEME });
+  public requestPywalColors() {
+    this.sendMessage({ action: NATIVE_MESSAGES.PYWAL_COLORS });
   }
 
   public requestCssEnabled(target: string, enabled: boolean) {
