@@ -2,6 +2,7 @@ import path from 'path';
 import copy from 'rollup-plugin-copy';
 import clear from 'rollup-plugin-clear';
 import postcss from 'rollup-plugin-postcss';
+import { terser } from "rollup-plugin-terser";
 import typescript from 'rollup-plugin-typescript2';
 
 import cssimport from 'postcss-import';
@@ -19,6 +20,7 @@ export default [
     plugins: [
       clear({ targets: ['extension/dist', 'artifacts'] }),
       typescript(),
+      production && terser(),
       postcss({
         extract: path.resolve('extension/dist/pages/bundle.min.css'),
         extensions: [ '.css' ],
@@ -36,7 +38,10 @@ export default [
       file: 'extension/dist/duckduckgo.js',
       format: 'iife',
     },
-    plugins: [ typescript() ],
+    plugins: [
+      typescript(),
+      production && terser()
+    ],
   },
   {
     input: 'src/ui/settings.ts',
@@ -46,6 +51,7 @@ export default [
     },
     plugins: [
       typescript(),
+      production && terser(),
       copy({ targets: [ { src: 'src/ui/settings.html', dest: 'extension/dist/pages' } ] }),
     ],
   },
@@ -57,6 +63,7 @@ export default [
     },
     plugins: [
       typescript(),
+      production && terser(),
       copy({ targets: [ { src: 'src/ui/update.html', dest: 'extension/dist/pages'} ] }),
     ],
   },

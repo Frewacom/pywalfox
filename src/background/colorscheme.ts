@@ -1,6 +1,6 @@
-import { changeLuminance, normalizeLuminance } from '../utils/colors';
 import { DUCKDUCKGO_THEME_ID } from '../config/general';
 import { EXTENDED_PYWAL_COLORS } from '../config/default-themes';
+import { changeLuminance, normalizeLuminance } from '../utils/colors';
 
 import {
   PaletteColors,
@@ -136,9 +136,6 @@ function stripHashSymbol(color: string) {
 /**
  * Creates a unique hash based on the colors in the palette,
  * used to detect when the theme has been changed.
- *
- * @param {IPalette} palette
- * @returns {string} the hash based on palette
  */
 function createPaletteHash(palette: IPalette) {
   const colors = Object.keys(palette);
