@@ -62,37 +62,6 @@
   100% { transform: rotate(360deg); }
 }
 
-.btn-sm {
-  font-size: var(--font-size-sm);
-  height: var(--button-height-sm);
-  padding: var(--spacing-md) var(--spacing);
-}
-
-.btn-sm > i {
-  width: var(--icon-size-sm);
-  height: var(--icon-size-sm);
-}
-
-.btn-control {
-  background-color: var(--lighter-background);
-  padding: 0;
-  width: calc(var(--button-height) - (var(--spacing-md)));
-  height: calc(var(--button-height) - (var(--spacing-md)));
-  color: var(--text-focus);
-  font-size: 1.25rem;
-  border-radius: 2px;
-  box-shadow: var(--box-shadow);
-}
-
-.btn-control:hover,
-body.light .btn-control:hover {
-  background-color: var(--lighter-background-hover);
-}
-
-body.light .btn-control {
-  background-color: var(--background-light);
-}
-
 .btn-lighter {
   background-color: var(--background-extra);
   color: var(--text-focus);
@@ -308,5 +277,16 @@ body.light #colorpicker-custom {
 
 #theme-select {
   width: 9.5rem; /* Fixed width to prevent flickering when changing themes */
+}
+
+.btn-sm {
+  font-size: var(--font-size-sm);
+  height: var(--button-height-sm);
+  padding: var(--spacing-md) var(--spacing);
+}
+
+.btn-sm > i {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
 }
 

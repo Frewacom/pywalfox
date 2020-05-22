@@ -41,6 +41,24 @@
   top: calc(var(--header-height) - 1px);
 }
 
+.separator {
+  height: 2em;
+  width: 2px;
+  background-color: var(--background-light);
+  margin: 0 var(--spacing-sm);
+}
+
+.h-separator {
+  height: 2px;
+  margin: var(--spacing-sm) 0;
+  background-color: var(--border-color);
+}
+
+body.light .separator {
+  background-color: var(--background);
+  filter: brightness(90%);
+}
+
 .indent {
   margin-left: var(--spacing-xlg);
   box-sizing: border-box;

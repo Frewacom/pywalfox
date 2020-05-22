@@ -64,28 +64,6 @@ header {
   font-size: calc(var(--font-size-lg) * 0.8);
 }
 
-.palette-card-container {
-  width: 100%;
-}
-
-.separator {
-  height: 2em;
-  width: 2px;
-  background-color: var(--background-light);
-  margin: 0 var(--spacing-sm);
-}
-
-.h-separator {
-  height: 2px;
-  margin: var(--spacing-sm) 0;
-  background-color: var(--border-color);
-}
-
-body.light .separator {
-  background-color: var(--background);
-  filter: brightness(90%);
-}
-
 .clickable {
   cursor: pointer;
 }
@@ -135,7 +113,8 @@ code,
   resize: none;
 }
 
-body.light #debugging-output, body.light code {
+body.light code,
+body.light #debugging-output {
   box-shadow: var(--box-shadow);
 }
 

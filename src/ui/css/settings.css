@@ -15,8 +15,8 @@ body.light .setting[selected]:not(.no-highlight) {
   box-shadow: var(--box-shadow);
 }
 
-.setting-title {
-  font-weight: bold;
+.setting-title,
+.setting-description {
   font-size: var(--font-size-md);
   color: var(--text-focus);
   margin: 0;
@@ -24,8 +24,7 @@ body.light .setting[selected]:not(.no-highlight) {
 
 .setting-description {
   font-weight: normal;
-  font-size: var(--font-size-md);
-  margin: 0;
+  color: var(--text);
   margin-top: var(--spacing-xxsm);
 }
 
@@ -39,7 +38,7 @@ body.light .setting[selected]:not(.no-highlight) {
 }
 
 #colorpicker-custom-container[selected] {
-  border: 2px solid var(--text);
+  border-color: var(--text);
 }
 
 #colorpicker-custom-label {
@@ -60,18 +59,12 @@ body.light .setting[selected]:not(.no-highlight) {
   opacity: 0;
 }
 
-#font-size-option {
-  display: none;
-}
-
-#user-chrome-option[selected] + #font-size-option {
-  display: flex;
-}
-
+#font-size-option,
 #auto-time-interval-option {
   display: none;
 }
 
-body.auto #auto-time-interval-option {
+body.auto #auto-time-interval-option,
+#user-chrome-option[selected] + #font-size-option {
   display: flex;
 }
