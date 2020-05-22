@@ -94,7 +94,7 @@ body.light .btn-control {
 }
 
 .btn-lighter {
-  background-color: var(--lighter-background);
+  background-color: var(--background-extra);
   color: var(--text-focus);
   border-radius: var(--border-radius-sm);
   box-shadow: var(--box-shadow);

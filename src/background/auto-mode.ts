@@ -27,9 +27,9 @@ export class AutoMode {
 
   private checkIfDayTime(startTime: ITimeIntervalEndpoint, endTime: ITimeIntervalEndpoint) {
     const currentDate = new Date();
-    const currentHour = currentDate.getUTCHours();
-    const currentMinute = currentDate.getUTCMinutes();
-    const currentSecond = currentDate.getUTCSeconds();
+    const currentHour = currentDate.getHours();
+    const currentMinute = currentDate.getMinutes();
+    const currentSecond = currentDate.getSeconds();
     let timeoutDelay = AUTO_MODE_INTERVAL_MS;
     let result = false;
 
