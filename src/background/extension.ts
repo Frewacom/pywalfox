@@ -90,7 +90,7 @@ export class Extension {
 
     switch (optionData.option) {
       case EXTENSION_OPTIONS.FONT_SIZE:
-        this.setCssFontSize(optionData);
+        this.setCssFontSize(optionData['value']);
         break;
       case EXTENSION_OPTIONS.DUCKDUCKGO:
         this.setDDGEnabled(optionData);
@@ -243,8 +243,8 @@ export class Extension {
     }
   }
 
-  private setCssFontSize({ value }: IOptionSetData) {
-    if (value !== undefined && value >= 10 && value <= 20) {
+  private setCssFontSize(value: number) {
+    if (typeof value === 'number' && value !== undefined && value >= 10 && value <= 20) {
       // Currently, only userChrome uses the custom font size feature
       this.nativeApp.requestFontSizeSet(CSSTargets.UserChrome, value);
     } else {
