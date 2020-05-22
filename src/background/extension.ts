@@ -8,7 +8,6 @@ import {
   IExtensionTheme,
   IPaletteTemplate,
   IExtensionMessage,
-  ITimeIntervalEndpoint,
   ThemeModes,
   CSSTargets,
 } from '../definitions';
@@ -347,7 +346,7 @@ export class Extension {
       UI.sendAutoTimeEnd(value);
     }
 
-    UI.sendNotification('Auto mode', 'Light theme time interval was updated successfully');
+    UI.sendNotification('Auto mode', 'Light theme interval was updated successfully');
   }
 
   private createCustomColorPalette(data: Partial<IPalette>) {
