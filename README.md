@@ -85,7 +85,7 @@ pip uninstall pywalfox  # Removes the pywalfox executable
 * If you updated Pywalfox and have issues, try re-running the setup script as described in [Installation](#installation) above.
 * If you have a permission error when running `pywalfox setup`, you can (probably) fix it by doing one of the following. Make sure to use the path from the setup output.
 
-  - `chown <username> ~/.mozilla/native-messaging-host`
+  - `chown <username> ~/.mozilla/native-messaging-hosts`
 
      or
 
