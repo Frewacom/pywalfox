@@ -154,6 +154,10 @@ export class Extension {
     browser.theme.reset();
     this.updateExtensionPagesTheme(null);
 
+    if (this.state.getThemeMode() === ThemeModes.Auto) {
+      this.autoMode.stop();
+    }
+
     if (this.state.getDDGThemeEnabled()) {
       DDG.resetTheme();
     }
@@ -287,8 +291,11 @@ export class Extension {
     this.updateThemeForCurrentMode();
 
     if (mode === ThemeModes.Auto) {
-      const { start, end } = this.state.getAutoTimeInterval();
-      this.autoMode.start(start, end);
+      if (this.state.getApplied()) {
+        const { start, end } = this.state.getAutoTimeInterval();
+        this.autoMode.start(start, end);
+      }
+
       UI.sendThemeMode(this.state.getTemplateThemeMode(), false);
     } else {
       UI.sendThemeMode(mode, true);
@@ -336,13 +343,15 @@ export class Extension {
   }
 
   private setAutoTimeInterval({ option, value }: IOptionSetData) {
+    const isApplied = this.state.getApplied();
+
     if (option === EXTENSION_OPTIONS.AUTO_TIME_START) {
       this.state.setAutoTimeStart(value);
-      this.autoMode.setStartTime(value);
+      this.autoMode.setStartTime(value, isApplied);
       UI.sendAutoTimeStart(value);
     } else {
       this.state.setAutoTimeEnd(value);
-      this.autoMode.setEndTime(value);
+      this.autoMode.setEndTime(value, isApplied);
       UI.sendAutoTimeEnd(value);
     }
 
@@ -392,6 +401,11 @@ export class Extension {
     UI.sendDebuggingOutput('Pywal colors was fetched from daemon and applied successfully');
     UI.sendPywalColors(colors);
     this.setThemes(colors);
+
+    if (this.state.getThemeMode() === ThemeModes.Auto) {
+      const { start, end } = this.state.getAutoTimeInterval();
+      this.autoMode.start(start, end);
+    }
   }
 
   private onPywalColorsFetchFailed(error: string) {

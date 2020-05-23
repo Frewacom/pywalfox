@@ -92,19 +92,21 @@ export class AutoMode {
     this.startTime = startTime;
     this.endTime = endTime;
     this.applyUpdatedInterval();
+    console.log('Started auto theme mode');
   }
 
-  public setStartTime(startTime: ITimeIntervalEndpoint) {
+  public setStartTime(startTime: ITimeIntervalEndpoint, isApplied: boolean) {
     this.startTime = startTime;
-    this.applyUpdatedInterval();
+    isApplied && this.applyUpdatedInterval();
   }
 
-  public setEndTime(endTime: ITimeIntervalEndpoint) {
+  public setEndTime(endTime: ITimeIntervalEndpoint, isApplied: boolean) {
     this.endTime = endTime;
-    this.applyUpdatedInterval();
+    isApplied && this.applyUpdatedInterval();
   }
 
   public stop() {
     this.deleteCurrentTimeout();
+    console.log('Stopped auto theme mode');
   }
 }
