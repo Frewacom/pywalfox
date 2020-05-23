@@ -33,8 +33,8 @@ First, install the [Firefox add-on](https://addons.mozilla.org/en-US/firefox/add
 **To use the add-on you must also install the script that fetches the Pywal colors:**
 1. `pip install pywalfox`
 2. `pywalfox setup`
-3. Restart Firefox 
-4. Click the Pywalfox icon to access the settings and click "Fetch Pywal colors" 
+2. Restart Firefox 
+3. Click the Pywalfox icon to access the settings and click "Fetch Pywal colors" 
 
 *If the Pywal colors could not be fetched, take a look in the [Troubleshooting](#troubleshooting) section below.*
 
@@ -74,6 +74,12 @@ To enable the custom CSS sheets:
 3. For further theming of context menus etc., enable the "Use included userChrome.css" option under General settings in the Pywalfox settings page.
 
 To hide the scrollbar, enable the "Use included userContent.css" option.
+
+## Uninstall
+```bash
+pywalfox uninstall      # Removes the manifest from native-messaging-hosts
+pip uninstall pywalfox  # Removes the pywalfox executable
+``` 
 
 ## Troubleshooting
 * If you updated Pywalfox and have issues, try re-running the setup script as described in [Installation](#installation) above.
