@@ -45,9 +45,11 @@ export class Extension {
   private settingsPage: ExtensionPage;
   private updatePage: ExtensionPage;
   private autoMode: AutoMode;
+  private stateLoadPromise: Promise<void>;
 
   constructor() {
     this.state = new State();
+    this.stateLoadPromise = null;
     this.autoMode = new AutoMode(this.onThemeChangeTrigger.bind(this));
     this.nativeApp = new NativeApp({
       connected: this.nativeAppConnected.bind(this),
@@ -109,9 +111,16 @@ export class Extension {
   }
 
   /* Handles incoming messages from the UI and other content scripts. */
-  private onMessage({ action, data }: IExtensionMessage) {
+  private async onMessage({ action, data }: IExtensionMessage) {
     switch (action) {
       case EXTENSION_MESSAGES.INITIAL_DATA_GET:
+        // If the settings page is open on firefox startup, the initial data will be
+        // requested before the state has loaded. To avoid this, we will wait for
+        // 'this.stateLoadPromise' to be resolved before sending the data to the page.
+        if (this.stateLoadPromise !== null) {
+          await this.stateLoadPromise;
+        }
+
         UI.sendInitialData(this.state.getInitialData());
         break;
       case EXTENSION_MESSAGES.DDG_THEME_GET:
@@ -455,13 +464,15 @@ export class Extension {
   }
 
   public async start() {
-    await this.state.load();
+    this.settingsPage = new ExtensionPage(EXTENSION_PAGES.SETTINGS);
+    this.updatePage = new ExtensionPage(EXTENSION_PAGES.UPDATE);
+
+    this.stateLoadPromise = this.state.load();
+    await this.stateLoadPromise;
+    this.stateLoadPromise = null;
 
     const savedColorscheme = this.state.getColorscheme();
     const currentThemeMode = this.state.getThemeMode();
-
-    this.settingsPage = new ExtensionPage(EXTENSION_PAGES.SETTINGS);
-    this.updatePage = new ExtensionPage(EXTENSION_PAGES.UPDATE);
 
     // Run this after creating the extension pages so that the themes can be
     // set if the pages were reopened on launch.
