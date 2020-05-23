@@ -1,0 +1,95 @@
+body {
+  --font: -apple-system, BlinkMacSystemFont, "Noto Sans", "Segoe UI", Roboto, Ubuntu, sans-serif;
+  --font-size-sm: 0.76rem;
+  --font-size-md: 0.82rem;
+  --font-size: 0.85rem;
+  --font-size-lg: 1.2rem;
+
+  --border-radius: 4px;
+  --border-radius-sm: 2px;
+  --border-color: var(--background-extra);
+
+  --spinner-width: 0.8rem;
+  --spinner-thickness: 0.15rem;
+
+  --spacing: 1rem;
+  --spacing-xxsm: 0.1rem;
+  --spacing-xsm: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 0.75rem;
+  --spacing-card: 1.05rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xlg: 1.8rem;
+
+  --brightness-filter-light: brightness(140%);
+  --brightness-filter: brightness(120%);
+  --brightness-filter-dark: brightness(90%);
+  --brightness-filter-dark-hover: brightness(85%);
+
+  --box-shadow: 0px 2px 10px 1px rgba(0,0,0,0.2);
+  --box-shadow-card: 2px 4px 10px #00000012;
+  --box-shadow-highlight: 0px 2px 12px 3px rgba(0,0,0,0.4);
+  --box-shadow-card-content-header: 0px 5px 10px -8px #000000d6;
+
+  --button-height-sm: 2.2rem;
+  --button-height-md: 2.3rem;
+  --button-height: 2.45rem;
+
+  --icon-size-sm: 1.1rem;
+  --icon-size-md: 1.25rem;
+  --icon-size: 1.4rem;
+  --icon-size-lg: 1.7rem;
+
+  --arrow-size: 1rem;
+  --header-height: calc((2 * var(--spacing-sm)) + var(--button-height));
+  --content-width: 48rem;
+  --min-content-width: 36rem;
+
+  --dialog-width: 6.2rem;
+  --dialog-offset: calc(var(--content-width) + var(--spacing-lg));
+
+  --z-index-dialog: 50;
+  --z-index-notification: 30;
+  --z-index-color-button: 15;
+  --z-index-header: 25;
+  --z-index-sticky: 20;
+  --z-index-overlay: 10;
+
+  --transition-time: 0.1s;
+
+  --lighter-background: rgba(255,255,255,0.05);
+  --lighter-background-hover: rgba(255,255,255,0.2);
+  --darker-background: rgba(0,0,0,0.2);
+  --button-background: var(--background);
+
+  --background: #252525;
+  --background-light: #444444;
+  --background-extra: #555555;
+  --text: #ffffff;
+  --text-focus: #ffffff;
+  --accent-primary: #658bff;
+  --accent-secondary: #969dff;
+  --error-color: #fd2e2e;
+}
+
+body.light {
+  --background: #EDEDF0;
+  --background-light: #ffffff;
+  --background-extra: #eeeeee;
+  --accent-primary: #4c68ff;
+  --accent-secondary: #6575cc;
+  --text: #333;
+  --text-focus: #252525;
+
+  --brightness-filter: brightness(107%);
+  --border-color: rgba(0,0,0,0.15);
+  --lighter-background: rgba(0,0,0,0.05);
+  --lighter-background-hover: rgba(0,0,0,0.1);
+  --darker-background: var(--lighter-background);
+  --button-background: #ececec;
+
+  --box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+  --box-shadow-card: 0 1px 4px 0 rgba(12, 12, 13, 0.1);
+  --box-shadow-highlight: var(--box-shadow);
+  --box-shadow-card-content-header: 0px 5px 10px -8px rgba(0,0,0,0.2);
+}

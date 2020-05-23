@@ -1,0 +1,120 @@
+body {
+  font-family: var(--font);
+  background-color: var(--background);
+  font-size: var(--font-size);
+  color: var(--text);
+  font-weight: bold;
+  margin: 0em;
+  min-width: var(--min-content-width);
+}
+
+p {
+  margin: 0.5em 0em 0.5em 0em;
+  font-weight: normal;
+}
+
+.bold-text {
+  font-weight: bold;
+}
+
+a {
+  color: var(--text-focus);
+  font-size: var(--font-size);
+  font-weight: bold;
+}
+
+a:hover {
+  filter: var(--brightness-filter);
+}
+
+header {
+  z-index: var(--z-index-header);
+  background-color: var(--background);
+  height: var(--header-height);
+}
+
+#overlay {
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  position: fixed;
+  z-index: var(--z-index-overlay);
+  background-color: var(--background);
+  opacity: 0;
+  display: none;
+}
+
+#overlay[open] {
+  display: flex;
+}
+
+#logo {
+  position: relative;
+  font-size: var(--font-size-lg);
+  font-weight: 900;
+  color: var(--text-focus);
+  margin: 0;
+}
+
+#logo > span {
+  position: relative;
+  color: var(--accent-primary);
+  bottom: 0.5em;
+  font-size: calc(var(--font-size-lg) * 0.8);
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.color-preview {
+  display: none;
+  cursor: initial;
+}
+
+body.applied .color-preview {
+  display: flex;
+}
+
+#debugging-version,
+#debugging-connected {
+  font-weight: bold;
+}
+
+#debugging-version {
+  padding: var(--spacing-xsm) var(--spacing-sm);
+  color: var(--background);
+  background-color: var(--accent-secondary);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
+
+body.light #debugging-version {
+  color: var(--background-light);
+}
+
+code,
+#debugging-output {
+  background: var(--darker-background);
+  padding: var(--spacing-md);
+  color: var(--text);
+  box-sizing: border-box;
+  border-radius: var(--border-radius-sm);
+  font-weight: normal;
+}
+
+#debugging-output {
+  width: 100%;
+  height: 150px;
+  border: none;
+  font-size: var(--font-size-sm);
+  resize: none;
+}
+
+body.light code,
+body.light #debugging-output {
+  box-shadow: var(--box-shadow);
+}
+

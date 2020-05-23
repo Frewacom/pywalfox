@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Pywalfox - Settings</title>
+    <link rel="stylesheet" href="./bundle.min.css">
+  </head>
+  <body>
+    <div class="wrapper">
+      <div id="overlay" class="clickable"></div>
+      <header class="container row v-center margin-v-sm">
+        <div class="box row expand space-between">
+          <div class="box">
+            <h1 id="logo">Pywalfox<span id="version">v2.0.0</span></h1>
+          </div>
+          <div class="box" id="header-buttons">
+            <button class="btn btn-default btn-header margin-right-sm" id="disable">Disable theme</button>
+            <button class="btn btn-primary btn-header" id="fetch">Fetch Pywal colors</button>
+            <div class="separator"></div>
+            <button class="btn btn-default btn-header dialog-arrow" id="theme-select"></button>
+          </div>
+        </div>
+        <aside class="dialog" id="themepicker">
+          <button class="btn btn-sm btn-dialog margin-bottom-xsm" data-theme="dark"><i icon="moon"></i>Dark</button>
+          <button class="btn btn-sm btn-dialog margin-bottom-xsm" data-theme="light"><i icon="sun"></i>Light</button>
+          <button class="btn btn-sm btn-dialog" data-theme="auto"><i icon="auto"></i>Auto</button>
+        </aside>
+      </header>
+      <main class="container">
+        <div class="box column expand palette-card-container">
+          <section class="setting-card card expand space-between margin-bottom-lg" open>
+            <div class="setting-card-header card-header expand row v-center space-between clickable">
+              <div class="box">
+                <i icon="droplet"></i>
+                <p class="card-title">Palette</p>
+              </div>
+              <i icon="chevron"></i>
+            </div>
+            <div class="card-content column expand" id="palette-content">
+              <template id="palette-template">
+                <div class="setting row expand space-between v-center">
+                  <div class="box column align-left">
+                    <p class="setting-title"></p>
+                    <p class="setting-description"></p>
+                  </div>
+                  <button data-color="" class="btn btn-color dialog-arrow"></button>
+                </div>
+              </template>
+            </div>
+          </section>
+          <aside class="dialog" id="colorpicker">
+            <div id="colorpicker-grid"></div>
+            <div class="box" id="colorpicker-buttons">
+              <div class="box btn btn-default btn-sm" id="colorpicker-custom-container">
+                <label for="colorpicker-custom" id="colorpicker-custom-label" class="clickable">Custom</label>
+                <input id="colorpicker-custom" class="clickable" type="color">
+              </div>
+              <button class="btn btn-primary btn-sm margin-top-sm" id="colorpicker-undo">Undo</button>
+            </div>
+          </aside>
+        </div>
+        <section class="setting-card card expand space-between margin-bottom-lg" open>
+          <div class="setting-card-header card-header expand row v-center space-between clickable">
+            <div class="box">
+              <i icon="settings"></i>
+              <p class="card-title">General</p>
+            </div>
+            <i icon="chevron"></i>
+          </div>
+          <div class="card-content column expand">
+            <div class="setting row expand space-between v-center no-highlight">
+              <div class="box column align-left">
+                <p class="setting-title">Use DuckDuckGo theme?</p>
+                <p class="setting-description">Applies matching theme to all DuckDuckGo-pages</p>
+              </div>
+              <button class="btn btn-darker" data-option="duckduckgo">No</button>
+            </div>
+            <div class="setting row expand space-between v-center no-highlight" id="user-chrome-option">
+              <div class="box column align-left">
+                <p class="setting-title">Use included userChrome.css?</p>
+                <p class="setting-description">Bold text, styled dropdown and context menus</p>
+              </div>
+              <button class="btn btn-darker" data-option="userChrome" async>No</button>
+            </div>
+            <div class="setting row expand space-between v-center indent no-highlight" id="font-size-option">
+              <div class="box column align-left">
+                <p class="setting-title">Font size</p>
+                <p class="setting-description">The base font size to be used in userChrome.css (in pixels)</p>
+              </div>
+              <input type="number" min="10" max="20" id="font-size-input" data-option="fontSize">
+            </div>
+            <div class="setting row expand space-between v-center no-highlight">
+              <div class="box column align-left">
+                <p class="setting-title">Use included userContent.css</p>
+                <p class="setting-description">Globally hides the page scrollbar</p>
+              </div>
+              <button class="btn btn-darker" data-option="userContent" async>No</button>
+            </div>
+            <div class="setting row expand space-between v-center no-highlight" id="auto-time-interval-option">
+              <div class="box column align-left">
+                <p class="setting-title">Light mode interval</p>
+                <p class="setting-description">Light theme will be enabled in the selected interval</p>
+              </div>
+              <div class="box">
+                <input type="time" id="auto-time-start-input" class="margin-right-sm" step="60" required data-option="autoTimeStart">
+                <input type="time" id="auto-time-end-input" step="60" required data-option="autoTimeEnd">
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="setting-card card expand space-between margin-bottom-lg">
+          <div class="setting-card-header card-header expand row v-center space-between clickable">
+            <div class="box">
+              <i icon="edit"></i>
+              <p class="card-title">Palette template</p>
+            </div>
+            <i icon="chevron"></i>
+          </div>
+          <div class="card-content card-content-header row expand v-center space-between sticky">
+            <div class="box">
+              <button class="btn btn-primary btn-sm margin-right-sm" id="palette-template-save">Save palette</button>
+              <button class="btn btn-lighter btn-sm margin-right-sm" id="palette-template-current">Load from current</button>
+              <button class="btn btn-lighter btn-sm" id="palette-template-reset">Reset to default</button>
+            </div>
+            <button class="btn btn-lighter btn-sm btn-h-sm" data-help="palette-template-help">
+              <i icon="help-circle"></i>
+              Help
+            </button>
+          </div>
+          <div class="card-content card-subsection column expand align-left" id="palette-template-help">
+            <h3 class="card-help-title">Creating a custom palette</h3>
+            <p class="card-help-description">
+              The palette is a collection of Pywal colors that is generated when clicking the "Fetch Pywal colors" button.
+              A custom palette template allows you to manually select which Pywal color should be the default color
+              used for the background, text, etc.
+              <br><br>
+              The easiest way to create palette templates is to select colors using the "Palette" section and then
+              click the "Load from current" button to automatically take the selected colors from the palette and generate
+              a template. To save the template, click "Save template".
+              <br><br>
+              If you want to change the color for a certain element of the browser theme, you can do that in
+              the "Theme template"-section below.
+              <br><br>
+              Note that the palette templates for light and dark mode are <b>separate</b>.
+              You always modify the template for the currently selected theme mode.
+            </p>
+          </div>
+          <div class="card-content column expand" id="palette-template-content">
+            <template id="palette-edit-template">
+              <div class="setting row expand space-between v-center">
+                <div class="box column align-left">
+                  <p class="setting-title"></p>
+                  <p class="setting-description"></p>
+                </div>
+                <div class="box row v-center">
+                  <div class="btn btn-color color-preview margin-right-sm"></div>
+                  <input type="number" data-target="" min="0" max="" />
+                </div>
+              </div>
+            </template>
+          </div>
+        </section>
+        <section class="setting-card card expand space-between margin-bottom-lg">
+          <div class="setting-card-header card-header expand row v-center space-between clickable">
+            <div class="box">
+              <i icon="template"></i>
+              <p class="card-title">Theme template</p>
+            </div>
+            <i icon="chevron"></i>
+          </div>
+          <div class="card-content card-content-header row expand v-center space-between sticky">
+            <div class="box">
+              <button class="btn btn-primary btn-sm margin-right-sm" id="theme-template-save">Save template</button>
+              <button class="btn btn-lighter btn-sm" id="theme-template-reset">Reset to default</button>
+            </div>
+            <button class="btn btn-lighter btn-sm btn-h-sm" data-help="theme-template-help">
+              <i icon="help-circle"></i>
+              Help
+            </button>
+          </div>
+          <div class="card-content card-subsection column expand align-left" id="theme-template-help">
+            <h3 class="card-help-title">Creating a custom theme template</h3>
+            <p class="card-help-description">
+              Custom theme templates allows you to customize each element of the browser individually by telling
+              Pywalfox which palette color should be used for a specific element.
+              <br><br>
+              Not all elements are customizable. We are limited by the properties provided by the Theme API.<br>
+              For further customization, you can use the included userContent and userChrome (or your own).
+              <br><br>
+              Note that the theme templates for light and dark mode are <b>separate</b>.
+              You always modify the template for the currently selected theme mode.
+            </p>
+            <div class="box expand row v-center align-left">
+              <a class="row v-center margin-top btn btn-sm btn-lighter margin-right-sm"
+                 href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme#colors"
+                 target="_blank"
+                 rel="noopener noreferrer">
+                <i icon="external-link"></i>
+                Visual description of theme elements
+              </a>
+            </div>
+          </div>
+          <div class="card-content column expand" id="theme-template-content">
+            <template id="theme-template">
+              <div class="setting row expand space-between v-center">
+                <div class="box column align-left">
+                  <p class="setting-title"></p>
+                  <p class="setting-description"></p>
+                </div>
+                <!-- Select element is inserted dynamically -->
+              </div>
+            </template>
+          </div>
+        </section>
+        <section class="setting-card card expand space-between">
+          <div class="setting-card-header card-header expand row v-center space-between clickable">
+            <div class="box">
+              <i icon="alert-triangle"></i>
+              <p class="card-title">Debugging</p>
+            </div>
+            <i icon="chevron"></i>
+          </div>
+          <div class="card-content card-content-header row expand space-between v-center" id="debugging-info">
+            <div class="box row v-center">
+              <i icon="activity" class="icon-sm"></i>
+              <p id="debugging-connected" class="margin-right-sm">Disconnected</p>
+              <p id="debugging-version">version not set</p>
+            </div>
+            <a class="row v-center btn btn-lighter btn-sm"
+               href="https://github.com/frewacom/pywalfox#troubleshooting"
+               target="_blank"
+               rel="noopener noreferrer">
+              <i icon="external-link"></i>
+              Troubleshooting guide
+            </a>
+          </div>
+          <div class="card-content card-content-lg column expand">
+            <textarea id="debugging-output" readonly></textarea>
+          </div>
+        </section>
+      </main>
+      <section id="notification-container">
+        <template id="notification-template">
+          <div class="notification box row v-center">
+            <i class="icon-sm" icon=""></i>
+            <p class="notification-title"></p>
+            <p class="notification-content"></p>
+            <button class="btn notification-close"></button>
+          </div>
+        </template>
+      </section>
+    </div>
+    <script src="./settings.min.js"></script>
+  </body>
+</html>

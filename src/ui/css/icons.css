@@ -1,0 +1,91 @@
+i {
+  margin-right: var(--spacing-sm);
+  width: var(--icon-size);
+  height: var(--icon-size);
+}
+
+body.light i {
+  filter: invert(100%);
+}
+
+i[icon="pen"] {
+  content: url('../icons/pen-tool.svg');
+}
+
+i[icon="bell"] {
+  content: url('../icons/bell.svg');
+}
+
+i[icon="chevron"] {
+  content: url('../icons/chevron.svg');
+  margin: 0em;
+}
+
+i[icon="message"] {
+  content: url('../icons/message-circle.svg');
+}
+
+i[icon="settings"] {
+  content: url('../icons/settings.svg');
+}
+
+i[icon="template"] {
+  content: url('../icons/layout.svg');
+}
+
+i[icon="error"] {
+  content: url('../icons/alert-circle.svg');
+}
+
+i[icon="sun"] {
+  content: url('../icons/sun.svg');
+}
+
+i[icon="moon"] {
+  content: url('../icons/moon.svg');
+}
+
+i[icon="auto"] {
+  content: url('../icons/eye.svg');
+}
+
+i[icon="external-link"] {
+  content: url('../icons/external-link.svg');
+}
+
+i[icon="activity"] {
+  content: url('../icons/activity.svg');
+}
+
+i[icon="help-circle"] {
+  content: url('../icons/help-circle.svg');
+}
+
+i[icon="droplet"] {
+  content: url('../icons/droplet.svg');
+}
+
+i[icon="edit"] {
+  content: url('../icons/edit.svg');
+}
+
+i[icon="alert-triangle"] {
+  content: url('../icons/alert-triangle.svg');
+}
+
+.icon-sm {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+}
+
+.icon-md {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+}
+
+.icon-lg {
+  width: var(--icon-size-lg);
+  height: var(--icon-size-lg);
+}
+
+

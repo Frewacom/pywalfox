@@ -1,0 +1,84 @@
+#notification-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: var(--z-index-notification);
+  background: linear-gradient(transparent, var(--background));
+  box-sizing: border-box;
+  min-width: var(--min-content-width);
+}
+
+.notification {
+  display: flex;
+  background-color: var(--accent-primary);
+  padding: var(--spacing-md) var(--spacing);
+  width: var(--content-width);
+  bottom: var(--spacing-lg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  margin-bottom: var(--spacing-md);
+  color: var(--background);
+  position: relative;
+  font-size: var(--font-size-md);
+  transition: opacity 0.4s;
+  will-change: opacity;
+}
+
+.notification.error {
+  background-color: var(--error-color);
+  color: white;
+}
+
+.notification.error i {
+  filter: none;
+}
+
+.notification.fadeout {
+  opacity: 0;
+}
+
+.notification > i {
+  filter: invert(100%);
+}
+
+.notification-title {
+  font-weight: 900;
+  display: flex;
+  white-space: nowrap;
+}
+
+.notification-content {
+  font-weight: 700;
+  margin-left: 0.3em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  flex: 1;
+  margin-right: var(--spacing);
+}
+
+.notification-close {
+  background-color: transparent;
+  box-shadow: none;
+  color: inherit;
+  padding: 0 var(--spacing-md);
+  height: var(--button-height);
+  position: absolute;
+  right: var(--spacing-md);
+  font-size: var(--font-size-lg);
+}
+
+.notification-close::after {
+  content: '\000D7';
+}
+
+body.light .notification {
+  color: var(--background-light);
+}
+
+body.light .notification > i {
+  filter: none;
+}

@@ -1,0 +1,107 @@
+.card {
+  background-color: var(--background-light);
+  border-radius: var(--border-radius);
+  box-sizing: border-box;
+  box-shadow: var(--box-shadow-card);
+}
+
+.card-header {
+  padding: 0 var(--spacing-card);
+  box-sizing: border-box;
+  transition: background-color var(--transition-time);
+  border-radius: var(--border-radius);
+  height: calc(var(--button-height) + 2*var(--spacing-xxsm));
+}
+
+.card-header:hover {
+  background-color: var(--lighter-background);
+}
+
+.card-header i {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+}
+
+.card-header i[icon=chevron] {
+  width: var(--icon-size-lg);
+  height: var(--icon-size-lg);
+}
+
+.card-title {
+  font-size: var(--font-size-sm);
+  color: var(--text-focus);
+  font-weight: 900;
+  text-transform: uppercase;
+  margin: 0em;
+}
+
+.card-content {
+  display: none;
+  box-sizing: border-box;
+  height: auto;
+  padding: var(--spacing-sm) var(--spacing-sm);
+}
+
+.card-content-lg-padding {
+  padding: var(--spacing-md) var(--spacing-card);
+}
+
+.card[open] i[icon="chevron"] {
+  rotate: 180deg;
+}
+
+.card[open] .card-content {
+  display: flex;
+}
+
+.card[open] .card-header {
+  border-bottom: 1px solid var(--border-color);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.card-content-header {
+  background-color: var(--background-light);
+  font-size: var(--font-size-md);
+  padding: var(--spacing-sm) var(--spacing-card);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--box-shadow-card-content-header);
+}
+
+.card-help-title {
+  font-size: var(--font-size-md);
+  margin: 0;
+}
+
+.card-help-description {
+  font-weight: normal;
+  font-size: var(--font-size-md);
+}
+
+.card[open] .card-header:hover {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+#theme-template-content {
+  /* This div is autopopulated and each item has margin-bottom */
+  padding-bottom: var(--spacing-sm);
+}
+
+.card-subsection,
+.card[open] .card-subsection {
+  padding: var(--spacing) var(--spacing);
+  border-left: 0.4em solid var(--accent-primary);
+  background-color: var(--lighter-background);
+  border-bottom: 1px solid var(--border-color);
+  display: none;
+}
+
+.card[open] .card-subsection[open] {
+  display: flex;
+}
+
+.card-content-lg {
+  padding: var(--spacing) var(--spacing);
+}
+

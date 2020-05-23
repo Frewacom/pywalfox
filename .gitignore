@@ -1,6 +1,5 @@
-dist
-/*/*.pyc
-/*/__pycache__
-Session.vim
-TODO
 /node_modules
+/extension/dist
+/artifacts
+/daemon/
+/dist

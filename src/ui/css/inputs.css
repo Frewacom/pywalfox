@@ -1,0 +1,61 @@
+input, .input-container {
+  background-color: var(--button-background);
+  border-radius: var(--border-radius-sm);
+  height: var(--button-height);
+  padding: 0 var(--spacing-xsm);
+  border: none;
+  color: var(--text-focus);
+  font-weight: bold;
+  box-shadow: var(--box-shadow);
+}
+
+.input-container {
+  padding: 0 var(--spacing-xsm);
+  overflow: hidden;
+  box-shadow: var(--box-shadow);
+}
+
+input[type="number"] {
+  text-align: center;
+  width: 2.8rem;
+  -moz-appearance: textfield;
+}
+
+input[type="time"] {
+  padding-left: var(--spacing);
+  padding-right: 0;
+}
+
+input[type="number"]:hover,
+input[type="number"]:focus,
+.setting:hover input[type="number"] {
+  -moz-appearance: number-input;
+}
+
+select {
+  background-color: var(--button-background);
+  border-radius: var(--border-radius-sm);
+  border: none;
+  padding: var(--spacing-sm);
+  padding-right: var(--spacing-xlg);
+  height: var(--button-height);
+  color: var(--text-focus);
+  font-weight: bold;
+  font-size: var(--font-size-sm);
+  -moz-appearance: none;
+  outline: none;
+  background-image: url('../icons/chevron.svg');
+  background-position: calc(100% - var(--spacing-sm));
+  background-repeat: no-repeat;
+  background-size: 1.2rem;
+  background-blend-mode: lighten;
+  box-shadow: var(--box-shadow);
+}
+
+body.light select {
+  background-blend-mode: difference;
+}
+
+select:hover {
+  filter: var(--brightness-filter-dark);
+}

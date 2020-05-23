@@ -1,0 +1,33 @@
+.dialog {
+  position: absolute;
+  top: 0;
+  left: var(--dialog-offset);
+  width: var(--dialog-width);
+  background-color: var(--background-light);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-md);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+  z-index: var(--z-index-dialog);
+  box-shadow: var(--box-shadow-card);
+}
+
+.dialog[open] {
+  display: flex;
+}
+
+#themepicker {
+  padding: var(--spacing-sm) var(--spacing-sm);
+  top: var(--spacing-sm);
+}
+
+#colorpicker-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  row-gap: 0.4rem;
+  margin-bottom: var(--spacing-sm);
+}
