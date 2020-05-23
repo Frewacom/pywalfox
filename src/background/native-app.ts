@@ -84,7 +84,7 @@ export class NativeApp {
       const colors: IPywalColors = this.getData(message);
 
       if (!colors) {
-        this.logError('Pywal colors was read successfully, but no colors was received');
+        this.logError('Pywal colors were read successfully, but no colors were received');
         return;
       }
 

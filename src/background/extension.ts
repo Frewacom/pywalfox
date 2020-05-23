@@ -411,7 +411,7 @@ export class Extension {
 
   private onPywalColorsFetchSuccess(pywalColors: IPywalColors) {
     const colors = extendPywalColors(pywalColors);
-    UI.sendDebuggingOutput('Pywal colors was fetched from daemon and applied successfully');
+    UI.sendDebuggingOutput('Pywal colors were fetched from daemon and applied successfully');
     UI.sendPywalColors(colors);
     this.setThemes(colors);
 
