@@ -18,7 +18,7 @@
     "build": "npm run lint && run-s build:*",
     "build:compile": "npx rollup -c",
     "build:dist": "web-ext build",
-    "build:source": "bestzip artifacts/source.zip extension src tsconfig.json package.json rollup.config.js",
+    "build:source": "bestzip artifacts/source.zip extension src tsconfig.json package.json yarn.lock rollup.config.js LICENSE README.md",
     "lint": "web-ext lint"
   },
   "devDependencies": {
