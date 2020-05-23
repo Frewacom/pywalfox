@@ -1,3 +1,4 @@
+import { sendDebuggingOutput } from '../communication/ui';
 import { AUTO_MODE_INTERVAL_MS } from '../config/general';
 
 import {
@@ -92,7 +93,7 @@ export class AutoMode {
     this.startTime = startTime;
     this.endTime = endTime;
     this.applyUpdatedInterval();
-    console.log('Started auto theme mode');
+    sendDebuggingOutput('Started auto theme mode');
   }
 
   public setStartTime(startTime: ITimeIntervalEndpoint, isApplied: boolean) {
@@ -107,6 +108,6 @@ export class AutoMode {
 
   public stop() {
     this.deleteCurrentTimeout();
-    console.log('Stopped auto theme mode');
+    sendDebuggingOutput('Stopped auto theme mode');
   }
 }

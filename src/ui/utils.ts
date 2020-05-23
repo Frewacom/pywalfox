@@ -1,5 +1,3 @@
-import { ThemeModes, ITimeIntervalEndpoint } from '../definitions';
-
 export function setVersionLabel(element: HTMLElement) {
   element.innerText = `v${browser.runtime.getManifest().version}`;
 }

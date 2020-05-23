@@ -126,6 +126,9 @@ export class Extension {
       case EXTENSION_MESSAGES.THEME_MODE_SET:
         this.setThemeMode(data);
         break;
+      case EXTENSION_MESSAGES.TEMPLATE_THEME_MODE_GET:
+        UI.sendThemeMode(this.state.getTemplateThemeMode(), false);
+        break;
       case EXTENSION_MESSAGES.THEME_FETCH:
         this.nativeApp.requestPywalColors();
         break;
@@ -298,6 +301,7 @@ export class Extension {
 
       UI.sendThemeMode(this.state.getTemplateThemeMode(), false);
     } else {
+      this.autoMode.stop();
       UI.sendThemeMode(mode, true);
     }
   }

@@ -25,6 +25,10 @@ export function requestThemeModeSet(mode: ThemeModes) {
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.THEME_MODE_SET, data: mode });
 }
 
+export function requestTemplateThemeMode() {
+  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.TEMPLATE_THEME_MODE_GET });
+}
+
 export function requestPaletteColorSet(id: string, color: string) {
   const paletteColorData: Partial<IPalette> = { [id]: color };
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.PALETTE_COLOR_SET, data: paletteColorData });

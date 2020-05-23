@@ -28,6 +28,7 @@ export const EXTENSION_MESSAGES = {
   THEME_FETCH: 'theme:fetch',
   THEME_DISABLE: 'theme:disable',
   THEME_MODE_SET: 'theme:mode:set',
+  TEMPLATE_THEME_MODE_GET: 'template:theme:mode:get',
   PALETTE_COLOR_SET: 'palette:color:set',
   TEMPLATE_SET: 'template:set',
   PALETTE_TEMPLATE_SET: 'palette:template:set',
