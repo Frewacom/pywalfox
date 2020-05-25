@@ -69,7 +69,6 @@ export class AutoMode {
     if (this.checkTimeout !== null) {
       clearTimeout(this.checkTimeout);
       this.checkTimeout = null;
-      sendDebuggingOutput('Stopped auto theme mode');
     }
   }
 
@@ -88,6 +87,7 @@ export class AutoMode {
   private applyUpdatedInterval() {
     this.deleteCurrentTimeout();
     this.update();
+    sendDebuggingOutput('Updated interval for auto theme mode');
   }
 
   public start(startTime: ITimeIntervalEndpoint, endTime: ITimeIntervalEndpoint) {
@@ -109,5 +109,6 @@ export class AutoMode {
 
   public stop() {
     this.deleteCurrentTimeout();
+    sendDebuggingOutput('Stopped auto theme mode');
   }
 }
