@@ -31,6 +31,9 @@ With Pywalfox you can:
 First, install the [Firefox add-on](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/).
 
 **To use the add-on you must also install the script that fetches the Pywal colors:**
+
+Some users have had issues with getting the addon and daemon to communicate, despite everything seemingly being setup correctly. The **temporary** fix is to install from pip using `sudo pip install pywalfox` [#31](https://github.com/Frewacom/pywalfox/issues/31). 
+
 1. `pip install pywalfox`
 2. `pywalfox setup`
 2. Restart Firefox
