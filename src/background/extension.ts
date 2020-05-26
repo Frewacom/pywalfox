@@ -139,7 +139,11 @@ export class Extension {
         UI.sendThemeMode(this.state.getTemplateThemeMode(), false);
         break;
       case EXTENSION_MESSAGES.THEME_FETCH:
-        this.nativeApp.requestPywalColors();
+        if (this.state.getConnected()) {
+          this.nativeApp.requestPywalColors();
+        } else {
+          UI.sendNotification('Fetch failed', 'You are not connected to the Pywalfox daemon', true);
+        }
         break;
       case EXTENSION_MESSAGES.THEME_DISABLE:
         this.resetThemes();

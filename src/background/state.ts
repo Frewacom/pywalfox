@@ -143,8 +143,8 @@ export class State {
 
   public getDebuggingInfo() {
     return {
-      connected: this.currentState.connected,
-      version: this.currentState.version
+      connected: this.getVersion(),
+      version: this.getConnected(),
     };
   }
 
@@ -154,6 +154,10 @@ export class State {
 
   public getVersion() {
     return this.currentState.version;
+  }
+
+  public getConnected() {
+    return this.currentState.connected;
   }
 
   public getUpdateMuted() {
