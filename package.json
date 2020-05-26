@@ -15,7 +15,7 @@
     "watch": "npx rollup -cw",
     "browser": "web-ext run",
     "debug": "run-p watch browser",
-    "build": "npm run lint && run-s build:*",
+    "build": "run-s build:* lint",
     "build:compile": "npx rollup -c",
     "build:dist": "web-ext build",
     "build:source": "bestzip artifacts/source.zip extension src tsconfig.json package.json yarn.lock rollup.config.js LICENSE README.md",
