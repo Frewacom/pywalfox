@@ -62,6 +62,15 @@
   100% { transform: rotate(360deg); }
 }
 
+.btn-flat {
+  background-color: var(--lighter-background);
+  box-shadow: none;
+}
+
+.btn-flat:hover {
+  background-color: var(--lighter-background-hover);
+}
+
 .btn-lighter {
   background-color: var(--background-extra);
   color: var(--text-focus);

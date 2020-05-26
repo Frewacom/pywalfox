@@ -75,11 +75,10 @@ export class AutoMode {
   private update() {
     const { result, timeoutDelay } = this.checkIfDayTime(this.startTime, this.endTime);
 
-    if (result === this.isDay) {
-      return;
+    if (result !== this.isDay) {
+      this.callback(result);
     }
 
-    this.callback(result);
     this.checkTimeout = window.setTimeout(this.update.bind(this), timeoutDelay);
     this.isDay = result;
   }
