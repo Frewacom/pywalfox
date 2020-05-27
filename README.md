@@ -4,6 +4,7 @@
 [<img src="https://img.shields.io/amo/stars/pywalfox">](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/)
 [<img src="https://img.shields.io/amo/users/pywalfox">](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/)
 [<img src="https://img.shields.io/amo/dw/pywalfox">](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/)
+[<img src="https://img.shields.io/github/license/frewacom/pywalfox">](https://www.mozilla.org/en-US/MPL/2.0/FAQ/)
 
 > Dynamic theming of Firefox using your Pywal colors
 
@@ -30,12 +31,15 @@ With Pywalfox you can:
 
 First, install the [Firefox add-on](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/).
 
-**To use the add-on you must also install the script that fetches the Pywal colors:**
+**To use the add-on you must also install the native application that fetches the Pywal colors:**
 
 1. `pip install pywalfox`
 2. `pywalfox setup`
 2. Restart Firefox
 3. Click the Pywalfox icon to access the settings and click "Fetch Pywal colors"
+
+|The source code for the Pywalfox native messaging program is located [here](https://github.com/Frewacom/Pywalfox-native).|
+| --- |
 
 *If the Pywal colors could not be fetched, take a look in the [Troubleshooting](#troubleshooting) section below.*
 
