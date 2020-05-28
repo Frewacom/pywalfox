@@ -19,7 +19,7 @@ With Pywalfox you can:
 - [x] Have bold text, styled dropdowns and much more (optional)
 - [x] Easily update the browser theme using the add-on and/or your terminal
 
-![](images/demo.gif)
+![](images/neon_demo.gif)
 
 ## Requirements
 - Python (both 2.7.x and 3.x versions are supported)
