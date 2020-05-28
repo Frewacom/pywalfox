@@ -143,8 +143,8 @@ export class State {
 
   public getDebuggingInfo() {
     return {
-      connected: this.getVersion(),
-      version: this.getConnected(),
+      connected: this.getConnected(),
+      version: this.getVersion(),
     };
   }
 
