@@ -84,6 +84,11 @@ export class Extension {
     return DEFAULT_THEME_LIGHT;
   }
 
+  private startAutoThemeMode() {
+    const { start, end } = this.state.getAutoTimeInterval();
+    this.autoMode.start(start, end);
+  }
+
   private setOption(optionData: IOptionSetData) {
     if (!optionData) {
       UI.sendDebuggingOutput('Tried to set option, but no data was provided', true);
@@ -308,8 +313,7 @@ export class Extension {
 
     if (mode === ThemeModes.Auto) {
       if (this.state.getApplied()) {
-        const { start, end } = this.state.getAutoTimeInterval();
-        this.autoMode.start(start, end);
+        this.startAutoThemeMode();
       }
 
       UI.sendThemeMode(this.state.getTemplateThemeMode(), false);
@@ -413,15 +417,20 @@ export class Extension {
     this.state.setConnected(false);
   }
 
-  private onPywalColorsFetchSuccess(pywalColors: IPywalColors) {
+  private async onPywalColorsFetchSuccess(pywalColors: IPywalColors) {
     const colors = extendPywalColors(pywalColors);
     UI.sendDebuggingOutput('Pywal colors were fetched from daemon and applied successfully');
     UI.sendPywalColors(colors);
+
+    // We must make sure to reset all custom colors for both theme modes or
+    // previously selected custom colors will still be active on theme mode switch,
+    // even after a Fetch.
+    await this.state.resetAllCustomColors();
+
     this.setThemes(colors);
 
     if (this.state.getThemeMode() === ThemeModes.Auto) {
-      const { start, end } = this.state.getAutoTimeInterval();
-      this.autoMode.start(start, end);
+      this.startAutoThemeMode();
     }
   }
 
@@ -482,8 +491,7 @@ export class Extension {
     // set if the pages were reopened on launch.
     if (savedColorscheme !== null) {
       if (currentThemeMode === ThemeModes.Auto) {
-        const { start, end } = this.state.getAutoTimeInterval();
-        this.autoMode.start(start, end);
+        this.startAutoThemeMode();
       }
 
       this.setSavedColorscheme(savedColorscheme);

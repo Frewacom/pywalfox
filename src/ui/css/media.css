@@ -50,7 +50,7 @@
     height: auto;
     left: 0;
     top: 0;
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-card);
     flex-direction: row;
     padding: var(--spacing) var(--spacing-card);
   }

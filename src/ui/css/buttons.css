@@ -99,7 +99,7 @@ body.light .btn-lighter {
 }
 
 .btn-darker[selected] {
-  background-color: var(--text);
+  background-color: var(--accent-secondary);
   color: var(--background);
 }
 

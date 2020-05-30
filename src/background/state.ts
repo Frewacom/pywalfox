@@ -54,8 +54,8 @@ export class State {
         pywalColors: null,
         colorscheme: null,
         customColors: {
-          [ThemeModes.Light]: {},
-          [ThemeModes.Dark]: {},
+          [ThemeModes.Light]: null,
+          [ThemeModes.Dark]: null,
         },
         templates: {
           [ThemeModes.Light]: DEFAULT_THEME_LIGHT,
@@ -314,6 +314,15 @@ export class State {
           ...this.currentState.theme.customColors,
           [currentThemeMode]: customColors,
         },
+      },
+    });
+  }
+
+  public resetAllCustomColors() {
+    return this.set({
+      theme: {
+        ...this.currentState.theme,
+        customColors: this.initialState.theme.customColors,
       },
     });
   }

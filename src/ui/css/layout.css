@@ -160,6 +160,10 @@ body.light .separator {
   margin-bottom: var(--spacing-lg);
 }
 
+.margin-bottom-card {
+  margin-bottom: var(--spacing-card);
+}
+
 .padding-v {
   padding-top: var(--spacing);
   padding-bottom: var(--spacing);

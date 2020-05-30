@@ -69,6 +69,7 @@
 }
 
 .card-help-title {
+  color: var(--text-focus);
   font-size: var(--font-size-md);
   margin: 0;
 }
