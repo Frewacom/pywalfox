@@ -82,6 +82,10 @@ body.applied .color-preview {
   font-weight: bold;
 }
 
+#debugging-connected {
+  color: var(--text-focus);
+}
+
 #debugging-version {
   padding: var(--spacing-xsm) var(--spacing-sm);
   color: var(--background);
