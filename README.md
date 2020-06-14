@@ -17,7 +17,8 @@ With Pywalfox you can:
 - [x] Customize the colors of almost every UI element
 - [x] Automatically theme DuckDuckGo :duck: (optional)
 - [x] Have bold text, styled dropdowns and much more (optional)
-- [x] Easily update the browser theme using the add-on and/or your terminal
+- [x] Easily update the browser theme using the add-on and/or the command line
+- [x] Automatically switch between dark- and light theme based on the time of day
 
 ![](images/neon_demo.gif)
 
@@ -25,6 +26,7 @@ With Pywalfox you can:
 - Python (both 2.7.x and 3.x versions are supported)
 - Pywal
 - Firefox
+- [Pywalfox native messaging application](https://github.com/Frewacom/pywalfox-native)
 - Linux/MacOS/Windows
 
 ## Installation
@@ -38,12 +40,9 @@ First, install the [Firefox add-on](https://addons.mozilla.org/en-US/firefox/add
 2. Restart Firefox
 3. Click the Pywalfox icon to access the settings and click "Fetch Pywal colors"
 
-|The source code for the Pywalfox native messaging program is located [here](https://github.com/Frewacom/Pywalfox-native).|
-| --- |
+If the Pywal colors could not be fetched, take a look in the [Troubleshooting](#troubleshooting) section below.
 
-*If the Pywal colors could not be fetched, take a look in the [Troubleshooting](#troubleshooting) section below.*
-
-> :warning:  **Some users have had issues with getting the addon and daemon to communicate, despite everything seemingly being setup correctly. A *temporary* fix is to install from pip using** `sudo pip install pywalfox`**, see [#31](https://github.com/Frewacom/pywalfox/issues/31).** 
+> **Some users have had issues with getting the addon and daemon to communicate, despite everything seemingly being setup correctly. You can currently fix this by installing from pip using `sudo pip install pywalfox`, see [#31](https://github.com/Frewacom/pywalfox/issues/31).**
 
 ## Usage
 
@@ -76,7 +75,7 @@ Modifying the theme is very straightforward; find the element that you want to c
 #### Theme modes
 There are three different theme modes, Dark, Light and Auto. Selecting Auto will automatically switch between the dark and light modes based on a selected time interval in the "General" section of the extension.
 
-> :warning:  **Note that dark- and light mode have *separate* theme- and palette templates. When modifying a template, you are always modifiying the template for the currently selected mode (dark/light).**
+> **Note that dark- and light mode have *separate* theme- and palette templates. When modifying a template, you are always modifiying the template for the currently selected mode (dark/light).**
 
 ### Further theming with the included userChrome.css and userContent.css
 Pywalfox includes custom CSS sheets that you can enable.
@@ -123,6 +122,11 @@ pip uninstall pywalfox  # Removes the pywalfox executable
    After you have copied over the manifest to the correct path, make sure to also update the `path` property in the copied manifest. The `path` should point to `<path-to-python-site-packages>/pywalfox/bin/main.sh` (or `win.bat` if you are on Windows).
 
    If it is still not working, you could try reinstalling Firefox, see [#14](https://github.com/Frewacom/pywalfox/issues/14).
+
+- `stderr output from native app pywalfox: <installation-path>/main.sh: line 3: pywalfox: command not found`
+  Pywalfox assumes that the `pywalfox` executable is in your `PATH`.
+  
+  If you can not run `pywalfox` from the command line (without specifying an absolute path), you must either add the path to the execuatable to your `PATH` variable, or move the executable to a path that already is in your `PATH`. 
 
 If you encounter any other errors [this troubleshooting guide](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#Troubleshooting
 ) from Mozilla may be of use.
