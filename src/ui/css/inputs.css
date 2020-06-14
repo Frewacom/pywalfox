@@ -5,6 +5,7 @@ input, .input-container {
   padding: 0 var(--spacing-xsm);
   border: none;
   color: var(--text-focus);
+  font-size: var(--font-size);
   font-weight: bold;
   box-shadow: var(--box-shadow);
 }
