@@ -18,22 +18,23 @@ With Pywalfox you can:
 - [x] Automatically theme DuckDuckGo :duck: (optional)
 - [x] Have bold text, styled dropdowns and much more (optional)
 - [x] Easily update the browser theme using the add-on and/or the command line
-- [x] Automatically switch between dark- and light theme based on the time of day
+- [x] Automatically switch between a dark and a light theme based on the time of day
 
 ![](images/neon_demo.gif)
 
 ## Requirements
-- Python (both 2.7.x and 3.x versions are supported)
-- Pywal
 - Firefox
+- Python (version 2.7.x or 3.x)
+- [Pywal](https://github.com/dylanaraps/pywal)
 - [Pywalfox native messaging application](https://github.com/Frewacom/pywalfox-native)
-- Linux/MacOS/Windows
+
+Pywalfox is supported on GNU/Linux, MacOS and Windows.
 
 ## Installation
 
 First, install the [Firefox add-on](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/).
 
-**To use the add-on you must also install the native application that fetches the Pywal colors:**
+**To use the add-on you must also install the companion native messaging application that fetches the Pywal colors:**
 
 1. `pip install pywalfox`
 2. `pywalfox setup`
@@ -42,12 +43,14 @@ First, install the [Firefox add-on](https://addons.mozilla.org/en-US/firefox/add
 
 If the Pywal colors could not be fetched, take a look in the [Troubleshooting](#troubleshooting) section below.
 
-> **Some users have had issues with getting the addon and daemon to communicate, despite everything seemingly being setup correctly. You can currently fix this by installing from pip using `sudo pip install pywalfox`, see [#31](https://github.com/Frewacom/pywalfox/issues/31).**
+> **Some users have had issues with getting the addon and the native messaging application to communicate, despite everything seemingly being setup correctly. You can currently fix this by installing from pip with super user privileges, i.e. `sudo pip install pywalfox`, see [#31](https://github.com/Frewacom/pywalfox/issues/31).**
 
 ## Usage
 
 ### Updating the theme using the terminal
-If you are using some script for theming your system and do not want to manually refetch your Pywal colors using the Pywalfox settings page, you can trigger an update of the browser theme by running `pywalfox update` in your terminal.
+Run `pywalfox update` in your terminal to trigger an update of the browser theme. 
+This allows you to update the browser theme without using the add-on GUI. 
+The command can be used to integrate Pywalfox into e.g. system theming scripts.
 
 ### Customization
 Pywalfox comes with extensive customization options.
@@ -75,7 +78,7 @@ Modifying the theme is very straightforward; find the element that you want to c
 #### Theme modes
 There are three different theme modes, Dark, Light and Auto. Selecting Auto will automatically switch between the dark and light modes based on a selected time interval in the "General" section of the extension.
 
-> **Note that dark- and light mode have *separate* theme- and palette templates. When modifying a template, you are always modifiying the template for the currently selected mode (dark/light).**
+> **Note that dark- and light mode have *separate* theme and palette templates. When modifying a template, you are always modifiying the template for the currently selected mode (dark/light).**
 
 ### Further theming with the included userChrome.css and userContent.css
 Pywalfox includes custom CSS sheets that you can enable.
@@ -85,9 +88,9 @@ The scrollbar can also be hidden for a cleaner look.
 To enable the custom CSS sheets:
 1. Navigate to `about:config` in Firefox
 2. Set `toolkit.legacyUserProfileCustomizations.stylesheets` to `true`
-3. For further theming of context menus etc., enable the "Use included userChrome.css" option under General settings in the Pywalfox settings page.
-
-To hide the scrollbar, enable the "Use included userContent.css" option.
+3. Under "General" in the Pywalfox settings:
+   - Enable "Use included userChrome.css" to theme context menus and other details
+   - Enable "Use included userContent.css" to hide the scrollbar
 
 ## Uninstall
 ```bash
@@ -97,7 +100,9 @@ pip uninstall pywalfox  # Removes the pywalfox executable
 
 ## Troubleshooting
 * If you updated Pywalfox and have issues, try re-running the setup script as described in [Installation](#installation) above.
-* If you have a permission error when running `pywalfox setup`, you can (probably) fix it by doing one of the following. Make sure to use the path from the setup output.
+* Check the log in the Debugging section at the bottom of the Pywalfox settings page
+
+* If you have a permission error when running `pywalfox setup`, you can (probably) fix it by doing one of the following: 
 
   - `chown <username> ~/.mozilla/native-messaging-hosts`
 
@@ -105,14 +110,16 @@ pip uninstall pywalfox  # Removes the pywalfox executable
 
   - `rm -r ~/.mozilla/native-messaging-hosts`; the setup script will then recreate it with the correct permissions.
 
-* Take a look at the Debugging output in the Pywalfox settings page
+      *Make sure to use the path from the setup output!*
 
-  - If the output says `Received unhandled message action: invalidMessage`, you are using an outdated daemon version. Make sure to install the newest one using `pip` by following the instructions in the [Installation](#installation) above.
-* Make sure that `~/.cache/wal/colors` exists and contains the colors generated by Pywal
-* Make sure that `path` in `~/<native-messaging-hosts-folder>/pywalfox.json` is correct and is a valid path
-* Take a look in the Browser console for errors, i.e. `Tools > Web developer > Browser console` in Firefox
+  - If you get `Received unhandled message action: invalidMessage`, you are using an outdated daemon version. 
+  Install the newest one using `pip` by following the instructions in the [Installation](#installation).
+  
+* Verify that `~/.cache/wal/colors` exists and contains the colors generated by Pywal
+* Verify that `path` in `~/<native-messaging-hosts-folder>/pywalfox.json` is a valid path
+* Check the Firefox browser console for errors (`Tools > Web developer > Browser console`) 
 
-### Errors in browser console
+### Errors in the browser console
 - `ExtensionError: No such native application pywalfox`:
 
    The manifest is not installed properly. Try installing the manifest manually by following the instructions [here](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_manifests.).
@@ -121,7 +128,7 @@ pip uninstall pywalfox  # Removes the pywalfox executable
 
    After you have copied over the manifest to the correct path, make sure to also update the `path` property in the copied manifest. The `path` should point to `<path-to-python-site-packages>/pywalfox/bin/main.sh` (or `win.bat` if you are on Windows).
 
-   If it is still not working, you could try reinstalling Firefox, see [#14](https://github.com/Frewacom/pywalfox/issues/14).
+   If it still does not work, try reinstalling Firefox, see [#14](https://github.com/Frewacom/pywalfox/issues/14).
 
 - `stderr output from native app pywalfox: <installation-path>/main.sh: line 3: pywalfox: command not found`
   Pywalfox assumes that the `pywalfox` executable is in your `PATH`.
@@ -131,7 +138,7 @@ pip uninstall pywalfox  # Removes the pywalfox executable
 If you encounter any other errors [this troubleshooting guide](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#Troubleshooting
 ) from Mozilla may be of use.
 
-Note that the errors in the `Browser Console` is not limited to just Pywalfox.
+*Note that the errors in the `Browser Console` is not limited to just Pywalfox.*
 
 ## Development setup
 ```bash
