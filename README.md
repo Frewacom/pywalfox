@@ -49,7 +49,7 @@ If the Pywal colors could not be fetched, take a look in the [Troubleshooting](#
 
 ### Updating the theme using the terminal
 Run `pywalfox update` in your terminal to trigger an update of the browser theme. 
-This allows you to update the browser theme without using the add-on GUI. 
+This allows you to update the browser theme without having to press "Fetch Pywal colors" in the add-on GUI. 
 The command can be used to integrate Pywalfox into e.g. system theming scripts.
 
 ### Customization
@@ -73,12 +73,13 @@ A notification should pop up, telling you it was saved successfully.
 Theme templates define the look of your browser theme. 
 You can modify every element of the browser that is currently supported by the [Firefox Theme API](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme).
 
-Modifying the theme is very straightforward; find the element that you want to change and select a palette color from the dropdown. When you are done, click "Save template".
+Modifying the theme is very straightforward; find the element that you want to change and select a palette color from the dropdown. 
+When you are done, click "Save template".
 
 #### Theme modes
 There are three different theme modes, Dark, Light and Auto. Selecting Auto will automatically switch between the dark and light modes based on a selected time interval in the "General" section of the extension.
 
-> **Note that dark- and light mode have *separate* theme and palette templates. When modifying a template, you are always modifiying the template for the currently selected mode (dark/light).**
+> **Note that the dark and light modes have *separate* theme and palette templates. When modifying a template, you are always modifiying the template for the currently selected mode (dark/light).**
 
 ### Further theming with the included userChrome.css and userContent.css
 Pywalfox includes custom CSS sheets that you can enable.
