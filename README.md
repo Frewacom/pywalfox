@@ -6,24 +6,24 @@
 [<img src="https://img.shields.io/amo/dw/pywalfox">](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/)
 [<img src="https://img.shields.io/github/license/frewacom/pywalfox">](https://www.mozilla.org/en-US/MPL/2.0/FAQ/)
 
-> Dynamic theming of Firefox using your Pywal colors
+> Dynamic theming of Firefox (and Thunderbird) using your Pywal colors
 
-- Tired of Firefox not respecting your gorgeous Pywal colors like the rest of your system?
+- Tired of Firefox and Thunderbird not respecting your gorgeous Pywal colors like the rest of your system?
 - Looking to rack up some karma :arrow_up: on [/r/unixporn](https://reddit.com/r/unixporn)?
 
-Introducing **Pywalfox**, an [add-on for Firefox](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/) that themes the browser with your [Pywal](https://github.com/dylanaraps/pywal) colors using the official [Firefox Theme API](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme)!
+Introducing **Pywalfox**, an add-on for [Firefox](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/) and [Thunderbird](https://addons.thunderbird.net/sv-SE/thunderbird/addon/pywalfox/) that themes the browser with your [Pywal](https://github.com/dylanaraps/pywal) colors using the official [Theme API](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme) from Mozilla!
 
 With Pywalfox you can:
 - [x] Customize the colors of almost every UI element
-- [x] Automatically theme DuckDuckGo :duck: (optional)
+- [x] Automatically theme DuckDuckGo :duck: searches in Firefox (optional)
 - [x] Have bold text, styled dropdowns and much more (optional)
-- [x] Easily update the browser theme using the add-on and/or the command line
+- [x] Easily update the theme using the add-on and/or the command line
 - [x] Automatically switch between a dark and a light theme based on the time of day
 
 ![](images/neon_demo.gif)
 
 ## Requirements
-- Firefox
+- Firefox and/or Thunderbird
 - Python (version 2.7.x or 3.x)
 - [Pywal](https://github.com/dylanaraps/pywal)
 - [Pywalfox native messaging application](https://github.com/Frewacom/pywalfox-native)
@@ -32,16 +32,18 @@ Pywalfox is supported on GNU/Linux, MacOS and Windows.
 
 ## Installation
 
-First, install the [Firefox add-on](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/).
+First, install the Pywalfox add-on for [Firefox](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/) and/or for [Thunderbird](https://addons.thunderbird.net/sv-SE/thunderbird/addon/pywalfox/).
 
 **To use the add-on you must also install the companion native messaging application that fetches the Pywal colors:**
 
 1. `pip install pywalfox`
 2. `pywalfox setup`
-2. Restart Firefox
-3. Click the Pywalfox icon to access the settings and click "Fetch Pywal colors"
+2. Restart Firefox and/or Thunderbird
+3. Click the Pywalfox icon in the UI to access the settings and click "Fetch Pywal colors"
 
 If the Pywal colors could not be fetched, take a look in the [Troubleshooting](#troubleshooting) section below.
+
+> **If Firefox and Thunderbird are both running at the same time, currently only one of the two will update when issuing `pywalfox update` in the terminal, see [#38](https://github.com/Frewacom/pywalfox/issues/38).**
 
 > **Some users have had issues with getting the addon and the native messaging application to communicate, despite everything seemingly being setup correctly. You can currently fix this by installing from pip with super user privileges, i.e. `sudo pip install pywalfox`, see [#31](https://github.com/Frewacom/pywalfox/issues/31).**
 
@@ -71,7 +73,7 @@ A notification should pop up, telling you it was saved successfully.
 
 #### Theme templates
 Theme templates define the look of your browser theme. 
-You can modify every element of the browser that is currently supported by the [Firefox Theme API](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme).
+You can modify every element of the browser that is currently supported by the [Theme API](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme).
 
 Modifying the theme is very straightforward; find the element that you want to change and select a palette color from the dropdown. 
 When you are done, click "Save template".
@@ -81,9 +83,9 @@ There are three different theme modes, Dark, Light and Auto. Selecting Auto will
 
 > **Note that the dark and light modes have *separate* theme and palette templates. When modifying a template, you are always modifiying the template for the currently selected mode (dark/light).**
 
-### Further theming with the included userChrome.css and userContent.css
-Pywalfox includes custom CSS sheets that you can enable.
-The custom CSS sheets applies your Pywal colors to the context menus and other elements of the browser that are not available using the [Firefox Theme API](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme).
+### Further theming with the included userChrome.css and userContent.css in Firefox
+Pywalfox includes custom CSS sheets that you can enable for Firefox.
+The custom CSS sheets applies your Pywal colors to the context menus and other elements of the browser that are not available using the [Theme API](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme).
 The scrollbar can also be hidden for a cleaner look.
 
 To enable the custom CSS sheets:
