@@ -43,8 +43,6 @@ First, install the Pywalfox add-on for [Firefox](https://addons.mozilla.org/en-U
 
 If the Pywal colors could not be fetched, take a look in the [Troubleshooting](#troubleshooting) section below.
 
-> **If Firefox and Thunderbird are both running at the same time, currently only one of the two will update when issuing `pywalfox update` in the terminal, see [#38](https://github.com/Frewacom/pywalfox/issues/38).**
-
 > **Some users have had issues with getting the addon and the native messaging application to communicate, despite everything seemingly being setup correctly. You can currently fix this by installing from pip with super user privileges, i.e. `sudo pip install pywalfox`, see [#31](https://github.com/Frewacom/pywalfox/issues/31).**
 
 ## Usage
@@ -53,6 +51,8 @@ If the Pywal colors could not be fetched, take a look in the [Troubleshooting](#
 Run `pywalfox update` in your terminal to trigger an update of the browser theme. 
 This allows you to update the browser theme without having to press "Fetch Pywal colors" in the add-on GUI. 
 The command can be used to integrate Pywalfox into e.g. system theming scripts.
+
+> **If Pywalfox has been installed for both Firefox and Thunderbird and the two are running at the same time, currently only one of them will update when issuing `pywalfox update` in the terminal, see [#38](https://github.com/Frewacom/pywalfox/issues/38).**
 
 ### Customization
 Pywalfox comes with extensive customization options.
