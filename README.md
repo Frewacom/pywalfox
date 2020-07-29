@@ -32,7 +32,7 @@ Pywalfox is supported on GNU/Linux, MacOS and Windows.
 
 ## Installation
 
-First, install the Pywalfox add-on for [Firefox](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/) and/or for [Thunderbird](https://addons.thunderbird.net/sv-SE/thunderbird/addon/pywalfox/).
+First, install the Pywalfox add-on for [Firefox](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/) and/or for [Thunderbird](https://addons.thunderbird.net/en-US/thunderbird/addon/pywalfox/).
 
 **To use the add-on you must also install the companion native messaging application that fetches the Pywal colors:**
 
