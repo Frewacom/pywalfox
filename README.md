@@ -1,4 +1,4 @@
-<img align="left" width="48" height="48" src="extension/icons/icon-48.png" alt="Pywalfox icon">
+<img align="left" width="48" height="80" src="images/icon-readme.png" alt="Pywalfox icon">
 
 # Pywalfox
 
@@ -34,9 +34,9 @@ Pywalfox is supported on GNU/Linux, MacOS and Windows.
 ## Installation
 
 1. `pip install pywalfox`
-2. `pywalfox setup` 
-3. Get the Pywalfox add-on for 
-   - [Firefox](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/) 
+2. `pywalfox setup`
+3. Get the Pywalfox add-on for
+   - [Firefox](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/)
    - [Thunderbird](https://addons.thunderbird.net/en-US/thunderbird/addon/pywalfox/)
 4. Restart Firefox and/or Thunderbird
 5. Click the Pywalfox icon in the Firefox/Thunderbird UI to access the theme settings and click "Fetch Pywal colors". A theme matching your Pywal colors should now be applied.
