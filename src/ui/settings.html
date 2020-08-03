@@ -52,10 +52,10 @@
           <aside class="dialog" id="colorpicker">
             <div id="colorpicker-grid"></div>
             <div class="box" id="colorpicker-buttons">
-              <div class="box btn btn-default btn-sm" id="colorpicker-custom-container">
+              <button class="box btn btn-default btn-sm" id="colorpicker-custom-container">
                 <label for="colorpicker-custom" id="colorpicker-custom-label" class="clickable">Custom</label>
-                <input id="colorpicker-custom" class="clickable" type="color">
-              </div>
+                <input id="colorpicker-custom" class="clickable" type="color" tabindex="-1">
+              </button>
               <button class="btn btn-primary btn-sm margin-top-sm" id="colorpicker-undo">Undo</button>
             </div>
           </aside>
@@ -132,7 +132,7 @@
             <h3 class="card-help-title">Creating a custom palette</h3>
             <p class="card-help-description">
               The palette is a collection of Pywal colors and it is generated when "Fetch Pywal colors" is clicked.
-              A custom palette template allows you to manually select which Pywal colors should be used for the 
+              A custom palette template allows you to manually select which Pywal colors should be used for the
               background, text, etc.
               <br><br>
               The easiest way to create a palette template is to select colors using the "Palette" section above and then

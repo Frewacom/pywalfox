@@ -23,7 +23,7 @@ a {
   font-weight: bold;
 }
 
-a:hover {
+a:hover, a:focus {
   filter: var(--brightness-filter);
 }
 

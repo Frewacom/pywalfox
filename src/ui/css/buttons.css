@@ -7,7 +7,6 @@
   font-weight: 700;
   font-size: var(--font-size-md);
   cursor: pointer;
-  outline: none;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -67,7 +66,8 @@
   box-shadow: none;
 }
 
-.btn-flat:hover {
+.btn-flat:hover,
+.btn-flat:focus {
   background-color: var(--lighter-background-hover);
 }
 
@@ -78,7 +78,8 @@
   box-shadow: var(--box-shadow);
 }
 
-.btn-lighter:hover {
+.btn-lighter:hover,
+.btn-lighter:focus {
   background-color: var(--lighter-background-hover);
   filter: none;
 }
@@ -94,7 +95,8 @@ body.light .btn-lighter {
   width: 4em;
 }
 
-.btn-darker:hover {
+.btn-darker:hover,
+.btn-darker:focus {
   filter: var(--brightness-filter-light);
 }
 
@@ -103,7 +105,7 @@ body.light .btn-lighter {
   color: var(--background);
 }
 
-body.light .btn-darker:hover {
+body.light .btn-darker:hover, body.light .btn-darker:focus {
   filter: var(--brightness-filter-dark);
 }
 
@@ -112,6 +114,7 @@ body.light .btn-darker[selected] {
 }
 
 .btn-darker[selected]:hover,
+.btn-darker[selected]:focus,
 body.light .btn-darker[selected] {
   filter: none;
 }
@@ -142,12 +145,14 @@ body.light .btn-darker[selected] {
   left: unset;
 }
 
-#theme-select.dialog-arrow[selected]:hover::after {
+#theme-select.dialog-arrow[selected]:hover::after,
+#theme-select.dialog-arrow[selected]:focus::after {
   /* The filter on the button changes the brightness of the arrow as well */
   filter: brightness(85%);
 }
 
-body.light #theme-select.dialog-arrow[selected]:hover::after {
+body.light #theme-select.dialog-arrow[selected]:hover::after,
+body.light #theme-select.dialog-arrow[selected]:focus::after {
   filter: none;
 }
 
@@ -192,8 +197,14 @@ body.light #theme-select.dialog-arrow[selected]:hover::after {
   transition-property: border-radius, border-color;
 }
 
-.btn-palette-color:hover {
+.btn-palette-color:hover,
+.btn-palette-color:focus {
   border-color: var(--text-focus);
+}
+
+.btn-color[selected],
+.btn-palette-color:focus {
+  outline: none;
 }
 
 .btn-palette-color[selected] {
@@ -221,11 +232,13 @@ body.light .btn-dialog[selected] {
   color: var(--background-light);
 }
 
-.btn-dialog[selected]:hover {
+.btn-dialog[selected]:hover,
+.btn-dialog[selected]:focus {
   background-color: var(--accent-secondary);
 }
 
-.btn-dialog:hover {
+.btn-dialog:hover,
+.btn-dialog:focus {
   background-color: var(--lighter-background-hover);
 }
 
@@ -258,7 +271,9 @@ body.light .btn-dialog[selected] > i {
 }
 
 .btn-primary:hover,
-.btn-secondary:hover {
+.btn-primary:focus,
+.btn-secondary:hover,
+.btn-secondary:focus {
   filter: var(--brightness-filter);
 }
 
@@ -272,11 +287,13 @@ body.light .btn-secondary {
   color: var(--text-focus);
 }
 
-.btn-default:hover {
+.btn-default:hover,
+.btn-default:focus {
   filter: var(--brightness-filter);
 }
 
-body.light .btn-default:hover {
+body.light .btn-default:hover,
+body.light .btn-default:focus {
   filter: none;
 }
 

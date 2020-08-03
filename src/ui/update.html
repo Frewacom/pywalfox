@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>Pywalfox - Update needed</title>
+    <title>Pywalfox - Update/install required</title>
     <link rel="stylesheet" href="./bundle.min.css">
   </head>
   <body>
@@ -13,35 +13,34 @@
       </header>
       <main class="container">
         <section class="card expand space-between margin-bottom-lg" open>
-          <div class="card-header expand row v-center">
+          <div class="card-header no-hover expand row v-center">
             <i icon="message"></i>
-            <p class="card-title">Daemon update required</p>
+            <p class="card-title">Native messaging application</p>
           </div>
           <div class="card-content card-subsection column expand align-left" open>
-            <h3 class="card-help-title">Update information</h3>
+            <h3 class="card-help-title">Why am I getting this?</h3>
             <p class="card-help-description">
-              The currently installed version of the browser extension does not support the installed native application.<br>
-              Not updating will most likely lead to unexpected behaviour and bugs.<br><br>
+              The installed Pywalfox native messaging application is outdated or it may not be installed correctly.<br>
+              If you do not fix this, you may experience issues and certain features may not be available.<br><br>
 
-              If you encounter issues with the new version of daemon, refer to the open issues on GitHub (or create a new one).
+              If you encounter bugs with the new version, refer to the open issues on GitHub (or create a new one).<br>
             </p>
-            <a class="row v-center margin-top-sm btn btn-sm btn-flat" href="https://github.com/frewacom/pywalfox/issues" target="_blank" rel="noopener noreferrer">
-              <i icon="external-link"></i>
-              GitHub issues
-            </a>
+            <div class="row v-center margin-top-sm">
+              <a class="row v-center btn btn-sm btn-flat margin-right-sm" href="https://github.com/frewacom/pywalfox/issues" target="_blank" rel="noopener noreferrer">
+                <i icon="external-link"></i>
+                GitHub issues
+              </a>
+              <a class="row v-center btn btn-sm btn-flat" href="https://github.com/frewacom/pywalfox#installation" target="_blank" rel="noopener noreferrer">
+                <i icon="external-link"></i>
+                Installation guide
+              </a>
+            </div>
           </div>
           <div class="card-content card-content-lg-padding padding-v-lg column expand">
             <p class="margin-bottom">
-              If you are migrating from extension version 1.5.3, you need to remove the old daemon located in the
-              "Pywalfox" repo. You can safely remove the entire folder.<br><br>
-
-              To install the new daemon, refer to the installation guide on the GitHub page:
-              <a href="https://github.com/frewacom/pywalfox#installation" target="_blank" rel="noopener noreferrer">
-                Installation guide
-              </a>
+              If you have previously installed the Pywalfox native messaging application,
+              you can simply run the following command to update to the latest version (assuming you installed it using pip):
             </p>
-            <div class="h-separator expand"></div>
-            <p class="margin-bottom">If you installed it using pip you can run the following command:</p>
             <code class="margin-bottom">
               pip install --upgrade pywalfox
             </code>

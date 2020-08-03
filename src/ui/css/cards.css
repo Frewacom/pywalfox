@@ -17,6 +17,10 @@
   background-color: var(--lighter-background);
 }
 
+.card-header.no-hover:hover {
+  background-color: var(--background-light);
+}
+
 .card-header i {
   width: var(--icon-size-sm);
   height: var(--icon-size-sm);
