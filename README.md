@@ -1,3 +1,5 @@
+<img align="left" src="extension/icons/icon-48.png" alt="">
+
 # Pywalfox
 
 [<img src="https://img.shields.io/amo/v/pywalfox">](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/)
@@ -26,24 +28,22 @@ With Pywalfox you can:
 - Firefox and/or Thunderbird
 - Python (version 2.7.x or 3.x)
 - [Pywal](https://github.com/dylanaraps/pywal)
-- [Pywalfox native messaging application](https://github.com/Frewacom/pywalfox-native)
 
 Pywalfox is supported on GNU/Linux, MacOS and Windows.
 
 ## Installation
 
-First, install the Pywalfox add-on for [Firefox](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/) and/or for [Thunderbird](https://addons.thunderbird.net/en-US/thunderbird/addon/pywalfox/).
-
-**To use the add-on you must also install the companion native messaging application that fetches the Pywal colors:**
-
 1. `pip install pywalfox`
-2. `pywalfox setup`
-2. Restart Firefox and/or Thunderbird
-3. Click the Pywalfox icon in the UI to access the settings and click "Fetch Pywal colors"
+2. `pywalfox setup` 
+3. Get the Pywalfox add-on for 
+   - [Firefox](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/) 
+   - [Thunderbird](https://addons.thunderbird.net/en-US/thunderbird/addon/pywalfox/)
+4. Restart Firefox and/or Thunderbird
+5. Click the Pywalfox icon in the Firefox/Thunderbird UI to access the theme settings and click "Fetch Pywal colors". A theme matching your Pywal colors should now be applied.
 
-If the Pywal colors could not be fetched, take a look in the [Troubleshooting](#troubleshooting) section below.
+The Python package installed through `pip` is the [Pywalfox native messaging application](https://github.com/Frewacom/pywalfox-native), which fetches your Pywal colors for the Pywalfox add-on to use with the [Theme API](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme).
 
-> **Some users have had issues with getting the addon and the native messaging application to communicate, despite everything seemingly being setup correctly. You can currently fix this by installing from pip with super user privileges, i.e. `sudo pip install pywalfox`, see [#31](https://github.com/Frewacom/pywalfox/issues/31).**
+*Please review the [Troubleshooting](#troubleshooting) section if something is not working correctly.*
 
 ## Usage
 
@@ -51,8 +51,6 @@ If the Pywal colors could not be fetched, take a look in the [Troubleshooting](#
 Run `pywalfox update` in your terminal to trigger an update of the browser theme.
 This allows you to update the browser theme without having to press "Fetch Pywal colors" in the add-on GUI.
 The command can be used to integrate Pywalfox into e.g. system theming scripts.
-
-> **If Pywalfox has been installed for both Firefox and Thunderbird and the two are running at the same time, currently only one of them will update when issuing `pywalfox update` in the terminal, see [#38](https://github.com/Frewacom/pywalfox/issues/38).**
 
 ### Customization
 Pywalfox comes with extensive customization options.
@@ -102,6 +100,9 @@ pip uninstall pywalfox  # Removes the pywalfox executable
 ```
 
 ## Troubleshooting
+* Some users have had issues with getting the add-on and the native messaging application to communicate, despite everything seemingly being setup correctly. A possbile solution is to install from `pip` with super user privileges, i.e. `sudo pip install pywalfox`, see [#31](https://github.com/Frewacom/pywalfox/issues/31).
+Another solution not requiring a global install is proposed [here](https://github.com/Frewacom/pywalfox/issues/31#issuecomment-645768818).
+
 * If you updated Pywalfox and have issues, try re-running the setup script as described in [Installation](#installation) above.
 * Check the log in the Debugging section at the bottom of the Pywalfox settings page
 
@@ -155,5 +156,3 @@ To build the extension into a zip:
 ```bash
 yarn run build
 ```
-## Contributors
-[![](https://sourcerer.io/fame/Frewacom/Frewacom/Pywalfox/images/0)](https://sourcerer.io/fame/Frewacom/Frewacom/Pywalfox/links/0)[![](https://sourcerer.io/fame/Frewacom/Frewacom/Pywalfox/images/1)](https://sourcerer.io/fame/Frewacom/Frewacom/Pywalfox/links/1)[![](https://sourcerer.io/fame/Frewacom/Frewacom/Pywalfox/images/2)](https://sourcerer.io/fame/Frewacom/Frewacom/Pywalfox/links/2)[![](https://sourcerer.io/fame/Frewacom/Frewacom/Pywalfox/images/3)](https://sourcerer.io/fame/Frewacom/Frewacom/Pywalfox/links/3)[![](https://sourcerer.io/fame/Frewacom/Frewacom/Pywalfox/images/4)](https://sourcerer.io/fame/Frewacom/Frewacom/Pywalfox/links/4)[![](https://sourcerer.io/fame/Frewacom/Frewacom/Pywalfox/images/5)](https://sourcerer.io/fame/Frewacom/Frewacom/Pywalfox/links/5)[![](https://sourcerer.io/fame/Frewacom/Frewacom/Pywalfox/images/6)](https://sourcerer.io/fame/Frewacom/Frewacom/Pywalfox/links/6)[![](https://sourcerer.io/fame/Frewacom/Frewacom/Pywalfox/images/7)](https://sourcerer.io/fame/Frewacom/Frewacom/Pywalfox/links/7)
