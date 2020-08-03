@@ -1,4 +1,4 @@
-<img align="left" src="extension/icons/icon-48.png" alt="">
+<img align="left" width="48" height="48" src="extension/icons/icon-48.png" alt="Pywalfox icon">
 
 # Pywalfox
 
