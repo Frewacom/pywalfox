@@ -32,6 +32,49 @@
             "js": ["dist/duckduckgo.js"]
         }
     ],
+    "commands": {
+        "fetch_pywal_colors": {
+            "description": "Fetches your Pywal colors and updates your browser theme",
+            "suggested_key": {
+              "default": "Ctrl+Shift+F",
+              "mac": "MacCtrl+Shift+F"
+            }
+        },
+        "disable_theme": {
+            "description": "Disables the Pywalfox theme",
+            "suggested_key": {
+              "default": "Ctrl+Shift+R",
+              "mac": "MacCtrl+Shift+R"
+            }
+        },
+        "enable_dark_mode": {
+            "description": "Enables the Pywalfox Dark mode",
+            "suggested_key": {
+              "default": "Ctrl+Shift+D",
+              "mac": "MacCtrl+Shift+D"
+            }
+        },
+        "enable_light_mode": {
+            "description": "Enables the Pywalfox Light mode",
+            "suggested_key": {
+              "default": "Ctrl+Shift+L",,
+              "mac": "MacCtrl+Shift+L"
+            }
+        },
+        "enable_auto_mode": {
+            "description": "Enables the Pywalfox Auto mode",
+            "suggested_key": {
+              "default": "Ctrl+Shift+A",
+              "mac": "MacCtrl+Shift+A"
+            }
+        },
+        "_execute_browser_action": {
+            "suggested_key": {
+              "default": "Ctrl+Shift+P",
+              "mac": "MacCtrl+Shift+P"
+            }
+        }
+    },
     "permissions": [
         "nativeMessaging",
         "theme",

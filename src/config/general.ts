@@ -52,6 +52,14 @@ export const EXTENSION_MESSAGES = {
   DDG_THEME_RESET: 'ddg:theme:reset',
 };
 
+export const EXTENSION_COMMANDS = {
+  FETCH_THEME: 'fetch_pywal_colors',
+  DISABLE_THEME: 'disable_theme',
+  ENABLE_DARK_MODE: 'enable_dark_mode',
+  ENABLE_LIGHT_MODE: 'enable_light_mode',
+  ENABLE_AUTO_MODE: 'enable_auto_mode',
+};
+
 export const EXTENSION_OPTIONS = {
   AUTO_TIME_START: 'autoTimeStart',
   AUTO_TIME_END: 'autoTimeEnd',

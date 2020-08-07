@@ -21,6 +21,7 @@ import {
 import {
   EXTENSION_PAGES,
   EXTENSION_OPTIONS,
+  EXTENSION_COMMANDS,
   EXTENSION_MESSAGES,
   DEFAULT_CSS_FONT_SIZE,
   MIN_REQUIRED_DAEMON_VERSION,
@@ -65,6 +66,7 @@ export class Extension {
       cssFontSizeSetFailed: this.cssFontSizeSetFailed.bind(this),
     });
 
+    browser.commands.onCommand.addListener(this.onCommand.bind(this));
     browser.runtime.onMessage.addListener(this.onMessage.bind(this));
     browser.browserAction.onClicked.addListener(() => this.settingsPage.open());
   }
@@ -112,6 +114,29 @@ export class Extension {
         break;
       default:
         UI.sendDebuggingOutput(`Received unhandled option: ${optionData.option}`);
+    }
+  }
+
+  /* Handles extension keybindings set using Firefox */
+  private onCommand(command: string) {
+    switch (command) {
+      case EXTENSION_COMMANDS.FETCH_THEME:
+        this.nativeApp.requestPywalColors();
+        break;
+      case EXTENSION_COMMANDS.DISABLE_THEME:
+        this.resetThemes();
+        break;
+      case EXTENSION_COMMANDS.ENABLE_DARK_MODE:
+        this.setThemeMode(ThemeModes.Dark);
+        break;
+      case EXTENSION_COMMANDS.ENABLE_LIGHT_MODE:
+        this.setThemeMode(ThemeModes.Light);
+        break;
+      case EXTENSION_COMMANDS.ENABLE_AUTO_MODE:
+        this.setThemeMode(ThemeModes.Auto, true);
+        break;
+      default:
+        console.warn(`Received unhandled command from Firefox: ${command}`);
     }
   }
 
@@ -302,7 +327,7 @@ export class Extension {
     UI.sendCustomColors(customColors);
   }
 
-  private async setThemeMode(mode: ThemeModes) {
+  private async setThemeMode(mode: ThemeModes, updateSelectedModeInList=false) {
     const currentMode = this.state.getThemeMode();
     if (currentMode === mode) {
       return;
@@ -314,6 +339,10 @@ export class Extension {
     if (mode === ThemeModes.Auto) {
       if (this.state.getApplied()) {
         this.startAutoThemeMode();
+      }
+
+      if (updateSelectedModeInList) {
+        UI.sendThemeMode(mode, true);
       }
 
       UI.sendThemeMode(this.state.getTemplateThemeMode(), false);

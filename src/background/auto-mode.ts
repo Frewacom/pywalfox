@@ -65,10 +65,12 @@ export class AutoMode {
     };
   }
 
-  private deleteCurrentTimeout() {
+  private deleteCurrentTimeout(printOutput=false) {
     if (this.checkTimeout !== null) {
       clearTimeout(this.checkTimeout);
       this.checkTimeout = null;
+
+      printOutput && sendDebuggingOutput('Stopped auto theme mode');
     }
   }
 
@@ -107,7 +109,6 @@ export class AutoMode {
   }
 
   public stop() {
-    this.deleteCurrentTimeout();
-    sendDebuggingOutput('Stopped auto theme mode');
+    this.deleteCurrentTimeout(true);
   }
 }
