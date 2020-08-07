@@ -57,7 +57,7 @@
         "enable_light_mode": {
             "description": "Enables the Pywalfox Light mode",
             "suggested_key": {
-              "default": "Ctrl+Shift+L",,
+              "default": "Ctrl+Shift+L",
               "mac": "MacCtrl+Shift+L"
             }
         },
