@@ -9,15 +9,21 @@ let currentThemeMode: ThemeModes = null;
 
 function handleExtensionMessage({ action, data }: IExtensionMessage) {
   switch (action) {
-    case EXTENSION_MESSAGES.THEME_MODE_SET:
-      const { mode } = data;
-      if (currentThemeMode !== null) {
-        document.body.classList.remove(currentThemeMode);
-      }
-
-      document.body.classList.add(mode);
-      currentThemeMode = mode;
+    case EXTENSION_MESSAGES.THEME_MODE_SET: /* fallthrough */
+    case EXTENSION_MESSAGES.TEMPLATE_THEME_MODE_SET:
+      setThemeMode(data);
       break;
+  }
+}
+
+function setThemeMode(mode: ThemeModes) {
+  if (mode !== ThemeModes.Auto) {
+    if (currentThemeMode !== null) {
+      document.body.classList.remove(currentThemeMode);
+    }
+
+    document.body.classList.add(mode);
+    currentThemeMode = mode;
   }
 }
 

@@ -1,6 +1,6 @@
 import { CSSTargets } from '../definitions';
 
-export const MIN_REQUIRED_DAEMON_VERSION = 2.5;
+export const MIN_REQUIRED_DAEMON_VERSION = 2.7;
 export const DEFAULT_CSS_FONT_SIZE = 13;
 export const PYWAL_PALETTE_LENGTH = 20;
 export const AUTO_MODE_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
@@ -29,6 +29,7 @@ export const EXTENSION_MESSAGES = {
   THEME_DISABLE: 'theme:disable',
   THEME_MODE_SET: 'theme:mode:set',
   TEMPLATE_THEME_MODE_GET: 'template:theme:mode:get',
+  TEMPLATE_THEME_MODE_SET: 'template:theme:mode:set',
   PALETTE_COLOR_SET: 'palette:color:set',
   TEMPLATE_SET: 'template:set',
   PALETTE_TEMPLATE_SET: 'palette:template:set',

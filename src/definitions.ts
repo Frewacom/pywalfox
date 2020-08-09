@@ -243,11 +243,6 @@ export interface INotificationData {
   error: boolean;
 }
 
-export interface IThemeModeSetData {
-  mode: ThemeModes;
-  updateSelected: boolean;
-}
-
 export interface IDuckDuckGoThemeSetData {
   hash: IPaletteHash;
   theme: IDuckDuckGoTheme;

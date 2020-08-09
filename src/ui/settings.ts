@@ -1,24 +1,3 @@
-import * as Utils from './utils';
-import * as Messenger from './messenger';
-
-import { Dialog } from './dialog';
-import { Colorpicker } from './colorpicker';
-import { Themepicker } from './themepicker';
-
-import {
-  EXTENSION_OPTIONS,
-  EXTENSION_MESSAGES,
-  PYWAL_PALETTE_LENGTH,
-  ENABLED_BODY_CLASS,
-  NOTIFICATION_TIMEOUT,
-  MAX_SIMULTANEOUS_NOTIFICATIONS,
-} from '../config/general';
-
-import {
-  THEME_TEMPLATE_DATA,
-  PALETTE_TEMPLATE_DATA,
-} from '../config/template-data';
-
 import {
     IExtensionMessage,
     IColorschemeTemplate,
@@ -34,6 +13,27 @@ import {
     IDebuggingInfoData,
     PaletteColors,
 } from '../definitions';
+
+import {
+  EXTENSION_OPTIONS,
+  EXTENSION_MESSAGES,
+  PYWAL_PALETTE_LENGTH,
+  ENABLED_BODY_CLASS,
+  NOTIFICATION_TIMEOUT,
+  MAX_SIMULTANEOUS_NOTIFICATIONS,
+} from '../config/general';
+
+import {
+  THEME_TEMPLATE_DATA,
+  PALETTE_TEMPLATE_DATA,
+} from '../config/template-data';
+
+import * as Utils from './utils';
+import * as Messenger from './messenger';
+
+import { Dialog } from './dialog';
+import { Colorpicker } from './colorpicker';
+import { Themepicker } from './themepicker';
 
 const optionButtons = <NodeListOf<HTMLElement>>document.querySelectorAll('button[data-option]');
 const helpToggleButtons = <NodeListOf<HTMLElement>>document.querySelectorAll('button[data-help]');
@@ -534,11 +534,10 @@ function handleExtensionMessage({ action, data }: IExtensionMessage) {
       template.browser = data;
       break;
     case EXTENSION_MESSAGES.THEME_MODE_SET:
-      if (data.updateSelected) {
-        themepicker.setSelectedMode(data.mode);
-      } else {
-        themepicker.setBodyClass(data.mode);
-      }
+      themepicker.setSelectedMode(data);
+      break;
+    case EXTENSION_MESSAGES.TEMPLATE_THEME_MODE_SET:
+      themepicker.setBodyClass(data);
       break;
     case EXTENSION_MESSAGES.OPTION_SET:
       updateOptionState(data);

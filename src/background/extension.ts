@@ -75,15 +75,11 @@ export class Extension {
     const themeMode = this.state.getThemeMode();
 
     if (!themeMode) {
-      console.error('Theme mode is not set');
+      console.error('Failed to get default template: theme mode is not set');
       return;
     }
 
-    if (themeMode === ThemeModes.Dark) {
-      return DEFAULT_THEME_DARK;
-    }
-
-    return DEFAULT_THEME_LIGHT;
+    return themeMode === ThemeModes.Dark ? DEFAULT_THEME_DARK : DEFAULT_THEME_LIGHT;
   }
 
   private startAutoThemeMode() {
@@ -133,7 +129,7 @@ export class Extension {
         this.setThemeMode(ThemeModes.Light);
         break;
       case EXTENSION_COMMANDS.ENABLE_AUTO_MODE:
-        this.setThemeMode(ThemeModes.Auto, true);
+        this.setThemeMode(ThemeModes.Auto);
         break;
       default:
         console.warn(`Received unhandled command from Firefox: ${command}`);
@@ -166,14 +162,10 @@ export class Extension {
         this.setThemeMode(data);
         break;
       case EXTENSION_MESSAGES.TEMPLATE_THEME_MODE_GET:
-        UI.sendThemeMode(this.state.getTemplateThemeMode(), false);
+        UI.sendTemplateThemeMode(this.state.getTemplateThemeMode());
         break;
       case EXTENSION_MESSAGES.THEME_FETCH:
-        if (this.state.getConnected()) {
-          this.nativeApp.requestPywalColors();
-        } else {
-          UI.sendNotification('Fetch failed', 'You are not connected to the Pywalfox daemon', true);
-        }
+        this.fetchTheme();
         break;
       case EXTENSION_MESSAGES.THEME_DISABLE:
         this.resetThemes();
@@ -194,6 +186,17 @@ export class Extension {
   private updateExtensionPagesTheme(extensionTheme: IExtensionTheme) {
     this.settingsPage.setTheme(extensionTheme);
     this.updatePage.setTheme(extensionTheme);
+  }
+
+  private fetchTheme() {
+    const isConnected = this.state.getConnected();
+
+    if (!isConnected) {
+      UI.sendNotification('Fetch failed', 'You are not connected to the Pywalfox daemon', true);
+      return;
+    }
+
+    this.nativeApp.requestPywalColors();
   }
 
   private resetThemes() {
@@ -233,24 +236,23 @@ export class Extension {
 
   private applyUpdatedPaletteTemplate(template: IPaletteTemplate) {
     const pywalColors = this.state.getPywalColors();
-    const customColors = this.state.getCustomColors();
 
     if (!pywalColors) {
       return;
     }
 
-    for (const color in customColors) {
-      if (pywalColors[template[color]] === customColors[color]) {
-        delete customColors[color];
-      }
-    }
+    const customColors = this.state.getCustomColors();
+    const filteredCustomColors = customColors.filter((color) => {
+      pywalColors[template[color]] !== customColors[color];
+    });
 
-    this.setThemes(pywalColors, customColors);
-    UI.sendCustomColors(customColors);
+    this.setThemes(pywalColors, filteredCustomColors);
+    UI.sendCustomColors(filteredCustomColors);
   }
 
   private applyDuckDuckGoTheme() {
     const colorscheme = this.state.getColorscheme();
+
     if (colorscheme) {
       DDG.setTheme(colorscheme.hash, colorscheme.duckduckgo);
     }
@@ -261,11 +263,11 @@ export class Extension {
   }
 
   private setDDGEnabled({ option, enabled }: IOptionSetData) {
-    const isEnabled = this.state.getDDGThemeEnabled();
+    const isDDGEnabled = this.state.getDDGThemeEnabled();
 
-    if (enabled && !isEnabled) {
+    if (enabled && !isDDGEnabled) {
       this.applyDuckDuckGoTheme();
-    } else if (!enabled && isEnabled) {
+    } else if (!enabled && isDDGEnabled) {
       DDG.resetTheme();
     }
 
@@ -274,9 +276,9 @@ export class Extension {
   }
 
   private setDDGTheme() {
-    const isEnabled = this.state.getDDGThemeEnabled();
+    const isDDGEnabled = this.state.getDDGThemeEnabled();
 
-    if (isEnabled) {
+    if (isDDGEnabled) {
       this.applyDuckDuckGoTheme();
     } else {
       DDG.resetTheme();
@@ -312,7 +314,7 @@ export class Extension {
   private async onThemeChangeTrigger(isDay: boolean) {
     await this.state.setIsDay(isDay);
     this.updateThemeForCurrentMode();
-    UI.sendThemeMode(this.state.getTemplateThemeMode(), false);
+    UI.sendTemplateThemeMode(this.state.getTemplateThemeMode());
     UI.sendDebuggingOutput(`Theme update triggered by automatic theme mode. Is day: ${isDay}`);
   }
 
@@ -320,6 +322,7 @@ export class Extension {
     const pywalColors = this.state.getPywalColors();
     const template = this.state.getTemplate();
     const customColors = this.state.getCustomColors();
+
     pywalColors && this.setThemes(pywalColors, customColors);
 
     UI.sendPaletteTemplate(template.palette);
@@ -327,8 +330,9 @@ export class Extension {
     UI.sendCustomColors(customColors);
   }
 
-  private async setThemeMode(mode: ThemeModes, updateSelectedModeInList=false) {
+  private async setThemeMode(mode: ThemeModes) {
     const currentMode = this.state.getThemeMode();
+
     if (currentMode === mode) {
       return;
     }
@@ -341,25 +345,24 @@ export class Extension {
         this.startAutoThemeMode();
       }
 
-      if (updateSelectedModeInList) {
-        UI.sendThemeMode(mode, true);
-      }
-
-      UI.sendThemeMode(this.state.getTemplateThemeMode(), false);
+      UI.sendTemplateThemeMode(this.state.getTemplateThemeMode());
     } else {
       this.autoMode.stop();
-      UI.sendThemeMode(mode, true);
     }
+
+    UI.sendThemeMode(mode);
   }
 
   private setPaletteTemplate(template: IPaletteTemplate) {
     let updatedTemplate: IPaletteTemplate = template;
+
     if (updatedTemplate === null) {
       updatedTemplate = this.getDefaultTemplate().palette;
     }
 
     this.state.setPaletteTemplate(updatedTemplate);
     this.applyUpdatedPaletteTemplate(updatedTemplate);
+
     UI.sendPaletteTemplate(updatedTemplate);
     UI.sendNotification('Palette template', 'Template was updated successfully');
   }
@@ -380,12 +383,14 @@ export class Extension {
     }
 
     this.state.setThemeTemplate(updatedTemplate);
+
     UI.sendThemeTemplate(updatedTemplate);
     UI.sendNotification('Theme template', 'Template was updated successfully');
   }
 
   private setPaletteColor(palette: Partial<IPalette>) {
     const pywalColors = this.state.getPywalColors();
+
     if (pywalColors !== null) {
       const customPalette = this.createCustomColorPalette(palette);
       this.setThemes(pywalColors, customPalette);
@@ -441,9 +446,10 @@ export class Extension {
   }
 
   private nativeAppDisconnected() {
+    this.state.setConnected(false);
+
     UI.sendDebuggingOutput('Disconnected from native app', true);
     UI.sendDebuggingInfo({ connected: false, version: this.state.getVersion() });
-    this.state.setConnected(false);
   }
 
   private async onPywalColorsFetchSuccess(pywalColors: IPywalColors) {
@@ -478,27 +484,31 @@ export class Extension {
       // the CSS has been enabled.
       if (target === CSSTargets.UserChrome) {
         const fontSize = this.state.getCssFontSize();
+
         if (fontSize !== DEFAULT_CSS_FONT_SIZE) {
           this.setCssFontSize(fontSize);
         }
       }
     }
 
+    this.state.setCssEnabled(target, newState);
+
     UI.sendOption(target, newState);
     UI.sendNotification('Restart needed', notificationMessage);
-    this.state.setCssEnabled(target, newState);
   }
 
   private cssToggleFailed(target: string, error: string) {
     const currentState = this.state.getCssEnabled(target);
+
     UI.sendOption(target, currentState);
     UI.sendNotification('Custom CSS', error);
   }
 
   private cssFontSizeSetSuccess(size: number) {
+    this.state.setCssFontSize(size);
+
     UI.sendNotification('Restart needed', 'Updated base font size successfully');
     UI.sendFontSize(size);
-    this.state.setCssFontSize(size);
   }
 
   private cssFontSizeSetFailed(error: string) {

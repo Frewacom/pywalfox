@@ -12,7 +12,6 @@ import {
   IDebuggingInfoData,
   IOptionSetData,
   INotificationData,
-  IThemeModeSetData,
 } from '../definitions';
 
 function sendMessage(data: any) {
@@ -46,9 +45,12 @@ export function sendTemplate(template: IColorschemeTemplate) {
   sendMessage({ action: EXTENSION_MESSAGES.TEMPLATE_SET, data: template });
 }
 
-export function sendThemeMode(mode: ThemeModes, updateSelected: boolean) {
-  const themeModeData: IThemeModeSetData = { mode, updateSelected };
-  sendMessage({ action: EXTENSION_MESSAGES.THEME_MODE_SET, data: themeModeData });
+export function sendThemeMode(mode: ThemeModes) {
+  sendMessage({ action: EXTENSION_MESSAGES.THEME_MODE_SET, data: mode });
+}
+
+export function sendTemplateThemeMode(mode: ThemeModes) {
+  sendMessage({ action: EXTENSION_MESSAGES.TEMPLATE_THEME_MODE_SET, data: mode });
 }
 
 export function sendOption(option: string, enabled: boolean, value?: any) {
