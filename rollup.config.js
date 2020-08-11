@@ -2,6 +2,7 @@ import path from 'path';
 import copy from 'rollup-plugin-copy';
 import clear from 'rollup-plugin-clear';
 import postcss from 'rollup-plugin-postcss';
+import analyze from 'rollup-plugin-analyzer';
 import { terser } from "rollup-plugin-terser";
 import typescript from 'rollup-plugin-typescript2';
 
@@ -9,6 +10,7 @@ import cssimport from 'postcss-import';
 import urlresolve from 'postcss-url';
 
 const production = !process.env.ROLLUP_WATCH;
+const analyzeConfig = { summaryOnly: true };
 
 export default [
   {
@@ -30,6 +32,7 @@ export default [
         ],
         minimize: production,
       }),
+      production && analyze(analyzeConfig),
     ],
   },
   {
@@ -40,7 +43,8 @@ export default [
     },
     plugins: [
       typescript(),
-      production && terser()
+      production && terser(),
+      production && analyze(analyzeConfig),
     ],
   },
   {
@@ -52,6 +56,7 @@ export default [
     plugins: [
       typescript(),
       production && terser(),
+      production && analyze(analyzeConfig),
       copy({ targets: [ { src: 'src/ui/settings.html', dest: 'extension/dist/pages' } ] }),
     ],
   },
@@ -64,6 +69,7 @@ export default [
     plugins: [
       typescript(),
       production && terser(),
+      production && analyze(analyzeConfig),
       copy({ targets: [ { src: 'src/ui/update.html', dest: 'extension/dist/pages'} ] }),
     ],
   },
