@@ -1,16 +1,19 @@
 import path from 'path';
-import copy from 'rollup-plugin-copy';
 import clear from 'rollup-plugin-clear';
 import postcss from 'rollup-plugin-postcss';
 import analyze from 'rollup-plugin-analyzer';
-import { terser } from "rollup-plugin-terser";
+import { terser } from 'rollup-plugin-terser';
 import typescript from 'rollup-plugin-typescript2';
 
 import cssimport from 'postcss-import';
 import urlresolve from 'postcss-url';
 
 const production = !process.env.ROLLUP_WATCH;
-const analyzeConfig = { summaryOnly: true };
+const defaultPlugins = [
+  typescript(),
+  production && terser(),
+  production && analyze({ summaryOnly: true }),
+];
 
 export default [
   {
@@ -21,10 +24,8 @@ export default [
     },
     plugins: [
       clear({ targets: ['extension/dist', 'artifacts'] }),
-      typescript(),
-      production && terser(),
       postcss({
-        extract: path.resolve('extension/dist/pages/bundle.min.css'),
+        extract: path.resolve('extension/dist/styles.bundle.css'),
         extensions: [ '.css' ],
         plugins: [
           cssimport(),
@@ -32,7 +33,7 @@ export default [
         ],
         minimize: production,
       }),
-      production && analyze(analyzeConfig),
+      ...defaultPlugins,
     ],
   },
   {
@@ -41,36 +42,22 @@ export default [
       file: 'extension/dist/duckduckgo.js',
       format: 'iife',
     },
-    plugins: [
-      typescript(),
-      production && terser(),
-      production && analyze(analyzeConfig),
-    ],
+    plugins: defaultPlugins,
   },
   {
     input: 'src/ui/settings.ts',
     output: {
-      file: 'extension/dist/pages/settings.min.js',
+      file: 'extension/dist/settings.bundle.js',
       format: 'iife',
     },
-    plugins: [
-      typescript(),
-      production && terser(),
-      production && analyze(analyzeConfig),
-      copy({ targets: [ { src: 'src/ui/settings.html', dest: 'extension/dist/pages' } ] }),
-    ],
+    plugins: defaultPlugins,
   },
   {
     input: 'src/ui/update.ts',
     output: {
-      file: 'extension/dist/pages/update.min.js',
+      file: 'extension/dist/update.bundle.js',
       format: 'iife',
     },
-    plugins: [
-      typescript(),
-      production && terser(),
-      production && analyze(analyzeConfig),
-      copy({ targets: [ { src: 'src/ui/update.html', dest: 'extension/dist/pages'} ] }),
-    ],
+    plugins: defaultPlugins,
   },
 ];

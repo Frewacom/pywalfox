@@ -13,8 +13,8 @@ export const DUCKDUCKGO_THEME_ID = 'pywalfox';
 export const INJECT_URL_PATTERN = [ '*://*.duckduckgo.com/*' ];
 
 export const EXTENSION_PAGES = {
-  UPDATE: 'dist/pages/update.html',
-  SETTINGS: 'dist/pages/settings.html',
+  UPDATE: 'ui/update.html',
+  SETTINGS: 'ui/settings.html',
 };
 
 export const EXTERNAL_MESSAGES = {
