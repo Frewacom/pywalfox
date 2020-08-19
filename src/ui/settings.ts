@@ -202,20 +202,12 @@ function createTimeIntervalObject(value: string) {
   return intervalObject;
 }
 
-function onAutoTimeStartSave() {
+function onTimeIntervalSave(input: HTMLInputElement, action: string) {
   if (validateAutoTimeInterval()) {
-    const intervalObject = createTimeIntervalObject(autoTimeStartInput.value);
-    if (intervalObject !== null) {
-      UI.requestAutoTimeSet(EXTENSION_OPTIONS.AUTO_TIME_START, intervalObject);
-    }
-  }
-}
+    const intervalObject = createTimeIntervalObject(input.value);
 
-function onAutoTimeEndSave() {
-  if (validateAutoTimeInterval()) {
-    const intervalObject = createTimeIntervalObject(autoTimeEndInput.value);
     if (intervalObject !== null) {
-      UI.requestAutoTimeSet(EXTENSION_OPTIONS.AUTO_TIME_END, intervalObject);
+      UI.requestAutoTimeSet(action, intervalObject);
     }
   }
 }
@@ -560,8 +552,14 @@ function setupListeners() {
   fetchButton.addEventListener('click', UI.requestFetch);
   themeButton.addEventListener('click', () => openDialog(themepicker, themeButton));
   fontSizeSaveInput.addEventListener('change', Utils.debounce(onFontSizeSave, 500));
-  autoTimeStartInput.addEventListener('change', Utils.debounce(onAutoTimeStartSave, 500));
-  autoTimeEndInput.addEventListener('change', Utils.debounce(onAutoTimeEndSave, 500));
+
+  autoTimeStartInput.addEventListener('change', Utils.debounce(() => {
+    onTimeIntervalSave(autoTimeStartInput, EXTENSION_OPTIONS.AUTO_TIME_START);
+  }, 500));
+
+  autoTimeEndInput.addEventListener('change', Utils.debounce(() => {
+    onTimeIntervalSave(autoTimeEndInput, EXTENSION_OPTIONS.AUTO_TIME_END);
+  }, 500));
 
   themeTemplateSaveButton.addEventListener('click', onThemeTemplateSave);
   themeTemplateResetButton.addEventListener('click', UI.requestThemeTemplateReset);
@@ -570,8 +568,14 @@ function setupListeners() {
   paletteTemplateCurrentButton.addEventListener('click', onPaletteTemplateUseCurrent);
   paletteTemplateResetButton.addEventListener('click', UI.requestPaletteTemplateReset);
 
-  helpToggleButtons.forEach((button: HTMLElement) => button.addEventListener('click', () => onHelpToggle(button)));
-  settingCardHeaders.forEach((header: HTMLElement) => header.addEventListener('click', () => Utils.toggleOpen(header.parentElement)));
+  helpToggleButtons.forEach((button: HTMLElement) => {
+    button.addEventListener('click', () => onHelpToggle(button))
+  });
+
+  settingCardHeaders.forEach((header: HTMLElement) => {
+    header.addEventListener('click', () => Utils.toggleOpen(header.parentElement))
+  });
+
   optionButtons.forEach((button: HTMLElement) => {
     const option = button.getAttribute('data-option');
     button.addEventListener('click', onOptionClicked);
