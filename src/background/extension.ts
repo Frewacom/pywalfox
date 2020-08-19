@@ -319,8 +319,8 @@ export class Extension {
   }
 
   private updateThemeForCurrentMode() {
-    const pywalColors = this.state.getPywalColors();
     const template = this.state.getTemplate();
+    const pywalColors = this.state.getPywalColors();
     const customColors = this.state.getCustomColors();
 
     pywalColors && this.setThemes(pywalColors, customColors);
@@ -332,13 +332,25 @@ export class Extension {
 
   private async setThemeMode(mode: ThemeModes) {
     const currentMode = this.state.getThemeMode();
+    const previousTemplateMode = this.state.getTemplateThemeMode();
 
     if (currentMode === mode) {
       return;
     }
 
-    await this.state.setThemeMode(mode); // Must wait for this to finish
-    this.updateThemeForCurrentMode();
+    /**
+     * TODO: Change 'setThemeMode' behaviour to allow use without 'await'
+     *
+     * Doing it this way is not clean and can easily cause bugs, since forgetting
+     * to await the promise will give us an invalid template mode.
+     */
+    await this.state.setThemeMode(mode);
+
+    // No need to update the theme if the currently applied theme mode
+    // matches the one that will be set by auto-mode.
+    if (previousTemplateMode !== this.state.getTemplateThemeMode()) {
+      this.updateThemeForCurrentMode();
+    }
 
     if (mode === ThemeModes.Auto) {
       if (this.state.getApplied()) {
