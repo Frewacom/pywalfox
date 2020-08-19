@@ -5,7 +5,15 @@
     "target": "es6",
     "allowJs": true,
     "lib": ["dom"],
-    "removeComments": true
+    "removeComments": true,
+    "baseUrl": ".",
+    "paths": {
+      "@ui/*": [ "src/ui/*" ],
+      "@pywalfox/*": [ "src/*" ],
+      "@config/*": [ "src/config/*" ],
+      "@definitions": [ "src/definitions" ],
+      "@communication/*": [ "src/communication/*" ]
+    }
   },
   "include": [
     "./src"

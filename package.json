@@ -33,6 +33,7 @@
     "rollup-plugin-copy": "^3.3.0",
     "rollup-plugin-postcss": "^3.1.1",
     "rollup-plugin-terser": "^5.3.0",
+    "rollup-plugin-typescript-paths": "^1.2.2",
     "rollup-plugin-typescript2": "^0.27.1",
     "tslib": "^2.0.0",
     "typescript": "^3.9.3",
