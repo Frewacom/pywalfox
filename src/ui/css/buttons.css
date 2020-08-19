@@ -1,8 +1,8 @@
 .btn {
   height: var(--button-height);
-  border-radius: var(--border-radius-sm);
   padding: var(--spacing-md) var(--spacing-lg);
   border: none;
+  border-radius: var(--border-radius-sm);
   font-family: var(--font);
   font-weight: 700;
   font-size: var(--font-size-md);
@@ -24,6 +24,47 @@
 
 .btn::-moz-focus-inner {
   border: 0;
+}
+
+.btn-sm {
+  font-size: var(--font-size-sm);
+  height: var(--button-height-sm);
+  padding: var(--spacing-md) var(--spacing);
+}
+
+.btn-sm > i {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+}
+
+.btn-fixed-width {
+  border-radius: var(--border-radius-sm);
+  width: 4em;
+}
+
+.btn-default {
+  background-color: var(--button-background);
+  color: var(--button-text);
+}
+
+.btn-default:hover, .btn-default:focus {
+  background-color: var(--button-background-hover);
+  box-shadow: var(--box-shadow-button-hover);
+}
+
+.btn-default[selected] {
+  background-color: var(--accent-secondary);
+  color: var(--button-text-accent);
+  box-shadow: none;
+}
+
+.btn-lighter {
+  background-color: var(--lighter-background);
+  color: var(--button-text);
+}
+
+.btn-lighter:hover, .btn-lighter:focus {
+  background-color: var(--lighter-background-hover);
 }
 
 .btn[loading]::before {
@@ -61,70 +102,13 @@
   100% { transform: rotate(360deg); }
 }
 
-.btn-flat {
-  background-color: var(--lighter-background);
-  box-shadow: none;
-}
-
-.btn-flat:hover,
-.btn-flat:focus {
-  background-color: var(--lighter-background-hover);
-}
-
-.btn-lighter {
-  background-color: var(--background-extra);
-  color: var(--text-focus);
-  border-radius: var(--border-radius-sm);
-  box-shadow: var(--box-shadow);
-}
-
-.btn-lighter:hover,
-.btn-lighter:focus {
-  background-color: var(--lighter-background-hover);
-  filter: none;
-}
-
-body.light .btn-lighter {
-  background-color: var(--lighter-background-hover);
-}
-
-.btn-darker {
-  background-color: var(--button-background);
-  color: var(--text-focus);
-  border-radius: var(--border-radius-sm);
-  width: 4em;
-}
-
-.btn-darker:hover,
-.btn-darker:focus {
-  filter: var(--brightness-filter-light);
-}
-
-.btn-darker[selected] {
-  background-color: var(--accent-secondary);
-  color: var(--background);
-}
-
-body.light .btn-darker:hover, body.light .btn-darker:focus {
-  filter: var(--brightness-filter-dark);
-}
-
-body.light .btn-darker[selected] {
-  color: var(--background-light);
-}
-
-.btn-darker[selected]:hover,
-.btn-darker[selected]:focus,
-body.light .btn-darker[selected] {
-  filter: none;
-}
-
 .btn-color {
   width: var(--button-height-sm);
   height: var(--button-height-sm);
   padding: 0;
   z-index: var(--z-index-color-button);
-  box-shadow: var(--box-shadow);
+  border: 2px solid transparent;
+  transition: border-radius, border-color, var(--transition-time);
 }
 
 .dialog-arrow[selected]::after {
@@ -143,17 +127,6 @@ body.light .btn-darker[selected] {
 #theme-select.dialog-arrow[selected]::after {
   right: calc(-1 * (var(--spacing-md) + var(--arrow-size)));
   left: unset;
-}
-
-#theme-select.dialog-arrow[selected]:hover::after,
-#theme-select.dialog-arrow[selected]:focus::after {
-  /* The filter on the button changes the brightness of the arrow as well */
-  filter: brightness(85%);
-}
-
-body.light #theme-select.dialog-arrow[selected]:hover::after,
-body.light #theme-select.dialog-arrow[selected]:focus::after {
-  filter: none;
 }
 
 .btn-color[data-target="background"] {
@@ -192,9 +165,8 @@ body.light #theme-select.dialog-arrow[selected]:focus::after {
   padding: 0;
   border: 2px solid transparent;
   transform: translateY(0px);
-  box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
-  transition-duration: var(--transition-time);
-  transition-property: border-radius, border-color;
+  box-shadow: var(--box-shadow-palette-color);
+  transition: border-radius, border-color, var(--transition-time);
 }
 
 .btn-palette-color:hover,
@@ -207,13 +179,10 @@ body.light #theme-select.dialog-arrow[selected]:focus::after {
   outline: none;
 }
 
+.btn-color[selected],
 .btn-palette-color[selected] {
   border-color: var(--text-focus);
   border-radius: 50%;
-}
-
-body.light .btn-palette-color {
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.4);
 }
 
 .btn-dialog {
@@ -223,7 +192,9 @@ body.light .btn-palette-color {
   box-shadow: none;
 }
 
-.btn-dialog[selected] {
+.btn-dialog[selected],
+.btn-dialog[selected]:hover,
+.btn-dialog[selected]:focus {
   color: var(--background);
   background-color: var(--accent-secondary);
 }
@@ -232,21 +203,13 @@ body.light .btn-dialog[selected] {
   color: var(--background-light);
 }
 
-.btn-dialog[selected]:hover,
-.btn-dialog[selected]:focus {
-  background-color: var(--accent-secondary);
-}
-
 .btn-dialog:hover,
 .btn-dialog:focus {
   background-color: var(--lighter-background-hover);
 }
 
+.btn-dialog[selected] > i,
 body.light .btn-dialog > i {
-  filter: invert(100%);
-}
-
-.btn-dialog[selected] > i {
   filter: invert(100%);
 }
 
@@ -256,18 +219,19 @@ body.light .btn-dialog[selected] > i {
 
 .btn-header {
   border-radius: var(--border-radius);
+  background-color: var(--background-light);
   color: var(--text-focus);
   box-shadow: var(--box-shadow-card);
 }
 
 .btn-primary {
   background-color: var(--accent-primary);
-  color: var(--background);
+  color: var(--button-text-accent);
 }
 
 .btn-secondary {
   background-color: var(--accent-secondary);
-  color: var(--background);
+  color: var(--button-text-accent);
 }
 
 .btn-primary:hover,
@@ -277,42 +241,11 @@ body.light .btn-dialog[selected] > i {
   filter: var(--brightness-filter);
 }
 
-body.light .btn-primary,
+body.light .btn-primary:not(.btn-header),
 body.light .btn-secondary {
-  color: var(--background-light);
-}
-
-.btn-default {
-  background-color: var(--background-light);
-  color: var(--text-focus);
-}
-
-.btn-default:hover,
-.btn-default:focus {
-  filter: var(--brightness-filter);
-}
-
-body.light .btn-default:hover,
-body.light .btn-default:focus {
-  filter: none;
-}
-
-body.light #colorpicker-custom {
-  color: var(--background-light);
+  box-shadow: none;
 }
 
 #theme-select {
   width: 9.5rem; /* Fixed width to prevent flickering when changing themes */
 }
-
-.btn-sm {
-  font-size: var(--font-size-sm);
-  height: var(--button-height-sm);
-  padding: var(--spacing-md) var(--spacing);
-}
-
-.btn-sm > i {
-  width: var(--icon-size-sm);
-  height: var(--icon-size-sm);
-}
-
