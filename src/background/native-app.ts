@@ -1,11 +1,11 @@
-import { RESPONSE_TIMEOUT, NATIVE_MESSAGES } from '../config/native';
-
 import {
   IPywalColors,
   INativeAppMessage,
   INativeAppRequest,
   INativeAppMessageCallbacks
-} from '../definitions';
+} from '@definitions';
+
+import { RESPONSE_TIMEOUT, NATIVE_MESSAGES } from '@config/native';
 
 /**
  * Implements the communcation with the native messaging host.

@@ -1,4 +1,4 @@
-import { ITemplateItem, PaletteColors } from '../definitions';
+import { ITemplateItem, PaletteColors } from '@definitions';
 
 export const PALETTE_TEMPLATE_DATA: ITemplateItem[] = [
   { title: 'Background', description: 'Main background color', target: PaletteColors.Background },

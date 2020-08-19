@@ -1,8 +1,11 @@
-import { Dialog } from './dialog';
-import { ThemeModes, INodeLookup } from '../definitions';
-import { requestThemeModeSet } from '../communication/ui';
+import {
+  ThemeModes,
+  INodeLookup
+} from '@definitions';
 
-import * as Utils from './utils';
+import { Dialog } from './dialog';
+import { setSelected, setDeselected } from '@utils/dom';
+import { requestThemeModeSet } from '@communication/ui';
 
 export class Themepicker extends Dialog {
   private themeSelectButton: HTMLElement;
@@ -30,7 +33,7 @@ export class Themepicker extends Dialog {
 
   private selectMode(target: HTMLElement, mode: ThemeModes) {
     if (this.selected !== null) {
-      Utils.deselect(this.selected);
+      setDeselected(this.selected);
     }
 
     if (this.themeSelectButton !== null) {
@@ -50,7 +53,7 @@ export class Themepicker extends Dialog {
       }
     }
 
-    Utils.select(target);
+    setSelected(target);
     this.selected = target;
 
     this.setBodyClass(mode);

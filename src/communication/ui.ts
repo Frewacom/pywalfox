@@ -1,5 +1,3 @@
-import { EXTENSION_MESSAGES, EXTENSION_OPTIONS } from '../config/general';
-
 import {
   IPalette,
   IInitialData,
@@ -12,7 +10,9 @@ import {
   IDebuggingInfoData,
   IOptionSetData,
   INotificationData,
-} from '../definitions';
+} from '@definitions';
+
+import { EXTENSION_MESSAGES, EXTENSION_OPTIONS } from '@config/general';
 
 function sendMessage(data: any) {
   // Mute errors from sending messages to non-existing listeners

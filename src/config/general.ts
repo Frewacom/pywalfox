@@ -1,4 +1,4 @@
-import { CSSTargets } from '../definitions';
+import { CSSTargets } from '@definitions';
 
 export const MIN_REQUIRED_DAEMON_VERSION = 2.5;
 export const DEFAULT_CSS_FONT_SIZE = 13;

@@ -7,6 +7,15 @@ function validateHex(hex: string) {
   return validatedHex;
 }
 
+export function rgbToHex(rgb: string) {
+  if (rgb[0] === '#' || !rgb) { return rgb; }
+  const hex = rgb.substr(4, rgb.indexOf(')') - 4).split(',').map((color) => {
+    let str = parseInt(color).toString(16);
+    return str.length === 1 ? str = "0" + str : str;
+  }).join('');
+  return '#' + hex;
+}
+
 // https://www.sitepoint.com/javascript-generate-lighter-darker-color/
 export function changeLuminance(hex: string, lum: number) {
   let validatedHex = validateHex(hex);

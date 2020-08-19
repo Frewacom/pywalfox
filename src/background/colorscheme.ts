@@ -1,9 +1,3 @@
-import { DUCKDUCKGO_THEME_ID } from '../config/general';
-import { EXTENDED_PYWAL_COLORS } from '../config/default-themes';
-import { THEME_TEMPLATE_DATA, PALETTE_TEMPLATE_DATA } from '../config/template-data';
-
-import { changeLuminance, normalizeLuminance } from '../utils/colors';
-
 import {
   PaletteColors,
   IPalette,
@@ -14,7 +8,13 @@ import {
   IPaletteTemplate,
   IColorschemeTemplate,
   IDuckDuckGoThemeTemplate,
-} from '../definitions';
+} from '@definitions';
+
+import { DUCKDUCKGO_THEME_ID } from '@config/general';
+import { EXTENDED_PYWAL_COLORS } from '@config/default-themes';
+import { THEME_TEMPLATE_DATA, PALETTE_TEMPLATE_DATA } from '@config/template-data';
+
+import { changeLuminance, normalizeLuminance } from '@utils/colors';
 
 export function extendPywalColors(pywalColors: IPywalColors) {
   const colors = pywalColors;

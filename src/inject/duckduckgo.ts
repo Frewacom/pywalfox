@@ -1,6 +1,6 @@
-import { EXTENSION_MESSAGES, DUCKDUCKGO_THEME_ID } from '../config/general';
-import { IDuckDuckGoTheme, IExtensionMessage } from '../definitions';
-import { requestTheme } from '../communication/duckduckgo';
+import { requestTheme } from '@communication/duckduckgo';
+import { IDuckDuckGoTheme, IExtensionMessage } from '@definitions';
+import { EXTENSION_MESSAGES, DUCKDUCKGO_THEME_ID } from '@config/general';
 
 function getCurrentTheme() {
   return window.wrappedJSObject.DDG.settings.get('kae');
@@ -20,7 +20,6 @@ function resetTheme() {
   window.wrappedJSObject.DDG.settings.setTheme('d');
   setHash('');
 }
-
 
 function applyTheme(hash: string, theme: IDuckDuckGoTheme) {
   console.log('Applying Pywalfox theme');
@@ -55,9 +54,3 @@ browser.runtime.onMessage.addListener(onMessage);
 requestTheme();
 
 console.log('Pywalfox content script loaded');
-
-
-
-
-
-

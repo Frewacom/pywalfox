@@ -1,10 +1,10 @@
-import { sendDebuggingOutput } from '../communication/ui';
-import { AUTO_MODE_INTERVAL_MS } from '../config/general';
-
 import {
   ITimeIntervalEndpoint,
   IAutoModeTriggerCallback
-} from '../definitions';
+} from '@definitions';
+
+import { sendDebuggingOutput } from '@communication/ui';
+import { AUTO_MODE_INTERVAL_MS } from '@config/general';
 
 export class AutoMode {
   private startTime: ITimeIntervalEndpoint;

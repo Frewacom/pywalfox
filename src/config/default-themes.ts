@@ -5,7 +5,7 @@ import {
   IColorschemeTemplate,
   IDuckDuckGoThemeTemplate,
   IExtendedPywalColors,
-} from '../definitions';
+} from '@definitions';
 
 export const EXTENDED_PYWAL_COLORS: IExtendedPywalColors = [
   { targetIndex: 16, colorIndex: 0, modifier: 1.25 },

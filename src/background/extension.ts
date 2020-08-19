@@ -10,13 +10,7 @@ import {
   IExtensionMessage,
   ThemeModes,
   CSSTargets,
-} from '../definitions';
-
-import {
-  extendPywalColors,
-  generateColorscheme,
-  generateBrowserTheme,
-} from './colorscheme';
+} from '@definitions';
 
 import {
   EXTENSION_PAGES,
@@ -25,20 +19,26 @@ import {
   EXTENSION_MESSAGES,
   DEFAULT_CSS_FONT_SIZE,
   MIN_REQUIRED_DAEMON_VERSION,
-} from '../config/general';
+} from '@config/general';
 
 import {
   DEFAULT_THEME_DARK,
   DEFAULT_THEME_LIGHT,
-} from '../config/default-themes';
+} from '@config/default-themes';
+
+import {
+  extendPywalColors,
+  generateColorscheme,
+  generateBrowserTheme,
+} from './colorscheme';
 
 import { State } from './state';
 import { NativeApp } from './native-app';
 import { AutoMode } from './auto-mode';
 import { ExtensionPage } from './extension-page';
 
-import * as UI from '../communication/ui';
-import * as DDG from '../communication/duckduckgo';
+import * as UI from '@communication/ui';
+import * as DDG from '@communication/duckduckgo';
 
 export class Extension {
   private state: State;

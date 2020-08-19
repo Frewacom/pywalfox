@@ -1,11 +1,11 @@
-import { EXTENSION_MESSAGES, INJECT_URL_PATTERN } from '../config/general';
-
 import {
   IDuckDuckGoTheme,
   IExtensionMessage,
   IPaletteHash,
   IDuckDuckGoThemeSetData
-} from '../definitions';
+} from '@definitions';
+
+import { EXTENSION_MESSAGES, INJECT_URL_PATTERN } from '@config/general';
 
 async function sendMessage(message: IExtensionMessage) {
   const tabs = await browser.tabs.query({ url: INJECT_URL_PATTERN });

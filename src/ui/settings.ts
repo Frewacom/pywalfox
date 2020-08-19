@@ -12,7 +12,7 @@ import {
     INotificationData,
     IDebuggingInfoData,
     PaletteColors,
-} from '../definitions';
+} from '@definitions';
 
 import {
   EXTENSION_OPTIONS,
@@ -21,19 +21,19 @@ import {
   ENABLED_BODY_CLASS,
   NOTIFICATION_TIMEOUT,
   MAX_SIMULTANEOUS_NOTIFICATIONS,
-} from '../config/general';
+} from '@config/general';
 
 import {
   THEME_TEMPLATE_DATA,
   PALETTE_TEMPLATE_DATA,
-} from '../config/template-data';
+} from '@config/template-data';
 
-import * as Utils from './utils';
-import * as UI from '../communication/ui';
+import * as Utils from '@utils/dom';
+import * as UI from '@communication/ui';
 
-import { Dialog } from './dialog';
-import { Colorpicker } from './colorpicker';
-import { Themepicker } from './themepicker';
+import { Dialog } from './components/dialog';
+import { Colorpicker } from './components/colorpicker';
+import { Themepicker } from './components/themepicker';
 
 const optionButtons = <NodeListOf<HTMLElement>>document.querySelectorAll('button[data-option]');
 const helpToggleButtons = <NodeListOf<HTMLElement>>document.querySelectorAll('button[data-help]');
@@ -77,7 +77,7 @@ let themeTemplateInputLookup: INodeLookup = {};
 
 function openDialog(dialog: Dialog, target: HTMLElement) {
   if (!Utils.isOpen(overlay)) {
-    Utils.open(overlay);
+    Utils.setOpen(overlay);
   }
 
   if (currentDialog === dialog) {
@@ -100,7 +100,7 @@ function closeDialog() {
   }
 
   if (Utils.isOpen(overlay)) {
-    Utils.close(overlay);
+    Utils.setClosed(overlay);
   }
 }
 
@@ -126,16 +126,16 @@ function onColorClicked(e: Event) {
 
 function setOptionEnabled(target: HTMLElement, enabled: boolean) {
   if (Utils.isSet('loading', target)) {
-    Utils.loaded(target);
+    Utils.setLoaded(target);
   }
 
   if (enabled) {
-    Utils.select(target);
-    Utils.select(target.parentElement);
+    Utils.setSelected(target);
+    Utils.setSelected(target.parentElement);
     target.innerText = 'Yes';
   } else {
-    Utils.deselect(target);
-    Utils.deselect(target.parentElement);
+    Utils.setDeselected(target);
+    Utils.setDeselected(target.parentElement);
     target.innerText = 'No';
   }
 }
@@ -146,7 +146,7 @@ function onOptionClicked(e: Event) {
   const newState = Utils.isSet('selected', target) ? false : true;
 
   if (Utils.isSet('async', target)) {
-    Utils.loading(target);
+    Utils.setLoading(target);
   }
 
   UI.requestOptionSet(option, newState);

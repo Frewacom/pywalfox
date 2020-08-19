@@ -1,6 +1,3 @@
-import { DEFAULT_CSS_FONT_SIZE } from '../config/general';
-import { DEFAULT_THEME_DARK, DEFAULT_THEME_LIGHT } from '../config/default-themes';
-
 import {
   IPalette,
   IPaletteHash,
@@ -20,7 +17,10 @@ import {
   ThemeModes,
   TemplateTypes,
   ColorschemeTypes,
-} from '../definitions';
+} from '@definitions';
+
+import { DEFAULT_CSS_FONT_SIZE } from '@config/general';
+import { DEFAULT_THEME_DARK, DEFAULT_THEME_LIGHT } from '@config/default-themes';
 
 export interface IExtensionState {
   version: number,

@@ -1,4 +1,4 @@
-import { IExtensionTheme } from '../definitions';
+import { IExtensionTheme } from '@definitions';
 
 export class ExtensionPage {
   protected tab: browser.tabs.Tab;

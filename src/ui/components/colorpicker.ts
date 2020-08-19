@@ -1,16 +1,16 @@
-import * as Utils from './utils';
-
-import { Dialog } from './dialog';
-import { requestPaletteColorSet } from '../communication/ui';
-import { PYWAL_PALETTE_LENGTH } from '../config/general';
-
 import {
   IPywalColors,
   IPaletteTemplate,
   IPalette,
   INodeLookup,
   PaletteColors
-} from '../definitions';
+} from '@definitions';
+
+import { Dialog } from './dialog';
+import { rgbToHex } from '@utils/colors';
+import { setSelected, setDeselected } from '@utils/dom';
+import { PYWAL_PALETTE_LENGTH } from '@config/general';
+import { requestPaletteColorSet } from '@communication/ui';
 
 export class Colorpicker extends Dialog {
   private grid: HTMLElement;
@@ -68,29 +68,29 @@ export class Colorpicker extends Dialog {
 
   protected onOpen(currentTarget: HTMLElement, nextTarget: HTMLElement) {
     if (currentTarget !== null) {
-      Utils.deselect(currentTarget.parentElement);
+      setDeselected(currentTarget.parentElement);
     }
 
-    Utils.select(nextTarget.parentElement);
+    setSelected(nextTarget.parentElement);
   }
 
   protected onClose(currentTarget: HTMLElement) {
-    Utils.deselect(currentTarget.parentElement);
+    setDeselected(currentTarget.parentElement);
   }
 
   private highlightSelectedColor(element: HTMLElement) {
     if (element === null) {
       if (this.selected !== null) {
-        Utils.deselect(this.selected);
+        setDeselected(this.selected);
       }
       return;
     }
 
     if (this.selected !== null) {
-      Utils.deselect(this.selected);
+      setDeselected(this.selected);
     }
 
-    Utils.select(element);
+    setSelected(element);
     this.setCustomColor(element);
     this.selected = element;
   }
@@ -105,7 +105,7 @@ export class Colorpicker extends Dialog {
   }
 
   private updateCustomColorInputValue(color: string) {
-    this.customColorButton.value = Utils.rgbToHex(color);
+    this.customColorButton.value = rgbToHex(color);
   }
 
   private setCustomColor(element: HTMLElement) {
@@ -248,5 +248,3 @@ export class Colorpicker extends Dialog {
     }
   }
 }
-
-

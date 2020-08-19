@@ -1,4 +1,9 @@
-import * as Utils from './utils';
+import {
+  setOpen,
+  setClosed,
+  setSelected,
+  setDeselected
+} from '@utils/dom';
 
 /**
  * Base class for dialogs.
@@ -23,11 +28,11 @@ export abstract class Dialog {
    * @param {HTMLElement} target - the dialog opener element
    */
   public open(target: HTMLElement) {
-    Utils.open(this.dialog);
-    Utils.select(target);
+    setOpen(this.dialog);
+    setSelected(target);
 
     if (this.target !== null){
-      Utils.deselect(this.target);
+      setDeselected(this.target);
     }
 
     this.onOpen !== undefined && this.onOpen(this.target, target);
@@ -38,6 +43,7 @@ export abstract class Dialog {
     return this.target;
   }
 
+
   protected onOpen(currentTarget: HTMLElement, nextTarget: HTMLElement) {};
   protected onClose(currentTarget: HTMLElement) {};
 
@@ -46,8 +52,8 @@ export abstract class Dialog {
    * Callback is available by implementing the 'onClose' function.
    */
   public close() {
-    Utils.close(this.dialog);
-    Utils.deselect(this.target);
+    setClosed(this.dialog);
+    setDeselected(this.target);
 
     this.onClose !== undefined && this.onClose(this.target);
     this.target = null;
