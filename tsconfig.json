@@ -10,6 +10,7 @@
     "paths": {
       "@ui/*": [ "src/ui/*" ],
       "@pywalfox/*": [ "src/*" ],
+      "@utils/*": [ "src/utils/*" ],
       "@config/*": [ "src/config/*" ],
       "@definitions": [ "src/definitions" ],
       "@communication/*": [ "src/communication/*" ]
