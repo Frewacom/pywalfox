@@ -29,7 +29,7 @@ import {
 } from '../config/template-data';
 
 import * as Utils from './utils';
-import * as Messenger from './messenger';
+import * as UI from '../communication/ui';
 
 import { Dialog } from './dialog';
 import { Colorpicker } from './colorpicker';
@@ -149,11 +149,11 @@ function onOptionClicked(e: Event) {
     Utils.loading(target);
   }
 
-  Messenger.requestOptionSet(option, newState);
+  UI.requestOptionSet(option, newState);
 }
 
 function onDisableClicked() {
-  Messenger.requestDisable();
+  UI.requestDisable();
   colorpicker.setPywalColors(null);
   colorpicker.setCustomColors(null);
   colorpicker.updateSelected();
@@ -164,7 +164,7 @@ function onDisableClicked() {
 function onFontSizeSave() {
   if (fontSizeSaveInput.checkValidity()) {
     const option = fontSizeSaveInput.getAttribute('data-option');
-    Messenger.requestFontSizeSet(option, parseInt(fontSizeSaveInput.value));
+    UI.requestFontSizeSet(option, parseInt(fontSizeSaveInput.value));
   } else {
     createNotification({
       title: 'Custom font size',
@@ -206,7 +206,7 @@ function onAutoTimeStartSave() {
   if (validateAutoTimeInterval()) {
     const intervalObject = createTimeIntervalObject(autoTimeStartInput.value);
     if (intervalObject !== null) {
-      Messenger.requestAutoTimeSet(EXTENSION_OPTIONS.AUTO_TIME_START, intervalObject);
+      UI.requestAutoTimeSet(EXTENSION_OPTIONS.AUTO_TIME_START, intervalObject);
     }
   }
 }
@@ -215,7 +215,7 @@ function onAutoTimeEndSave() {
   if (validateAutoTimeInterval()) {
     const intervalObject = createTimeIntervalObject(autoTimeEndInput.value);
     if (intervalObject !== null) {
-      Messenger.requestAutoTimeSet(EXTENSION_OPTIONS.AUTO_TIME_END, intervalObject);
+      UI.requestAutoTimeSet(EXTENSION_OPTIONS.AUTO_TIME_END, intervalObject);
     }
   }
 }
@@ -272,7 +272,7 @@ function onPaletteTemplateSave() {
     return;
   }
 
-  Messenger.requestPaletteTemplateSet(template.palette);
+  UI.requestPaletteTemplateSet(template.palette);
 }
 
 function onPaletteTemplateUseCurrent() {
@@ -302,7 +302,7 @@ function onThemeTemplateSave() {
     return;
   }
 
-  Messenger.requestThemeTemplateSet(template.browser);
+  UI.requestThemeTemplateSet(template.browser);
 }
 
 function updateOptionState({ option, enabled, value }: IOptionSetData) {
@@ -557,18 +557,18 @@ function handleExtensionMessage({ action, data }: IExtensionMessage) {
 function setupListeners() {
   overlay.addEventListener('click', closeDialog);
   disableButton.addEventListener('click', onDisableClicked);
-  fetchButton.addEventListener('click', Messenger.requestFetch);
+  fetchButton.addEventListener('click', UI.requestFetch);
   themeButton.addEventListener('click', () => openDialog(themepicker, themeButton));
   fontSizeSaveInput.addEventListener('change', Utils.debounce(onFontSizeSave, 500));
   autoTimeStartInput.addEventListener('change', Utils.debounce(onAutoTimeStartSave, 500));
   autoTimeEndInput.addEventListener('change', Utils.debounce(onAutoTimeEndSave, 500));
 
   themeTemplateSaveButton.addEventListener('click', onThemeTemplateSave);
-  themeTemplateResetButton.addEventListener('click', Messenger.requestThemeTemplateReset);
+  themeTemplateResetButton.addEventListener('click', UI.requestThemeTemplateReset);
 
   paletteTemplateSaveButton.addEventListener('click', onPaletteTemplateSave);
   paletteTemplateCurrentButton.addEventListener('click', onPaletteTemplateUseCurrent);
-  paletteTemplateResetButton.addEventListener('click', Messenger.requestPaletteTemplateReset);
+  paletteTemplateResetButton.addEventListener('click', UI.requestPaletteTemplateReset);
 
   helpToggleButtons.forEach((button: HTMLElement) => button.addEventListener('click', () => onHelpToggle(button)));
   settingCardHeaders.forEach((header: HTMLElement) => header.addEventListener('click', () => Utils.toggleOpen(header.parentElement)));
@@ -590,5 +590,5 @@ setupListeners();
 createPaletteContent();
 createThemeTemplateContent();
 
-Messenger.requestInitialData();
+UI.requestInitialData();
 Utils.setVersionLabel(versionLabel);

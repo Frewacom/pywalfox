@@ -1,7 +1,7 @@
 import * as Utils from './utils';
 
 import { Dialog } from './dialog';
-import { requestPaletteColorSet } from './messenger';
+import { requestPaletteColorSet } from '../communication/ui';
 import { PYWAL_PALETTE_LENGTH } from '../config/general';
 
 import {

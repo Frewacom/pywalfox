@@ -1,6 +1,7 @@
 import { Dialog } from './dialog';
 import { ThemeModes, INodeLookup } from '../definitions';
-import { requestThemeModeSet } from './messenger';
+import { requestThemeModeSet } from '../communication/ui';
+
 import * as Utils from './utils';
 
 export class Themepicker extends Dialog {
@@ -34,6 +35,7 @@ export class Themepicker extends Dialog {
 
     if (this.themeSelectButton !== null) {
       switch (mode) {
+        // TODO: Remove call to 'innerHTML'
         case ThemeModes.Dark:
           this.themeSelectButton.innerHTML = `<i icon="moon" class="icon-md"></i>Dark mode`;
           break;

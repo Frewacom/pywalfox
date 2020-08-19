@@ -1,7 +1,7 @@
 import { setVersionLabel } from './utils';
 import { EXTENSION_MESSAGES } from '../config/general';
 import { IExtensionMessage, ThemeModes } from '../definitions';
-import { requestUpdatePageMute, requestTemplateThemeMode } from './messenger';
+import { requestUpdatePageMute, requestTemplateThemeMode } from '../communication/ui';
 
 const versionLabel = <HTMLSpanElement>document.getElementById('version');
 const disableButton = <HTMLButtonElement>document.getElementById('disable-button');
