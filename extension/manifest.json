@@ -36,42 +36,42 @@
         "fetch_pywal_colors": {
             "description": "Fetches your Pywal colors and updates your browser theme",
             "suggested_key": {
-              "default": "Ctrl+Shift+F",
-              "mac": "MacCtrl+Shift+F"
+              "default": "Ctrl+Alt+F",
+              "mac": "MacCtrl+Alt+F"
             }
         },
         "disable_theme": {
             "description": "Disables the Pywalfox theme",
             "suggested_key": {
-              "default": "Ctrl+Shift+R",
-              "mac": "MacCtrl+Shift+R"
+              "default": "Ctrl+Alt+R",
+              "mac": "MacCtrl+Alt+R"
             }
         },
         "enable_dark_mode": {
             "description": "Enables the Pywalfox Dark mode",
             "suggested_key": {
-              "default": "Ctrl+Shift+D",
-              "mac": "MacCtrl+Shift+D"
+              "default": "Ctrl+Alt+D",
+              "mac": "MacCtrl+Alt+D"
             }
         },
         "enable_light_mode": {
             "description": "Enables the Pywalfox Light mode",
             "suggested_key": {
-              "default": "Ctrl+Shift+L",
-              "mac": "MacCtrl+Shift+L"
+              "default": "Ctrl+Alt+L",
+              "mac": "MacCtrl+Alt+L"
             }
         },
         "enable_auto_mode": {
             "description": "Enables the Pywalfox Auto mode",
             "suggested_key": {
-              "default": "Ctrl+Shift+A",
-              "mac": "MacCtrl+Shift+A"
+              "default": "Ctrl+Alt+A",
+              "mac": "MacCtrl+Alt+A"
             }
         },
         "_execute_browser_action": {
             "suggested_key": {
-              "default": "Ctrl+Shift+P",
-              "mac": "MacCtrl+Shift+P"
+              "default": "Ctrl+Alt+P",
+              "mac": "MacCtrl+Alt+P"
             }
         }
     },
