@@ -24,7 +24,12 @@ export function sendInitialData(data: IInitialData) {
 }
 
 export function sendDebuggingOutput(message: string, error = false) {
-  error === true ? console.error(message) : console.log(message);
+  if (error) {
+    console.error(message);
+  } else {
+    console.log(message);
+  }
+
   sendMessage({ action: EXTENSION_MESSAGES.DEBUGGING_OUTPUT, data: message });
 }
 
@@ -104,7 +109,11 @@ export function requestTemplateThemeMode() {
 
 export function requestPaletteColorSet(id: string, color: string) {
   const paletteColorData: Partial<IPalette> = { [id]: color };
-  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.PALETTE_COLOR_SET, data: paletteColorData });
+
+  browser.runtime.sendMessage({
+    action: EXTENSION_MESSAGES.PALETTE_COLOR_SET,
+    data: paletteColorData,
+  });
 }
 
 export function requestFontSizeSet(option: string, size: number) {

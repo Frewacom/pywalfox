@@ -1,13 +1,13 @@
 import {
   IDuckDuckGoTheme,
   IExtensionMessage,
-  IDuckDuckGoThemeTemplateItem,
+  IDuckDuckGoThemeSetData,
 } from '@definitions';
 
 import { requestTheme } from '@communication/duckduckgo';
 import { EXTENSION_MESSAGES, DUCKDUCKGO_THEME_ID } from '@config/general';
 
-function getCurrentTheme() {
+function getTheme() {
   return window.wrappedJSObject.DDG.settings.get('kae');
 }
 
@@ -19,41 +19,46 @@ function setHash(hash: string) {
   window.localStorage.setItem('hash', hash);
 }
 
-function resetTheme() {
+function onResetTheme() {
+  if (getTheme() !== DUCKDUCKGO_THEME_ID) {
+    return;
+  }
+
   // TODO: We could send the reset theme from the background script based on the current theme mode
-  console.log('Resetting theme');
   window.wrappedJSObject.DDG.settings.setTheme('d');
   setHash('');
 }
 
 function applyTheme(hash: string, theme: IDuckDuckGoTheme) {
-  console.log('Applying Pywalfox theme');
-  for (const key of Object.keys(theme)) {
+  Object.keys(theme).forEach((key) => {
     window.wrappedJSObject.DDG.settings.set(key, theme[key]);
-  }
+  });
 
   window.wrappedJSObject.DDG.settings.set('kae', DUCKDUCKGO_THEME_ID);
 
   setHash(hash);
 }
 
+function onThemeSet(data: IDuckDuckGoThemeSetData) {
+  const { hash, theme } = data;
+  const currentHash = getHash();
+  const currentTheme = getTheme();
+
+  if (currentTheme !== DUCKDUCKGO_THEME_ID || currentHash !== hash) {
+    applyTheme(hash, theme);
+  }
+}
+
 function onMessage({ action, data }: IExtensionMessage) {
-  const currentTheme = getCurrentTheme();
   switch (action) {
     case EXTENSION_MESSAGES.DDG_THEME_SET:
-      const { hash, theme } = data;
-      const currentHash = getHash();
-      if (currentTheme !== DUCKDUCKGO_THEME_ID || currentHash !== hash) {
-        applyTheme(hash, theme);
-      }
+      onThemeSet(data);
       break;
     case EXTENSION_MESSAGES.DDG_THEME_RESET:
-      if (currentTheme === DUCKDUCKGO_THEME_ID) {
-        resetTheme();
-      }
+      onResetTheme();
       break;
     default:
-      console.error(`Received unhandled action: ${action}`);
+      break;
   }
 }
 

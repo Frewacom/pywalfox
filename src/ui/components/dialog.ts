@@ -2,15 +2,15 @@ import {
   setOpen,
   setClosed,
   setSelected,
-  setDeselected
+  setDeselected,
 } from '@utils/dom';
 
 /**
  * Base class for dialogs.
  *
- * @param {string} dialogId - the id of the dialog element
+ * @param dialogId - the id of the dialog element
  */
-export abstract class Dialog {
+export default abstract class Dialog {
   protected dialog: HTMLElement;
   protected target: HTMLElement;
   protected selected: HTMLElement;
@@ -25,15 +25,15 @@ export abstract class Dialog {
    * Opens the dialog and selects/deselects opener elements.
    * Callback is available by implementing the 'onOpen' function.
    *
-   * @param {HTMLElement} target - the dialog opener element
+   * @param target - the dialog opener element
    */
   public open(target: HTMLElement) {
-    setOpen(this.dialog);
-    setSelected(target);
-
-    if (this.target !== null){
+    if (this.target !== null) {
       setDeselected(this.target);
     }
+
+    setOpen(this.dialog);
+    setSelected(target);
 
     this.onOpen !== undefined && this.onOpen(this.target, target);
     this.target = target;
@@ -43,9 +43,16 @@ export abstract class Dialog {
     return this.target;
   }
 
-
-  protected onOpen(currentTarget: HTMLElement, nextTarget: HTMLElement) {};
-  protected onClose(currentTarget: HTMLElement) {};
+  /**
+   * Callbacks for when the dialog is opened or closed.
+   *
+   * @param currentTarget - the element that was seleted when called
+   * @param nextTarget - the element that initiated the callback
+   */
+  /* eslint-disable */
+  protected onOpen(currentTarget: (HTMLElement | null), nextTarget: HTMLElement) {}
+  protected onClose(currentTarget: HTMLElement) {}
+  /* eslint-enable */
 
   /**
    * Closes the dialog and unselects the opener element.

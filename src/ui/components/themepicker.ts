@@ -1,13 +1,14 @@
 import {
   ThemeModes,
-  INodeLookup
+  INodeLookup,
 } from '@definitions';
 
-import { Dialog } from './dialog';
 import { setSelected, setDeselected } from '@utils/dom';
 import { requestThemeModeSet } from '@communication/ui';
 
-export class Themepicker extends Dialog {
+import Dialog from './dialog';
+
+export default class Themepicker extends Dialog {
   private themeSelectButton: HTMLElement;
   private modeButtons: NodeListOf<HTMLElement>;
   private modeLookup: INodeLookup;
@@ -57,13 +58,6 @@ export class Themepicker extends Dialog {
     this.selected = target;
 
     this.setBodyClass(mode);
-    this.removeAutoBodyClassIfNotEnabled(mode);
-  }
-
-  private removeAutoBodyClassIfNotEnabled(mode: ThemeModes) {
-    if (mode !== ThemeModes.Auto) {
-      document.body.classList.remove('auto');
-    }
   }
 
   public setBodyClass(mode: ThemeModes) {
@@ -76,8 +70,10 @@ export class Themepicker extends Dialog {
       document.body.classList.remove(this.currentClassName);
     }
 
+    document.body.classList.add(mode);
+    document.body.classList.remove('auto');
+
     this.currentClassName = mode;
-    document.body.classList.add(this.currentClassName);
   }
 
   private onSetMode(target: HTMLElement) {

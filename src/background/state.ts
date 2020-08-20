@@ -4,14 +4,13 @@ import {
   IPywalColors,
   IColorscheme,
   IBrowserTheme,
-  ICustomColors,
   IExtensionOptions,
   IThemeTemplate,
   IPaletteTemplate,
   IColorschemeTemplate,
-  IColorschemeTemplates,
   IDuckDuckGoThemeTemplate,
   ITimeIntervalEndpoint,
+  IExtensionState,
   IOptionSetData,
   CSSTargets,
   ThemeModes,
@@ -22,23 +21,7 @@ import {
 import { DEFAULT_CSS_FONT_SIZE } from '@config/general';
 import { DEFAULT_THEME_DARK, DEFAULT_THEME_LIGHT } from '@config/default-themes';
 
-export interface IExtensionState {
-  version: number,
-  connected: boolean;
-  updateMuted: boolean;
-  theme: {
-    mode: ThemeModes;
-    isDay: boolean;
-    isApplied: boolean;
-    pywalColors: IPywalColors;
-    colorscheme: IColorscheme;
-    customColors: ICustomColors;
-    templates: IColorschemeTemplates;
-  };
-  options: IExtensionOptions;
-}
-
-export class State {
+export default class State {
   private initialState: IExtensionState;
   public currentState: { [key: string]: any };
 
@@ -239,14 +222,16 @@ export class State {
 
   public getOptionsData() {
     const data: IOptionSetData[] = [];
-    for (const key in this.currentState.options) {
+
+    Object.keys(this.currentState.options).forEach((key) => {
       const value = this.currentState.options[key];
+
       if (typeof value === 'boolean') {
         data.push({ option: key, enabled: value });
       } else {
         data.push({ option: key, enabled: true, value });
       }
-    }
+    });
 
     return data;
   }

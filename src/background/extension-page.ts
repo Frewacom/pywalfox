@@ -1,6 +1,6 @@
 import { IExtensionTheme } from '@definitions';
 
-export class ExtensionPage {
+export default class ExtensionPage {
   protected tab: browser.tabs.Tab;
   protected currentTheme: IExtensionTheme;
   protected url: string;
@@ -13,9 +13,9 @@ export class ExtensionPage {
   }
 
   private async deleteDetached(tabs: browser.tabs.Tab[]) {
-    for (const tab of tabs) {
+    tabs.forEach(async (tab) => {
       await browser.tabs.remove(tab.id);
-    }
+    });
   }
 
   private attach(tab: browser.tabs.Tab) {
@@ -41,7 +41,7 @@ export class ExtensionPage {
     }
   }
 
-  private onClosed(tabId: number, removeInfo?: any) {
+  private onClosed(tabId: number) {
     if (this.tab !== null) {
       if (tabId === this.tab.id) {
         browser.tabs.onRemoved.removeListener(this.onClosed);
@@ -51,7 +51,7 @@ export class ExtensionPage {
     }
   }
 
-  private onUpdated(tabId: number, changeInfo: any, tab?: any) {
+  private onUpdated(tabId: number, changeInfo: any) {
     if (changeInfo.status === 'loading') {
       // The 'url' attribute is only available on loading
       if (changeInfo.url === this.url || changeInfo.url === undefined) {

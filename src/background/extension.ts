@@ -35,12 +35,12 @@ import {
   generateBrowserTheme,
 } from './colorscheme';
 
-import { State } from './state';
-import { NativeApp } from './native-app';
-import { AutoMode } from './auto-mode';
-import { ExtensionPage } from './extension-page';
+import State from './state';
+import NativeApp from './native-app';
+import AutoMode from './auto-mode';
+import ExtensionPage from './extension-page';
 
-export class Extension {
+export default class Extension {
   private state: State;
   private nativeApp: NativeApp;
   private settingsPage: ExtensionPage;
@@ -76,7 +76,7 @@ export class Extension {
 
     if (!themeMode) {
       console.error('Failed to get default template: theme mode is not set');
-      return;
+      return null;
     }
 
     return themeMode === ThemeModes.Dark ? DEFAULT_THEME_DARK : DEFAULT_THEME_LIGHT;
@@ -180,6 +180,8 @@ export class Extension {
         this.state.setUpdateMuted(true);
         this.updatePage.close();
         break;
+      default:
+        break;
     }
   }
 
@@ -236,15 +238,20 @@ export class Extension {
 
   private applyUpdatedPaletteTemplate(template: IPaletteTemplate) {
     const pywalColors = this.state.getPywalColors();
+    const customColors = this.state.getCustomColors();
 
     if (!pywalColors) {
       return;
     }
 
-    const customColors = this.state.getCustomColors();
-    const filteredCustomColors = customColors.filter((color) => {
-      pywalColors[template[color]] !== customColors[color];
-    });
+    // Make sure that a color from the pywal palette is not used as a custom color.
+    let filteredCustomColors = customColors;
+    if (customColors !== null) {
+      filteredCustomColors = <Partial<IPalette>>Object.keys(customColors).filter((key) => {
+        const pywalColor = pywalColors[template[key]];
+        return pywalColor !== customColors[key];
+      });
+    }
 
     this.setThemes(pywalColors, filteredCustomColors);
     UI.sendCustomColors(filteredCustomColors);

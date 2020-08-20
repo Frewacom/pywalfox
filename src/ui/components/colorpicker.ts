@@ -3,16 +3,17 @@ import {
   IPaletteTemplate,
   IPalette,
   INodeLookup,
-  PaletteColors
+  PaletteColors,
 } from '@definitions';
 
-import { Dialog } from './dialog';
 import { rgbToHex } from '@utils/colors';
 import { setSelected, setDeselected } from '@utils/dom';
 import { PYWAL_PALETTE_LENGTH } from '@config/general';
 import { requestPaletteColorSet } from '@communication/ui';
 
-export class Colorpicker extends Dialog {
+import Dialog from './dialog';
+
+export default class Colorpicker extends Dialog {
   private grid: HTMLElement;
   private customColorButton: HTMLInputElement;
   private customColorButtonContainer: HTMLElement;
@@ -100,7 +101,7 @@ export class Colorpicker extends Dialog {
       return null;
     }
 
-    const colorIndex = parseInt(selectedElement.getAttribute('data-color-index'));
+    const colorIndex = parseInt(selectedElement.getAttribute('data-color-index'), 10);
     return this.pywalColors[colorIndex];
   }
 
@@ -167,9 +168,14 @@ export class Colorpicker extends Dialog {
     this.selectedElement = null;
   }
 
-  public setData(pywalColors: IPywalColors, customColor: Partial<IPalette>, template: IPaletteTemplate) {
+  public setData(
+    pywalColors: IPywalColors,
+    customColors: Partial<IPalette>,
+    template: IPaletteTemplate,
+  ) {
+    // TODO: Check if the call to 'this.setCustomColors' is needed
     this.setPywalColors(pywalColors);
-    this.setCustomColors(customColor);
+    this.setCustomColors(customColors);
     this.setPaletteTemplate(template);
   }
 
@@ -180,13 +186,13 @@ export class Colorpicker extends Dialog {
 
     if (pywalColors !== null) {
       this.grid.childNodes.forEach((element: HTMLElement, index: number) => {
-        const color = pywalColors[index]
+        const color = pywalColors[index];
         element.style.backgroundColor = color;
         this.colorElementLookup[color] = element;
       });
     } else {
       this.grid.childNodes.forEach((element: HTMLElement) => {
-        element.style.backgroundColor = "";
+        element.style.backgroundColor = '';
       });
     }
   }
@@ -196,7 +202,7 @@ export class Colorpicker extends Dialog {
   }
 
   public setCustomColors(customColors: Partial<IPalette>) {
-    this.customColors = customColors ? customColors : {};
+    this.customColors = customColors || {};
   }
 
   public getSelectedData(targetId: string) {
@@ -208,7 +214,7 @@ export class Colorpicker extends Dialog {
       color = this.customColors[<PaletteColors>targetId];
       if (this.colorElementLookup.hasOwnProperty(color)) {
         element = this.colorElementLookup[color];
-        index = parseInt(element.getAttribute('data-color-index'));
+        index = parseInt(element.getAttribute('data-color-index'), 10);
       } else {
         element = this.customColorButtonContainer;
       }

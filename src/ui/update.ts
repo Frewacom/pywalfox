@@ -8,6 +8,7 @@ const disableButton = <HTMLButtonElement>document.getElementById('disable-button
 let currentThemeMode: ThemeModes = null;
 
 function handleExtensionMessage({ action, data }: IExtensionMessage) {
+  /* eslint-disable default-case */
   switch (action) {
     case EXTENSION_MESSAGES.THEME_MODE_SET: /* fallthrough */
     case EXTENSION_MESSAGES.TEMPLATE_THEME_MODE_SET:

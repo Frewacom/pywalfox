@@ -31,9 +31,9 @@ import {
 import * as Utils from '@utils/dom';
 import * as UI from '@communication/ui';
 
-import { Dialog } from './components/dialog';
-import { Colorpicker } from './components/colorpicker';
-import { Themepicker } from './components/themepicker';
+import Dialog from './components/dialog';
+import Colorpicker from './components/colorpicker';
+import Themepicker from './components/themepicker';
 
 const optionButtons = <NodeListOf<HTMLElement>>document.querySelectorAll('button[data-option]');
 const helpToggleButtons = <NodeListOf<HTMLElement>>document.querySelectorAll('button[data-help]');
@@ -110,7 +110,7 @@ function toggleIsAppliedBodyClass() {
 
 function setDebuggingInfo({ version, connected }: IDebuggingInfoData) {
   debuggingConnected.innerText = connected ? 'Connected' : 'Disconnected';
-  debuggingVersion.innerText = version == 0 ? 'version not set' : `version ${version}`;
+  debuggingVersion.innerText = `version ${version === 0 ? 'not set' : version}`;
 }
 
 function writeOutput(message: string) {
@@ -125,6 +125,11 @@ function onColorClicked(e: Event) {
 }
 
 function setOptionEnabled(target: HTMLElement, enabled: boolean) {
+  if (target === null) {
+    console.error('Failed to update option state, target is null');
+    return;
+  }
+
   if (Utils.isSet('loading', target)) {
     Utils.setLoaded(target);
   }
@@ -164,7 +169,7 @@ function onDisableClicked() {
 function onFontSizeSave() {
   if (fontSizeSaveInput.checkValidity()) {
     const option = fontSizeSaveInput.getAttribute('data-option');
-    UI.requestFontSizeSet(option, parseInt(fontSizeSaveInput.value));
+    UI.requestFontSizeSet(option, parseInt(fontSizeSaveInput.value, 10));
   } else {
     createNotification({
       title: 'Custom font size',
@@ -187,15 +192,16 @@ function validateAutoTimeInterval() {
 }
 
 function createTimeIntervalObject(value: string) {
-  const valueList = value.split(':');
-  if (valueList.length !== 2) {
+  const [hour, minute] = value.split(':');
+
+  if (hour === undefined || minute === undefined) {
     console.error(`Could not create time interval object for ${value}`);
     return null;
   }
 
   const intervalObject: ITimeIntervalEndpoint = {
-    hour: parseInt(valueList[0]),
-    minute: parseInt(valueList[1]),
+    hour: parseInt(hour, 10),
+    minute: parseInt(minute, 10),
     stringFormat: value,
   };
 
@@ -235,7 +241,7 @@ function onPaletteTemplateInputChanged(e: Event) {
   }
 
   if (target.checkValidity()) {
-    const index = parseInt(value);
+    const index = parseInt(value, 10);
     template.palette[targetId] = index;
     updatePaletteTemplateColorPreview(target, pywalColors, index);
   }
@@ -268,13 +274,12 @@ function onPaletteTemplateSave() {
 }
 
 function onPaletteTemplateUseCurrent() {
-  for (const targetId of Object.values(PaletteColors)) {
+  Object.values(PaletteColors).forEach((targetId) => {
     const { index } = colorpicker.getSelectedData(targetId);
     const inputElement = <HTMLInputElement>paletteTemplateInputLookup[targetId];
 
     if (index === null) {
       console.log(`Palette color '${targetId}' is set to a custom color and can not be used`);
-      continue;
     }
 
     if (inputElement === null) {
@@ -285,7 +290,7 @@ function onPaletteTemplateUseCurrent() {
     updatePaletteTemplateColorPreview(inputElement, pywalColors, index);
     inputElement.value = index.toString();
     template.palette[targetId] = index;
-  }
+  });
 }
 
 function onThemeTemplateSave() {
@@ -309,15 +314,17 @@ function updateOptionState({ option, enabled, value }: IOptionSetData) {
       autoTimeEndInput.value = value.stringFormat;
       break;
     default:
-      const target = <HTMLButtonElement>optionButtonsLookup[option];
-      if (target) {
-        setOptionEnabled(target, enabled);
-      }
+      setOptionEnabled(<HTMLButtonElement>optionButtonsLookup[option], enabled);
   }
 }
 
-function updatePaletteTemplateColorPreview(element: HTMLElement, updatedPywalColors: IPywalColors, index: number) {
+function updatePaletteTemplateColorPreview(
+  element: HTMLElement,
+  updatedPywalColors: IPywalColors,
+  index: number,
+) {
   const previewElement = <HTMLElement>element.previousElementSibling;
+
   if (!previewElement) {
     console.error('Could not find preview element as sibling to:', element);
     return;
@@ -333,9 +340,14 @@ function updatePaletteTemplateColorPreview(element: HTMLElement, updatedPywalCol
   }
 }
 
-function updatePaletteTemplateInputs(updatedTemplate: IPaletteTemplate, updatedPywalColors: IPywalColors) {
-  for (const key in updatedTemplate) {
+// TODO: Write generic function for updating template inputs
+function updatePaletteTemplateInputs(
+  updatedTemplate: IPaletteTemplate,
+  updatedPywalColors: IPywalColors,
+) {
+  Object.keys(updatedTemplate).forEach((key) => {
     const element = <HTMLInputElement>paletteTemplateInputLookup[key];
+
     if (element) {
       const index = updatedTemplate[key];
       element.value = index.toString();
@@ -343,19 +355,20 @@ function updatePaletteTemplateInputs(updatedTemplate: IPaletteTemplate, updatedP
     } else {
       console.error(`Found unhandled palette template target: ${key}`);
     }
-  }
+  });
 }
 
 function updateThemeTemplateInputs(updatedTemplate: IThemeTemplate) {
-  for (const key in updatedTemplate) {
+  Object.keys(updatedTemplate).forEach((key) => {
     const element = <HTMLSelectElement>themeTemplateInputLookup[key];
+
     if (element) {
       const defaultValue = updatedTemplate[key];
       element.value = defaultValue;
     } else {
       console.error(`Found unhandled theme template target: ${key}`);
     }
-  }
+  });
 }
 
 function createNotification(data: INotificationData) {
@@ -384,7 +397,10 @@ function createNotification(data: INotificationData) {
   setTimeout(() => containerElement.classList.remove('fadeout'), 50);
   setTimeout(() => {
     if (notificationContainer.contains(containerElement)) {
-      // The notification might already be deleted if the MAX_SIMULTANEOUS_NOTIFICATIONS treshold is reached
+      /**
+       * The notification might already be deleted if the
+       * MAX_SIMULTANEOUS_NOTIFICATIONS treshold is reached
+       */
       notificationContainer.removeChild(containerElement);
     }
   }, NOTIFICATION_TIMEOUT);
@@ -396,11 +412,11 @@ function createThemeTemplateContent() {
 
   selectElement.classList.add('clickable');
 
-  for (const color of Object.values(PaletteColors)) {
+  Object.values(PaletteColors).forEach((color) => {
     const optionElement = <HTMLOptionElement>document.createElement('option');
     optionElement.innerText = color;
     selectElement.appendChild(optionElement);
-  }
+  });
 
   THEME_TEMPLATE_DATA.forEach((item: ITemplateItem) => {
     const clone = <HTMLElement>themeTemplate.content.cloneNode(true);
@@ -421,7 +437,12 @@ function createThemeTemplateContent() {
   });
 }
 
-function createPaletteItem(parent: HTMLElement, base: HTMLTemplateElement, item: ITemplateItem) {
+// TODO: Create generic function for creating these elements
+function createPaletteItem(
+  parent: HTMLElement,
+  base: HTMLTemplateElement,
+  item: ITemplateItem,
+) {
   const clone = <HTMLElement>base.content.cloneNode(true);
   const titleElement = <HTMLParagraphElement>clone.querySelector('.setting-title');
   const contentElement = <HTMLParagraphElement>clone.querySelector('.setting-description');
@@ -437,7 +458,11 @@ function createPaletteItem(parent: HTMLElement, base: HTMLTemplateElement, item:
   parent.appendChild(clone);
 }
 
-function createPaletteTemplateItem(parent: HTMLElement, base: HTMLTemplateElement, item: ITemplateItem) {
+function createPaletteTemplateItem(
+  parent: HTMLElement,
+  base: HTMLTemplateElement,
+  item: ITemplateItem,
+) {
   const clone = <HTMLElement>base.content.cloneNode(true);
   const titleElement = <HTMLParagraphElement>clone.querySelector('.setting-title');
   const contentElement = <HTMLParagraphElement>clone.querySelector('.setting-description');
@@ -478,9 +503,9 @@ function setInitialData(data: IInitialData) {
     toggleIsAppliedBodyClass();
   }
 
-  for (const optionData of data.options) {
+  data.options.forEach((optionData) => {
     updateOptionState(optionData);
-  }
+  });
 
   colorpicker.setData(data.pywalColors, data.customColors, data.template.palette);
   colorpicker.updateSelected();
@@ -543,6 +568,8 @@ function handleExtensionMessage({ action, data }: IExtensionMessage) {
       break;
     case EXTENSION_MESSAGES.DEBUGGING_INFO_SET:
       setDebuggingInfo(data);
+      break;
+    default:
       break;
   }
 }

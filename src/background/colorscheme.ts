@@ -12,8 +12,8 @@ import {
   IDuckDuckGoThemeTemplateItem,
 } from '@definitions';
 
+import { EXTENSION_THEME_SELCTOR } from '@config/general';
 import { EXTENDED_PYWAL_COLORS } from '@config/default-themes';
-import { DUCKDUCKGO_THEME_ID, EXTENSION_THEME_SELCTOR } from '@config/general';
 import { THEME_TEMPLATE_DATA, PALETTE_TEMPLATE_DATA } from '@config/template-data';
 
 import { changeLuminance } from '@utils/colors';
@@ -22,7 +22,7 @@ import { changeLuminance } from '@utils/colors';
 export function extendPywalColors(pywalColors: IPywalColors) {
   const colors = pywalColors;
 
-  for (const color of EXTENDED_PYWAL_COLORS) {
+  EXTENDED_PYWAL_COLORS.forEach((color) => {
     const {
       targetIndex, colorString, colorIndex, modifier, min, max,
     } = color;
@@ -37,7 +37,7 @@ export function extendPywalColors(pywalColors: IPywalColors) {
     } else {
       console.warn(`Invalid extended pywal color. Missing required properties for targetIndex: ${targetIndex}`);
     }
-  }
+  });
 
   return colors;
 }
@@ -47,10 +47,14 @@ export function generateColorscheme(
   customColors: Partial<IPalette>,
   template: IColorschemeTemplate,
 ) {
-  const originalPalette = createObjectFromTemplateData<IPalette>(PALETTE_TEMPLATE_DATA, pywalPalette, template.palette);
+  const originalPalette = createObjectFromTemplateData<IPalette>(
+    PALETTE_TEMPLATE_DATA,
+    pywalPalette,
+    template.palette,
+  );
 
   // Override the templated palette with any custom colors set by the user
-  const palette = Object.assign(originalPalette, customColors);
+  const palette = { ...originalPalette, ...customColors };
 
   return {
     hash: createPaletteHash(palette),
@@ -68,7 +72,7 @@ export function generateBrowserTheme(palette: IPalette, template: IThemeTemplate
 export function generateDDGTheme(palette: IPalette, template: IDuckDuckGoThemeTemplate) {
   const theme = <IDuckDuckGoTheme>{};
 
-  for (const key of Object.keys(template)) {
+  Object.keys(template).forEach((key) => {
     const item: IDuckDuckGoThemeTemplateItem = template[key];
     let color: string = palette[item.colorKey];
 
@@ -77,7 +81,7 @@ export function generateDDGTheme(palette: IPalette, template: IDuckDuckGoThemeTe
     }
 
     theme[key] = stripHashSymbol(color);
-  }
+  });
 
   return theme;
 }
@@ -85,9 +89,9 @@ export function generateDDGTheme(palette: IPalette, template: IDuckDuckGoThemeTe
 export function generateExtensionTheme(palette: IPalette) {
   let variables: string = '';
 
-  for (const { target, cssVariable } of PALETTE_TEMPLATE_DATA) {
+  PALETTE_TEMPLATE_DATA.forEach(({ target, cssVariable }) => {
     variables += `${cssVariable}:${palette[target]};`;
-  }
+  });
 
   return `${EXTENSION_THEME_SELCTOR}{${variables}}`;
 }
@@ -103,7 +107,7 @@ function createObjectFromTemplateData<T>(
   template: (IPaletteTemplate | IThemeTemplate),
 ) {
   return data.reduce((obj: T, item: ITemplateItem) => {
-    obj[<keyof T>item.target] = values[template[item.target]];
+    obj[<keyof T>item.target] = values[template[item.target]]; // eslint-disable-line
     return obj;
   }, <T>{});
 }
@@ -118,12 +122,13 @@ function stripHashSymbol(color: string) {
  */
 function createPaletteHash(palette: IPalette) {
   const colors = Object.keys(palette);
+  let hash: string = '';
+
   colors.sort((a: string, b: string) => ((a > b) ? 1 : -1));
 
-  let hash: string = '';
-  for (const key of colors) {
+  colors.forEach((key: string) => {
     hash += stripHashSymbol(palette[<PaletteColors>key]);
-  }
+  });
 
   return hash;
 }

@@ -52,7 +52,7 @@ export enum DuckDuckGoThemeKeys {
 
 export type IPalette = {
   [key in PaletteColors]: string;
-}
+};
 
 export interface IBrowserTheme {
   icons: string;
@@ -98,7 +98,7 @@ export type IExtensionTheme = string;
 
 export type IDuckDuckGoTheme = {
   [key in DuckDuckGoThemeKeys]: string;
-}
+};
 
 export interface IColorscheme {
   hash: IPaletteHash;
@@ -110,7 +110,7 @@ export interface IColorscheme {
 
 export type IPaletteTemplate = {
   [key in PaletteColors]: number;
-}
+};
 
 export interface IThemeTemplate {
   [key: string]: PaletteColors;
@@ -123,7 +123,7 @@ export interface IDuckDuckGoThemeTemplateItem {
 
 export type IDuckDuckGoThemeTemplate = {
   [key in DuckDuckGoThemeKeys]: IDuckDuckGoThemeTemplateItem;
-}
+};
 
 export interface IColorschemeTemplate {
   palette: IPaletteTemplate;
@@ -131,8 +131,17 @@ export interface IColorschemeTemplate {
   duckduckgo: IDuckDuckGoThemeTemplate;
 }
 
-export type TemplateTypes = IPaletteTemplate | IThemeTemplate | IDuckDuckGoThemeTemplate;
-export type ColorschemeTypes = IPalette | IPaletteHash | IBrowserTheme | IDuckDuckGoTheme | IExtensionTheme;
+export type TemplateTypes =
+  | IPaletteTemplate
+  | IThemeTemplate
+  | IDuckDuckGoThemeTemplate;
+
+export type ColorschemeTypes =
+  | IPalette
+  | IPaletteHash
+  | IBrowserTheme
+  | IDuckDuckGoTheme
+  | IExtensionTheme;
 
 export interface ICustomColors {
   [ThemeModes.Dark]: Partial<IPalette>;
@@ -156,7 +165,7 @@ export interface IExtensionOptions {
 export interface IExtensionMessage {
   action: string;
   data?: any;
-};
+}
 
 export interface IOptionSetData {
   option: string;
@@ -243,6 +252,22 @@ export interface ITimeIntervalEndpoints {
 }
 
 export type IAutoModeTriggerCallback = (isDay: boolean) => void;
+
+export interface IExtensionState {
+  version: number,
+  connected: boolean;
+  updateMuted: boolean;
+  theme: {
+    mode: ThemeModes;
+    isDay: boolean;
+    isApplied: boolean;
+    pywalColors: IPywalColors;
+    colorscheme: IColorscheme;
+    customColors: ICustomColors;
+    templates: IColorschemeTemplates;
+  };
+  options: IExtensionOptions;
+}
 
 /**
  * Expose 'wrappedJSObject' from the 'window' namespace.

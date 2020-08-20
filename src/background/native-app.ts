@@ -15,7 +15,7 @@ import { RESPONSE_TIMEOUT, NATIVE_MESSAGES } from '@config/native';
  * user's computer and share resources that are otherwise inaccessible by the browser.
  * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging
  */
-export class NativeApp {
+export default class NativeApp {
   private isConnected: boolean;
   private port: browser.runtime.Port;
   private callbacks: INativeAppMessageCallbacks;
@@ -118,7 +118,7 @@ export class NativeApp {
         return;
       }
 
-      this.callbacks.cssFontSizeSetSuccess(parseInt(updatedFontSize));
+      this.callbacks.cssFontSizeSetSuccess(parseInt(updatedFontSize, 10));
     } else {
       this.callbacks.cssFontSizeSetFailed(message.error);
     }
@@ -165,7 +165,8 @@ export class NativeApp {
   }
 
   public requestCssEnabled(target: string, enabled: boolean) {
-    this.sendMessage({ action: enabled ? NATIVE_MESSAGES.CSS_ENABLE : NATIVE_MESSAGES.CSS_DISABLE, target });
+    const action = enabled ? NATIVE_MESSAGES.CSS_ENABLE : NATIVE_MESSAGES.CSS_DISABLE;
+    this.sendMessage({ action, target });
   }
 
   public requestFontSizeSet(target: string, size: number) {

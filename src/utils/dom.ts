@@ -61,6 +61,7 @@ export function toggleOpen(element: HTMLElement) {
 }
 
 export function debounce<F extends (...params: any[]) => void>(fn: F, delay: number) {
+  /* eslint-disable */
   let timeoutID: number = null;
   return function (this: any, ...args: any[]) {
     clearTimeout(timeoutID);
