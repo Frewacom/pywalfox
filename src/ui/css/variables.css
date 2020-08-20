@@ -59,8 +59,8 @@ body {
 
   --transition-time: 0.1s;
 
-  --lighter-background: rgba(255,255,255,0.05);
-  --lighter-background-hover: rgba(255,255,255,0.2);
+  --lighter-background: rgba(255,255,255,0.08);
+  --lighter-background-hover: rgba(255,255,255,0.1);
   --darker-background: rgba(0,0,0,0.2);
 
   --button-background: var(--background);
@@ -89,8 +89,8 @@ body.light {
 
   --brightness-filter: brightness(107%);
   --border-color: rgba(0,0,0,0.15);
-  --lighter-background: rgba(0,0,0,0.03);
-  --lighter-background-hover: rgba(0,0,0,0.08);
+  --lighter-background: rgba(0,0,0,0.08);
+  --lighter-background-hover: rgba(0,0,0,0.1);
   --darker-background: var(--lighter-background);
 
   --button-background: var(--background-light);
@@ -98,7 +98,7 @@ body.light {
   --button-text: var(--text-focus);
   --button-text-accent: var(--background-light);
 
-  --box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+  --box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
   --box-shadow-button-hover: 0 0 0 1px var(--text);
   --box-shadow-card: 0 1px 4px 0 rgba(12, 12, 13, 0.1);
   --box-shadow-highlight: var(--box-shadow);

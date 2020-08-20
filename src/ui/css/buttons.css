@@ -129,34 +129,6 @@
   left: unset;
 }
 
-.btn-color[data-target="background"] {
-  background: var(--background);
-}
-
-.btn-color[data-target="backgroundLight"] {
-  background: var(--background-light);
-}
-
-.btn-color[data-target="text"] {
-  background: var(--text);
-}
-
-.btn-color[data-target="textFocus"] {
-  background: var(--text-focus);
-}
-
-.btn-color[data-target="accentPrimary"] {
-  background: var(--accent-primary);
-}
-
-.btn-color[data-target="accentSecondary"] {
-  background: var(--accent-secondary);
-}
-
-.btn-color[data-target="backgroundExtra"] {
-  background: var(--background-extra);
-}
-
 .btn-palette-color {
   height: var(--button-height-sm);
   border-radius: var(--border-radius-sm);

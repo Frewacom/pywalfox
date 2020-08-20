@@ -430,6 +430,7 @@ function createPaletteItem(parent: HTMLElement, base: HTMLTemplateElement, item:
   titleElement.innerText = item.title;
   contentElement.innerText = item.description;
   buttonElement.setAttribute('data-target', item.target);
+  buttonElement.style.backgroundColor = `var(${item.cssVariable})`;
 
   buttonElement.addEventListener('click', onColorClicked);
 
