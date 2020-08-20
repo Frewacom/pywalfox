@@ -1,5 +1,10 @@
+import {
+  IDuckDuckGoTheme,
+  IExtensionMessage,
+  IDuckDuckGoThemeTemplateItem
+} from '@definitions';
+
 import { requestTheme } from '@communication/duckduckgo';
-import { IDuckDuckGoTheme, IExtensionMessage } from '@definitions';
 import { EXTENSION_MESSAGES, DUCKDUCKGO_THEME_ID } from '@config/general';
 
 function getCurrentTheme() {
@@ -23,9 +28,11 @@ function resetTheme() {
 
 function applyTheme(hash: string, theme: IDuckDuckGoTheme) {
   console.log('Applying Pywalfox theme');
-  for (const id of Object.keys(theme)) {
-    window.wrappedJSObject.DDG.settings.set(id, theme[id]);
+  for (const key of Object.keys(theme)) {
+    window.wrappedJSObject.DDG.settings.set(key, theme[key]);
   }
+
+  window.wrappedJSObject.DDG.settings.set('kae', DUCKDUCKGO_THEME_ID);
 
   setHash(hash);
 }

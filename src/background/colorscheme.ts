@@ -6,16 +6,19 @@ import {
   ITemplateItem,
   IThemeTemplate,
   IPaletteTemplate,
+  IDuckDuckGoTheme,
   IColorschemeTemplate,
   IDuckDuckGoThemeTemplate,
+  IDuckDuckGoThemeTemplateItem,
 } from '@definitions';
 
-import { DUCKDUCKGO_THEME_ID } from '@config/general';
 import { EXTENDED_PYWAL_COLORS } from '@config/default-themes';
+import { DUCKDUCKGO_THEME_ID, EXTENSION_THEME_SELCTOR } from '@config/general';
 import { THEME_TEMPLATE_DATA, PALETTE_TEMPLATE_DATA } from '@config/template-data';
 
-import { changeLuminance, normalizeLuminance } from '@utils/colors';
+import { changeLuminance } from '@utils/colors';
 
+// TODO: Refactor this ugly function
 export function extendPywalColors(pywalColors: IPywalColors) {
   const colors = pywalColors;
 
@@ -23,7 +26,7 @@ export function extendPywalColors(pywalColors: IPywalColors) {
     const { targetIndex, colorString, colorIndex, modifier, min, max } = color;
     if (color.hasOwnProperty('colorIndex') && color.hasOwnProperty('modifier')) {
       if (color.hasOwnProperty('min') && color.hasOwnProperty('max')) {
-        colors.splice(targetIndex, 0, normalizeLuminance(colors[colorIndex], modifier, min, max));
+        colors.splice(targetIndex, 0, changeLuminance(colors[colorIndex], modifier, min, max));
       } else {
         colors.splice(targetIndex, 0, changeLuminance(colors[colorIndex], modifier));
       }
@@ -61,33 +64,30 @@ export function generateBrowserTheme(palette: IPalette, template: IThemeTemplate
 }
 
 export function generateDDGTheme(palette: IPalette, template: IDuckDuckGoThemeTemplate) {
-  const modifier = template.modifier;
+  const theme = <IDuckDuckGoTheme>{};
 
-  return {
-    'k7':  stripHashSymbol(palette[template.background]),
-    'kj':  stripHashSymbol(palette[template.headerBackground]),
-    'k9':  stripHashSymbol(palette[template.resultTitle]),
-    'k8':  stripHashSymbol(palette[template.resultDescription]),
-    'kx':  stripHashSymbol(changeLuminance(palette[template.resultLink], modifier)),
-    'kaa': stripHashSymbol(changeLuminance(palette[template.resultLinkVisited], modifier)),
-    'k21': stripHashSymbol(palette[template.hover]),
-    'kae': DUCKDUCKGO_THEME_ID,
-  };
+  for (const key of Object.keys(template)) {
+    const item: IDuckDuckGoThemeTemplateItem = template[key];
+    let color: string = palette[item.colorKey];
+
+    if (item.hasOwnProperty('modifier')) {
+      color = changeLuminance(color, item.modifier);
+    }
+
+    theme[key] = stripHashSymbol(color);
+  }
+
+  return theme;
 }
 
 export function generateExtensionTheme(palette: IPalette) {
-  // String concatenations is used to avoid spaces and escape sequences
-  let css: string = 'body,body.light,body.dark{';
-  css += `--background: ${palette.background};`;
-  css += `--background-light: ${palette.backgroundLight};`;
-  css += `--background-extra: ${palette.backgroundExtra};`;
-  css += `--text: ${palette.text};`;
-  css += `--accent-primary: ${palette.accentPrimary};`;
-  css += `--accent-secondary: ${palette.accentSecondary};`;
-  css += `--text-focus: ${palette.textFocus};`;
-  css += '}';
+  let variables: string = '';
 
-  return css;
+  for (const { target, cssVariable } of PALETTE_TEMPLATE_DATA) {
+    variables += `${cssVariable}:${palette[target]};`;
+  }
+
+  return `${EXTENSION_THEME_SELCTOR}{${variables}}`;
 }
 
 /**

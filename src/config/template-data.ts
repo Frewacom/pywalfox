@@ -1,13 +1,48 @@
 import { ITemplateItem, PaletteColors } from '@definitions';
 
 export const PALETTE_TEMPLATE_DATA: ITemplateItem[] = [
-  { title: 'Background', description: 'Main background color', target: PaletteColors.Background },
-  { title: 'Background light', description: 'Secondary background color', target: PaletteColors.BackgroundLight },
-  { title: 'Background extra', description: 'Additional contrasting background color', target: PaletteColors.BackgroundExtra },
-  { title: 'Text', description: 'Main text color', target: PaletteColors.Text },
-  { title: 'Text focus', description: 'Text used in the current tab, etc.', target: PaletteColors.TextFocus },
-  { title: 'Accent primary', description: 'Main accent color, used for icons', target: PaletteColors.AccentPrimary },
-  { title: 'Accent secondary', description: 'Mainly used for hovers and highlights', target: PaletteColors.AccentSecondary },
+  {
+    title: 'Background',
+    description: 'Main background color',
+    target: PaletteColors.Background,
+    cssVariable: '--background',
+  },
+  {
+    title: 'Background light',
+    description: 'Secondary background color',
+    target: PaletteColors.BackgroundLight,
+    cssVariable: '--background-light',
+  },
+  {
+    title: 'Background extra',
+    description: 'Additional contrasting background color',
+    target: PaletteColors.BackgroundExtra,
+    cssVariable: '--background-extra',
+  },
+  {
+    title: 'Text',
+    description: 'Main text color',
+    target: PaletteColors.Text,
+    cssVariable: '--text',
+  },
+  {
+    title: 'Text focus',
+    description: 'Text used in the current tab, etc.',
+    target: PaletteColors.TextFocus,
+    cssVariable: '--text-focus',
+  },
+  {
+    title: 'Accent primary',
+    description: 'Main accent color, used for icons',
+    target: PaletteColors.AccentPrimary,
+    cssVariable: '--accent-primary',
+  },
+  {
+    title: 'Accent secondary',
+    description: 'Mainly used for hovers and highlights',
+    target: PaletteColors.AccentSecondary,
+    cssVariable: '--accent-secondary',
+  },
 ];
 
 export const THEME_TEMPLATE_DATA: ITemplateItem[] = [

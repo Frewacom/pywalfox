@@ -9,6 +9,7 @@ export const NOTIFICATION_TIMEOUT = 5000;
 export const MAX_SIMULTANEOUS_NOTIFICATIONS = 3;
 
 export const ENABLED_BODY_CLASS = 'applied';
+export const EXTENSION_THEME_SELCTOR = 'body,body.light,body.dark';
 export const DUCKDUCKGO_THEME_ID = 'pywalfox';
 export const INJECT_URL_PATTERN = [ '*://*.duckduckgo.com/*' ];
 

@@ -1,11 +1,14 @@
 import {
   PaletteColors,
+  DuckDuckGoThemeKeys,
   IThemeTemplate,
   IPaletteTemplate,
   IColorschemeTemplate,
   IDuckDuckGoThemeTemplate,
   IExtendedPywalColors,
 } from '@definitions';
+
+import { DUCKDUCKGO_THEME_ID } from '@config/general';
 
 export const EXTENDED_PYWAL_COLORS: IExtendedPywalColors = [
   { targetIndex: 16, colorIndex: 0, modifier: 1.25 },
@@ -114,26 +117,26 @@ export const DEFAULT_BROWSER_TEMPLATE_LIGHT: IThemeTemplate = {
   button_background_active: PaletteColors.BackgroundExtra,
 };
 
+const BASE_DDG_THEME = (mainBackground: PaletteColors) => {
+  return {
+    [DuckDuckGoThemeKeys.Background]: { colorKey: mainBackground },
+    [DuckDuckGoThemeKeys.HeaderBackground]: { colorKey: mainBackground },
+    [DuckDuckGoThemeKeys.ResultTitle]: { colorKey: PaletteColors.TextFocus },
+    [DuckDuckGoThemeKeys.ResultDescription]: { colorKey: PaletteColors.Text },
+    [DuckDuckGoThemeKeys.Hover]: { colorKey: PaletteColors.BackgroundLight },
+  };
+};
+
 export const DEFAULT_DDG_THEME_DARK: IDuckDuckGoThemeTemplate = {
-  background: PaletteColors.Background,
-  headerBackground: PaletteColors.Background,
-  resultTitle: PaletteColors.TextFocus,
-  resultDescription: PaletteColors.Text,
-  resultLink: PaletteColors.AccentSecondary,
-  resultLinkVisited: PaletteColors.AccentPrimary,
-  hover: PaletteColors.BackgroundLight,
-  modifier: 0.2,
+  ...BASE_DDG_THEME(PaletteColors.Background),
+  [DuckDuckGoThemeKeys.ResultLink]: { colorKey: PaletteColors.AccentSecondary, modifier: 0.2  },
+  [DuckDuckGoThemeKeys.ResultLinkVisited]: { colorKey: PaletteColors.AccentPrimary, modifier: 0.2 },
 };
 
 export const DEFAULT_DDG_THEME_LIGHT: IDuckDuckGoThemeTemplate = {
-  background: PaletteColors.BackgroundLight,
-  headerBackground: PaletteColors.BackgroundLight,
-  resultTitle: PaletteColors.TextFocus,
-  resultDescription: PaletteColors.Text,
-  resultLink: PaletteColors.AccentSecondary,
-  resultLinkVisited: PaletteColors.AccentPrimary,
-  hover: PaletteColors.BackgroundLight,
-  modifier: -0.3,
+  ...BASE_DDG_THEME(PaletteColors.BackgroundLight),
+  [DuckDuckGoThemeKeys.ResultLink]: { colorKey: PaletteColors.AccentSecondary, modifier: -0.3  },
+  [DuckDuckGoThemeKeys.ResultLinkVisited]: { colorKey: PaletteColors.AccentPrimary, modifier: -0.3 },
 };
 
 export const DEFAULT_THEME_DARK: IColorschemeTemplate = {
