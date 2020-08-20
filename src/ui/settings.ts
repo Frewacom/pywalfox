@@ -1,17 +1,17 @@
 import {
-    IExtensionMessage,
-    IColorschemeTemplate,
-    ITimeIntervalEndpoint,
-    IPaletteTemplate,
-    IThemeTemplate,
-    IInitialData,
-    IOptionSetData,
-    INodeLookup,
-    IPywalColors,
-    ITemplateItem,
-    INotificationData,
-    IDebuggingInfoData,
-    PaletteColors,
+  IExtensionMessage,
+  IColorschemeTemplate,
+  ITimeIntervalEndpoint,
+  IPaletteTemplate,
+  IThemeTemplate,
+  IInitialData,
+  IOptionSetData,
+  INodeLookup,
+  IPywalColors,
+  ITemplateItem,
+  INotificationData,
+  IDebuggingInfoData,
+  PaletteColors,
 } from '@definitions';
 
 import {
@@ -71,9 +71,9 @@ let currentDialog: Dialog = null;
 let pywalColors: IPywalColors = null;
 let template: IColorschemeTemplate = null;
 
-let optionButtonsLookup: INodeLookup = {};
-let paletteTemplateInputLookup: INodeLookup = {};
-let themeTemplateInputLookup: INodeLookup = {};
+const optionButtonsLookup: INodeLookup = {};
+const paletteTemplateInputLookup: INodeLookup = {};
+const themeTemplateInputLookup: INodeLookup = {};
 
 function openDialog(dialog: Dialog, target: HTMLElement) {
   if (!Utils.isOpen(overlay)) {
@@ -114,7 +114,7 @@ function setDebuggingInfo({ version, connected }: IDebuggingInfoData) {
 }
 
 function writeOutput(message: string) {
-  debuggingOutput.value += message + '\n';
+  debuggingOutput.value += `${message}\n`;
   debuggingOutput.scrollTop = debuggingOutput.scrollHeight; // Scrolls to bottom of textarea
 }
 
@@ -143,7 +143,7 @@ function setOptionEnabled(target: HTMLElement, enabled: boolean) {
 function onOptionClicked(e: Event) {
   const target = <HTMLElement>e.target;
   const option = target.getAttribute('data-option');
-  const newState = Utils.isSet('selected', target) ? false : true;
+  const newState = !Utils.isSet('selected', target);
 
   if (Utils.isSet('async', target)) {
     Utils.setLoading(target);
@@ -169,7 +169,7 @@ function onFontSizeSave() {
     createNotification({
       title: 'Custom font size',
       message: 'Invalid value, should be between 10-20 pixels',
-      error: true
+      error: true,
     });
   }
 }
@@ -227,7 +227,7 @@ function onHelpToggle(target: HTMLElement) {
 function onPaletteTemplateInputChanged(e: Event) {
   const target = <HTMLInputElement>e.target;
   const targetId = target.getAttribute('data-target');
-  const value = target.value;
+  const { value } = target;
 
   if (!template.palette.hasOwnProperty(targetId)) {
     console.error(`Invalid/missing 'data-target' attribute on palette template input: ${targetId}`);
@@ -243,7 +243,7 @@ function onPaletteTemplateInputChanged(e: Event) {
 
 function onThemeTemplateInputChanged(target: HTMLSelectElement) {
   const targetId = target.getAttribute('data-target');
-  const value = (<HTMLOptionElement>target[target.selectedIndex]).value;
+  const { value } = <HTMLOptionElement>target[target.selectedIndex];
 
   if (!template.browser.hasOwnProperty(targetId)) {
     console.error(`Invalid 'data-target' attribute on theme template input: ${targetId}`);
@@ -371,7 +371,7 @@ function createNotification(data: INotificationData) {
   const iconElement = <HTMLElement>clone.querySelector('i');
   const closeElement = <HTMLButtonElement>clone.querySelector('button');
 
-  titleElement.innerText = title + ':';
+  titleElement.innerText = `${title}:`;
   contentElement.innerText = message;
   iconElement.setAttribute('icon', error ? 'error' : 'bell');
   error && containerElement.classList.add('error');
@@ -385,7 +385,7 @@ function createNotification(data: INotificationData) {
   setTimeout(() => {
     if (notificationContainer.contains(containerElement)) {
       // The notification might already be deleted if the MAX_SIMULTANEOUS_NOTIFICATIONS treshold is reached
-      notificationContainer.removeChild(containerElement)
+      notificationContainer.removeChild(containerElement);
     }
   }, NOTIFICATION_TIMEOUT);
 }
@@ -570,11 +570,11 @@ function setupListeners() {
   paletteTemplateResetButton.addEventListener('click', UI.requestPaletteTemplateReset);
 
   helpToggleButtons.forEach((button: HTMLElement) => {
-    button.addEventListener('click', () => onHelpToggle(button))
+    button.addEventListener('click', () => onHelpToggle(button));
   });
 
   settingCardHeaders.forEach((header: HTMLElement) => {
-    header.addEventListener('click', () => Utils.toggleOpen(header.parentElement))
+    header.addEventListener('click', () => Utils.toggleOpen(header.parentElement));
   });
 
   optionButtons.forEach((button: HTMLElement) => {

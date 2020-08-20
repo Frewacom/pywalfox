@@ -23,7 +23,7 @@ export function sendInitialData(data: IInitialData) {
   sendMessage({ action: EXTENSION_MESSAGES.INITIAL_DATA_SET, data });
 }
 
-export function sendDebuggingOutput(message: string, error=false) {
+export function sendDebuggingOutput(message: string, error = false) {
   error === true ? console.error(message) : console.log(message);
   sendMessage({ action: EXTENSION_MESSAGES.DEBUGGING_OUTPUT, data: message });
 }
@@ -32,7 +32,7 @@ export function sendDebuggingInfo(info: IDebuggingInfoData) {
   sendMessage({ action: EXTENSION_MESSAGES.DEBUGGING_INFO_SET, data: info });
 }
 
-export function sendNotification(title: string, message: string, error=false) {
+export function sendNotification(title: string, message: string, error = false) {
   const notificationData: INotificationData = { title, message, error };
   sendMessage({ action: EXTENSION_MESSAGES.NOTIFCATION, data: notificationData });
 }

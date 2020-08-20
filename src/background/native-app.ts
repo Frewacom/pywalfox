@@ -2,7 +2,7 @@ import {
   IPywalColors,
   INativeAppMessage,
   INativeAppRequest,
-  INativeAppMessageCallbacks
+  INativeAppMessageCallbacks,
 } from '@definitions';
 
 import { RESPONSE_TIMEOUT, NATIVE_MESSAGES } from '@config/native';
@@ -36,13 +36,13 @@ export class NativeApp {
       return message.data;
     }
 
-    this.logError(`Recieved invalid message from native app. The 'data' field is undefined.`);
+    this.logError('Recieved invalid message from native app. The \'data\' field is undefined.');
     return null;
   }
 
   private async onMessage(message: INativeAppMessage) {
     console.debug(message);
-    switch(message.action) {
+    switch (message.action) {
       case NATIVE_MESSAGES.VERSION:
         this.onVersionResponse(message);
         break;
@@ -114,7 +114,7 @@ export class NativeApp {
       const updatedFontSize = this.getData(message);
 
       if (!updatedFontSize) {
-        this.logError(`Font size was updated successfully, but the updated font size was not specified`);
+        this.logError('Font size was updated successfully, but the updated font size was not specified');
         return;
       }
 

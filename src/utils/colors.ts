@@ -1,5 +1,5 @@
 function validateHex(hex: string) {
-  let validatedHex = String(hex).replace(/[^0-9a-f]/gi, "");
+  let validatedHex = String(hex).replace(/[^0-9a-f]/gi, '');
   if (hex.length < 6) {
     validatedHex = validatedHex.replace(/(.)/g, '$1$1');
   }
@@ -11,13 +11,13 @@ export function rgbToHex(rgb: string) {
   if (rgb[0] === '#' || !rgb) { return rgb; }
   const hex = rgb.substr(4, rgb.indexOf(')') - 4).split(',').map((color) => {
     let str = parseInt(color).toString(16);
-    return str.length === 1 ? str = "0" + str : str;
+    return str.length === 1 ? str = `0${str}` : str;
   }).join('');
-  return '#' + hex;
+  return `#${hex}`;
 }
 
 // https://www.sitepoint.com/javascript-generate-lighter-darker-color/
-export function changeLuminance(hex: string, lum: number, min=0, max=255) {
+export function changeLuminance(hex: string, lum: number, min = 0, max = 255) {
   let validatedHex = validateHex(hex);
   if (validatedHex === '000000') {
     // If the color is completely black, we can not generate a brighter color,
@@ -26,13 +26,13 @@ export function changeLuminance(hex: string, lum: number, min=0, max=255) {
   }
 
   lum = lum || 0;
-  let rgb: any = "#"
+  let rgb: any = '#';
   let c: any;
 
   for (let i = 0; i < 3; ++i) {
     c = parseInt(validatedHex.substr(i * 2, 2), 16);
     c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
-    rgb += ("00" + c).substr(c.length);
+    rgb += (`00${c}`).substr(c.length);
   }
 
   return rgb;

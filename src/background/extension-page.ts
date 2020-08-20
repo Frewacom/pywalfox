@@ -56,7 +56,6 @@ export class ExtensionPage {
       // The 'url' attribute is only available on loading
       if (changeInfo.url === this.url || changeInfo.url === undefined) {
         this.setTheme(this.currentTheme);
-        return;
       } else {
         this.onClosed(tabId);
       }
@@ -69,7 +68,7 @@ export class ExtensionPage {
     browser.tabs.onRemoved.addListener(this.onClosed.bind(this));
     browser.tabs.onUpdated.addListener(this.onUpdated.bind(this), {
       tabId: this.tab.id,
-      properties: [ 'status' ],
+      properties: ['status'],
     });
   }
 
@@ -103,7 +102,7 @@ export class ExtensionPage {
     browser.tabs.update(this.tab.id, { active: true });
   }
 
-  public async setTheme(extensionTheme: IExtensionTheme, resetCurrent=true) {
+  public async setTheme(extensionTheme: IExtensionTheme, resetCurrent = true) {
     if (this.tab !== null) {
       if (resetCurrent === true && this.currentTheme !== null) {
         await this.removeInsertedCss();
@@ -124,7 +123,7 @@ export class ExtensionPage {
   }
 
   public isOpen() {
-    return this.tab === null ? false : true;
+    return this.tab !== null;
   }
 
   public close() {

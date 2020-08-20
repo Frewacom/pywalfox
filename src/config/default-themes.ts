@@ -14,7 +14,9 @@ export const EXTENDED_PYWAL_COLORS: IExtendedPywalColors = [
   { targetIndex: 16, colorIndex: 0, modifier: 1.25 },
   { targetIndex: 17, colorString: '#ffffff' },
   { targetIndex: 18, colorIndex: 0, modifier: 1.85 },
-  { targetIndex: 19, colorIndex: 7, modifier: 0.1, min: 200, max: 225 },
+  {
+    targetIndex: 19, colorIndex: 7, modifier: 0.1, min: 200, max: 225,
+  },
 ];
 
 export const DEFAULT_PALETTE_TEMPLATE_DARK: IPaletteTemplate = {
@@ -117,25 +119,23 @@ export const DEFAULT_BROWSER_TEMPLATE_LIGHT: IThemeTemplate = {
   button_background_active: PaletteColors.BackgroundExtra,
 };
 
-const BASE_DDG_THEME = (mainBackground: PaletteColors) => {
-  return {
-    [DuckDuckGoThemeKeys.Background]: { colorKey: mainBackground },
-    [DuckDuckGoThemeKeys.HeaderBackground]: { colorKey: mainBackground },
-    [DuckDuckGoThemeKeys.ResultTitle]: { colorKey: PaletteColors.TextFocus },
-    [DuckDuckGoThemeKeys.ResultDescription]: { colorKey: PaletteColors.Text },
-    [DuckDuckGoThemeKeys.Hover]: { colorKey: PaletteColors.BackgroundLight },
-  };
-};
+const BASE_DDG_THEME = (mainBackground: PaletteColors) => ({
+  [DuckDuckGoThemeKeys.Background]: { colorKey: mainBackground },
+  [DuckDuckGoThemeKeys.HeaderBackground]: { colorKey: mainBackground },
+  [DuckDuckGoThemeKeys.ResultTitle]: { colorKey: PaletteColors.TextFocus },
+  [DuckDuckGoThemeKeys.ResultDescription]: { colorKey: PaletteColors.Text },
+  [DuckDuckGoThemeKeys.Hover]: { colorKey: PaletteColors.BackgroundLight },
+});
 
 export const DEFAULT_DDG_THEME_DARK: IDuckDuckGoThemeTemplate = {
   ...BASE_DDG_THEME(PaletteColors.Background),
-  [DuckDuckGoThemeKeys.ResultLink]: { colorKey: PaletteColors.AccentSecondary, modifier: 0.2  },
+  [DuckDuckGoThemeKeys.ResultLink]: { colorKey: PaletteColors.AccentSecondary, modifier: 0.2 },
   [DuckDuckGoThemeKeys.ResultLinkVisited]: { colorKey: PaletteColors.AccentPrimary, modifier: 0.2 },
 };
 
 export const DEFAULT_DDG_THEME_LIGHT: IDuckDuckGoThemeTemplate = {
   ...BASE_DDG_THEME(PaletteColors.BackgroundLight),
-  [DuckDuckGoThemeKeys.ResultLink]: { colorKey: PaletteColors.AccentSecondary, modifier: -0.3  },
+  [DuckDuckGoThemeKeys.ResultLink]: { colorKey: PaletteColors.AccentSecondary, modifier: -0.3 },
   [DuckDuckGoThemeKeys.ResultLinkVisited]: { colorKey: PaletteColors.AccentPrimary, modifier: -0.3 },
 };
 

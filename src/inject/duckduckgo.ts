@@ -1,7 +1,7 @@
 import {
   IDuckDuckGoTheme,
   IExtensionMessage,
-  IDuckDuckGoThemeTemplateItem
+  IDuckDuckGoThemeTemplateItem,
 } from '@definitions';
 
 import { requestTheme } from '@communication/duckduckgo';

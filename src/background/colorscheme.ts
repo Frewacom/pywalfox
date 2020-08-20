@@ -23,7 +23,9 @@ export function extendPywalColors(pywalColors: IPywalColors) {
   const colors = pywalColors;
 
   for (const color of EXTENDED_PYWAL_COLORS) {
-    const { targetIndex, colorString, colorIndex, modifier, min, max } = color;
+    const {
+      targetIndex, colorString, colorIndex, modifier, min, max,
+    } = color;
     if (color.hasOwnProperty('colorIndex') && color.hasOwnProperty('modifier')) {
       if (color.hasOwnProperty('min') && color.hasOwnProperty('max')) {
         colors.splice(targetIndex, 0, changeLuminance(colors[colorIndex], modifier, min, max));
@@ -43,7 +45,7 @@ export function extendPywalColors(pywalColors: IPywalColors) {
 export function generateColorscheme(
   pywalPalette: IPywalColors,
   customColors: Partial<IPalette>,
-  template: IColorschemeTemplate
+  template: IColorschemeTemplate,
 ) {
   const originalPalette = createObjectFromTemplateData<IPalette>(PALETTE_TEMPLATE_DATA, pywalPalette, template.palette);
 
@@ -98,7 +100,7 @@ export function generateExtensionTheme(palette: IPalette) {
 function createObjectFromTemplateData<T>(
   data: ITemplateItem[],
   values: (IPywalColors | IPalette),
-  template: (IPaletteTemplate | IThemeTemplate)
+  template: (IPaletteTemplate | IThemeTemplate),
 ) {
   return data.reduce((obj: T, item: ITemplateItem) => {
     obj[<keyof T>item.target] = values[template[item.target]];
@@ -116,7 +118,7 @@ function stripHashSymbol(color: string) {
  */
 function createPaletteHash(palette: IPalette) {
   const colors = Object.keys(palette);
-  colors.sort((a: string, b: string) => (a > b) ? 1 : -1);
+  colors.sort((a: string, b: string) => ((a > b) ? 1 : -1));
 
   let hash: string = '';
   for (const key of colors) {

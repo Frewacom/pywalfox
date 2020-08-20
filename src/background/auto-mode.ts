@@ -1,6 +1,6 @@
 import {
   ITimeIntervalEndpoint,
-  IAutoModeTriggerCallback
+  IAutoModeTriggerCallback,
 } from '@definitions';
 
 import { sendDebuggingOutput } from '@communication/ui';
@@ -65,7 +65,7 @@ export class AutoMode {
     };
   }
 
-  private deleteCurrentTimeout(printOutput=false) {
+  private deleteCurrentTimeout(printOutput = false) {
     if (this.checkTimeout !== null) {
       clearTimeout(this.checkTimeout);
       this.checkTimeout = null;

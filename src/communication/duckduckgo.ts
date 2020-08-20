@@ -2,7 +2,7 @@ import {
   IDuckDuckGoTheme,
   IExtensionMessage,
   IPaletteHash,
-  IDuckDuckGoThemeSetData
+  IDuckDuckGoThemeSetData,
 } from '@definitions';
 
 import { EXTENSION_MESSAGES, INJECT_URL_PATTERN } from '@config/general';
@@ -24,5 +24,5 @@ export function setTheme(hash: IPaletteHash, theme: IDuckDuckGoTheme) {
 }
 
 export function resetTheme() {
-  sendMessage({ action: EXTENSION_MESSAGES.DDG_THEME_RESET});
+  sendMessage({ action: EXTENSION_MESSAGES.DDG_THEME_RESET });
 }

@@ -26,6 +26,9 @@ import {
   DEFAULT_THEME_LIGHT,
 } from '@config/default-themes';
 
+import * as UI from '@communication/ui';
+import * as DDG from '@communication/duckduckgo';
+
 import {
   extendPywalColors,
   generateColorscheme,
@@ -36,9 +39,6 @@ import { State } from './state';
 import { NativeApp } from './native-app';
 import { AutoMode } from './auto-mode';
 import { ExtensionPage } from './extension-page';
-
-import * as UI from '@communication/ui';
-import * as DDG from '@communication/duckduckgo';
 
 export class Extension {
   private state: State;
@@ -95,7 +95,7 @@ export class Extension {
 
     switch (optionData.option) {
       case EXTENSION_OPTIONS.FONT_SIZE:
-        this.setCssFontSize(optionData['value']);
+        this.setCssFontSize(optionData.value);
         break;
       case EXTENSION_OPTIONS.DUCKDUCKGO:
         this.setDDGEnabled(optionData);
@@ -230,7 +230,7 @@ export class Extension {
     }
 
     this.state.setColors(pywalColors, colorscheme);
-    this.state.setCustomColors(customColors ? customColors : null);
+    this.state.setCustomColors(customColors || null);
     this.state.setApplied(true);
   }
 
@@ -289,7 +289,7 @@ export class Extension {
     if (Object.values(CSSTargets).includes(<CSSTargets>option)) {
       this.nativeApp.requestCssEnabled(option, enabled);
     } else {
-      let action = enabled ? 'enable' : 'disable';
+      const action = enabled ? 'enable' : 'disable';
       UI.sendNotification('Custom CSS', `Could not ${action} CSS target "${option}". Invalid target`, true);
       UI.sendOption(option, !enabled);
     }
@@ -486,7 +486,7 @@ export class Extension {
   }
 
   private cssToggleSuccess(target: CSSTargets) {
-    const newState = this.state.getCssEnabled(target) ? false : true;
+    const newState = !this.state.getCssEnabled(target);
     let notificationMessage: string = `${target} was disabled successfully!`;
 
     if (newState === true) {

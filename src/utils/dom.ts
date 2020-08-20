@@ -12,7 +12,7 @@ export function isOpen(element: HTMLElement) {
 }
 
 export function toggleAttribute(element: HTMLElement, attr: string) {
-  const newState = isSet(attr, element) ? false : true;
+  const newState = !isSet(attr, element);
   if (newState) {
     element.setAttribute(attr, '');
   } else {
@@ -62,7 +62,7 @@ export function toggleOpen(element: HTMLElement) {
 
 export function debounce<F extends (...params: any[]) => void>(fn: F, delay: number) {
   let timeoutID: number = null;
-  return function(this: any, ...args: any[]) {
+  return function (this: any, ...args: any[]) {
     clearTimeout(timeoutID);
     timeoutID = window.setTimeout(() => fn.apply(this, args), delay);
   } as F;

@@ -69,7 +69,7 @@ export class State {
         duckduckgo: false,
         autoTimeStart: { hour: 10, minute: 0, stringFormat: '10:00' },
         autoTimeEnd: { hour: 19, minute: 0, stringFormat: '19:00' },
-      }
+      },
     };
   }
 
@@ -233,12 +233,12 @@ export class State {
   public getAutoTimeInterval() {
     return {
       start: this.currentState.options.autoTimeStart,
-      end: this.currentState.options.autoTimeEnd
+      end: this.currentState.options.autoTimeEnd,
     };
   }
 
   public getOptionsData() {
-    let data: IOptionSetData[] = [];
+    const data: IOptionSetData[] = [];
     for (const key in this.currentState.options) {
       const value = this.currentState.options[key];
       if (typeof value === 'boolean') {
@@ -331,8 +331,8 @@ export class State {
     return this.set({
       theme: {
         ...this.currentState.theme,
-        pywalColors: pywalColors,
-        colorscheme: colorscheme,
+        pywalColors,
+        colorscheme,
       },
     });
   }
@@ -375,7 +375,7 @@ export class State {
 
   public async load() {
     this.currentState = await browser.storage.local.get(this.initialState);
-}
+  }
 
   public dump() {
     console.log(this.currentState);
