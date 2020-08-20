@@ -16,6 +16,7 @@
     "browser": "web-ext run",
     "web-ext-lint": "web-ext lint",
     "eslint": "npx esw -w --color ./src/**/*.ts",
+    "eslint-fix": "npx eslint --fix ./src/**/*.ts",
     "debug": "run-p watch browser eslint",
     "build": "run-s build:* web-ext-lint",
     "build:compile": "npx rollup -c",
@@ -67,6 +68,10 @@
       "es2017": true,
       "browser": true,
       "webextensions": true
+    },
+    "rules": {
+      "no-console": "off",
+      "@typescript-eslint/lines-between-class-members": "off"
     }
   }
 }
