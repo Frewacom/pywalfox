@@ -17,14 +17,16 @@
     "web-ext-lint": "web-ext lint",
     "eslint": "npx esw -w --cache --color --ext .ts",
     "eslint-fix": "npx eslint --fix ./src/**/*.ts",
+    "tests": "npx jest",
     "debug": "run-p watch browser",
-    "build": "run-s build:* eslint web-ext-lint",
+    "build": "run-s build:* tests eslint web-ext-lint",
     "build:compile": "npx rollup -c",
     "build:dist": "web-ext build",
     "build:source": "bestzip artifacts/source.zip extension src tsconfig.json package.json yarn.lock rollup.config.js LICENSE README.md"
   },
   "devDependencies": {
     "@types/firefox-webext-browser": "^70.0.1",
+    "@types/jest": "^26.0.10",
     "@typescript-eslint/eslint-plugin": "^3.9.1",
     "@typescript-eslint/parser": "^3.9.1",
     "bestzip": "^2.1.5",
@@ -32,6 +34,7 @@
     "eslint-config-airbnb-typescript": "^9.0.0",
     "eslint-plugin-import": "^2.21.2",
     "eslint-watch": "^7.0.0",
+    "jest": "^26.4.1",
     "npm-run-all": "^4.1.5",
     "postcss-import": "^12.0.1",
     "postcss-url": "^8.0.0",
@@ -42,6 +45,7 @@
     "rollup-plugin-terser": "^5.3.0",
     "rollup-plugin-typescript-paths": "^1.2.2",
     "rollup-plugin-typescript2": "^0.27.1",
+    "ts-jest": "^26.2.0",
     "tslib": "^2.0.0",
     "typescript": "^3.9.3",
     "web-ext": "^4.1.0"
@@ -59,6 +63,18 @@
       ]
     }
   },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^@ui/(.*)$": [ "<rootDir>/src/ui/$1" ],
+      "^@pywalfox/(.*)$": [ "<rootDir>/src/$1" ],
+      "^@utils/(.*)$": [ "<rootDir>/src/utils/$1" ],
+      "^@config/(.*)$": [ "<rootDir>/src/config/$1" ],
+      "^@definitions": [ "<rootDir>/src/definitions" ],
+      "^@communication/(.*)$": [ "<rootDir>/src/communication/$1" ]
+    }
+  },
   "eslintConfig": {
     "extends": "airbnb-typescript/base",
     "parserOptions": {
@@ -74,10 +90,20 @@
       "no-param-reassign": "off",
       "no-prototype-builtins": "off",
       "class-methods-use-this": "off",
-      "no-plusplus": [ "warn", { "allowForLoopAfterthoughts": true } ],
+      "no-plusplus": [
+        "warn",
+        {
+          "allowForLoopAfterthoughts": true
+        }
+      ],
       "@typescript-eslint/no-use-before-define": "off",
       "@typescript-eslint/lines-between-class-members": "off",
-      "@typescript-eslint/no-unused-expressions": [ "warn", { "allowShortCircuit": true } ]
+      "@typescript-eslint/no-unused-expressions": [
+        "warn",
+        {
+          "allowShortCircuit": true
+        }
+      ]
     }
   }
 }
