@@ -29,15 +29,10 @@ import {
 import * as UI from '@communication/ui';
 import * as DDG from '@communication/duckduckgo';
 
-import {
-  extendPywalColors,
-  generateColorscheme,
-  generateBrowserTheme,
-} from './colorscheme';
-
 import State from './state';
-import NativeApp from './native-app';
 import AutoMode from './auto-mode';
+import NativeApp from './native-app';
+import Generators from './generators';
 import ExtensionPage from './extension-page';
 
 export default class Extension {
@@ -222,7 +217,7 @@ export default class Extension {
 
   private setThemes(pywalColors: IPywalColors, customColors?: Partial<IPalette>) {
     const template = this.state.getTemplate();
-    const colorscheme = generateColorscheme(pywalColors, customColors, template);
+    const colorscheme = Generators.colorscheme(pywalColors, customColors, template);
 
     this.setBrowserTheme(colorscheme.browser);
     this.updateExtensionPagesTheme(colorscheme.extension);
@@ -396,7 +391,7 @@ export default class Extension {
 
     if (palette !== null) {
       // Generate a new browser theme only based on the current palette and the new template
-      const browserTheme = generateBrowserTheme(palette, updatedTemplate);
+      const browserTheme = Generators.browser(palette, updatedTemplate);
       this.setBrowserTheme(browserTheme);
       this.state.setBrowserTheme(browserTheme);
     }
@@ -472,16 +467,16 @@ export default class Extension {
   }
 
   private async onPywalColorsFetchSuccess(pywalColors: IPywalColors) {
-    const colors = extendPywalColors(pywalColors);
+    const pywalPalette = Generators.pywalPalette(pywalColors);
     UI.sendDebuggingOutput('Pywal colors were fetched from daemon and applied successfully');
-    UI.sendPywalColors(colors);
+    UI.sendPywalColors(pywalPalette);
 
     // We must make sure to reset all custom colors for both theme modes or
     // previously selected custom colors will still be active on theme mode switch,
     // even after a Fetch.
     await this.state.resetAllCustomColors();
 
-    this.setThemes(colors);
+    this.setThemes(pywalPalette);
 
     if (this.state.getThemeMode() === ThemeModes.Auto) {
       this.startAutoThemeMode();
