@@ -10,8 +10,7 @@ export function minuteNumberToMs(minute: number, currentSecond: number) {
   return Math.abs(minute * 60 * 1000 - (currentSecond * 1000));
 }
 
-export function checkIfDayTime(startTime: ITimeIntervalEndpoint, endTime: ITimeIntervalEndpoint) {
-  const currentDate = new Date();
+export function checkIfDayTime(currentDate: Date, startTime: ITimeIntervalEndpoint, endTime: ITimeIntervalEndpoint) {
   const currentHour = currentDate.getHours();
   const currentMinute = currentDate.getMinutes();
   const currentSecond = currentDate.getSeconds();
@@ -75,7 +74,7 @@ export default class AutoMode {
   }
 
   private update() {
-    const { result, timeoutDelay } = checkIfDayTime(this.startTime, this.endTime);
+    const { result, timeoutDelay } = checkIfDayTime(new Date(), this.startTime, this.endTime);
 
     if (result !== this.isDay) {
       this.callback(result);
