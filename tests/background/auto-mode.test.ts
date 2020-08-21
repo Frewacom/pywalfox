@@ -10,13 +10,11 @@ const endTime: ITimeIntervalEndpoint = { hour: 20, minute: 0, stringFormat: '20:
 const currentTime = new Date();
 
 // Updates the current hour and minute and returns the 'result' property from checkIfDayTime
-function getCheckIfDayTimeResult(hour: number, minute: number) {
+function getCheckIfDayTimeResponse(hour: number, minute: number) {
   currentTime.setHours(hour);
   currentTime.setMinutes(minute);
 
-  const { result } = checkIfDayTime(currentTime, startTime, endTime);
-
-  return result;
+  return checkIfDayTime(currentTime, startTime, endTime);
 }
 
 test('minuteNumberToMs calculates the time in ms until a certain minute', () => {
@@ -28,13 +26,15 @@ test('minuteNumberToMs calculates the time in ms until a certain minute', () => 
 });
 
 test('checkIfDayTime returns true if current time is between selected time interval', () => {
-  expect(getCheckIfDayTimeResult(10, 30)).toBe(true);
-  expect(getCheckIfDayTimeResult(12, 0)).toBe(true);
-  expect(getCheckIfDayTimeResult(19, 59)).toBe(true);
+  expect(getCheckIfDayTimeResponse(10, 30).result).toBe(true);
+  expect(getCheckIfDayTimeResponse(12, 0).result).toBe(true);
+  expect(getCheckIfDayTimeResponse(19, 59).result).toBe(true);
 });
 
 test('checkIfDayTime returns false if current time is not between selected time interval', () => {
-  expect(getCheckIfDayTimeResult(10, 29)).toBe(false);
-  expect(getCheckIfDayTimeResult(0, 0)).toBe(false);
-  expect(getCheckIfDayTimeResult(20, 0)).toBe(false);
+  expect(getCheckIfDayTimeResponse(10, 29).result).toBe(false);
+  expect(getCheckIfDayTimeResponse(0, 0).result).toBe(false);
+  expect(getCheckIfDayTimeResponse(20, 0).result).toBe(false);
 });
+
+// add tests for validating the 'timeoutDelay' property from checkIfDayTime
