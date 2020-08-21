@@ -107,6 +107,9 @@ export default class AutoMode {
     isApplied && this.applyUpdatedInterval();
   }
 
+  public getStartTime(){ return this.startTime; }
+  public getEndTime() { return this.endTime; }
+
   public stop() {
     this.deleteCurrentTimeout(true);
   }

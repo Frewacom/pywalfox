@@ -17,7 +17,7 @@
     "web-ext-lint": "web-ext lint",
     "eslint": "npx esw -w --cache --color --ext .ts",
     "eslint-fix": "npx eslint --fix ./src/**/*.ts",
-    "tests": "npx jest",
+    "tests": "npx jest --verbose",
     "debug": "run-p watch browser",
     "build": "run-s build:* tests eslint web-ext-lint",
     "build:compile": "npx rollup -c",

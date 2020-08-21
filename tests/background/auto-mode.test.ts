@@ -7,8 +7,14 @@ import AutoMode, { minuteNumberToMs, checkIfDayTime } from '@pywalfox/background
 
 const autoMode = new AutoMode(() => {});
 const startTime: ITimeIntervalEndpoint = { hour: 10, minute: 30, stringFormat: '10:30' };
-const endTime: ITimeIntervalEndpoint = { hour: 20, minute: 0, stringFormat: '20:00' };
+const endTime: ITimeIntervalEndpoint = { hour: 19, minute: 0, stringFormat: '19:00' };
 const currentTime = new Date();
+
+// Set the initial time interval
+function setInitialTimeInterval() {
+  autoMode.setStartTime(startTime, false);
+  autoMode.setEndTime(endTime, false);
+}
 
 // Updates the current hour and minute and returns the 'result' property from checkIfDayTime
 function getCheckIfDayTimeResponse(hour: number, minute: number) {
@@ -16,8 +22,12 @@ function getCheckIfDayTimeResponse(hour: number, minute: number) {
   currentTime.setMinutes(minute);
   currentTime.setSeconds(0);
 
-  return checkIfDayTime(currentTime, startTime, endTime);
+  return checkIfDayTime(currentTime, autoMode.getStartTime(), autoMode.getEndTime());
 }
+
+beforeAll(() => {
+  setInitialTimeInterval();
+});
 
 describe('minuteNumberToMs', () => {
   test('calculates the time in ms until a certain minute', () => {
@@ -30,23 +40,32 @@ describe('minuteNumberToMs', () => {
 });
 
 describe('checkIfDayTime', () => {
-  test('returns true if current time is between selected time interval', () => {
+  test('returns true if current time is in the selected time interval', () => {
     expect(getCheckIfDayTimeResponse(10, 30).result).toBe(true);
     expect(getCheckIfDayTimeResponse(12, 0).result).toBe(true);
-    expect(getCheckIfDayTimeResponse(19, 59).result).toBe(true);
+    expect(getCheckIfDayTimeResponse(18, 59).result).toBe(true);
   });
 
-  test('returns false if current time is not between selected time interval', () => {
+  test('returns false if current time is not in the selected time interval', () => {
     expect(getCheckIfDayTimeResponse(10, 29).result).toBe(false);
     expect(getCheckIfDayTimeResponse(0, 0).result).toBe(false);
-    expect(getCheckIfDayTimeResponse(20, 0).result).toBe(false);
+    expect(getCheckIfDayTimeResponse(19, 0).result).toBe(false);
   });
 
-  test('timeoutDelay corresponds to next update', () => {
+  test('timeoutDelay corresponds to the time until the next update', () => {
     expect(getCheckIfDayTimeResponse(10, 29).timeoutDelay).toBe(60000);
     expect(getCheckIfDayTimeResponse(0, 0).timeoutDelay).toBe(AUTO_MODE_INTERVAL_MS);
-    expect(getCheckIfDayTimeResponse(20, 0).timeoutDelay).toBe(AUTO_MODE_INTERVAL_MS);
-    expect(getCheckIfDayTimeResponse(19, 59).timeoutDelay).toBe(60000);
+    expect(getCheckIfDayTimeResponse(19, 0).timeoutDelay).toBe(AUTO_MODE_INTERVAL_MS);
+    expect(getCheckIfDayTimeResponse(18, 59).timeoutDelay).toBe(60000);
+  });
+
+  test('returns a correct value if the time interval is updated', () => {
+    expect(getCheckIfDayTimeResponse(9, 30).result).toBe(false);
+    autoMode.setStartTime({ hour: 9, minute: 0, stringFormat: '09:00' }, false);
+    expect(getCheckIfDayTimeResponse(9, 30).result).toBe(true);
+
+    expect(getCheckIfDayTimeResponse(20, 30).result).toBe(false);
+    autoMode.setEndTime({ hour: 21, minute: 0, stringFormat: '21:00' }, false);
+    expect(getCheckIfDayTimeResponse(20, 30).result).toBe(true);
   });
 });
-
