@@ -120,7 +120,7 @@ function stripHashSymbol(color: string) {
  * Creates a unique hash based on the colors in the palette,
  * used to detect when the theme has been changed.
  */
-function createPaletteHash(palette: IPalette) {
+export function createPaletteHash(palette: IPalette) {
   const colors = Object.keys(palette);
   let hash: string = '';
 
