@@ -4,7 +4,7 @@ import {
 } from '@definitions';
 
 import { setSelected, setDeselected } from '@utils/dom';
-import { requestThemeModeSet } from '@communication/ui';
+import { requestThemeModeSet } from '@communication/content-scripts/ui';
 
 import Dialog from './dialog';
 
@@ -41,13 +41,13 @@ export default class Themepicker extends Dialog {
       switch (mode) {
         // TODO: Remove call to 'innerHTML'
         case ThemeModes.Dark:
-          this.themeSelectButton.innerHTML = `<i icon="moon" class="icon-md"></i>Dark mode`;
+          this.themeSelectButton.innerHTML = '<i icon="moon" class="icon-md"></i>Dark mode';
           break;
         case ThemeModes.Light:
-          this.themeSelectButton.innerHTML = `<i icon="sun" class="icon-md"></i>Light mode`;
+          this.themeSelectButton.innerHTML = '<i icon="sun" class="icon-md"></i>Light mode';
           break;
         case ThemeModes.Auto:
-          this.themeSelectButton.innerHTML = `<i icon="auto" class="icon-md"></i>Auto mode`;
+          this.themeSelectButton.innerHTML = '<i icon="auto" class="icon-md"></i>Auto mode';
           break;
         default:
           console.error('Invalid theme type');

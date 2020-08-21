@@ -26,18 +26,17 @@ import {
   DEFAULT_THEME_LIGHT,
 } from '@config/default-themes';
 
-import * as UI from '@communication/ui';
-import * as DDG from '@communication/duckduckgo';
+import Messenger from '@communication/messenger';
+import NativeMessenger from '@communication/native-messenger';
 
 import State from './state';
 import AutoMode from './auto-mode';
-import NativeApp from './native-app';
 import Generators from './generators';
 import ExtensionPage from './extension-page';
 
 export default class Extension {
   private state: State;
-  private nativeApp: NativeApp;
+  private nativeMessenger: NativeMessenger;
   private settingsPage: ExtensionPage;
   private updatePage: ExtensionPage;
   private autoMode: AutoMode;
@@ -47,12 +46,12 @@ export default class Extension {
     this.state = new State();
     this.stateLoadPromise = null;
     this.autoMode = new AutoMode(this.onThemeChangeTrigger.bind(this));
-    this.nativeApp = new NativeApp({
+    this.nativeMessenger = new NativeMessenger({
       connected: this.nativeAppConnected.bind(this),
       updateNeeded: this.updateNeeded.bind(this),
       disconnected: this.nativeAppDisconnected.bind(this),
       version: this.validateVersion.bind(this),
-      output: UI.sendDebuggingOutput.bind(this),
+      output: Messenger.UI.sendDebuggingOutput.bind(this),
       pywalColorsFetchSuccess: this.onPywalColorsFetchSuccess.bind(this),
       pywalColorsFetchFailed: this.onPywalColorsFetchFailed.bind(this),
       cssToggleSuccess: this.cssToggleSuccess.bind(this),
@@ -84,7 +83,7 @@ export default class Extension {
 
   private setOption(optionData: IOptionSetData) {
     if (!optionData) {
-      UI.sendDebuggingOutput('Tried to set option, but no data was provided', true);
+      Messenger.UI.sendDebuggingOutput('Tried to set option, but no data was provided', true);
       return;
     }
 
@@ -104,7 +103,7 @@ export default class Extension {
         this.setAutoTimeInterval(optionData);
         break;
       default:
-        UI.sendDebuggingOutput(`Received unhandled option: ${optionData.option}`);
+        Messenger.UI.sendDebuggingOutput(`Received unhandled option: ${optionData.option}`);
     }
   }
 
@@ -112,7 +111,7 @@ export default class Extension {
   private onCommand(command: string) {
     switch (command) {
       case EXTENSION_COMMANDS.FETCH_THEME:
-        this.nativeApp.requestPywalColors();
+        this.nativeMessenger.requestPywalColors();
         break;
       case EXTENSION_COMMANDS.DISABLE_THEME:
         this.resetThemes();
@@ -142,7 +141,7 @@ export default class Extension {
           await this.stateLoadPromise;
         }
 
-        UI.sendInitialData(this.state.getInitialData());
+        Messenger.UI.sendInitialData(this.state.getInitialData());
         break;
       case EXTENSION_MESSAGES.DDG_THEME_GET:
         this.setDDGTheme();
@@ -157,7 +156,7 @@ export default class Extension {
         this.setThemeMode(data);
         break;
       case EXTENSION_MESSAGES.TEMPLATE_THEME_MODE_GET:
-        UI.sendTemplateThemeMode(this.state.getTemplateThemeMode());
+        Messenger.UI.sendTemplateThemeMode(this.state.getTemplateThemeMode());
         break;
       case EXTENSION_MESSAGES.THEME_FETCH:
         this.fetchTheme();
@@ -189,11 +188,11 @@ export default class Extension {
     const isConnected = this.state.getConnected();
 
     if (!isConnected) {
-      UI.sendNotification('Fetch failed', 'You are not connected to the Pywalfox daemon', true);
+      Messenger.UI.sendNotification('Fetch failed', 'You are not connected to the Pywalfox daemon', true);
       return;
     }
 
-    this.nativeApp.requestPywalColors();
+    this.nativeMessenger.requestPywalColors();
   }
 
   private resetThemes() {
@@ -205,14 +204,14 @@ export default class Extension {
     }
 
     if (this.state.getDDGThemeEnabled()) {
-      DDG.resetTheme();
+      Messenger.DDG.resetTheme();
     }
 
     this.state.setColors(null, null);
     this.state.setCustomColors(null);
     this.state.setApplied(false);
 
-    UI.sendDebuggingOutput('Theme was disabled');
+    Messenger.UI.sendDebuggingOutput('Theme was disabled');
   }
 
   private setThemes(pywalColors: IPywalColors, customColors?: Partial<IPalette>) {
@@ -223,7 +222,7 @@ export default class Extension {
     this.updateExtensionPagesTheme(colorscheme.extension);
 
     if (this.state.getDDGThemeEnabled()) {
-      DDG.setTheme(colorscheme.hash, colorscheme.duckduckgo);
+      Messenger.DDG.setTheme(colorscheme.hash, colorscheme.duckduckgo);
     }
 
     this.state.setColors(pywalColors, colorscheme);
@@ -249,14 +248,14 @@ export default class Extension {
     }
 
     this.setThemes(pywalColors, filteredCustomColors);
-    UI.sendCustomColors(filteredCustomColors);
+    Messenger.UI.sendCustomColors(filteredCustomColors);
   }
 
   private applyDuckDuckGoTheme() {
     const colorscheme = this.state.getColorscheme();
 
     if (colorscheme) {
-      DDG.setTheme(colorscheme.hash, colorscheme.duckduckgo);
+      Messenger.DDG.setTheme(colorscheme.hash, colorscheme.duckduckgo);
     }
   }
 
@@ -270,10 +269,10 @@ export default class Extension {
     if (enabled && !isDDGEnabled) {
       this.applyDuckDuckGoTheme();
     } else if (!enabled && isDDGEnabled) {
-      DDG.resetTheme();
+      Messenger.DDG.resetTheme();
     }
 
-    UI.sendOption(option, enabled);
+    Messenger.UI.sendOption(option, enabled);
     this.state.setDDGThemeEnabled(enabled);
   }
 
@@ -283,26 +282,26 @@ export default class Extension {
     if (isDDGEnabled) {
       this.applyDuckDuckGoTheme();
     } else {
-      DDG.resetTheme();
+      Messenger.DDG.resetTheme();
     }
   }
 
   private setCustomCSSEnabled({ option, enabled }: IOptionSetData) {
     if (Object.values(CSSTargets).includes(<CSSTargets>option)) {
-      this.nativeApp.requestCssEnabled(option, enabled);
+      this.nativeMessenger.requestCssEnabled(option, enabled);
     } else {
       const action = enabled ? 'enable' : 'disable';
-      UI.sendNotification('Custom CSS', `Could not ${action} CSS target "${option}". Invalid target`, true);
-      UI.sendOption(option, !enabled);
+      Messenger.UI.sendNotification('Custom CSS', `Could not ${action} CSS target "${option}". Invalid target`, true);
+      Messenger.UI.sendOption(option, !enabled);
     }
   }
 
   private setCssFontSize(value: number) {
     if (typeof value === 'number' && value !== undefined && value >= 10 && value <= 20) {
       // Currently, only userChrome uses the custom font size feature
-      this.nativeApp.requestFontSizeSet(CSSTargets.UserChrome, value);
+      this.nativeMessenger.requestFontSizeSet(CSSTargets.UserChrome, value);
     } else {
-      UI.sendNotification('Font size error', 'Invalid size or not set', true);
+      Messenger.UI.sendNotification('Font size error', 'Invalid size or not set', true);
     }
   }
 
@@ -316,8 +315,8 @@ export default class Extension {
   private async onThemeChangeTrigger(isDay: boolean) {
     await this.state.setIsDay(isDay);
     this.updateThemeForCurrentMode();
-    UI.sendTemplateThemeMode(this.state.getTemplateThemeMode());
-    UI.sendDebuggingOutput(`Theme update triggered by automatic theme mode. Is day: ${isDay}`);
+    Messenger.UI.sendTemplateThemeMode(this.state.getTemplateThemeMode());
+    Messenger.UI.sendDebuggingOutput(`Theme update triggered by automatic theme mode. Is day: ${isDay}`);
   }
 
   private updateThemeForCurrentMode() {
@@ -327,9 +326,9 @@ export default class Extension {
 
     pywalColors && this.setThemes(pywalColors, customColors);
 
-    UI.sendPaletteTemplate(template.palette);
-    UI.sendThemeTemplate(template.browser);
-    UI.sendCustomColors(customColors);
+    Messenger.UI.sendPaletteTemplate(template.palette);
+    Messenger.UI.sendThemeTemplate(template.browser);
+    Messenger.UI.sendCustomColors(customColors);
   }
 
   private async setThemeMode(mode: ThemeModes) {
@@ -359,12 +358,12 @@ export default class Extension {
         this.startAutoThemeMode();
       }
 
-      UI.sendTemplateThemeMode(this.state.getTemplateThemeMode());
+      Messenger.UI.sendTemplateThemeMode(this.state.getTemplateThemeMode());
     } else {
       this.autoMode.stop();
     }
 
-    UI.sendThemeMode(mode);
+    Messenger.UI.sendThemeMode(mode);
   }
 
   private setPaletteTemplate(template: IPaletteTemplate) {
@@ -377,8 +376,8 @@ export default class Extension {
     this.state.setPaletteTemplate(updatedTemplate);
     this.applyUpdatedPaletteTemplate(updatedTemplate);
 
-    UI.sendPaletteTemplate(updatedTemplate);
-    UI.sendNotification('Palette template', 'Template was updated successfully');
+    Messenger.UI.sendPaletteTemplate(updatedTemplate);
+    Messenger.UI.sendNotification('Palette template', 'Template was updated successfully');
   }
 
   private setThemeTemplate(template: IThemeTemplate) {
@@ -398,8 +397,8 @@ export default class Extension {
 
     this.state.setThemeTemplate(updatedTemplate);
 
-    UI.sendThemeTemplate(updatedTemplate);
-    UI.sendNotification('Theme template', 'Template was updated successfully');
+    Messenger.UI.sendThemeTemplate(updatedTemplate);
+    Messenger.UI.sendNotification('Theme template', 'Template was updated successfully');
   }
 
   private setPaletteColor(palette: Partial<IPalette>) {
@@ -417,14 +416,14 @@ export default class Extension {
     if (option === EXTENSION_OPTIONS.AUTO_TIME_START) {
       this.state.setAutoTimeStart(value);
       this.autoMode.setStartTime(value, isApplied);
-      UI.sendAutoTimeStart(value);
+      Messenger.UI.sendAutoTimeStart(value);
     } else {
       this.state.setAutoTimeEnd(value);
       this.autoMode.setEndTime(value, isApplied);
-      UI.sendAutoTimeEnd(value);
+      Messenger.UI.sendAutoTimeEnd(value);
     }
 
-    UI.sendNotification('Auto mode', 'Light theme interval was updated successfully');
+    Messenger.UI.sendNotification('Auto mode', 'Light theme interval was updated successfully');
   }
 
   private createCustomColorPalette(data: Partial<IPalette>) {
@@ -462,14 +461,14 @@ export default class Extension {
   private nativeAppDisconnected() {
     this.state.setConnected(false);
 
-    UI.sendDebuggingOutput('Disconnected from native app', true);
-    UI.sendDebuggingInfo({ connected: false, version: this.state.getVersion() });
+    Messenger.UI.sendDebuggingOutput('Disconnected from native app', true);
+    Messenger.UI.sendDebuggingInfo({ connected: false, version: this.state.getVersion() });
   }
 
   private async onPywalColorsFetchSuccess(pywalColors: IPywalColors) {
     const pywalPalette = Generators.pywalPalette(pywalColors);
-    UI.sendDebuggingOutput('Pywal colors were fetched from daemon and applied successfully');
-    UI.sendPywalColors(pywalPalette);
+    Messenger.UI.sendDebuggingOutput('Pywal colors were fetched from daemon and applied successfully');
+    Messenger.UI.sendPywalColors(pywalPalette);
 
     // We must make sure to reset all custom colors for both theme modes or
     // previously selected custom colors will still be active on theme mode switch,
@@ -484,7 +483,7 @@ export default class Extension {
   }
 
   private onPywalColorsFetchFailed(error: string) {
-    UI.sendNotification('Pywal colors', error, true);
+    Messenger.UI.sendNotification('Pywal colors', error, true);
   }
 
   private cssToggleSuccess(target: CSSTargets) {
@@ -507,26 +506,26 @@ export default class Extension {
 
     this.state.setCssEnabled(target, newState);
 
-    UI.sendOption(target, newState);
-    UI.sendNotification('Restart needed', notificationMessage);
+    Messenger.UI.sendOption(target, newState);
+    Messenger.UI.sendNotification('Restart needed', notificationMessage);
   }
 
   private cssToggleFailed(target: string, error: string) {
     const currentState = this.state.getCssEnabled(target);
 
-    UI.sendOption(target, currentState);
-    UI.sendNotification('Custom CSS', error);
+    Messenger.UI.sendOption(target, currentState);
+    Messenger.UI.sendNotification('Custom CSS', error);
   }
 
   private cssFontSizeSetSuccess(size: number) {
     this.state.setCssFontSize(size);
 
-    UI.sendNotification('Restart needed', 'Updated base font size successfully');
-    UI.sendFontSize(size);
+    Messenger.UI.sendNotification('Restart needed', 'Updated base font size successfully');
+    Messenger.UI.sendFontSize(size);
   }
 
   private cssFontSizeSetFailed(error: string) {
-    UI.sendNotification('Font size', error, false);
+    Messenger.UI.sendNotification('Font size', error, false);
   }
 
   public async start() {
@@ -550,6 +549,6 @@ export default class Extension {
       this.setSavedColorscheme(savedColorscheme);
     }
 
-    this.nativeApp.connect();
+    this.nativeMessenger.connect();
   }
 }

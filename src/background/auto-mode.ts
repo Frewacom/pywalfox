@@ -3,7 +3,7 @@ import {
   IAutoModeTriggerCallback,
 } from '@definitions';
 
-import { sendDebuggingOutput } from '@communication/ui';
+import { sendDebuggingOutput } from '@communication/content-scripts/ui';
 import { AUTO_MODE_INTERVAL_MS } from '@config/general';
 
 export function minuteNumberToMs(minute: number, currentSecond: number) {
