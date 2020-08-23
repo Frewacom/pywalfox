@@ -20,7 +20,7 @@ import { changeLuminance } from '@utils/colors';
 
 // TODO: Refactor this ugly function
 export function generatePywalPalette(pywalColors: IPywalColors) {
-  const colors = pywalColors;
+  const colors = [...pywalColors]; // Prevent mutation of the original pywalColors array
 
   EXTENDED_PYWAL_COLORS.forEach((color) => {
     const {

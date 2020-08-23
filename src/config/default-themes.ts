@@ -9,11 +9,26 @@ import {
 } from '@definitions';
 
 export const EXTENDED_PYWAL_COLORS: IExtendedPywalColors = [
-  { targetIndex: 16, colorIndex: 0, modifier: 1.25 },
-  { targetIndex: 17, colorString: '#ffffff' },
-  { targetIndex: 18, colorIndex: 0, modifier: 1.85 },
   {
-    targetIndex: 19, colorIndex: 7, modifier: 0.1, min: 200, max: 225,
+    targetIndex: 16,
+    colorIndex: 0,
+    modifier: 1.25,
+  },
+  {
+    targetIndex: 17,
+    colorString: '#ffffff',
+  },
+  {
+    targetIndex: 18,
+    colorIndex: 0,
+    modifier: 1.85,
+  },
+  {
+    targetIndex: 19,
+    colorIndex: 7,
+    modifier: 0.1,
+    min: 200,
+    max: 225,
   },
 ];
 
