@@ -2,7 +2,7 @@ import {
    IPalette,
 } from '@definitions';
 
-import { createPaletteHash } from '@pywalfox/background/colorscheme';
+import { generatePaletteHash } from '@pywalfox/background/generators';
 
 const paletteA: IPalette = {
   background: '#FFFFFF',
@@ -25,10 +25,10 @@ const paletteB: IPalette = {
   accentSecondary: '#FFFFFF',
 };
 
-const hashA: string = createPaletteHash(paletteA);
-const hashB: string = createPaletteHash(paletteB);
+const hashA: string = generatePaletteHash(paletteA);
+const hashB: string = generatePaletteHash(paletteB);
 
-describe('createPaletteHash', () => {
+describe('generatePaletteHash', () => {
   test('creates the same hash for identical palettes', () => {
     expect(hashA).toBe(hashA);
   });

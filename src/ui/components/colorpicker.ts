@@ -9,7 +9,7 @@ import {
 import { rgbToHex } from '@utils/colors';
 import { setSelected, setDeselected } from '@utils/dom';
 import { PYWAL_PALETTE_LENGTH } from '@config/general';
-import { requestPaletteColorSet } from '@communication/ui';
+import { requestPaletteColorSet } from '@communication/content-scripts/ui';
 
 import Dialog from './dialog';
 

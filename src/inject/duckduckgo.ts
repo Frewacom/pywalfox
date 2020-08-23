@@ -4,7 +4,7 @@ import {
   IDuckDuckGoThemeSetData,
 } from '@definitions';
 
-import { requestTheme } from '@communication/duckduckgo';
+import { requestTheme } from '@communication/content-scripts/duckduckgo';
 import { EXTENSION_MESSAGES, DUCKDUCKGO_THEME_ID } from '@config/general';
 
 function getTheme() {

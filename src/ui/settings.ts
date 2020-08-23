@@ -29,7 +29,7 @@ import {
 } from '@config/template-data';
 
 import * as Utils from '@utils/dom';
-import * as UI from '@communication/ui';
+import Messenger from '@communication/messenger';
 
 import Dialog from './components/dialog';
 import Colorpicker from './components/colorpicker';
@@ -154,11 +154,11 @@ function onOptionClicked(e: Event) {
     Utils.setLoading(target);
   }
 
-  UI.requestOptionSet(option, newState);
+  Messenger.UI.requestOptionSet(option, newState);
 }
 
 function onDisableClicked() {
-  UI.requestDisable();
+  Messenger.UI.requestDisable();
   colorpicker.setPywalColors(null);
   colorpicker.setCustomColors(null);
   colorpicker.updateSelected();
@@ -169,7 +169,7 @@ function onDisableClicked() {
 function onFontSizeSave() {
   if (fontSizeSaveInput.checkValidity()) {
     const option = fontSizeSaveInput.getAttribute('data-option');
-    UI.requestFontSizeSet(option, parseInt(fontSizeSaveInput.value, 10));
+    Messenger.UI.requestFontSizeSet(option, parseInt(fontSizeSaveInput.value, 10));
   } else {
     createNotification({
       title: 'Custom font size',
@@ -213,7 +213,7 @@ function onTimeIntervalSave(input: HTMLInputElement, action: string) {
     const intervalObject = createTimeIntervalObject(input.value);
 
     if (intervalObject !== null) {
-      UI.requestAutoTimeSet(action, intervalObject);
+      Messenger.UI.requestAutoTimeSet(action, intervalObject);
     }
   }
 }
@@ -270,7 +270,7 @@ function onPaletteTemplateSave() {
     return;
   }
 
-  UI.requestPaletteTemplateSet(template.palette);
+  Messenger.UI.requestPaletteTemplateSet(template.palette);
 }
 
 function onPaletteTemplateUseCurrent() {
@@ -299,7 +299,7 @@ function onThemeTemplateSave() {
     return;
   }
 
-  UI.requestThemeTemplateSet(template.browser);
+  Messenger.UI.requestThemeTemplateSet(template.browser);
 }
 
 function updateOptionState({ option, enabled, value }: IOptionSetData) {
@@ -577,7 +577,7 @@ function handleExtensionMessage({ action, data }: IExtensionMessage) {
 function setupListeners() {
   overlay.addEventListener('click', closeDialog);
   disableButton.addEventListener('click', onDisableClicked);
-  fetchButton.addEventListener('click', UI.requestFetch);
+  fetchButton.addEventListener('click', Messenger.UI.requestFetch);
   themeButton.addEventListener('click', () => openDialog(themepicker, themeButton));
   fontSizeSaveInput.addEventListener('change', Utils.debounce(onFontSizeSave, 500));
 
@@ -590,11 +590,11 @@ function setupListeners() {
   }, 500));
 
   themeTemplateSaveButton.addEventListener('click', onThemeTemplateSave);
-  themeTemplateResetButton.addEventListener('click', UI.requestThemeTemplateReset);
+  themeTemplateResetButton.addEventListener('click', Messenger.UI.requestThemeTemplateReset);
 
   paletteTemplateSaveButton.addEventListener('click', onPaletteTemplateSave);
   paletteTemplateCurrentButton.addEventListener('click', onPaletteTemplateUseCurrent);
-  paletteTemplateResetButton.addEventListener('click', UI.requestPaletteTemplateReset);
+  paletteTemplateResetButton.addEventListener('click', Messenger.UI.requestPaletteTemplateReset);
 
   helpToggleButtons.forEach((button: HTMLElement) => {
     button.addEventListener('click', () => onHelpToggle(button));
@@ -622,5 +622,5 @@ setupListeners();
 createPaletteContent();
 createThemeTemplateContent();
 
-UI.requestInitialData();
+Messenger.UI.requestInitialData();
 Utils.setVersionLabel(versionLabel);

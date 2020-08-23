@@ -19,7 +19,7 @@ import { THEME_TEMPLATE_DATA, PALETTE_TEMPLATE_DATA } from '@config/template-dat
 import { changeLuminance } from '@utils/colors';
 
 // TODO: Refactor this ugly function
-export function extendPywalColors(pywalColors: IPywalColors) {
+export function generatePywalPalette(pywalColors: IPywalColors) {
   const colors = pywalColors;
 
   EXTENDED_PYWAL_COLORS.forEach((color) => {
@@ -43,33 +43,50 @@ export function extendPywalColors(pywalColors: IPywalColors) {
 }
 
 export function generateColorscheme(
-  pywalPalette: IPywalColors,
+  pywalColors: IPywalColors,
   customColors: Partial<IPalette>,
   template: IColorschemeTemplate,
 ) {
-  const originalPalette = createObjectFromTemplateData<IPalette>(
-    PALETTE_TEMPLATE_DATA,
-    pywalPalette,
-    template.palette,
-  );
-
-  // Override the templated palette with any custom colors set by the user
-  const palette = { ...originalPalette, ...customColors };
+  const palette = generatePalette(pywalColors, customColors, template.palette);
 
   return {
-    hash: createPaletteHash(palette),
+    hash: generatePaletteHash(palette),
     palette,
     browser: generateBrowserTheme(palette, template.browser),
-    duckduckgo: generateDDGTheme(palette, template.duckduckgo),
+    duckduckgo: generateDuckduckgoTheme(palette, template.duckduckgo),
     extension: generateExtensionTheme(palette),
   };
+}
+
+// Creates a unique hash based on the colors in the palette,
+export function generatePaletteHash(palette: IPalette) {
+  const colors = Object.keys(palette);
+  let hash: string = '';
+
+  colors.sort((a: string, b: string) => ((a > b) ? 1 : -1));
+
+  colors.forEach((key: string) => {
+    hash += stripHashSymbol(palette[<PaletteColors>key]);
+  });
+
+  return hash;
+}
+
+export function generatePalette(pywalColors, customColors, template: IPaletteTemplate) {
+  const defaultPalette = createObjectFromTemplateData<IPalette>(
+    PALETTE_TEMPLATE_DATA,
+    pywalColors,
+    template,
+  );
+
+  return Object.assign(defaultPalette, customColors);
 }
 
 export function generateBrowserTheme(palette: IPalette, template: IThemeTemplate) {
   return createObjectFromTemplateData<IBrowserTheme>(THEME_TEMPLATE_DATA, palette, template);
 }
 
-export function generateDDGTheme(palette: IPalette, template: IDuckDuckGoThemeTemplate) {
+export function generateDuckduckgoTheme(palette: IPalette, template: IDuckDuckGoThemeTemplate) {
   const theme = <IDuckDuckGoTheme>{};
 
   Object.keys(template).forEach((key) => {
@@ -116,19 +133,12 @@ function stripHashSymbol(color: string) {
   return color.substring(1);
 }
 
-/**
- * Creates a unique hash based on the colors in the palette,
- * used to detect when the theme has been changed.
- */
-export function createPaletteHash(palette: IPalette) {
-  const colors = Object.keys(palette);
-  let hash: string = '';
-
-  colors.sort((a: string, b: string) => ((a > b) ? 1 : -1));
-
-  colors.forEach((key: string) => {
-    hash += stripHashSymbol(palette[<PaletteColors>key]);
-  });
-
-  return hash;
-}
+export default {
+  hash: generatePaletteHash,
+  palette: generatePalette,
+  browser: generateBrowserTheme,
+  colorscheme: generateColorscheme,
+  extension: generateExtensionTheme,
+  pywalPalette: generatePywalPalette,
+  duckduckgo: generateDuckduckgoTheme,
+};
