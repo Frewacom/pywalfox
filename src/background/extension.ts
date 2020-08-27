@@ -377,7 +377,6 @@ export default class Extension {
     this.applyUpdatedPaletteTemplate(updatedTemplate);
 
     Messenger.UI.sendPaletteTemplate(updatedTemplate);
-    Messenger.UI.sendNotification('Palette template', 'Template was updated successfully');
   }
 
   private setThemeTemplate(template: IThemeTemplate) {
@@ -398,7 +397,6 @@ export default class Extension {
     this.state.setThemeTemplate(updatedTemplate);
 
     Messenger.UI.sendThemeTemplate(updatedTemplate);
-    Messenger.UI.sendNotification('Theme template', 'Template was updated successfully');
   }
 
   private setPaletteColor(palette: Partial<IPalette>) {

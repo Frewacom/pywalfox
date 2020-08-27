@@ -119,8 +119,7 @@
           </div>
           <div class="card-content card-content-header row expand v-center space-between sticky">
             <div class="box">
-              <button class="btn btn-primary btn-sm margin-right-sm" id="palette-template-save">Save palette</button>
-              <button class="btn btn-lighter btn-sm margin-right-sm" id="palette-template-current">Load from current</button>
+              <button class="btn btn-primary btn-sm margin-right-sm" id="palette-template-current">Load from current</button>
               <button class="btn btn-lighter btn-sm" id="palette-template-reset">Reset to default</button>
             </div>
             <button class="btn btn-lighter btn-sm btn-h-sm" data-help="palette-template-help">
@@ -134,6 +133,8 @@
               The palette is a collection of Pywal colors and it is generated when "Fetch Pywal colors" is clicked.
               A custom palette template allows you to manually select which Pywal colors should be used for the
               background, text, etc.
+              <br></br>
+              Your changes are <b>persistent</b> between fetches and the current theme mode.
               <br><br>
               The easiest way to create a palette template is to select colors using the "Palette" section above and then
               click "Load from current" here to automatically grab the selected colors from the palette, thus generating
@@ -170,7 +171,6 @@
           </div>
           <div class="card-content card-content-header row expand v-center space-between sticky">
             <div class="box">
-              <button class="btn btn-primary btn-sm margin-right-sm" id="theme-template-save">Save template</button>
               <button class="btn btn-lighter btn-sm" id="theme-template-reset">Reset to default</button>
             </div>
             <button class="btn btn-lighter btn-sm btn-h-sm" data-help="theme-template-help">
@@ -183,6 +183,8 @@
             <p class="card-help-description">
               Custom theme templates allow you to customize the color of each browser element individually by associating
               palette colors with specific elements.
+              <br><br>
+              Your changes are <b>persistent</b> between fetches and the current theme mode.
               <br><br>
               Not all elements are customizable since we are limited by the properties provided by the Theme API.<br>
               For further customization, use the included userContent and userChrome (or your own).

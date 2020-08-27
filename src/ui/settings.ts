@@ -53,12 +53,10 @@ const debuggingConnected = <HTMLParagraphElement>document.getElementById('debugg
 
 const paletteContent = <HTMLDivElement>document.getElementById('palette-content');
 const paletteTemplateContent = <HTMLDivElement>document.getElementById('palette-template-content');
-const paletteTemplateSaveButton = <HTMLButtonElement>document.getElementById('palette-template-save');
 const paletteTemplateResetButton = <HTMLButtonElement>document.getElementById('palette-template-reset');
 const paletteTemplateCurrentButton = <HTMLButtonElement>document.getElementById('palette-template-current');
 
 const themeTemplateContent = <HTMLDivElement>document.getElementById('theme-template-content');
-const themeTemplateSaveButton = <HTMLButtonElement>document.getElementById('theme-template-save');
 const themeTemplateResetButton = <HTMLButtonElement>document.getElementById('theme-template-reset');
 
 const notificationContainer = <HTMLDivElement>document.getElementById('notification-container');
@@ -244,6 +242,7 @@ function onPaletteTemplateInputChanged(e: Event) {
     const index = parseInt(value, 10);
     template.palette[targetId] = index;
     updatePaletteTemplateColorPreview(target, pywalColors, index);
+    savePaletteTemplate();
   }
 }
 
@@ -262,9 +261,11 @@ function onThemeTemplateInputChanged(target: HTMLSelectElement) {
   }
 
   template.browser[targetId] = <PaletteColors>value;
+
+  saveThemeTemplate();
 }
 
-function onPaletteTemplateSave() {
+function savePaletteTemplate() {
   if (template === null || !template.hasOwnProperty('palette')) {
     console.error(`Template is null or the palette template is not set: ${template}`);
     return;
@@ -293,7 +294,7 @@ function onPaletteTemplateUseCurrent() {
   });
 }
 
-function onThemeTemplateSave() {
+function saveThemeTemplate() {
   if (template === null || !template.hasOwnProperty('browser')) {
     console.error(`Template is null or the browser template is not set: ${template}`);
     return;
@@ -589,10 +590,8 @@ function setupListeners() {
     onTimeIntervalSave(autoTimeEndInput, EXTENSION_OPTIONS.AUTO_TIME_END);
   }, 500));
 
-  themeTemplateSaveButton.addEventListener('click', onThemeTemplateSave);
   themeTemplateResetButton.addEventListener('click', Messenger.UI.requestThemeTemplateReset);
 
-  paletteTemplateSaveButton.addEventListener('click', onPaletteTemplateSave);
   paletteTemplateCurrentButton.addEventListener('click', onPaletteTemplateUseCurrent);
   paletteTemplateResetButton.addEventListener('click', Messenger.UI.requestPaletteTemplateReset);
 
