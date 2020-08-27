@@ -2,6 +2,11 @@ export interface IPywalColors extends Array<string> {
   [index: number]: string;
 }
 
+export interface IPywalData {
+  colors: IPywalColors;
+  wallpaper: string;
+}
+
 export interface IExtendedPywalColorBase {
   targetIndex: number;
   colorString?: string;
