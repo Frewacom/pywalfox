@@ -22,7 +22,7 @@ With Pywalfox you can:
 - [x] Easily update the theme using the add-on and/or the command line
 - [x] Automatically switch between a dark and a light theme based on the time of day
 
-![](images/neon_demo.gif)
+![](images/demo_v204.gif)
 
 ## Requirements
 - Firefox and/or Thunderbird
