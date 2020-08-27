@@ -1,5 +1,5 @@
 /* eslint-disable */
-function validateHex(hex: string) {
+export function validateHex(hex: string) {
   let validatedHex = String(hex).replace(/[^0-9a-f]/gi, '');
   if (hex.length < 6) {
     validatedHex = validatedHex.replace(/(.)/g, '$1$1');
