@@ -19,7 +19,7 @@ With Pywalfox you can:
 - [x] Customize the colors of almost every UI element
 - [x] Automatically theme DuckDuckGo :duck: searches in Firefox (optional)
 - [x] Have bold text, styled dropdowns and much more (optional)
-- [x] Easily update the theme using the add-on and/or the command line
+- [x] Easily update the theme using the add-on GUI and/or the command line
 - [x] Automatically switch between a dark and a light theme based on the time of day
 
 ![](images/demo_v204.gif)
@@ -49,32 +49,35 @@ The Python package installed through `pip` is the [Pywalfox native messaging app
 
 ### Updating the theme using the terminal
 Run `pywalfox update` in your terminal to trigger an update of the browser theme.
-This allows you to update the browser theme without having to press "Fetch Pywal colors" in the add-on GUI.
-The command can be used to integrate Pywalfox into e.g. system theming scripts.
+This command allows integration of Pywalfox into e.g. system theming scripts and is functionally equivalent to clicking "Fetch Pywal colors" in the add-on settings GUI.
 
 ### Customization
-Pywalfox comes with extensive customization options.
+Pywalfox comes with extensive customization options divided into the "Palette", "Palette template" and "Theme template" sections in the add-on settings GUI.
+
+#### The palette
+The palette in the "Palette" section is used to temporarily customize one or more colors from the Pywal palette. 
+You can use one of the generated colors, or choose any color. Changes to the palette will be reset when clicking "Fetch Pywal colors" or when running `pywalfox update`.
 
 #### Palette templates
-The palette template allows you to create a custom palette using Pywal color indices.
-Pywalfox will use your palette when creating themes.
+If you want your palette customizations to be persistent (unlike the regular palette you must use a palette template. 
 
-The best way to modify and create your own custom palette templates is to first fetch your Pywal colors using the "Fetch Pywal colors" button and then choose the colors that you want using the colorpicker in the "Palette" section.
-You open the colorpicker by clicking on the color preview.
-The colorpicker also allows you to select a custom color.
-You can however **not** use a custom color in your palette template.
+Creating a palette template is quite simple:
+1. Click "Fetch Pywal colors" (or run `pywalfox update`) in the add-on settings GUI.
+2. Customize the colors to your liking in the regular "Palette" section at the top of the page.
+   - *Colors from outside the Pywal palette (i.e. from the colorwheel) cannot be used in a template*.
+   - *Advanced users can set the colors directly using Pywal color indices.*
+3. Go down to the "Palette template" section and click "Load from current".
+4. Click "Save palette" to save the palette template. 
 
-When you have modified the colors to your liking, open the "Palette template" section and click "Load from current".
-This will automatically take the indices of your selected colors and update the inputs.
-You must then save the template by clicking on the "Save palette" button.
-A notification should pop up, telling you it was saved successfully.
+Your custom palette will now be applied whenever you update the browser theme.
 
 #### Theme templates
-Theme templates define the look of your browser theme.
-You can modify every element of the browser that is currently supported by the [Theme API](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme).
+The theme template assigns colors (from your palette template) to different browser elements.
 
-Modifying the theme is very straightforward; find the element that you want to change and select a palette color from the dropdown.
-When you are done, click "Save template".
+Every element of the browser that is currently supported by the [Theme API](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme) can be customized.
+
+To create a palette template, go through the items in the "Theme template" section and assign a color to each item.
+The colors are identified by their names as seen in the "Palette template" section.
 
 #### Theme modes
 There are three different theme modes, Dark, Light and Auto. Selecting Auto will automatically switch between the dark and light modes based on a selected time interval in the "General" section of the extension.
@@ -100,9 +103,6 @@ pip uninstall pywalfox  # Removes the pywalfox executable
 ```
 
 ## Troubleshooting
-* Some users have had issues with getting the add-on and the native messaging application to communicate, despite everything seemingly being setup correctly. A possbile solution is to install from `pip` with super user privileges, i.e. `sudo pip install pywalfox`, see [#31](https://github.com/Frewacom/pywalfox/issues/31).
-Another solution not requiring a global install is proposed [here](https://github.com/Frewacom/pywalfox/issues/31#issuecomment-645768818).
-
 * If you updated Pywalfox and have issues, try re-running the setup script as described in [Installation](#installation) above.
 * Check the log in the Debugging section at the bottom of the Pywalfox settings page
 
