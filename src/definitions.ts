@@ -106,8 +106,9 @@ export interface IColorscheme {
   hash: IPaletteHash;
   palette: IPalette;
   browser: IBrowserTheme;
-  duckduckgo: IDuckDuckGoTheme;
   extension: IExtensionTheme;
+  duckduckgo: IDuckDuckGoTheme;
+  darkreader: IDarkreaderScheme;
 }
 
 export type IPaletteTemplate = {
@@ -160,6 +161,7 @@ export interface IExtensionOptions {
   [CSSTargets.UserContent]: boolean;
   fontSize: number;
   duckduckgo: boolean;
+  darkreader: boolean;
   autoTimeStart: ITimeIntervalEndpoint;
   autoTimeEnd: ITimeIntervalEndpoint;
 }
@@ -167,6 +169,29 @@ export interface IExtensionOptions {
 export interface IExtensionMessage {
   action: string;
   data?: any;
+}
+
+export type IDarkreaderErrorCallback = (message: string) => void;
+
+export interface IDarkreaderDarkscheme {
+  darkSchemeBackgroundColor: string;
+  darkSchemeTextColor: string;
+}
+
+export interface IDarkreaderLightScheme {
+  lightSchemeBackgroundColor: string;
+  lightSchemeTextColor: string;
+}
+
+export type IDarkreaderScheme = IDarkreaderLightScheme | IDarkreaderDarkscheme
+
+export interface IDarkreaderThemeMode {
+  mode: number;
+}
+
+export interface IDarkreaderMessage {
+  type: string;
+  data?: IDarkreaderScheme | IDarkreaderThemeMode;
 }
 
 export interface IOptionSetData {

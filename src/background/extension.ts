@@ -28,6 +28,7 @@ import {
 
 import Messenger from '@communication/messenger';
 import NativeMessenger from '@communication/native-messenger';
+import DarkreaderMessenger from '@communication/darkreader-messenger';
 
 import State from './state';
 import AutoMode from './auto-mode';
@@ -37,6 +38,7 @@ import ExtensionPage from './extension-page';
 export default class Extension {
   private state: State;
   private nativeMessenger: NativeMessenger;
+  private darkreaderMessenger: DarkreaderMessenger;
   private settingsPage: ExtensionPage;
   private updatePage: ExtensionPage;
   private autoMode: AutoMode;
@@ -45,6 +47,7 @@ export default class Extension {
   constructor() {
     this.state = new State();
     this.stateLoadPromise = null;
+    this.darkreaderMessenger = new DarkreaderMessenger(this.onDarkreaderError.bind(this));
     this.autoMode = new AutoMode(this.onThemeChangeTrigger.bind(this));
     this.nativeMessenger = new NativeMessenger({
       connected: this.nativeAppConnected.bind(this),
@@ -101,6 +104,9 @@ export default class Extension {
       case EXTENSION_OPTIONS.AUTO_TIME_START: /* Fallthrough */
       case EXTENSION_OPTIONS.AUTO_TIME_END:
         this.setAutoTimeInterval(optionData);
+        break;
+      case EXTENSION_OPTIONS.DARKREADER:
+        this.setDarkreaderEnabled(optionData);
         break;
       default:
         Messenger.UI.sendDebuggingOutput(`Received unhandled option: ${optionData.option}`);
@@ -207,6 +213,10 @@ export default class Extension {
       Messenger.DDG.resetTheme();
     }
 
+    if (this.state.getDarkreaderEnabled()) {
+      this.darkreaderMessenger.requestThemeReset();
+    }
+
     this.state.setColors(null, null);
     this.state.setCustomColors(null);
     this.state.setApplied(false);
@@ -215,8 +225,9 @@ export default class Extension {
   }
 
   private setThemes(pywalColors: IPywalColors, customColors?: Partial<IPalette>) {
+    const mode = this.state.getTemplateThemeMode();
     const template = this.state.getTemplate();
-    const colorscheme = Generators.colorscheme(pywalColors, customColors, template);
+    const colorscheme = Generators.colorscheme(mode, pywalColors, customColors, template);
 
     this.setBrowserTheme(colorscheme.browser);
     this.updateExtensionPagesTheme(colorscheme.extension);
@@ -225,9 +236,15 @@ export default class Extension {
       Messenger.DDG.setTheme(colorscheme.hash, colorscheme.duckduckgo);
     }
 
+    if (this.state.getDarkreaderEnabled()) {
+      this.darkreaderMessenger.requestThemeSet(colorscheme.darkreader);
+    }
+
     this.state.setColors(pywalColors, colorscheme);
     this.state.setCustomColors(customColors || null);
     this.state.setApplied(true);
+
+    return colorscheme;
   }
 
   private applyUpdatedPaletteTemplate(template: IPaletteTemplate) {
@@ -274,6 +291,38 @@ export default class Extension {
 
     Messenger.UI.sendOption(option, enabled);
     this.state.setDDGThemeEnabled(enabled);
+  }
+
+  private getDarkreaderScheme() {
+    let darkreaderScheme = this.state.getColorscheme().darkreader;
+
+    if (!darkreaderScheme) {
+      // When updating from an addon version that does not support darkreader,
+      // the darkreader scheme will not be generated yet.
+      darkreaderScheme = this.updateThemeForCurrentMode().darkreader;
+    }
+
+    return darkreaderScheme;
+  }
+
+  private setDarkreaderEnabled({ option, enabled }: IOptionSetData) {
+    const isApplied = this.state.getApplied();
+
+    this.state.setDarkreaderEnabled(enabled);
+    Messenger.UI.sendOption(option, enabled);
+
+    if (!isApplied) {
+      // The darkreader scheme will be applied when the user fetches pywal colors
+      return;
+    }
+
+    if (enabled) {
+      // TODO: We should probably disable the Duckduckgo integration when activating darkreader
+      const darkreaderScheme = this.getDarkreaderScheme();
+      this.darkreaderMessenger.requestThemeSet(darkreaderScheme);
+    } else {
+      this.darkreaderMessenger.requestThemeReset();
+    }
   }
 
   private setDDGTheme() {
@@ -324,11 +373,15 @@ export default class Extension {
     const pywalColors = this.state.getPywalColors();
     const customColors = this.state.getCustomColors();
 
-    pywalColors && this.setThemes(pywalColors, customColors);
-
     Messenger.UI.sendPaletteTemplate(template.palette);
     Messenger.UI.sendThemeTemplate(template.browser);
     Messenger.UI.sendCustomColors(customColors);
+
+    if (pywalColors) {
+      return this.setThemes(pywalColors, customColors);
+    }
+
+    return null;
   }
 
   private async setThemeMode(mode: ThemeModes) {
@@ -351,6 +404,7 @@ export default class Extension {
     await this.state.setThemeMode(mode);
 
     const newTemplateMode = this.state.getTemplateThemeMode();
+    const isDarkreaderEnabled = this.state.getDarkreaderEnabled();
 
     // No need to update the theme if the currently applied theme mode
     // matches the one that will be set by auto-mode.
@@ -366,6 +420,10 @@ export default class Extension {
       Messenger.UI.sendTemplateThemeMode(newTemplateMode);
     } else {
       this.autoMode.stop();
+    }
+
+    if (isDarkreaderEnabled) {
+      this.darkreaderMessenger.requestThemeModeSet(newTemplateMode);
     }
 
     Messenger.UI.sendThemeMode(mode, newTemplateMode);
@@ -457,6 +515,10 @@ export default class Extension {
     this.updatePage.open();
   }
 
+  private onDarkreaderError(message: string) {
+    Messenger.UI.sendDebuggingOutput(message, true);
+  }
+
   private nativeAppConnected() {
     this.state.setConnected(true);
   }
@@ -541,6 +603,7 @@ export default class Extension {
 
     const savedColorscheme = this.state.getColorscheme();
     const currentThemeMode = this.state.getThemeMode();
+    const isDarkreaderEnabled = this.state.getDarkreaderEnabled();
 
     // Run this after creating the extension pages so that the themes can be
     // set if the pages were reopened on launch.
@@ -553,5 +616,9 @@ export default class Extension {
     }
 
     this.nativeMessenger.connect();
+
+    if (isDarkreaderEnabled) {
+      this.darkreaderMessenger.connect();
+    }
   }
 }

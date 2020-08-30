@@ -5,7 +5,7 @@ import {
   INativeAppMessageCallbacks,
 } from '@definitions';
 
-import { RESPONSE_TIMEOUT, NATIVE_MESSAGES } from '@config/native';
+import { RESPONSE_TIMEOUT_MS, NATIVE_MESSAGES } from '@config/general';
 
 /**
  * Implements the communcation with the native messaging host.
@@ -16,7 +16,8 @@ import { RESPONSE_TIMEOUT, NATIVE_MESSAGES } from '@config/native';
  * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging
  */
 export default class NativeApp {
-  private isConnected: boolean;
+  public isConnected: boolean;
+
   private port: browser.runtime.Port;
   private callbacks: INativeAppMessageCallbacks;
 
@@ -129,12 +130,12 @@ export default class NativeApp {
     output && this.callbacks.output(output);
   }
 
-  private async onDisconnect(port: browser.runtime.Port) {
-    if (port.error) {
+  private async onDisconnect({ error }: browser.runtime.Port) {
+    if (error) {
       clearTimeout(this.versionCheckTimeout);
       clearTimeout(this.connectedCheckTimeout);
       this.callbacks.disconnected();
-      console.log('Disconnected from native messaging host');
+      console.log(`Disconnected from native messaging host: ${error}`);
     }
   }
 
@@ -143,17 +144,25 @@ export default class NativeApp {
     this.port.onDisconnect.addListener(this.onDisconnect.bind(this));
   }
 
+  private sendMessage(message: INativeAppRequest) {
+    if (!this.isConnected) {
+      // If we are not connected, it means that an error occured. No point to try and reconnect
+      console.error('Failed to send data to native app. You are not connected');
+      return;
+    }
+
+    this.port.postMessage(message);
+  }
+
   public connect() {
     this.port = browser.runtime.connectNative('pywalfox');
     this.isConnected = true;
-    this.versionCheckTimeout = window.setTimeout(this.callbacks.updateNeeded, RESPONSE_TIMEOUT);
-    this.connectedCheckTimeout = window.setTimeout(this.callbacks.connected, RESPONSE_TIMEOUT);
+
+    this.versionCheckTimeout = window.setTimeout(this.callbacks.updateNeeded, RESPONSE_TIMEOUT_MS);
+    this.connectedCheckTimeout = window.setTimeout(this.callbacks.connected, RESPONSE_TIMEOUT_MS);
+
     this.setupListeners();
     this.requestVersion();
-  }
-
-  private sendMessage(message: INativeAppRequest) {
-    this.port.postMessage(message);
   }
 
   public requestVersion() {

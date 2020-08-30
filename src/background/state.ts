@@ -12,6 +12,7 @@ import {
   ITimeIntervalEndpoint,
   IExtensionState,
   IOptionSetData,
+  ITemplateThemeMode,
   CSSTargets,
   ThemeModes,
   TemplateTypes,
@@ -23,7 +24,7 @@ import { DEFAULT_THEME_DARK, DEFAULT_THEME_LIGHT } from '@config/default-themes'
 
 export default class State {
   private initialState: IExtensionState;
-  public currentState: { [key: string]: any };
+  public currentState: Partial<IExtensionState>;
 
   constructor() {
     this.initialState = {
@@ -50,6 +51,7 @@ export default class State {
         userContent: false,
         fontSize: DEFAULT_CSS_FONT_SIZE,
         duckduckgo: false,
+        darkreader: false,
         autoTimeStart: { hour: 10, minute: 0, stringFormat: '10:00' },
         autoTimeEnd: { hour: 19, minute: 0, stringFormat: '19:00' },
       },
@@ -116,7 +118,8 @@ export default class State {
       template: this.getTemplate(),
       customColors: this.getCustomColors(),
       themeMode: this.getThemeMode(),
-      templateThemeMode: this.getTemplateThemeMode(),
+      // TODO: Fix this manual type inference
+      templateThemeMode: this.getTemplateThemeMode() as ITemplateThemeMode,
       debuggingInfo: this.getDebuggingInfo(),
       options: this.getOptionsData(),
       fontSize: this.getCssFontSize(),
@@ -205,6 +208,10 @@ export default class State {
     return this.currentState.options.duckduckgo;
   }
 
+  public getDarkreaderEnabled() {
+    return this.currentState.options.darkreader;
+  }
+
   public getCssEnabled(target: string) {
     return this.getProperty(this.currentState.options, target);
   }
@@ -270,6 +277,10 @@ export default class State {
 
   public setDDGThemeEnabled(enabled: boolean) {
     return this.setOption('duckduckgo', enabled);
+  }
+
+  public setDarkreaderEnabled(enabled: boolean) {
+    return this.setOption('darkreader', enabled);
   }
 
   public setCssEnabled(target: CSSTargets, enabled: boolean) {

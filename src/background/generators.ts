@@ -1,4 +1,5 @@
 import {
+  ThemeModes,
   PaletteColors,
   IPalette,
   IPywalColors,
@@ -7,6 +8,7 @@ import {
   IThemeTemplate,
   IPaletteTemplate,
   IDuckDuckGoTheme,
+  ITemplateThemeMode,
   IColorschemeTemplate,
   IDuckDuckGoThemeTemplate,
   IDuckDuckGoThemeTemplateItem,
@@ -43,6 +45,7 @@ export function generatePywalPalette(pywalColors: IPywalColors) {
 }
 
 export function generateColorscheme(
+  mode: ITemplateThemeMode,
   pywalColors: IPywalColors,
   customColors: Partial<IPalette>,
   template: IColorschemeTemplate,
@@ -53,8 +56,9 @@ export function generateColorscheme(
     hash: generatePaletteHash(palette),
     palette,
     browser: generateBrowserTheme(palette, template.browser),
-    duckduckgo: generateDuckduckgoTheme(palette, template.duckduckgo),
     extension: generateExtensionTheme(palette),
+    duckduckgo: generateDuckduckgoTheme(palette, template.duckduckgo),
+    darkreader: generateDarkreaderScheme(palette, mode),
   };
 }
 
@@ -113,6 +117,20 @@ export function generateExtensionTheme(palette: IPalette) {
   return `${EXTENSION_THEME_SELCTOR}{${variables}}`;
 }
 
+export function generateDarkreaderScheme({ background, text }: IPalette, mode: ITemplateThemeMode) {
+  if (mode === ThemeModes.Dark) {
+    return {
+      darkSchemeTextColor: text,
+      darkSchemeBackgroundColor: background,
+    };
+  }
+
+  return {
+    lightSchemeTextColor: text,
+    lightSchemeBackgroundColor: background,
+  };
+}
+
 /**
  * Creates a palette/browser theme object based on the target keys defined
  * in 'data'. The target key is then used as index in 'template' to get
@@ -141,4 +159,5 @@ export default {
   extension: generateExtensionTheme,
   pywalPalette: generatePywalPalette,
   duckduckgo: generateDuckduckgoTheme,
+  darkreader: generateDarkreaderScheme,
 };

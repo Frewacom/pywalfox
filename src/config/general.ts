@@ -1,5 +1,6 @@
 import { CSSTargets } from '@definitions';
 
+export const RESPONSE_TIMEOUT_MS = 3000;
 export const MIN_REQUIRED_DAEMON_VERSION = 2.5;
 export const DEFAULT_CSS_FONT_SIZE = 13;
 export const PYWAL_PALETTE_LENGTH = 20;
@@ -12,7 +13,9 @@ export const ENABLED_BODY_CLASS = 'applied';
 export const EXTENSION_THEME_SELCTOR = 'body,body.light,body.dark';
 export const DUCKDUCKGO_THEME_ID = 'pywalfox';
 export const INJECT_URL_PATTERN = ['*://*.duckduckgo.com/*'];
+export const DARKREADER_CONNECTION_ID = 'addon@darkreader.org';
 
+// TODO: Move constants into an enum for better type validation
 export const EXTENSION_PAGES = {
   UPDATE: 'ui/update.html',
   SETTINGS: 'ui/settings.html',
@@ -69,4 +72,21 @@ export const EXTENSION_OPTIONS = {
   USER_CHROME: CSSTargets.UserChrome,
   USER_CONTENT: CSSTargets.UserContent,
   DUCKDUCKGO: 'duckduckgo',
+  DARKREADER: 'darkreader',
+};
+
+export const NATIVE_MESSAGES = {
+  VERSION: 'debug:version',
+  OUTPUT: 'debug:output',
+  PYWAL_COLORS: 'action:colors',
+  INVALID_ACTION: 'action:invalid',
+  CSS_ENABLE: 'css:enable',
+  CSS_DISABLE: 'css:disable',
+  CSS_FONT_SIZE: 'css:font:size',
+};
+
+export const DARKREADER_MESSAGES = {
+  THEME: 'setTheme',
+  CHANGE_SETTINGS: 'changeSettings',
+  RESET: 'resetTheme',
 };
