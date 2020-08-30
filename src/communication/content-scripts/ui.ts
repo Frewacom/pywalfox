@@ -7,6 +7,8 @@ import {
   IPaletteTemplate,
   IThemeTemplate,
   ThemeModes,
+  IThemeModeData,
+  ITemplateThemeMode,
   IDebuggingInfoData,
   IOptionSetData,
   INotificationData,
@@ -50,8 +52,9 @@ export function sendTemplate(template: IColorschemeTemplate) {
   sendMessage({ action: EXTENSION_MESSAGES.TEMPLATE_SET, data: template });
 }
 
-export function sendThemeMode(mode: ThemeModes) {
-  sendMessage({ action: EXTENSION_MESSAGES.THEME_MODE_SET, data: mode });
+export function sendThemeMode(mode: ThemeModes, templateMode: ITemplateThemeMode) {
+  const themeModeData: IThemeModeData = { mode, templateMode };
+  sendMessage({ action: EXTENSION_MESSAGES.THEME_MODE_SET, data: themeModeData });
 }
 
 export function sendTemplateThemeMode(mode: ThemeModes) {
@@ -88,32 +91,28 @@ export function sendCustomColors(customColors: Partial<IPalette>) {
 }
 
 export function requestInitialData() {
-  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.INITIAL_DATA_GET });
+  sendMessage({ action: EXTENSION_MESSAGES.INITIAL_DATA_GET });
 }
 
 export function requestFetch() {
-  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.THEME_FETCH });
+  sendMessage({ action: EXTENSION_MESSAGES.THEME_FETCH });
 }
 
 export function requestDisable() {
-  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.THEME_DISABLE });
+  sendMessage({ action: EXTENSION_MESSAGES.THEME_DISABLE });
 }
 
 export function requestThemeModeSet(mode: ThemeModes) {
-  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.THEME_MODE_SET, data: mode });
+  sendMessage({ action: EXTENSION_MESSAGES.THEME_MODE_SET, data: mode });
 }
 
 export function requestTemplateThemeMode() {
-  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.TEMPLATE_THEME_MODE_GET });
+  sendMessage({ action: EXTENSION_MESSAGES.TEMPLATE_THEME_MODE_GET });
 }
 
 export function requestPaletteColorSet(id: string, color: string) {
   const paletteColorData: Partial<IPalette> = { [id]: color };
-
-  browser.runtime.sendMessage({
-    action: EXTENSION_MESSAGES.PALETTE_COLOR_SET,
-    data: paletteColorData,
-  });
+  sendMessage({ action: EXTENSION_MESSAGES.PALETTE_COLOR_SET, data: paletteColorData });
 }
 
 export function requestFontSizeSet(option: string, size: number) {
@@ -126,25 +125,25 @@ export function requestAutoTimeSet(option: string, time: ITimeIntervalEndpoint) 
 
 export function requestOptionSet(option: string, enabled: boolean, value?: any) {
   const optionData: IOptionSetData = { option, enabled, value };
-  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.OPTION_SET, data: optionData });
+  sendMessage({ action: EXTENSION_MESSAGES.OPTION_SET, data: optionData });
 }
 
 export function requestThemeTemplateSet(template: IThemeTemplate) {
-  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.THEME_TEMPLATE_SET, data: template });
+  sendMessage({ action: EXTENSION_MESSAGES.THEME_TEMPLATE_SET, data: template });
 }
 
 export function requestThemeTemplateReset() {
-  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.THEME_TEMPLATE_SET, data: null });
+  sendMessage({ action: EXTENSION_MESSAGES.THEME_TEMPLATE_SET, data: null });
 }
 
 export function requestPaletteTemplateSet(template: IPaletteTemplate) {
-  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.PALETTE_TEMPLATE_SET, data: template });
+  sendMessage({ action: EXTENSION_MESSAGES.PALETTE_TEMPLATE_SET, data: template });
 }
 
 export function requestPaletteTemplateReset() {
-  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.PALETTE_TEMPLATE_SET, data: null });
+  sendMessage({ action: EXTENSION_MESSAGES.PALETTE_TEMPLATE_SET, data: null });
 }
 
 export function requestUpdatePageMute() {
-  browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.UPDATE_PAGE_MUTE });
+  sendMessage({ action: EXTENSION_MESSAGES.UPDATE_PAGE_MUTE });
 }

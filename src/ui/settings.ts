@@ -500,8 +500,7 @@ function createPaletteContent() {
 }
 
 function setInitialData(data: IInitialData) {
-  themepicker.setSelectedMode(data.themeMode);
-  themepicker.setBodyClass(data.templateThemeMode);
+  themepicker.setSelectedMode(data.themeMode, data.templateThemeMode);
 
   if (data.isApplied) {
     toggleIsAppliedBodyClass();
@@ -556,10 +555,10 @@ function handleExtensionMessage({ action, data }: IExtensionMessage) {
       template.browser = data;
       break;
     case EXTENSION_MESSAGES.THEME_MODE_SET:
-      themepicker.setSelectedMode(data);
+      themepicker.setSelectedMode(data.mode, data.templateMode);
       break;
     case EXTENSION_MESSAGES.TEMPLATE_THEME_MODE_SET:
-      themepicker.setBodyClass(data);
+      themepicker.setTemplateBodyClass(data);
       break;
     case EXTENSION_MESSAGES.OPTION_SET:
       updateOptionState(data);

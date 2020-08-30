@@ -1,6 +1,7 @@
 import {
   ThemeModes,
   INodeLookup,
+  ITemplateThemeMode,
 } from '@definitions';
 
 import { setSelected, setDeselected } from '@utils/dom';
@@ -56,22 +57,22 @@ export default class Themepicker extends Dialog {
 
     setSelected(target);
     this.selected = target;
-
-    this.setBodyClass(mode);
   }
 
-  public setBodyClass(mode: ThemeModes) {
-    if (mode === ThemeModes.Auto) {
-      document.body.classList.add('auto');
-      return;
-    }
+  private applyAutoBodyClass() {
+    document.body.classList.add('auto');
+  }
 
+  private removeAutoBodyClass() {
+    document.body.classList.remove('auto');
+  }
+
+  public setTemplateBodyClass(mode: ITemplateThemeMode) {
     if (this.currentClassName) {
       document.body.classList.remove(this.currentClassName);
     }
 
     document.body.classList.add(mode);
-    document.body.classList.remove('auto');
 
     this.currentClassName = mode;
   }
@@ -82,12 +83,21 @@ export default class Themepicker extends Dialog {
     this.selectMode(target, mode);
   }
 
-  public setSelectedMode(mode: ThemeModes) {
+  public setSelectedMode(mode: ThemeModes, templateMode: ITemplateThemeMode) {
     const targetButton: HTMLElement = this.modeLookup[mode];
+
     if (targetButton) {
       this.selectMode(targetButton, mode);
     } else {
       console.error(`Could not find target button associated with the mode: ${mode}`);
     }
+
+    if (mode === ThemeModes.Auto) {
+      this.applyAutoBodyClass();
+    } else {
+      this.removeAutoBodyClass();
+    }
+
+    this.setTemplateBodyClass(templateMode);
   }
 }

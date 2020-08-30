@@ -344,12 +344,17 @@ export default class Extension {
      *
      * Doing it this way is not clean and can easily cause bugs, since forgetting
      * to await the promise will give us an invalid template mode.
+     *
+     * We could return the updated template mode when the state has been updated, e.g:
+     * const { templateMode } = await this.state.updateThemeMode(mode);
      */
     await this.state.setThemeMode(mode);
 
+    const newTemplateMode = this.state.getTemplateThemeMode();
+
     // No need to update the theme if the currently applied theme mode
     // matches the one that will be set by auto-mode.
-    if (previousTemplateMode !== this.state.getTemplateThemeMode()) {
+    if (previousTemplateMode !== newTemplateMode) {
       this.updateThemeForCurrentMode();
     }
 
@@ -358,12 +363,12 @@ export default class Extension {
         this.startAutoThemeMode();
       }
 
-      Messenger.UI.sendTemplateThemeMode(this.state.getTemplateThemeMode());
+      Messenger.UI.sendTemplateThemeMode(newTemplateMode);
     } else {
       this.autoMode.stop();
     }
 
-    Messenger.UI.sendThemeMode(mode);
+    Messenger.UI.sendThemeMode(mode, newTemplateMode);
   }
 
   private setPaletteTemplate(template: IPaletteTemplate) {

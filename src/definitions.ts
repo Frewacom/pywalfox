@@ -50,6 +50,8 @@ export enum DuckDuckGoThemeKeys {
   Hover = 'k21',
 }
 
+export type ITemplateThemeMode = ThemeModes.Dark | ThemeModes.Light;
+
 export type IPalette = {
   [key in PaletteColors]: string;
 };
@@ -173,6 +175,11 @@ export interface IOptionSetData {
   value?: any;
 }
 
+export interface IThemeModeData {
+  mode: ThemeModes;
+  templateMode: ITemplateThemeMode;
+}
+
 export interface INativeAppMessage {
   action: string;
   success: boolean;
@@ -210,7 +217,7 @@ export interface IInitialData {
   template: IColorschemeTemplate;
   customColors: Partial<IPalette>;
   themeMode: ThemeModes;
-  templateThemeMode: ThemeModes;
+  templateThemeMode: ITemplateThemeMode;
   debuggingInfo: IDebuggingInfoData;
   options: IOptionSetData[];
   fontSize: number;
