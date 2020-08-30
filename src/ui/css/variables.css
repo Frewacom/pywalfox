@@ -89,8 +89,8 @@ body.light {
 
   --brightness-filter: brightness(107%);
   --border-color: rgba(0,0,0,0.15);
-  --lighter-background: rgba(0,0,0,0.08);
-  --lighter-background-hover: rgba(0,0,0,0.1);
+  --lighter-background: rgba(0,0,0,0.06);
+  --lighter-background-hover: rgba(0,0,0,0.09);
   --darker-background: var(--lighter-background);
 
   --button-background: var(--background-light);

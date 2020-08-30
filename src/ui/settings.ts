@@ -281,6 +281,7 @@ function onPaletteTemplateUseCurrent() {
 
     if (index === null) {
       console.log(`Palette color '${targetId}' is set to a custom color and can not be used`);
+      return;
     }
 
     if (inputElement === null) {
@@ -292,6 +293,8 @@ function onPaletteTemplateUseCurrent() {
     inputElement.value = index.toString();
     template.palette[targetId] = index;
   });
+
+  savePaletteTemplate();
 }
 
 function saveThemeTemplate() {
