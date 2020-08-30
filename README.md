@@ -56,17 +56,18 @@ Pywalfox comes with extensive customization options divided into the "Palette", 
 
 #### The palette
 The palette in the "Palette" section is used to temporarily customize one or more colors from the Pywal palette. 
-You can use one of the generated colors, or choose any color. Changes to the palette will be reset when clicking "Fetch Pywal colors" or when running `pywalfox update`.
+You can use one of the generated colors, or choose any color from a colorwheel. Changes to the palette will be reset when clicking "Fetch Pywal colors" or when running `pywalfox update`.
 
 #### Palette templates
-If you want your palette customizations to be persistent (unlike the regular palette you must use a palette template. 
+If you want your palette customizations to be persistent (unlike the regular palette) you must save your current palette as a so-called palette template. 
 
-Creating a palette template is quite simple:
+Saving a palette template is quite simple:
+
 1. Click "Fetch Pywal colors" (or run `pywalfox update`) in the add-on settings GUI.
-2. Customize the colors to your liking in the regular "Palette" section at the top of the page.
+2. Use the regular "Palette" at the top of the page to customize the colors to your liking.
    - *Colors from outside the Pywal palette (i.e. from the colorwheel) cannot be used in a template*.
-   - *Advanced users can set the colors directly using Pywal color indices.*
-3. Go down to the "Palette template" section and click "Load from current".
+3. Click "Load from current" in the "Palette template" section below.
+   - *The colors can also be set directly in the "Palette template" section using Pywal color indices.*
 4. Click "Save palette" to save the palette template. 
 
 Your custom palette will now be applied whenever you update the browser theme.
@@ -79,10 +80,10 @@ Every element of the browser that is currently supported by the [Theme API](http
 To create a palette template, go through the items in the "Theme template" section and assign a color to each item.
 The colors are identified by their names as seen in the "Palette template" section.
 
-#### Theme modes
+### Theme modes
 There are three different theme modes, Dark, Light and Auto. Selecting Auto will automatically switch between the dark and light modes based on a selected time interval in the "General" section of the extension.
 
-> **Note that the dark and light modes have *separate* theme and palette templates. When modifying a template, you are always modifiying the template for the currently selected mode (dark/light).**
+> **Note that the dark and light modes have *separate* theme and palette templates. When modifying a template, you are always modifiying the template for the currently selected mode.**
 
 ### Further theming with the included userChrome.css and userContent.css in Firefox
 Pywalfox includes custom CSS sheets that you can enable for Firefox.
