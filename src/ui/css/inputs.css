@@ -28,7 +28,7 @@ input[type="time"] {
 input[type="number"]:hover,
 input[type="number"]:focus,
 .setting:hover input[type="number"] {
-  -moz-appearance: number-input;
+  -moz-appearance: initial;
 }
 
 select {
