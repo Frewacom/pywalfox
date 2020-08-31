@@ -57,16 +57,15 @@ export default class DarkreaderMessenger {
   }
 
   public requestThemeModeSet(mode: ITemplateThemeMode) {
-    // TODO: Probably needs an updated Darkreader API to work
     const data: IDarkreaderThemeMode = {
       mode: mode === ThemeModes.Dark ? 1 : 0,
     };
 
-    this.sendMessage({ type: DARKREADER_MESSAGES.CHANGE_SETTINGS, data });
+    this.sendMessage({ type: DARKREADER_MESSAGES.THEME, data });
   }
 
   public requestThemeReset() {
     // TODO: Not implemented in the current Darkreader API
-    this.sendMessage({ type: DARKREADER_MESSAGES.RESET });
+    //this.sendMessage({ type: DARKREADER_MESSAGES.RESET });
   }
 }
