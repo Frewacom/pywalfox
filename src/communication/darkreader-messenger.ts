@@ -65,7 +65,6 @@ export default class DarkreaderMessenger {
   }
 
   public requestThemeReset() {
-    // TODO: Not implemented in the current Darkreader API
-    //this.sendMessage({ type: DARKREADER_MESSAGES.RESET });
+    this.sendMessage({ type: DARKREADER_MESSAGES.RESET });
   }
 }

@@ -88,5 +88,5 @@ export const NATIVE_MESSAGES = {
 export const DARKREADER_MESSAGES = {
   THEME: 'setTheme',
   CHANGE_SETTINGS: 'changeSettings',
-  RESET: 'resetTheme',
+  RESET: 'resetSettings',
 };
