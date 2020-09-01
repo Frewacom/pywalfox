@@ -4,15 +4,18 @@ export interface IPywalColors extends Array<string> {
 
 export interface IExtendedPywalColorBase {
   targetIndex: number;
-  colorString?: string;
-  colorIndex?: number;
-  modifier?: number;
+}
+
+export interface ICustomPywalColor extends IExtendedPywalColorBase {
+  colorString: string;
+}
+
+export interface IModifiedPywalColor extends IExtendedPywalColorBase {
+  colorIndex: number;
+  modifier: number;
   min?: number;
   max?: number;
 }
-
-export interface ICustomPywalColor extends IExtendedPywalColorBase {}
-export interface IModifiedPywalColor extends IExtendedPywalColorBase {}
 
 export type IExtendedPywalColor = IModifiedPywalColor | ICustomPywalColor;
 export type IExtendedPywalColors = IExtendedPywalColor[];

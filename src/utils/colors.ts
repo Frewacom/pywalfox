@@ -27,6 +27,12 @@ export function changeLuminance(hex: string, lum: number, min = 0, max = 255) {
   }
 
   lum = lum || 0;
+
+  // Min and max are not required, but we want to be able to call this function
+  // using undefined values of min and max
+  min = min || 0;
+  max = max || 255;
+
   let rgb: any = '#';
   let c: any;
 

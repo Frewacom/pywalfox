@@ -3,6 +3,9 @@ import {
   PaletteColors,
   IPalette,
   IPywalColors,
+  IExtendedPywalColor,
+  IModifiedPywalColor,
+  ICustomPywalColor,
   IBrowserTheme,
   ITemplateItem,
   IThemeTemplate,
@@ -20,24 +23,22 @@ import { THEME_TEMPLATE_DATA, PALETTE_TEMPLATE_DATA } from '@config/template-dat
 
 import { changeLuminance } from '@utils/colors';
 
-// TODO: Refactor this ugly function
+function isCustomColor(color: IExtendedPywalColor): color is ICustomPywalColor {
+  return (color as ICustomPywalColor).colorString !== undefined;
+}
+
 export function generatePywalPalette(pywalColors: IPywalColors) {
   const colors = [...pywalColors]; // Prevent mutation of the original pywalColors array
 
-  EXTENDED_PYWAL_COLORS.forEach((color) => {
-    const {
-      targetIndex, colorString, colorIndex, modifier, min, max,
-    } = color;
-    if (color.hasOwnProperty('colorIndex') && color.hasOwnProperty('modifier')) {
-      if (color.hasOwnProperty('min') && color.hasOwnProperty('max')) {
-        colors.splice(targetIndex, 0, changeLuminance(colors[colorIndex], modifier, min, max));
-      } else {
-        colors.splice(targetIndex, 0, changeLuminance(colors[colorIndex], modifier));
-      }
-    } else if (color.hasOwnProperty('colorString')) {
+  EXTENDED_PYWAL_COLORS.forEach((color: IExtendedPywalColor) => {
+    const { targetIndex } = color;
+
+    if (isCustomColor(color)) {
+      const { colorString } = color;
       colors.splice(targetIndex, 0, colorString);
     } else {
-      console.warn(`Invalid extended pywal color. Missing required properties for targetIndex: ${targetIndex}`);
+      const { colorIndex, modifier, min, max } = color;
+      colors.splice(targetIndex, 0, changeLuminance(colors[colorIndex], modifier, min, max));
     }
   });
 
