@@ -20,7 +20,7 @@ export function rgbToHex(rgb: string) {
 // https://www.sitepoint.com/javascript-generate-lighter-darker-color/
 export function changeLuminance(hex: string, lum: number, min = 0, max = 255) {
   let validatedHex = validateHex(hex);
-  if (validatedHex === '000000') {
+  if (validatedHex === '000000' && lum > 0) {
     // If the color is completely black, we can not generate a brighter color,
     // so we change it to be a very dark gray.
     validatedHex = '0D0D0D';
@@ -32,7 +32,7 @@ export function changeLuminance(hex: string, lum: number, min = 0, max = 255) {
 
   for (let i = 0; i < 3; ++i) {
     c = parseInt(validatedHex.substr(i * 2, 2), 16);
-    c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+    c = Math.round(Math.min(Math.max(min, c + (c * lum)), max)).toString(16);
     rgb += (`00${c}`).substr(c.length);
   }
 

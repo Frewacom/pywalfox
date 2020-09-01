@@ -27,8 +27,8 @@ export const EXTENDED_PYWAL_COLORS: IExtendedPywalColors = [
     targetIndex: 19,
     colorIndex: 7,
     modifier: 0.1,
-    min: 200,
-    max: 225,
+    min: 205,
+    max: 220,
   },
 ];
 
