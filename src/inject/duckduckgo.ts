@@ -1,14 +1,17 @@
 import {
   IDuckDuckGoTheme,
   IExtensionMessage,
+  DuckDuckGoColorKeys,
+  DuckDuckGoThemeKeys,
+  DuckDuckGoSettingKeys,
   IDuckDuckGoThemeSetData,
 } from '@definitions';
 
+import { EXTENSION_MESSAGES } from '@config/general';
 import { requestTheme } from '@communication/content-scripts/duckduckgo';
-import { EXTENSION_MESSAGES, DUCKDUCKGO_THEME_ID } from '@config/general';
 
 function getTheme() {
-  return window.wrappedJSObject.DDG.settings.get('kae');
+  return window.wrappedJSObject.DDG.settings.get(DuckDuckGoSettingKeys.ThemeId);
 }
 
 function getHash() {
@@ -20,21 +23,24 @@ function setHash(hash: string) {
 }
 
 function onResetTheme() {
-  if (getTheme() !== DUCKDUCKGO_THEME_ID) {
+  if (getTheme() !== DuckDuckGoThemeKeys.Pywalfox) {
     return;
   }
 
   // TODO: We could send the reset theme from the background script based on the current theme mode
-  window.wrappedJSObject.DDG.settings.setTheme('d');
+  window.wrappedJSObject.DDG.settings.setTheme(DuckDuckGoThemeKeys.Dark);
   setHash('');
 }
 
 function applyTheme(hash: string, theme: IDuckDuckGoTheme) {
-  Object.keys(theme).forEach((key) => {
+  Object.keys(theme).forEach((key: DuckDuckGoColorKeys) => {
     window.wrappedJSObject.DDG.settings.set(key, theme[key]);
   });
 
-  window.wrappedJSObject.DDG.settings.set('kae', DUCKDUCKGO_THEME_ID);
+  window.wrappedJSObject.DDG.settings.set(
+    DuckDuckGoSettingKeys.ThemeId,
+    DuckDuckGoThemeKeys.Pywalfox,
+  );
 
   setHash(hash);
 }
@@ -44,7 +50,7 @@ function onThemeSet(data: IDuckDuckGoThemeSetData) {
   const currentHash = getHash();
   const currentTheme = getTheme();
 
-  if (currentTheme !== DUCKDUCKGO_THEME_ID || currentHash !== hash) {
+  if (currentTheme !== DuckDuckGoThemeKeys.Pywalfox || currentHash !== hash) {
     applyTheme(hash, theme);
   }
 }

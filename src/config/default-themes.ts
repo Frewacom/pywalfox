@@ -1,6 +1,6 @@
 import {
   PaletteColors,
-  DuckDuckGoThemeKeys,
+  DuckDuckGoSettingKeys,
   IThemeTemplate,
   IPaletteTemplate,
   IColorschemeTemplate,
@@ -109,29 +109,29 @@ export const DEFAULT_BROWSER_TEMPLATE_LIGHT: IThemeTemplate = {
 };
 
 const BASE_DDG_THEME = (mainBackground: PaletteColors) => ({
-  [DuckDuckGoThemeKeys.Background]: {
+  [DuckDuckGoSettingKeys.Background]: {
     colorKey: mainBackground,
   },
-  [DuckDuckGoThemeKeys.HeaderBackground]: {
+  [DuckDuckGoSettingKeys.HeaderBackground]: {
     colorKey: mainBackground,
   },
-  [DuckDuckGoThemeKeys.ResultTitle]: {
+  [DuckDuckGoSettingKeys.ResultTitle]: {
     colorKey: PaletteColors.TextFocus,
   },
-  [DuckDuckGoThemeKeys.ResultDescription]: {
+  [DuckDuckGoSettingKeys.ResultDescription]: {
     colorKey: PaletteColors.Text,
   },
-  [DuckDuckGoThemeKeys.Hover]: {
+  [DuckDuckGoSettingKeys.Hover]: {
     colorKey: PaletteColors.BackgroundLight,
   },
 });
 
 export const DEFAULT_DDG_TEMPLATE_DARK: IDuckDuckGoThemeTemplate = {
-  [DuckDuckGoThemeKeys.ResultLink]: {
+  [DuckDuckGoSettingKeys.ResultLink]: {
     colorKey: PaletteColors.AccentSecondary,
     modifier: 0.2,
   },
-  [DuckDuckGoThemeKeys.ResultLinkVisited]: {
+  [DuckDuckGoSettingKeys.ResultLinkVisited]: {
     colorKey: PaletteColors.AccentPrimary,
     modifier: 0.2,
   },
@@ -139,11 +139,11 @@ export const DEFAULT_DDG_TEMPLATE_DARK: IDuckDuckGoThemeTemplate = {
 };
 
 export const DEFAULT_DDG_TEMPLATE_LIGHT: IDuckDuckGoThemeTemplate = {
-  [DuckDuckGoThemeKeys.ResultLink]: {
+  [DuckDuckGoSettingKeys.ResultLink]: {
     colorKey: PaletteColors.AccentSecondary,
     modifier: -0.3,
   },
-  [DuckDuckGoThemeKeys.ResultLinkVisited]: {
+  [DuckDuckGoSettingKeys.ResultLinkVisited]: {
     colorKey: PaletteColors.AccentPrimary,
     modifier: -0.3,
   },

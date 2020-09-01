@@ -43,7 +43,7 @@ export enum ThemeModes {
   Auto = 'auto',
 }
 
-export enum DuckDuckGoThemeKeys {
+export enum DuckDuckGoSettingKeys {
   Background = 'k7',
   HeaderBackground = 'kj',
   ResultTitle = 'k9',
@@ -51,13 +51,18 @@ export enum DuckDuckGoThemeKeys {
   ResultLink = 'kx',
   ResultLinkVisited = 'kaa',
   Hover = 'k21',
+  ThemeId = 'kae',
 }
 
-export type ITemplateThemeMode = ThemeModes.Dark | ThemeModes.Light;
+export enum DuckDuckGoThemeKeys {
+  Dark = 'd',
+  Light = 'l',
+  Pywalfox = 'pywalfox',
+}
 
-export type IPalette = {
-  [key in PaletteColors]: string;
-};
+export type DuckDuckGoColorKeys = Exclude<DuckDuckGoSettingKeys, DuckDuckGoSettingKeys.ThemeId>;
+
+export type ITemplateThemeMode = Exclude<ThemeModes, ThemeModes.Auto>;
 
 export interface IBrowserTheme {
   icons: string;
@@ -101,10 +106,6 @@ export interface IBrowserTheme {
 
 export type IExtensionTheme = string;
 
-export type IDuckDuckGoTheme = {
-  [key in DuckDuckGoThemeKeys]: string;
-};
-
 export interface IColorscheme {
   hash: IPaletteHash;
   palette: IPalette;
@@ -114,22 +115,22 @@ export interface IColorscheme {
   darkreader: IDarkreaderScheme;
 }
 
-export type IPaletteTemplate = {
-  [key in PaletteColors]: number;
-};
-
 export interface IThemeTemplate {
   [key: string]: PaletteColors;
 }
+
+export type IPalette = Record<PaletteColors, string>;
+
+export type IPaletteTemplate = Record<PaletteColors, number>;
+
+export type IDuckDuckGoTheme = Record<DuckDuckGoColorKeys, string>;
+
+export type IDuckDuckGoThemeTemplate = Record<DuckDuckGoColorKeys, IDuckDuckGoThemeTemplateItem>;
 
 export interface IDuckDuckGoThemeTemplateItem {
   colorKey: string;
   modifier?: number;
 }
-
-export type IDuckDuckGoThemeTemplate = {
-  [key in DuckDuckGoThemeKeys]: IDuckDuckGoThemeTemplateItem;
-};
 
 export interface IColorschemeTemplate {
   palette: IPaletteTemplate;
@@ -149,15 +150,9 @@ export type ColorschemeTypes =
   | IDuckDuckGoTheme
   | IExtensionTheme;
 
-export interface ICustomColors {
-  [ThemeModes.Dark]: Partial<IPalette>;
-  [ThemeModes.Light]: Partial<IPalette>;
-}
+export type ICustomColors = Record<ITemplateThemeMode, Partial<IPalette>>;
 
-export interface IColorschemeTemplates {
-  [ThemeModes.Light]: IColorschemeTemplate;
-  [ThemeModes.Dark]: IColorschemeTemplate;
-}
+export type IColorschemeTemplates = Record<ITemplateThemeMode, IColorschemeTemplate>;
 
 export interface IExtensionOptions {
   [CSSTargets.UserChrome]: boolean;
@@ -314,6 +309,14 @@ export interface IExtensionState {
  */
 declare global {
   interface Window {
-    wrappedJSObject: { DDG: any; };
+    wrappedJSObject: {
+      DDG: {
+        settings: {
+          get: (key: DuckDuckGoSettingKeys) => unknown,
+          set: (key: DuckDuckGoSettingKeys, value: unknown) => void,
+          setTheme: (key: DuckDuckGoThemeKeys) => void,
+        }
+      },
+    };
   }
 }

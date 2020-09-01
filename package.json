@@ -91,6 +91,7 @@
       "no-param-reassign": "off",
       "no-prototype-builtins": "off",
       "class-methods-use-this": "off",
+      "object-curly-newline": "off",
       "no-plusplus": [
         "warn",
         {

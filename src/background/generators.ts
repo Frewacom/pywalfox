@@ -4,7 +4,6 @@ import {
   IPalette,
   IPywalColors,
   IExtendedPywalColor,
-  IModifiedPywalColor,
   ICustomPywalColor,
   IBrowserTheme,
   ITemplateItem,
@@ -77,7 +76,11 @@ export function generatePaletteHash(palette: IPalette) {
   return hash;
 }
 
-export function generatePalette(pywalColors, customColors, template: IPaletteTemplate) {
+export function generatePalette(
+  pywalColors: IPywalColors,
+  customColors: Partial<IPalette>,
+  template: IPaletteTemplate,
+) {
   const defaultPalette = createObjectFromTemplateData<IPalette>(
     PALETTE_TEMPLATE_DATA,
     pywalColors,
