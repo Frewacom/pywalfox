@@ -227,7 +227,7 @@ export interface INativeAppMessageCallbacks {
   disconnected: () => void,
   version: (version: string) => void,
   output: (message: string, error?: boolean) => void,
-  pywalColorsFetchSuccess: (pywalColors: IPywalColors) => void,
+  pywalColorsFetchSuccess: (pywalData: IPywalData) => void,
   pywalColorsFetchFailed: (error: string) => void,
   cssToggleSuccess: (target: string) => void,
   cssToggleFailed: (target: string, error: string) => void,

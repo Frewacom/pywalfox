@@ -1,5 +1,6 @@
 import {
   IPalette,
+  IPywalData,
   IPywalColors,
   IColorscheme,
   IBrowserTheme,
