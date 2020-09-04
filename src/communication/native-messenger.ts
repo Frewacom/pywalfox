@@ -1,5 +1,5 @@
 import {
-  IPywalColors,
+  IPywalData,
   INativeAppMessage,
   INativeAppRequest,
   INativeAppMessageCallbacks,
@@ -82,14 +82,14 @@ export default class NativeApp {
 
   private onPywalColorsResponse(message: INativeAppMessage) {
     if (message.success) {
-      const colors: IPywalColors = this.getData(message);
+      const pywalData: IPywalData = this.getData(message);
 
-      if (!colors) {
-        this.logError('Pywal colors were read successfully, but no colors were received');
+      if (!pywalData) {
+        this.logError('Pywal data was read successfully but contained null');
         return;
       }
 
-      this.callbacks.pywalColorsFetchSuccess(colors);
+      this.callbacks.pywalColorsFetchSuccess(pywalData);
     } else {
       this.callbacks.pywalColorsFetchFailed(message.error);
     }
