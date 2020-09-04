@@ -3,7 +3,7 @@ import {
   DuckDuckGoSettingKeys,
   IThemeTemplate,
   IPaletteTemplate,
-  IColorschemeTemplate,
+  IBrowserThemeTemplate,
   IDuckDuckGoThemeTemplate,
   IExtendedPywalColors,
 } from '@definitions';
@@ -84,7 +84,7 @@ export const BASE_BROWSER_TEMPLATE = {
   button_background_active: PaletteColors.BackgroundExtra,
 };
 
-export const DEFAULT_BROWSER_TEMPLATE_DARK: IThemeTemplate = {
+export const DEFAULT_BROWSER_TEMPLATE_DARK: IBrowserThemeTemplate = {
   tab_background_separator: PaletteColors.BackgroundLight,
   toolbar_field: PaletteColors.BackgroundExtra,
   toolbar_field_focus: PaletteColors.BackgroundExtra,
@@ -96,7 +96,7 @@ export const DEFAULT_BROWSER_TEMPLATE_DARK: IThemeTemplate = {
   ...BASE_BROWSER_TEMPLATE,
 };
 
-export const DEFAULT_BROWSER_TEMPLATE_LIGHT: IThemeTemplate = {
+export const DEFAULT_BROWSER_TEMPLATE_LIGHT: IBrowserThemeTemplate = {
   tab_background_separator: PaletteColors.Background,
   toolbar_field: PaletteColors.BackgroundLight,
   toolbar_field_focus: PaletteColors.BackgroundLight,
@@ -150,13 +150,13 @@ export const DEFAULT_DDG_TEMPLATE_LIGHT: IDuckDuckGoThemeTemplate = {
   ...BASE_DDG_THEME(PaletteColors.BackgroundLight),
 };
 
-export const DEFAULT_THEME_DARK: IColorschemeTemplate = {
+export const DEFAULT_THEME_DARK: IThemeTemplate = {
   palette: DEFAULT_PALETTE_TEMPLATE_DARK,
   browser: DEFAULT_BROWSER_TEMPLATE_DARK,
   duckduckgo: DEFAULT_DDG_TEMPLATE_DARK,
 };
 
-export const DEFAULT_THEME_LIGHT: IColorschemeTemplate = {
+export const DEFAULT_THEME_LIGHT: IThemeTemplate = {
   palette: DEFAULT_PALETTE_TEMPLATE_LIGHT,
   browser: DEFAULT_BROWSER_TEMPLATE_LIGHT,
   duckduckgo: DEFAULT_DDG_TEMPLATE_LIGHT,

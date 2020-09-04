@@ -1,4 +1,5 @@
 import {
+  CSSTargets,
   IPywalData,
   INativeAppMessage,
   INativeAppRequest,
@@ -100,7 +101,10 @@ export default class NativeApp {
 
     if (message.success) {
       if (!target) {
-        this.logError('Custom CSS was applied successfully, but the target was not specified');
+        this.logError('Custom CSS was applied successfully, but target was not specified');
+        return;
+      } else if (Object.values(CSSTargets).includes(target)) {
+        this.logError(`Custom CSS was applied successfully, but target "${target}" is invalid`);
         return;
       }
 

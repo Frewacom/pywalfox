@@ -36,7 +36,7 @@ export const EXTENSION_MESSAGES = {
   PALETTE_COLOR_SET: 'palette:color:set',
   TEMPLATE_SET: 'template:set',
   PALETTE_TEMPLATE_SET: 'palette:template:set',
-  THEME_TEMPLATE_SET: 'theme:template:set',
+  BROWSER_THEME_TEMPLATE_SET: 'browser:template:set',
   PYWAL_COLORS_SET: 'pywal:colors:set',
   CUSTOM_COLORS_SET: 'custom:colors:set',
   OPTION_SET: 'option:set',

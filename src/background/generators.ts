@@ -3,15 +3,16 @@ import {
   PaletteColors,
   IPalette,
   IPywalColors,
+  ICustomColors,
   IExtendedPywalColor,
   ICustomPywalColor,
   IBrowserTheme,
   ITemplateItem,
+  ITemplateThemeMode,
   IThemeTemplate,
   IPaletteTemplate,
+  IBrowserThemeTemplate,
   IDuckDuckGoTheme,
-  ITemplateThemeMode,
-  IColorschemeTemplate,
   IDuckDuckGoThemeTemplate,
   IDuckDuckGoThemeTemplateItem,
 } from '@definitions';
@@ -44,11 +45,11 @@ export function generatePywalPalette(pywalColors: IPywalColors) {
   return colors;
 }
 
-export function generateColorscheme(
+export function generateTheme(
   mode: ITemplateThemeMode,
   pywalColors: IPywalColors,
-  customColors: Partial<IPalette>,
-  template: IColorschemeTemplate,
+  customColors: ICustomColors,
+  template: IThemeTemplate,
 ) {
   const palette = generatePalette(pywalColors, customColors, template.palette);
 
@@ -90,7 +91,7 @@ export function generatePalette(
   return Object.assign(defaultPalette, customColors);
 }
 
-export function generateBrowserTheme(palette: IPalette, template: IThemeTemplate) {
+export function generateBrowserTheme(palette: IPalette, template: IBrowserThemeTemplate) {
   return createObjectFromTemplateData<IBrowserTheme>(THEME_TEMPLATE_DATA, palette, template);
 }
 
@@ -143,7 +144,7 @@ export function generateDarkreaderScheme({ background, text }: IPalette, mode: I
 function createObjectFromTemplateData<T>(
   data: ITemplateItem[],
   values: (IPywalColors | IPalette),
-  template: (IPaletteTemplate | IThemeTemplate),
+  template: (IPaletteTemplate | IBrowserThemeTemplate),
 ) {
   return data.reduce((obj: T, item: ITemplateItem) => {
     obj[<keyof T>item.target] = values[template[item.target]]; // eslint-disable-line
@@ -157,9 +158,9 @@ function stripHashSymbol(color: string) {
 
 export default {
   hash: generatePaletteHash,
+  theme: generateTheme,
   palette: generatePalette,
   browser: generateBrowserTheme,
-  colorscheme: generateColorscheme,
   extension: generateExtensionTheme,
   pywalPalette: generatePywalPalette,
   duckduckgo: generateDuckduckgoTheme,

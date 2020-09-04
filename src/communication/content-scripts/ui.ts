@@ -2,10 +2,10 @@ import {
   IPalette,
   IInitialData,
   IPywalColors,
-  IColorschemeTemplate,
+  IThemeTemplate,
   ITimeIntervalEndpoint,
   IPaletteTemplate,
-  IThemeTemplate,
+  IBrowserThemeTemplate,
   ThemeModes,
   IThemeModeData,
   ITemplateThemeMode,
@@ -48,7 +48,7 @@ export function sendPywalColors(pywalColors: IPywalColors) {
   sendMessage({ action: EXTENSION_MESSAGES.PYWAL_COLORS_SET, data: pywalColors });
 }
 
-export function sendTemplate(template: IColorschemeTemplate) {
+export function sendTemplate(template: IThemeTemplate) {
   sendMessage({ action: EXTENSION_MESSAGES.TEMPLATE_SET, data: template });
 }
 
@@ -82,8 +82,8 @@ export function sendPaletteTemplate(template: IPaletteTemplate) {
   sendMessage({ action: EXTENSION_MESSAGES.PALETTE_TEMPLATE_SET, data: template });
 }
 
-export function sendThemeTemplate(template: IThemeTemplate) {
-  sendMessage({ action: EXTENSION_MESSAGES.THEME_TEMPLATE_SET, data: template });
+export function sendBrowserThemeTemplate(template: IBrowserThemeTemplate) {
+  sendMessage({ action: EXTENSION_MESSAGES.BROWSER_THEME_TEMPLATE_SET, data: template });
 }
 
 export function sendCustomColors(customColors: Partial<IPalette>) {
@@ -128,7 +128,7 @@ export function requestOptionSet(option: string, enabled: boolean, value?: any) 
   sendMessage({ action: EXTENSION_MESSAGES.OPTION_SET, data: optionData });
 }
 
-export function requestThemeTemplateSet(template: IThemeTemplate) {
+export function requestThemeTemplateSet(template: IBrowserThemeTemplate) {
   sendMessage({ action: EXTENSION_MESSAGES.THEME_TEMPLATE_SET, data: template });
 }
 

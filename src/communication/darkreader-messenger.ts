@@ -1,5 +1,5 @@
 import {
-  IDarkreaderScheme,
+  IDarkreaderTheme,
   IDarkreaderThemeMode,
   IDarkreaderMessage,
   IDarkreaderErrorCallback,
@@ -52,7 +52,7 @@ export default class DarkreaderMessenger {
     this.setupListeners();
   }
 
-  public requestThemeSet(scheme: IDarkreaderScheme) {
+  public requestThemeSet(scheme: IDarkreaderTheme) {
     this.sendMessage({ type: DARKREADER_MESSAGES.THEME, data: scheme });
   }
 

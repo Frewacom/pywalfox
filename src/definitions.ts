@@ -25,8 +25,6 @@ export interface IModifiedPywalColor extends IExtendedPywalColorBase {
 export type IExtendedPywalColor = IModifiedPywalColor | ICustomPywalColor;
 export type IExtendedPywalColors = IExtendedPywalColor[];
 
-export type IPaletteHash = string;
-
 export enum PaletteColors {
   Background = 'background',
   BackgroundLight = 'backgroundLight',
@@ -69,6 +67,23 @@ export type DuckDuckGoColorKeys = Exclude<DuckDuckGoSettingKeys, DuckDuckGoSetti
 
 export type ITemplateThemeMode = Exclude<ThemeModes, ThemeModes.Auto>;
 
+export interface IGeneratedTheme {
+  hash: IPaletteHash;
+  palette: IPalette;
+  browser: IBrowserTheme;
+  extension: IExtensionTheme;
+  duckduckgo: IDuckDuckGoTheme;
+  darkreader: IDarkreaderTheme;
+}
+
+export type ITheme = Record<ITemplateThemeMode, IThemeItem>;
+
+export interface IThemeTemplate {
+  palette: IPaletteTemplate;
+  browser: IBrowserThemeTemplate;
+  duckduckgo: IDuckDuckGoThemeTemplate;
+}
+
 export interface IBrowserTheme {
   icons: string;
   icons_attention: string;
@@ -109,43 +124,33 @@ export interface IBrowserTheme {
   button_background_active: string;
 }
 
-export type IExtensionTheme = string;
+export type IBrowserThemeTemplate = Record<keyof IBrowserTheme, PaletteColors>;
 
-export interface IColorscheme {
-  hash: IPaletteHash;
-  palette: IPalette;
-  browser: IBrowserTheme;
-  extension: IExtensionTheme;
-  duckduckgo: IDuckDuckGoTheme;
-  darkreader: IDarkreaderScheme;
-}
-
-export interface IThemeTemplate {
-  [key: string]: PaletteColors;
-}
+export type IPaletteHash = string;
 
 export type IPalette = Record<PaletteColors, string>;
 
+export type ICustomColors = Partial<IPalette>;
+
 export type IPaletteTemplate = Record<PaletteColors, number>;
+
+export type IExtensionTheme = string;
 
 export type IDuckDuckGoTheme = Record<DuckDuckGoColorKeys, string>;
 
 export type IDuckDuckGoThemeTemplate = Record<DuckDuckGoColorKeys, IDuckDuckGoThemeTemplateItem>;
 
+export type ISavedThemes = Record<string, ITheme>;
+
+// TODO: Replace this and the pywal color extension types with a generic type
 export interface IDuckDuckGoThemeTemplateItem {
   colorKey: string;
   modifier?: number;
 }
 
-export interface IColorschemeTemplate {
-  palette: IPaletteTemplate;
-  browser: IThemeTemplate;
-  duckduckgo: IDuckDuckGoThemeTemplate;
-}
-
 export type TemplateTypes =
   | IPaletteTemplate
-  | IThemeTemplate
+  | IBrowserThemeTemplate
   | IDuckDuckGoThemeTemplate;
 
 export type ColorschemeTypes =
@@ -153,21 +158,8 @@ export type ColorschemeTypes =
   | IPaletteHash
   | IBrowserTheme
   | IDuckDuckGoTheme
-  | IExtensionTheme;
-
-export type ICustomColors = Record<ITemplateThemeMode, Partial<IPalette>>;
-
-export type IColorschemeTemplates = Record<ITemplateThemeMode, IColorschemeTemplate>;
-
-export interface IExtensionOptions {
-  [CSSTargets.UserChrome]: boolean;
-  [CSSTargets.UserContent]: boolean;
-  fontSize: number;
-  duckduckgo: boolean;
-  darkreader: boolean;
-  autoTimeStart: ITimeIntervalEndpoint;
-  autoTimeEnd: ITimeIntervalEndpoint;
-}
+  | IExtensionTheme
+  | IDarkreaderTheme;
 
 export interface IExtensionMessage {
   action: string;
@@ -176,17 +168,17 @@ export interface IExtensionMessage {
 
 export type IDarkreaderErrorCallback = (message: string) => void;
 
-export interface IDarkreaderDarkscheme {
+export interface IDarkreaderDarkTheme {
   darkSchemeBackgroundColor: string;
   darkSchemeTextColor: string;
 }
 
-export interface IDarkreaderLightScheme {
+export interface IDarkreaderLightTheme {
   lightSchemeBackgroundColor: string;
   lightSchemeTextColor: string;
 }
 
-export type IDarkreaderScheme = IDarkreaderLightScheme | IDarkreaderDarkscheme
+export type IDarkreaderTheme = IDarkreaderLightTheme | IDarkreaderDarkTheme;
 
 export interface IDarkreaderThemeMode {
   mode: number;
@@ -194,7 +186,7 @@ export interface IDarkreaderThemeMode {
 
 export interface IDarkreaderMessage {
   type: string;
-  data?: IDarkreaderScheme | IDarkreaderThemeMode;
+  data?: IDarkreaderTheme | IDarkreaderThemeMode;
 }
 
 export interface IOptionSetData {
@@ -229,8 +221,8 @@ export interface INativeAppMessageCallbacks {
   output: (message: string, error?: boolean) => void,
   pywalColorsFetchSuccess: (pywalData: IPywalData) => void,
   pywalColorsFetchFailed: (error: string) => void,
-  cssToggleSuccess: (target: string) => void,
-  cssToggleFailed: (target: string, error: string) => void,
+  cssToggleSuccess: (target: CSSTargets) => void,
+  cssToggleFailed: (target: CSSTargets, error: string) => void,
   cssFontSizeSetSuccess: (size: number) => void,
   cssFontSizeSetFailed: (error: string) => void,
 }
@@ -242,7 +234,7 @@ export interface INodeLookup {
 export interface IInitialData {
   isApplied: boolean;
   pywalColors: IPywalColors;
-  template: IColorschemeTemplate;
+  template: IThemeTemplate;
   customColors: Partial<IPalette>;
   themeMode: ThemeModes;
   templateThemeMode: ITemplateThemeMode;
@@ -288,19 +280,32 @@ export interface ITimeIntervalEndpoints {
 
 export type IAutoModeTriggerCallback = (isDay: boolean) => void;
 
+export interface IThemeItem {
+  customColors: Partial<IPalette>;
+  template: NonNullable<IThemeTemplate>;
+}
+
+export interface IExtensionOptions {
+  [CSSTargets.UserChrome]: boolean;
+  [CSSTargets.UserContent]: boolean;
+  fontSize: number;
+  duckduckgo: boolean;
+  darkreader: boolean;
+  intervalStart: ITimeIntervalEndpoint;
+  intervalEnd: ITimeIntervalEndpoint;
+}
+
 export interface IExtensionState {
   version: number,
   connected: boolean;
   updateMuted: boolean;
-  theme: {
-    mode: ThemeModes;
-    isDay: boolean;
-    isApplied: boolean;
-    pywalColors: IPywalColors;
-    colorscheme: IColorscheme;
-    customColors: ICustomColors;
-    templates: IColorschemeTemplates;
-  };
+  mode: ThemeModes;
+  isDay: boolean;
+  isApplied: boolean;
+  pywalColors: IPywalColors;
+  generatedTheme: IGeneratedTheme;
+  theme: ITheme;
+  savedThemes: ISavedThemes;
   options: IExtensionOptions;
 }
 

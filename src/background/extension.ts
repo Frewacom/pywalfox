@@ -2,9 +2,9 @@ import {
   IPalette,
   IPywalData,
   IPywalColors,
-  IColorscheme,
+  IGeneratedTheme,
   IBrowserTheme,
-  IThemeTemplate,
+  IBrowserThemeTemplate,
   IOptionSetData,
   IExtensionTheme,
   IPaletteTemplate,
@@ -81,7 +81,7 @@ export default class Extension {
   }
 
   private startAutoThemeMode() {
-    const { start, end } = this.state.getAutoTimeInterval();
+    const { start, end } = this.state.getInterval();
     this.autoMode.start(start, end);
   }
 
@@ -151,13 +151,13 @@ export default class Extension {
         Messenger.UI.sendInitialData(this.state.getInitialData());
         break;
       case EXTENSION_MESSAGES.DDG_THEME_GET:
-        this.setDDGTheme();
+        this.setDuckduckgoEnabled();
         break;
       case EXTENSION_MESSAGES.PALETTE_TEMPLATE_SET:
         this.setPaletteTemplate(data);
         break;
-      case EXTENSION_MESSAGES.THEME_TEMPLATE_SET:
-        this.setThemeTemplate(data);
+      case EXTENSION_MESSAGES.BROWSER_THEME_TEMPLATE_SET:
+        this.setBrowserThemeTemplate(data);
         break;
       case EXTENSION_MESSAGES.THEME_MODE_SET:
         this.setThemeMode(data);
@@ -210,7 +210,7 @@ export default class Extension {
       this.autoMode.stop();
     }
 
-    if (this.state.getDDGThemeEnabled()) {
+    if (this.state.getDuckduckgoEnabled()) {
       Messenger.DDG.resetTheme();
     }
 
@@ -218,8 +218,8 @@ export default class Extension {
       this.darkreaderMessenger.requestThemeReset();
     }
 
-    this.state.setColors(null, null);
-    this.state.setCustomColors(null);
+    this.state.resetCustomColors();
+    this.state.resetGeneratedTheme();
     this.state.setApplied(false);
 
     Messenger.UI.sendDebuggingOutput('Theme was disabled');
@@ -228,24 +228,26 @@ export default class Extension {
   private setThemes(pywalColors: IPywalColors, customColors?: Partial<IPalette>) {
     const mode = this.state.getTemplateThemeMode();
     const template = this.state.getTemplate();
-    const colorscheme = Generators.colorscheme(mode, pywalColors, customColors, template);
+    const generatedTheme = Generators.theme(mode, pywalColors, customColors, template);
+    const { hash, browser, extension, duckduckgo, darkreader } = generatedTheme;
 
-    this.setBrowserTheme(colorscheme.browser);
-    this.updateExtensionPagesTheme(colorscheme.extension);
+    this.setBrowserTheme(browser);
+    this.updateExtensionPagesTheme(extension);
 
-    if (this.state.getDDGThemeEnabled()) {
-      Messenger.DDG.setTheme(colorscheme.hash, colorscheme.duckduckgo);
+    if (this.state.getDuckduckgoEnabled()) {
+      Messenger.DDG.setTheme(hash, duckduckgo);
     }
 
     if (this.state.getDarkreaderEnabled()) {
-      this.darkreaderMessenger.requestThemeSet(colorscheme.darkreader);
+      this.darkreaderMessenger.requestThemeSet(darkreader);
     }
 
-    this.state.setColors(pywalColors, colorscheme);
+    this.state.setPywalColors(pywalColors);
+    this.state.setGeneratedTheme(generatedTheme);
     this.state.setCustomColors(customColors || null);
     this.state.setApplied(true);
 
-    return colorscheme;
+    return generatedTheme;
   }
 
   private applyUpdatedPaletteTemplate(template: IPaletteTemplate) {
@@ -270,7 +272,7 @@ export default class Extension {
   }
 
   private applyDuckDuckGoTheme() {
-    const colorscheme = this.state.getColorscheme();
+    const colorscheme = this.state.getGeneratedTheme();
 
     if (colorscheme) {
       Messenger.DDG.setTheme(colorscheme.hash, colorscheme.duckduckgo);
@@ -282,7 +284,7 @@ export default class Extension {
   }
 
   private setDDGEnabled({ option, enabled }: IOptionSetData) {
-    const isDDGEnabled = this.state.getDDGThemeEnabled();
+    const isDDGEnabled = this.state.getDuckduckgoEnabled();
 
     if (enabled && !isDDGEnabled) {
       this.applyDuckDuckGoTheme();
@@ -291,11 +293,11 @@ export default class Extension {
     }
 
     Messenger.UI.sendOption(option, enabled);
-    this.state.setDDGThemeEnabled(enabled);
+    this.state.setDuckduckgoEnabled(enabled);
   }
 
   private getDarkreaderScheme() {
-    let darkreaderScheme = this.state.getColorscheme().darkreader;
+    let darkreaderScheme = this.state.getGeneratedTheme().darkreader;
 
     if (!darkreaderScheme) {
       // When updating from an addon version that does not support darkreader,
@@ -326,10 +328,10 @@ export default class Extension {
     }
   }
 
-  private setDDGTheme() {
-    const isDDGEnabled = this.state.getDDGThemeEnabled();
+  private setDuckduckgoEnabled() {
+    const enabled = this.state.getDuckduckgoEnabled();
 
-    if (isDDGEnabled) {
+    if (enabled) {
       this.applyDuckDuckGoTheme();
     } else {
       Messenger.DDG.resetTheme();
@@ -355,10 +357,10 @@ export default class Extension {
     }
   }
 
-  private setSavedColorscheme(colorscheme: IColorscheme) {
-    console.log('Applying saved colorscheme');
-    this.setBrowserTheme(colorscheme.browser);
-    this.updateExtensionPagesTheme(colorscheme.extension);
+  private setSavedColorscheme({ browser, extension }: IGeneratedTheme) {
+    console.log('Applying saved theme');
+    this.setBrowserTheme(browser);
+    this.updateExtensionPagesTheme(extension);
     this.state.setApplied(true);
   }
 
@@ -375,7 +377,7 @@ export default class Extension {
     const customColors = this.state.getCustomColors();
 
     Messenger.UI.sendPaletteTemplate(template.palette);
-    Messenger.UI.sendThemeTemplate(template.browser);
+    Messenger.UI.sendBrowserThemeTemplate(template.browser);
     Messenger.UI.sendCustomColors(customColors);
 
     if (pywalColors) {
@@ -443,13 +445,9 @@ export default class Extension {
     Messenger.UI.sendPaletteTemplate(updatedTemplate);
   }
 
-  private setThemeTemplate(template: IThemeTemplate) {
+  private setBrowserThemeTemplate(template: IBrowserThemeTemplate) {
     const palette = this.state.getPalette();
-    let updatedTemplate = template;
-
-    if (updatedTemplate === null) {
-      updatedTemplate = this.getDefaultTemplate().browser;
-    }
+    const updatedTemplate = template || this.getDefaultTemplate().browser;
 
     if (palette !== null) {
       // Generate a new browser theme only based on the current palette and the new template
@@ -458,9 +456,9 @@ export default class Extension {
       this.state.setBrowserTheme(browserTheme);
     }
 
-    this.state.setThemeTemplate(updatedTemplate);
+    this.state.setBrowserThemeTemplate(updatedTemplate);
 
-    Messenger.UI.sendThemeTemplate(updatedTemplate);
+    Messenger.UI.sendBrowserThemeTemplate(updatedTemplate);
   }
 
   private setPaletteColor(palette: Partial<IPalette>) {
@@ -476,11 +474,11 @@ export default class Extension {
     const isApplied = this.state.getApplied();
 
     if (option === EXTENSION_OPTIONS.AUTO_TIME_START) {
-      this.state.setAutoTimeStart(value);
+      this.state.setIntervalStart(value);
       this.autoMode.setStartTime(value, isApplied);
       Messenger.UI.sendAutoTimeStart(value);
     } else {
-      this.state.setAutoTimeEnd(value);
+      this.state.setIntervalEnd(value);
       this.autoMode.setEndTime(value, isApplied);
       Messenger.UI.sendAutoTimeEnd(value);
     }
@@ -533,19 +531,20 @@ export default class Extension {
 
   private async onPywalColorsFetchSuccess({ colors, wallpaper }: IPywalData) {
     const pywalPalette = Generators.pywalPalette(colors);
-    Messenger.UI.sendDebuggingOutput('Pywal colors were fetched from daemon and applied successfully');
-    Messenger.UI.sendPywalColors(pywalPalette);
 
     // We must make sure to reset all custom colors for both theme modes or
     // previously selected custom colors will still be active on theme mode switch,
     // even after a Fetch.
-    await this.state.resetAllCustomColors();
+    await this.state.resetCustomColors();
 
     this.setThemes(pywalPalette);
 
     if (this.state.getThemeMode() === ThemeModes.Auto) {
       this.startAutoThemeMode();
     }
+
+    Messenger.UI.sendDebuggingOutput('Pywal colors were fetched from daemon and applied successfully');
+    Messenger.UI.sendPywalColors(pywalPalette);
   }
 
   private onPywalColorsFetchFailed(error: string) {
@@ -576,7 +575,7 @@ export default class Extension {
     Messenger.UI.sendNotification('Restart needed', notificationMessage);
   }
 
-  private cssToggleFailed(target: string, error: string) {
+  private cssToggleFailed(target: CSSTargets, error: string) {
     const currentState = this.state.getCssEnabled(target);
 
     Messenger.UI.sendOption(target, currentState);
@@ -602,7 +601,7 @@ export default class Extension {
     await this.stateLoadPromise;
     this.stateLoadPromise = null;
 
-    const savedColorscheme = this.state.getColorscheme();
+    const savedColorscheme = this.state.getGeneratedTheme();
     const currentThemeMode = this.state.getThemeMode();
     const isDarkreaderEnabled = this.state.getDarkreaderEnabled();
 
