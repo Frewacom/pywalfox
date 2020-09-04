@@ -1,7 +1,7 @@
 import { CSSTargets } from '@definitions';
 
 export const RESPONSE_TIMEOUT_MS = 3000;
-export const MIN_REQUIRED_DAEMON_VERSION = 2.5;
+export const MIN_REQUIRED_DAEMON_VERSION = 2.7;
 export const DEFAULT_CSS_FONT_SIZE = 13;
 export const PYWAL_PALETTE_LENGTH = 20;
 export const AUTO_MODE_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
