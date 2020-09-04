@@ -67,6 +67,17 @@ export type DuckDuckGoColorKeys = Exclude<DuckDuckGoSettingKeys, DuckDuckGoSetti
 
 export type ITemplateThemeMode = Exclude<ThemeModes, ThemeModes.Auto>;
 
+export interface ITheme {
+  customColors: ICustomColors;
+  template: NonNullable<IThemeTemplate>;
+}
+
+export interface IThemeTemplate {
+  palette: IPaletteTemplate;
+  browser: IBrowserThemeTemplate;
+  duckduckgo: IDuckDuckGoThemeTemplate;
+}
+
 export interface IGeneratedTheme {
   hash: IPaletteHash;
   palette: IPalette;
@@ -74,14 +85,6 @@ export interface IGeneratedTheme {
   extension: IExtensionTheme;
   duckduckgo: IDuckDuckGoTheme;
   darkreader: IDarkreaderTheme;
-}
-
-export type ITheme = Record<ITemplateThemeMode, IThemeItem>;
-
-export interface IThemeTemplate {
-  palette: IPaletteTemplate;
-  browser: IBrowserThemeTemplate;
-  duckduckgo: IDuckDuckGoThemeTemplate;
 }
 
 export interface IBrowserTheme {
@@ -140,7 +143,9 @@ export type IDuckDuckGoTheme = Record<DuckDuckGoColorKeys, string>;
 
 export type IDuckDuckGoThemeTemplate = Record<DuckDuckGoColorKeys, IDuckDuckGoThemeTemplateItem>;
 
-export type ISavedThemes = Record<string, ITheme>;
+export type ISavedPaletteTemplate = Partial<IPaletteTemplate>;
+
+export type ISavedPaletteTemplates = Record<string, ISavedPaletteTemplate>;
 
 // TODO: Replace this and the pywal color extension types with a generic type
 export interface IDuckDuckGoThemeTemplateItem {
@@ -240,8 +245,6 @@ export interface IInitialData {
   templateThemeMode: ITemplateThemeMode;
   debuggingInfo: IDebuggingInfoData;
   options: IOptionSetData[];
-  fontSize: number;
-  autoTimeInterval: ITimeIntervalEndpoints
 }
 
 export interface IDebuggingInfoData {
@@ -280,11 +283,6 @@ export interface ITimeIntervalEndpoints {
 
 export type IAutoModeTriggerCallback = (isDay: boolean) => void;
 
-export interface IThemeItem {
-  customColors: Partial<IPalette>;
-  template: NonNullable<IThemeTemplate>;
-}
-
 export interface IExtensionOptions {
   [CSSTargets.UserChrome]: boolean;
   [CSSTargets.UserContent]: boolean;
@@ -304,8 +302,9 @@ export interface IExtensionState {
   isApplied: boolean;
   pywalColors: IPywalColors;
   generatedTheme: IGeneratedTheme;
-  theme: ITheme;
-  savedThemes: ISavedThemes;
+  [ThemeModes.Light]: ITheme;
+  [ThemeModes.Dark]: ITheme;
+  savedPaletteTemplates: ISavedPaletteTemplates;
   options: IExtensionOptions;
 }
 

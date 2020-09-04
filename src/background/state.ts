@@ -1,7 +1,6 @@
 import {
-  IPalette,
-  IPaletteHash,
   IPywalColors,
+  ICustomColors,
   IGeneratedTheme,
   ITheme,
   IBrowserTheme,
@@ -35,17 +34,15 @@ export default class State {
       isApplied: false,
       pywalColors: null,
       generatedTheme: null,
-      theme: {
-        [ThemeModes.Light]: {
-          customColors: null,
-          template: DEFAULT_THEME_LIGHT,
-        },
-        [ThemeModes.Dark]: {
-          customColors: null,
-          template: DEFAULT_THEME_DARK,
-        },
+      [ThemeModes.Light]: {
+        customColors: null,
+        template: DEFAULT_THEME_LIGHT,
       },
-      savedThemes: {},
+      [ThemeModes.Dark]: {
+        customColors: null,
+        template: DEFAULT_THEME_DARK,
+      },
+      savedPaletteTemplates: {},
       options: {
         userChrome: false,
         userContent: false,
@@ -63,33 +60,37 @@ export default class State {
     await browser.storage.local.set(newState);
   }
 
-  private updateCurrentTemplate(
-    objectKey: keyof IThemeData,
-    key: keyof T,
-    value: T[keyof T],
-  ) {
-    // TODO: Add typechecking for T and make sure that it is a valid type for 'objectKey'
+  private updateCurrentTemplate(data: Partial<IThemeTemplate>) {
     const currentThemeMode = this.getTemplateThemeMode();
 
     return this.set({
-      ...this.currentState,
       [currentThemeMode]: {
-        ...this.currentState[objectKey],
-        [objectKey]: {
-          ...this.currentState[objectKey],
-          [key]: value,
+        ...this.currentState[currentThemeMode],
+        template: {
+          ...this.currentState[currentThemeMode].template,
+          ...data,
         },
       },
     });
   }
 
-  private updateCurrentTheme(item: Partial<ITheme>) {
+  private updateCurrentTheme(data: Partial<ITheme>) {
     const currentThemeMode = this.getTemplateThemeMode();
 
     return this.set({
-        [currentThemeMode]: {
-          ...th
-        },
+      [currentThemeMode]: {
+        ...this.currentState[currentThemeMode],
+        ...data,
+      },
+    });
+  }
+
+  private updateGeneratedTheme(data: Partial<IGeneratedTheme>) {
+    return this.set({
+      generatedTheme: {
+        ...this.currentState.generatedTheme,
+        ...data,
+      }
     });
   }
 
@@ -104,24 +105,21 @@ export default class State {
 
   public getInitialData() {
     return {
+      debuggingInfo: this.getDebuggingInfo(),
       isApplied: this.getApplied(),
       pywalColors: this.getPywalColors(),
       template: this.getTemplate(),
       customColors: this.getCustomColors(),
       themeMode: this.getThemeMode(),
-      // TODO: Fix this manual type inference
-      templateThemeMode: this.getTemplateThemeMode() as ITemplateThemeMode,
-      debuggingInfo: this.getDebuggingInfo(),
+      templateThemeMode: this.getTemplateThemeMode(),
       options: this.getOptionsData(),
-      fontSize: this.getCssFontSize(),
-      autoTimeInterval: this.getInterval(),
     };
   }
 
   public getDebuggingInfo() {
     return {
-      connected: this.getConnected(),
       version: this.getVersion(),
+      connected: this.getConnected(),
     };
   }
 
@@ -143,7 +141,7 @@ export default class State {
 
   public getTemplate() {
     const currentMode = this.getTemplateThemeMode();
-    return this.currentState.theme[currentMode].template;
+    return this.currentState[currentMode].template;
   }
 
   public getIsDay() {
@@ -155,13 +153,13 @@ export default class State {
   }
 
   public getTemplateThemeMode() {
-    const themeMode = this.getThemeMode();
+    let themeMode = this.getThemeMode();
 
     if (themeMode === ThemeModes.Auto) {
-      return this.getIsDay() ? ThemeModes.Light : ThemeModes.Dark;
+      themeMode = this.getIsDay() ? ThemeModes.Light : ThemeModes.Dark;
     }
 
-    return themeMode;
+    return <ITemplateThemeMode>themeMode;
   }
 
   public getPywalColors() {
@@ -175,10 +173,6 @@ export default class State {
 
   public getGeneratedTheme() {
     return this.currentState.generatedTheme;
-  }
-
-  public getPaletteHash() {
-    return this.currentState.generatedTheme.hash;
   }
 
   public getPalette() {
@@ -250,10 +244,10 @@ export default class State {
   }
 
   public setBrowserTheme(browser: IBrowserTheme) {
-    return this.updateCurrentTheme({ browser });
+    return this.updateGeneratedTheme({ browser });
   }
 
-  public setCustomColors(customColors: Partial<IPalette>) {
+  public setCustomColors(customColors: ICustomColors) {
     return this.updateCurrentTheme({ customColors });
   }
 
@@ -323,6 +317,11 @@ export default class State {
 
   public async load() {
     this.currentState = <IExtensionState>await browser.storage.local.get(this.initialState);
+
+    // Make sure default state is present in storage
+    browser.storage.local.set(this.currentState);
+
+    this.dump();
   }
 
   public dump() {

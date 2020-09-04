@@ -129,11 +129,11 @@ export function requestOptionSet(option: string, enabled: boolean, value?: any) 
 }
 
 export function requestThemeTemplateSet(template: IBrowserThemeTemplate) {
-  sendMessage({ action: EXTENSION_MESSAGES.THEME_TEMPLATE_SET, data: template });
+  sendMessage({ action: EXTENSION_MESSAGES.BROWSER_THEME_TEMPLATE_SET, data: template });
 }
 
 export function requestThemeTemplateReset() {
-  sendMessage({ action: EXTENSION_MESSAGES.THEME_TEMPLATE_SET, data: null });
+  sendMessage({ action: EXTENSION_MESSAGES.BROWSER_THEME_TEMPLATE_SET, data: null });
 }
 
 export function requestPaletteTemplateSet(template: IPaletteTemplate) {

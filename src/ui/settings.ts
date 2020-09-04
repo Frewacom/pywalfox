@@ -1,9 +1,9 @@
 import {
   IExtensionMessage,
-  IColorschemeTemplate,
+  IThemeTemplate,
   ITimeIntervalEndpoint,
   IPaletteTemplate,
-  IThemeTemplate,
+  IBrowserThemeTemplate,
   IInitialData,
   IOptionSetData,
   INodeLookup,
@@ -67,7 +67,7 @@ const themepicker = new Themepicker();
 
 let currentDialog: Dialog = null;
 let pywalColors: IPywalColors = null;
-let template: IColorschemeTemplate = null;
+let template: IThemeTemplate = null;
 
 const optionButtonsLookup: INodeLookup = {};
 const paletteTemplateInputLookup: INodeLookup = {};
@@ -362,7 +362,7 @@ function updatePaletteTemplateInputs(
   });
 }
 
-function updateThemeTemplateInputs(updatedTemplate: IThemeTemplate) {
+function updateBrowserThemeTemplateInputs(updatedTemplate: IBrowserThemeTemplate) {
   Object.keys(updatedTemplate).forEach((key) => {
     const element = <HTMLSelectElement>themeTemplateInputLookup[key];
 
@@ -514,7 +514,7 @@ function setInitialData(data: IInitialData) {
   colorpicker.updateSelected();
 
   updatePaletteTemplateInputs(data.template.palette, data.pywalColors);
-  updateThemeTemplateInputs(data.template.browser);
+  updateBrowserThemeTemplateInputs(data.template.browser);
   setDebuggingInfo(data.debuggingInfo);
 
   pywalColors = data.pywalColors;
@@ -541,7 +541,7 @@ function handleExtensionMessage({ action, data }: IExtensionMessage) {
     case EXTENSION_MESSAGES.TEMPLATE_SET:
       colorpicker.setPaletteTemplate(data.palette);
       colorpicker.updateSelected();
-      updateThemeTemplateInputs(data.browser);
+      updateBrowserThemeTemplateInputs(data.browser);
       updatePaletteTemplateInputs(data.palette, pywalColors);
       break;
     case EXTENSION_MESSAGES.PALETTE_TEMPLATE_SET:
@@ -550,8 +550,8 @@ function handleExtensionMessage({ action, data }: IExtensionMessage) {
       updatePaletteTemplateInputs(data, pywalColors);
       template.palette = data;
       break;
-    case EXTENSION_MESSAGES.THEME_TEMPLATE_SET:
-      updateThemeTemplateInputs(data);
+    case EXTENSION_MESSAGES.BROWSER_THEME_TEMPLATE_SET:
+      updateBrowserThemeTemplateInputs(data);
       template.browser = data;
       break;
     case EXTENSION_MESSAGES.THEME_MODE_SET:

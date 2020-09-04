@@ -103,7 +103,7 @@ export default class NativeApp {
       if (!target) {
         this.logError('Custom CSS was applied successfully, but target was not specified');
         return;
-      } else if (Object.values(CSSTargets).includes(target)) {
+      } else if (!Object.values(CSSTargets).includes(target)) {
         this.logError(`Custom CSS was applied successfully, but target "${target}" is invalid`);
         return;
       }

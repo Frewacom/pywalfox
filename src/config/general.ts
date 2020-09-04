@@ -65,8 +65,8 @@ export const EXTENSION_COMMANDS = {
 };
 
 export const EXTENSION_OPTIONS = {
-  AUTO_TIME_START: 'autoTimeStart',
-  AUTO_TIME_END: 'autoTimeEnd',
+  AUTO_TIME_START: 'intervalStart',
+  AUTO_TIME_END: 'intervalEnd',
   FONT_SIZE: 'fontSize',
   USER_CHROME: CSSTargets.UserChrome,
   USER_CONTENT: CSSTargets.UserContent,
