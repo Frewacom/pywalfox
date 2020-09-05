@@ -446,7 +446,7 @@ export default class Extension {
   }
 
   private setBrowserThemeTemplate(template: IBrowserThemeTemplate) {
-    const palette = this.state.getPalette();
+    const { palette } = this.state.getGeneratedTheme();
     const updatedTemplate = template || this.getDefaultTemplate().browser;
 
     if (palette !== null) {

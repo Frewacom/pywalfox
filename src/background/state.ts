@@ -175,22 +175,6 @@ export default class State {
     return this.currentState.generatedTheme;
   }
 
-  public getPalette() {
-    return this.currentState.generatedTheme.palette;
-  }
-
-  public getBrowserTheme() {
-    return this.currentState.generatedTheme.browser;
-  }
-
-  public getExtensionTheme() {
-    return this.currentState.generatedTheme.extension;
-  }
-
-  public getDuckduckgoTheme() {
-    return this.currentState.generatedTheme.duckduckgo;
-  }
-
   public getDuckduckgoEnabled() {
     return this.currentState.options.duckduckgo;
   }
