@@ -2,7 +2,7 @@ import {
   IPalette,
   IPywalData,
   IPywalColors,
-  IGeneratedTheme,
+  ITheme,
   IBrowserTheme,
   IBrowserThemeTemplate,
   IOptionSetData,
@@ -357,7 +357,7 @@ export default class Extension {
     }
   }
 
-  private setSavedColorscheme({ browser, extension }: IGeneratedTheme) {
+  private setSavedColorscheme({ browser, extension }: ITheme) {
     console.log('Applying saved theme');
     this.setBrowserTheme(browser);
     this.updateExtensionPagesTheme(extension);

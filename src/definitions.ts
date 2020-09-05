@@ -67,9 +67,14 @@ export type DuckDuckGoColorKeys = Exclude<DuckDuckGoSettingKeys, DuckDuckGoSetti
 
 export type ITemplateThemeMode = Exclude<ThemeModes, ThemeModes.Auto>;
 
-export interface ITheme {
+export interface IThemeGenerationData {
   customColors: ICustomColors;
   template: NonNullable<IThemeTemplate>;
+}
+
+export interface ISavedThemeGenerationData {
+  customColors?: ICustomColors;
+  template?: Partial<IThemeTemplate>;
 }
 
 export interface IThemeTemplate {
@@ -78,7 +83,7 @@ export interface IThemeTemplate {
   duckduckgo: IDuckDuckGoThemeTemplate;
 }
 
-export interface IGeneratedTheme {
+export interface ITheme {
   hash: IPaletteHash;
   palette: IPalette;
   browser: IBrowserTheme;
@@ -143,28 +148,11 @@ export type IDuckDuckGoTheme = Record<DuckDuckGoColorKeys, string>;
 
 export type IDuckDuckGoThemeTemplate = Record<DuckDuckGoColorKeys, IDuckDuckGoThemeTemplateItem>;
 
-export type ISavedPaletteTemplate = Partial<IPaletteTemplate>;
-
-export type ISavedPaletteTemplates = Record<string, ISavedPaletteTemplate>;
-
 // TODO: Replace this and the pywal color extension types with a generic type
 export interface IDuckDuckGoThemeTemplateItem {
   colorKey: string;
   modifier?: number;
 }
-
-export type TemplateTypes =
-  | IPaletteTemplate
-  | IBrowserThemeTemplate
-  | IDuckDuckGoThemeTemplate;
-
-export type ColorschemeTypes =
-  | IPalette
-  | IPaletteHash
-  | IBrowserTheme
-  | IDuckDuckGoTheme
-  | IExtensionTheme
-  | IDarkreaderTheme;
 
 export interface IExtensionMessage {
   action: string;
@@ -301,10 +289,10 @@ export interface IExtensionState {
   isDay: boolean;
   isApplied: boolean;
   pywalColors: IPywalColors;
-  generatedTheme: IGeneratedTheme;
-  [ThemeModes.Light]: ITheme;
-  [ThemeModes.Dark]: ITheme;
-  savedPaletteTemplates: ISavedPaletteTemplates;
+  generatedTheme: ITheme;
+  [ThemeModes.Light]: IThemeGenerationData;
+  [ThemeModes.Dark]: IThemeGenerationData;
+  savedThemeGenerationData: ISavedThemeGenerationData;
   options: IExtensionOptions;
 }
 

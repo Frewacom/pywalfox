@@ -1,8 +1,8 @@
 import {
   IPywalColors,
   ICustomColors,
-  IGeneratedTheme,
   ITheme,
+  IThemeGenerationData,
   IBrowserTheme,
   IBrowserThemeTemplate,
   IPaletteTemplate,
@@ -42,7 +42,7 @@ export default class State {
         customColors: null,
         template: DEFAULT_THEME_DARK,
       },
-      savedPaletteTemplates: {},
+      savedThemeGenerationData: {},
       options: {
         userChrome: false,
         userContent: false,
@@ -74,7 +74,7 @@ export default class State {
     });
   }
 
-  private updateCurrentTheme(data: Partial<ITheme>) {
+  private updateCurrentTheme(data: Partial<IThemeGenerationData>) {
     const currentThemeMode = this.getTemplateThemeMode();
 
     return this.set({
@@ -85,7 +85,7 @@ export default class State {
     });
   }
 
-  private updateGeneratedTheme(data: Partial<IGeneratedTheme>) {
+  private updateGeneratedTheme(data: Partial<ITheme>) {
     return this.set({
       generatedTheme: {
         ...this.currentState.generatedTheme,
@@ -263,7 +263,7 @@ export default class State {
     return this.set({ isDay });
   }
 
-  public setGeneratedTheme(generatedTheme: IGeneratedTheme) {
+  public setGeneratedTheme(generatedTheme: ITheme) {
     return this.set({ generatedTheme });
   }
 
