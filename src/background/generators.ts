@@ -49,13 +49,16 @@ export function generateTheme(
   mode: ITemplateThemeMode,
   pywalColors: IPywalColors,
   customColors: ICustomColors,
-  template: IThemeTemplate,
+  globalTemplate: IThemeTemplate,
+  savedTemplate: Partial<IThemeTemplate>,
 ) {
+  const template = Object.assign({}, globalTemplate, savedTemplate);
   const palette = generatePalette(pywalColors, customColors, template.palette);
 
   return {
-    hash: generatePaletteHash(palette),
     palette,
+    template,
+    hash: generatePaletteHash(palette),
     browser: generateBrowserTheme(palette, template.browser),
     extension: generateExtensionTheme(palette),
     duckduckgo: generateDuckduckgoTheme(palette, template.duckduckgo),
@@ -75,6 +78,10 @@ export function generatePaletteHash(palette: IPalette) {
   });
 
   return hash;
+}
+
+export function generatePywalHash(colors: IPywalColors) {
+  return colors.reduce((acc: string, color: string) => acc += stripHashSymbol(color), '');
 }
 
 export function generatePalette(
@@ -158,6 +165,7 @@ function stripHashSymbol(color: string) {
 
 export default {
   hash: generatePaletteHash,
+  pywalHash: generatePywalHash,
   theme: generateTheme,
   palette: generatePalette,
   browser: generateBrowserTheme,

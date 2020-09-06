@@ -1,8 +1,9 @@
 import {
+  IPywalHash,
   IPywalColors,
   ICustomColors,
   ITheme,
-  IThemeGenerationData,
+  IUserTheme,
   IBrowserTheme,
   IBrowserThemeTemplate,
   IPaletteTemplate,
@@ -33,16 +34,13 @@ export default class State {
       isDay: false,
       isApplied: false,
       pywalColors: null,
+      pywalHash: null,
       generatedTheme: null,
-      [ThemeModes.Light]: {
-        customColors: null,
-        template: DEFAULT_THEME_LIGHT,
+      globalTemplates: {
+        [ThemeModes.Light]: DEFAULT_THEME_LIGHT,
+        [ThemeModes.Dark]: DEFAULT_THEME_DARK,
       },
-      [ThemeModes.Dark]: {
-        customColors: null,
-        template: DEFAULT_THEME_DARK,
-      },
-      savedThemeGenerationData: {},
+      userThemes: {},
       options: {
         userChrome: false,
         userContent: false,
@@ -60,27 +58,15 @@ export default class State {
     await browser.storage.local.set(newState);
   }
 
-  private updateCurrentTemplate(data: Partial<IThemeTemplate>) {
+  private updateGlobalTemplate(data: Partial<IThemeTemplate>) {
     const currentThemeMode = this.getTemplateThemeMode();
 
     return this.set({
-      [currentThemeMode]: {
-        ...this.currentState[currentThemeMode],
-        template: {
-          ...this.currentState[currentThemeMode].template,
+      globalTemplates: {
+        [currentThemeMode]: {
+          ...this.currentState.globalTemplates[currentThemeMode],
           ...data,
         },
-      },
-    });
-  }
-
-  private updateCurrentTheme(data: Partial<IThemeGenerationData>) {
-    const currentThemeMode = this.getTemplateThemeMode();
-
-    return this.set({
-      [currentThemeMode]: {
-        ...this.currentState[currentThemeMode],
-        ...data,
       },
     });
   }
@@ -91,6 +77,41 @@ export default class State {
         ...this.currentState.generatedTheme,
         ...data,
       }
+    });
+  }
+
+  private updateGeneratedTemplate(data: Partial<IThemeTemplate>) {
+    return this.set({
+      generatedTheme: {
+        ...this.currentState.generatedTheme,
+        template: {
+          ...this.currentState.generatedTheme.template,
+          ...data,
+        },
+      },
+    });
+  }
+
+  // TODO: Setting a template, e.g. 'browser' overwrites all other defined templates
+  private updateCurrentTheme(data: Partial<IUserTheme>) {
+    const pywalHash = this.getPywalHash();
+    const currentThemeMode = this.getTemplateThemeMode();
+    const savedTheme = Object.assign({}, this.currentState.userThemes[pywalHash]);
+
+    if (Object.keys(savedTheme).length === 0) {
+      savedTheme[currentThemeMode] = data;
+    } else {
+      savedTheme[currentThemeMode] = {
+        ...savedTheme[currentThemeMode],
+        ...data,
+      };
+    }
+
+    return this.set({
+      userThemes: {
+        ...this.currentState.userThemes,
+        [pywalHash]: savedTheme,
+      },
     });
   }
 
@@ -108,8 +129,8 @@ export default class State {
       debuggingInfo: this.getDebuggingInfo(),
       isApplied: this.getApplied(),
       pywalColors: this.getPywalColors(),
-      template: this.getTemplate(),
-      customColors: this.getCustomColors(),
+      template: this.getGeneratedTemplate(),
+      userTheme: this.getUserTheme(),
       themeMode: this.getThemeMode(),
       templateThemeMode: this.getTemplateThemeMode(),
       options: this.getOptionsData(),
@@ -139,9 +160,15 @@ export default class State {
     return this.currentState.updateMuted;
   }
 
-  public getTemplate() {
-    const currentMode = this.getTemplateThemeMode();
-    return this.currentState[currentMode].template;
+  public getGeneratedTemplate() {
+    const currentThemeMode = this.getTemplateThemeMode();
+    const generatedTemplate = this.currentState.generatedTheme.template;
+
+    if (generatedTemplate) {
+      return generatedTemplate;
+    }
+
+    return this.currentState.globalTemplates[currentThemeMode];
   }
 
   public getIsDay() {
@@ -166,9 +193,13 @@ export default class State {
     return this.currentState.pywalColors;
   }
 
-  public getCustomColors() {
-    const currentMode = this.getTemplateThemeMode();
-    return this.currentState[currentMode].customColors;
+  public getPywalHash() {
+    return this.currentState.pywalHash;
+  }
+
+  public getGlobalTemplate() {
+    const currentThemeMode = this.getTemplateThemeMode();
+    return this.currentState.globalTemplates[currentThemeMode];
   }
 
   public getGeneratedTheme() {
@@ -215,24 +246,36 @@ export default class State {
     return data;
   }
 
-  public setPaletteTemplate(palette: IPaletteTemplate) {
-    return this.updateCurrentTemplate({ palette });
+  public getUserTheme() {
+    const pywalHash = this.getPywalHash();
+    const savedTheme = this.currentState.userThemes[pywalHash];
+    const currentThemeMode = this.getTemplateThemeMode();
+
+    if (!pywalHash || !savedTheme || !savedTheme[currentThemeMode]) {
+      return {};
+    }
+
+    return savedTheme[currentThemeMode];
   }
 
-  public setBrowserThemeTemplate(browser: IBrowserThemeTemplate) {
-    return this.updateCurrentTemplate({ browser });
+  public setGlobalTemplate(data: Partial<IThemeTemplate>) {
+    return this.updateGlobalTemplate(data);
   }
 
-  public setDuckduckgoThemeTemplate(duckduckgo: IDuckDuckGoThemeTemplate) {
-    return this.updateCurrentTemplate({ duckduckgo });
+  public setGeneratedTemplate(template: Partial<IThemeTemplate>) {
+    return this.updateGeneratedTemplate(template);
   }
 
-  public setBrowserTheme(browser: IBrowserTheme) {
-    return this.updateGeneratedTheme({ browser });
+  public setTemplate(userTemplate: Partial<IThemeTemplate>) {
+    return this.updateCurrentTheme({ userTemplate });
   }
 
   public setCustomColors(customColors: ICustomColors) {
     return this.updateCurrentTheme({ customColors });
+  }
+
+  public setBrowserTheme(browser: IBrowserTheme) {
+    return this.updateGeneratedTheme({ browser });
   }
 
   public setVersion(version: number) {
@@ -253,6 +296,10 @@ export default class State {
 
   public setPywalColors(pywalColors: IPywalColors) {
     return this.set({ pywalColors });
+  }
+
+  public setPywalHash(pywalHash: IPywalHash) {
+    return this.set({ pywalHash });
   }
 
   public setThemeMode(mode: ThemeModes) {
@@ -303,7 +350,7 @@ export default class State {
     this.currentState = <IExtensionState>await browser.storage.local.get(this.initialState);
 
     // Make sure default state is present in storage
-    browser.storage.local.set(this.currentState);
+    await browser.storage.local.set(this.currentState);
 
     this.dump();
   }

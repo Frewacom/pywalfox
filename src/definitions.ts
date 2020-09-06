@@ -67,21 +67,20 @@ export type DuckDuckGoColorKeys = Exclude<DuckDuckGoSettingKeys, DuckDuckGoSetti
 
 export type ITemplateThemeMode = Exclude<ThemeModes, ThemeModes.Auto>;
 
-export interface IThemeGenerationData {
-  customColors: ICustomColors;
-  template: NonNullable<IThemeTemplate>;
-}
-
-export interface ISavedThemeGenerationData {
-  customColors?: ICustomColors;
-  template?: Partial<IThemeTemplate>;
-}
-
 export interface IThemeTemplate {
   palette: IPaletteTemplate;
   browser: IBrowserThemeTemplate;
   duckduckgo: IDuckDuckGoThemeTemplate;
 }
+
+export type IGlobalTemplates = Record<ITemplateThemeMode, NonNullable<IThemeTemplate>>;
+
+export interface IUserTheme {
+  customColors?: ICustomColors;
+  userTemplate?: Partial<IThemeTemplate>;
+}
+
+export type IUserThemes = Partial<Record<IPywalHash, Record<ITemplateThemeMode, IUserTheme>>>;
 
 export interface ITheme {
   hash: IPaletteHash;
@@ -90,6 +89,7 @@ export interface ITheme {
   extension: IExtensionTheme;
   duckduckgo: IDuckDuckGoTheme;
   darkreader: IDarkreaderTheme;
+  template: IThemeTemplate;
 }
 
 export interface IBrowserTheme {
@@ -135,6 +135,8 @@ export interface IBrowserTheme {
 export type IBrowserThemeTemplate = Record<keyof IBrowserTheme, PaletteColors>;
 
 export type IPaletteHash = string;
+
+export type IPywalHash = string;
 
 export type IPalette = Record<PaletteColors, string>;
 
@@ -228,7 +230,7 @@ export interface IInitialData {
   isApplied: boolean;
   pywalColors: IPywalColors;
   template: IThemeTemplate;
-  customColors: Partial<IPalette>;
+  userTheme: IUserTheme;
   themeMode: ThemeModes;
   templateThemeMode: ITemplateThemeMode;
   debuggingInfo: IDebuggingInfoData;
@@ -289,10 +291,10 @@ export interface IExtensionState {
   isDay: boolean;
   isApplied: boolean;
   pywalColors: IPywalColors;
+  pywalHash: IPywalHash;
   generatedTheme: ITheme;
-  [ThemeModes.Light]: IThemeGenerationData;
-  [ThemeModes.Dark]: IThemeGenerationData;
-  savedThemeGenerationData: ISavedThemeGenerationData;
+  globalTemplates: IGlobalTemplates;
+  userThemes: IUserThemes;
   options: IExtensionOptions;
 }
 

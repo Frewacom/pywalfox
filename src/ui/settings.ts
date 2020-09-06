@@ -500,6 +500,8 @@ function createPaletteContent() {
 }
 
 function setInitialData(data: IInitialData) {
+  console.log(data);
+
   themepicker.setSelectedMode(data.themeMode, data.templateThemeMode);
 
   if (data.isApplied) {
@@ -510,7 +512,7 @@ function setInitialData(data: IInitialData) {
     updateOptionState(optionData);
   });
 
-  colorpicker.setData(data.pywalColors, data.customColors, data.template.palette);
+  colorpicker.setData(data.pywalColors, data.userTheme.customColors, data.template.palette);
   colorpicker.updateSelected();
 
   updatePaletteTemplateInputs(data.template.palette, data.pywalColors);

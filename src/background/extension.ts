@@ -1,6 +1,7 @@
 import {
   IPalette,
   IPywalData,
+  IPywalHash,
   IPywalColors,
   ITheme,
   IBrowserTheme,
@@ -218,17 +219,31 @@ export default class Extension {
       this.darkreaderMessenger.requestThemeReset();
     }
 
-    this.state.resetCustomColors();
+    /* this.state.resetCustomColors(); */
     this.state.resetGeneratedTheme();
     this.state.setApplied(false);
 
     Messenger.UI.sendDebuggingOutput('Theme was disabled');
   }
 
-  private setThemes(pywalColors: IPywalColors, customColors?: Partial<IPalette>) {
+  private setThemes(pywalColors: IPywalColors, newCustomColors?: Partial<IPalette>) {
     const mode = this.state.getTemplateThemeMode();
-    const template = this.state.getTemplate();
-    const generatedTheme = Generators.theme(mode, pywalColors, customColors, template);
+    const globalTemplate = this.state.getGlobalTemplate();
+    const { userTemplate, customColors } = this.state.getUserTheme();
+    let mergedCustomColors = customColors;
+
+    if (newCustomColors) {
+      mergedCustomColors = Object.assign({}, customColors, newCustomColors);
+      this.state.setCustomColors(mergedCustomColors);
+    }
+
+    const generatedTheme = Generators.theme(
+      mode,
+      pywalColors,
+      mergedCustomColors,
+      globalTemplate,
+      userTemplate
+    );
     const { hash, browser, extension, duckduckgo, darkreader } = generatedTheme;
 
     this.setBrowserTheme(browser);
@@ -242,33 +257,10 @@ export default class Extension {
       this.darkreaderMessenger.requestThemeSet(darkreader);
     }
 
-    this.state.setPywalColors(pywalColors);
     this.state.setGeneratedTheme(generatedTheme);
-    this.state.setCustomColors(customColors || null);
     this.state.setApplied(true);
 
     return generatedTheme;
-  }
-
-  private applyUpdatedPaletteTemplate(template: IPaletteTemplate) {
-    const pywalColors = this.state.getPywalColors();
-    const customColors = this.state.getCustomColors();
-
-    if (!pywalColors) {
-      return;
-    }
-
-    // Make sure that a color from the pywal palette is not used as a custom color.
-    let filteredCustomColors = customColors;
-    if (customColors !== null) {
-      filteredCustomColors = <Partial<IPalette>>Object.keys(customColors).filter((key) => {
-        const pywalColor = pywalColors[template[key]];
-        return pywalColor !== customColors[key];
-      });
-    }
-
-    this.setThemes(pywalColors, filteredCustomColors);
-    Messenger.UI.sendCustomColors(filteredCustomColors);
   }
 
   private applyDuckDuckGoTheme() {
@@ -372,9 +364,9 @@ export default class Extension {
   }
 
   private updateThemeForCurrentMode() {
-    const template = this.state.getTemplate();
     const pywalColors = this.state.getPywalColors();
-    const customColors = this.state.getCustomColors();
+    const template = this.state.getGeneratedTemplate();
+    const { customColors } = this.state.getUserTheme();
 
     Messenger.UI.sendPaletteTemplate(template.palette);
     Messenger.UI.sendBrowserThemeTemplate(template.browser);
@@ -432,41 +424,50 @@ export default class Extension {
     Messenger.UI.sendThemeMode(mode, newTemplateMode);
   }
 
-  private setPaletteTemplate(template: IPaletteTemplate) {
-    let updatedTemplate: IPaletteTemplate = template;
+  private async setPaletteTemplate(newTemplate: IPaletteTemplate) {
+    const pywalColors = this.state.getPywalColors();
+    const { customColors } = this.state.getUserTheme();
 
-    if (updatedTemplate === null) {
-      updatedTemplate = this.getDefaultTemplate().palette;
+    await this.state.setTemplate({ palette: newTemplate });
+
+    if (pywalColors) {
+      // Make sure that a color from the pywal palette is not used as a custom color.
+      let filteredCustomColors = customColors;
+      if (customColors) {
+        filteredCustomColors = <Partial<IPalette>>Object.keys(customColors).filter((key) => {
+          const pywalColor = pywalColors[newTemplate[key]];
+          return pywalColor !== customColors[key];
+        });
+      }
+
+      this.setThemes(pywalColors, filteredCustomColors);
+      Messenger.UI.sendCustomColors(filteredCustomColors);
     }
 
-    this.state.setPaletteTemplate(updatedTemplate);
-    this.applyUpdatedPaletteTemplate(updatedTemplate);
-
-    Messenger.UI.sendPaletteTemplate(updatedTemplate);
+    Messenger.UI.sendPaletteTemplate(newTemplate);
   }
 
-  private setBrowserThemeTemplate(template: IBrowserThemeTemplate) {
+  private setBrowserThemeTemplate(newTemplate: IBrowserThemeTemplate) {
     const { palette } = this.state.getGeneratedTheme();
-    const updatedTemplate = template || this.getDefaultTemplate().browser;
+
+    this.state.setTemplate({ browser: newTemplate });
+    this.state.setGeneratedTemplate({ browser: newTemplate });
 
     if (palette !== null) {
       // Generate a new browser theme only based on the current palette and the new template
-      const browserTheme = Generators.browser(palette, updatedTemplate);
+      const browserTheme = Generators.browser(palette, newTemplate);
       this.setBrowserTheme(browserTheme);
       this.state.setBrowserTheme(browserTheme);
     }
 
-    this.state.setBrowserThemeTemplate(updatedTemplate);
-
-    Messenger.UI.sendBrowserThemeTemplate(updatedTemplate);
+    Messenger.UI.sendBrowserThemeTemplate(newTemplate);
   }
 
-  private setPaletteColor(palette: Partial<IPalette>) {
+  private setPaletteColor(newCustomColors: Partial<IPalette>) {
     const pywalColors = this.state.getPywalColors();
 
     if (pywalColors !== null) {
-      const customPalette = this.createCustomColorPalette(palette);
-      this.setThemes(pywalColors, customPalette);
+      this.setThemes(pywalColors, newCustomColors);
     }
   }
 
@@ -484,16 +485,6 @@ export default class Extension {
     }
 
     Messenger.UI.sendNotification('Auto mode', 'Light theme interval was updated successfully');
-  }
-
-  private createCustomColorPalette(data: Partial<IPalette>) {
-    const currentColors = this.state.getCustomColors();
-
-    if (currentColors === null) {
-      return data;
-    }
-
-    return Object.assign(currentColors, data);
   }
 
   private validateVersion(version: string) {
@@ -530,12 +521,11 @@ export default class Extension {
   }
 
   private async onPywalColorsFetchSuccess({ colors, wallpaper }: IPywalData) {
+    const pywalHash = Generators.pywalHash(colors);
     const pywalPalette = Generators.pywalPalette(colors);
 
-    // We must make sure to reset all custom colors for both theme modes or
-    // previously selected custom colors will still be active on theme mode switch,
-    // even after a Fetch.
-    await this.state.resetCustomColors();
+    await this.state.setPywalHash(pywalHash);
+    await this.state.setPywalColors(pywalPalette);
 
     this.setThemes(pywalPalette);
 
