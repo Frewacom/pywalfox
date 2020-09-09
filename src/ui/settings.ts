@@ -500,8 +500,6 @@ function createPaletteContent() {
 }
 
 function setInitialData(data: IInitialData) {
-  console.log(data);
-
   themepicker.setSelectedMode(data.themeMode, data.templateThemeMode);
 
   if (data.isApplied) {
@@ -545,6 +543,7 @@ function handleExtensionMessage({ action, data }: IExtensionMessage) {
       colorpicker.updateSelected();
       updateBrowserThemeTemplateInputs(data.browser);
       updatePaletteTemplateInputs(data.palette, pywalColors);
+      template = data;
       break;
     case EXTENSION_MESSAGES.PALETTE_TEMPLATE_SET:
       colorpicker.setPaletteTemplate(data);

@@ -23,6 +23,9 @@ import { THEME_TEMPLATE_DATA, PALETTE_TEMPLATE_DATA } from '@config/template-dat
 
 import { changeLuminance } from '@utils/colors';
 
+import merge from 'just-merge';
+import filter from 'just-filter';
+
 function isCustomColor(color: IExtendedPywalColor): color is ICustomPywalColor {
   return (color as ICustomPywalColor).colorString !== undefined;
 }
@@ -52,7 +55,14 @@ export function generateTheme(
   globalTemplate: IThemeTemplate,
   savedTemplate: Partial<IThemeTemplate>,
 ) {
-  const template = Object.assign({}, globalTemplate, savedTemplate);
+  // Merging a saved template containing null as value for some key
+  // will simply set that key to null in the merged template.
+  let filteredSavedTemplate = {};
+  if (savedTemplate !== null && savedTemplate !== undefined) {
+    filteredSavedTemplate = filter(savedTemplate, (_, value: unknown) => value);
+  }
+
+  const template = merge({}, globalTemplate, filteredSavedTemplate);
   const palette = generatePalette(pywalColors, customColors, template.palette);
 
   return {

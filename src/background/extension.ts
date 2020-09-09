@@ -1,7 +1,6 @@
 import {
   IPalette,
   IPywalData,
-  IPywalHash,
   IPywalColors,
   ITheme,
   IBrowserTheme,
@@ -22,11 +21,6 @@ import {
   DEFAULT_CSS_FONT_SIZE,
   MIN_REQUIRED_DAEMON_VERSION,
 } from '@config/general';
-
-import {
-  DEFAULT_THEME_DARK,
-  DEFAULT_THEME_LIGHT,
-} from '@config/default-themes';
 
 import Messenger from '@communication/messenger';
 import NativeMessenger from '@communication/native-messenger';
@@ -68,17 +62,6 @@ export default class Extension {
     browser.commands.onCommand.addListener(this.onCommand.bind(this));
     browser.runtime.onMessage.addListener(this.onMessage.bind(this));
     browser.browserAction.onClicked.addListener(() => this.settingsPage.open());
-  }
-
-  private getDefaultTemplate() {
-    const themeMode = this.state.getThemeMode();
-
-    if (!themeMode) {
-      console.error('Failed to get default template: theme mode is not set');
-      return null;
-    }
-
-    return themeMode === ThemeModes.Dark ? DEFAULT_THEME_DARK : DEFAULT_THEME_LIGHT;
   }
 
   private startAutoThemeMode() {
@@ -142,14 +125,7 @@ export default class Extension {
   private async onMessage({ action, data }: IExtensionMessage) {
     switch (action) {
       case EXTENSION_MESSAGES.INITIAL_DATA_GET:
-        // If the settings page is open on firefox startup, the initial data will be
-        // requested before the state has loaded. To avoid this, we will wait for
-        // 'this.stateLoadPromise' to be resolved before sending the data to the page.
-        if (this.stateLoadPromise !== null) {
-          await this.stateLoadPromise;
-        }
-
-        Messenger.UI.sendInitialData(this.state.getInitialData());
+        this.sendInitialData();
         break;
       case EXTENSION_MESSAGES.DDG_THEME_GET:
         this.setDuckduckgoEnabled();
@@ -192,6 +168,17 @@ export default class Extension {
     this.updatePage.setTheme(extensionTheme);
   }
 
+  private async sendInitialData() {
+    // If the settings page is open on firefox startup, the initial data will be
+    // requested before the state has loaded. To avoid this, we will wait for
+    // 'this.stateLoadPromise' to be resolved before sending the data to the page.
+    if (this.stateLoadPromise !== null) {
+      await this.stateLoadPromise;
+    }
+
+    Messenger.UI.sendInitialData(this.state.getInitialData());
+  }
+
   private fetchTheme() {
     const isConnected = this.state.getConnected();
 
@@ -219,7 +206,6 @@ export default class Extension {
       this.darkreaderMessenger.requestThemeReset();
     }
 
-    /* this.state.resetCustomColors(); */
     this.state.resetGeneratedTheme();
     this.state.setApplied(false);
 
@@ -242,9 +228,9 @@ export default class Extension {
       pywalColors,
       mergedCustomColors,
       globalTemplate,
-      userTemplate
+      userTemplate,
     );
-    const { hash, browser, extension, duckduckgo, darkreader } = generatedTheme;
+    const { hash, browser, extension, duckduckgo, darkreader, template } = generatedTheme;
 
     this.setBrowserTheme(browser);
     this.updateExtensionPagesTheme(extension);
@@ -259,6 +245,8 @@ export default class Extension {
 
     this.state.setGeneratedTheme(generatedTheme);
     this.state.setApplied(true);
+
+    Messenger.UI.sendTemplate(template);
 
     return generatedTheme;
   }
@@ -427,8 +415,13 @@ export default class Extension {
   private async setPaletteTemplate(newTemplate: IPaletteTemplate) {
     const pywalColors = this.state.getPywalColors();
     const { customColors } = this.state.getUserTheme();
+    let updatedTemplate = newTemplate;
 
-    await this.state.setTemplate({ palette: newTemplate });
+    if (updatedTemplate === null) {
+      updatedTemplate = this.state.getGlobalTemplate().palette;
+    }
+
+    await this.state.setUserTemplate({ palette: updatedTemplate });
 
     if (pywalColors) {
       // Make sure that a color from the pywal palette is not used as a custom color.
@@ -444,23 +437,28 @@ export default class Extension {
       Messenger.UI.sendCustomColors(filteredCustomColors);
     }
 
-    Messenger.UI.sendPaletteTemplate(newTemplate);
+    Messenger.UI.sendPaletteTemplate(updatedTemplate);
   }
 
   private setBrowserThemeTemplate(newTemplate: IBrowserThemeTemplate) {
     const { palette } = this.state.getGeneratedTheme();
+    let updatedTemplate = newTemplate;
 
-    this.state.setTemplate({ browser: newTemplate });
-    this.state.setGeneratedTemplate({ browser: newTemplate });
+    if (updatedTemplate === null) {
+      updatedTemplate = this.state.getGlobalTemplate().browser;
+    }
+
+    this.state.setUserTemplate({ browser: updatedTemplate });
+    this.state.setGeneratedTemplate({ browser: updatedTemplate });
 
     if (palette !== null) {
       // Generate a new browser theme only based on the current palette and the new template
-      const browserTheme = Generators.browser(palette, newTemplate);
+      const browserTheme = Generators.browser(palette, updatedTemplate);
       this.setBrowserTheme(browserTheme);
       this.state.setBrowserTheme(browserTheme);
     }
 
-    Messenger.UI.sendBrowserThemeTemplate(newTemplate);
+    Messenger.UI.sendBrowserThemeTemplate(updatedTemplate);
   }
 
   private setPaletteColor(newCustomColors: Partial<IPalette>) {
@@ -520,7 +518,7 @@ export default class Extension {
     Messenger.UI.sendDebuggingInfo({ connected: false, version: this.state.getVersion() });
   }
 
-  private async onPywalColorsFetchSuccess({ colors, wallpaper }: IPywalData) {
+  private async onPywalColorsFetchSuccess({ colors }: IPywalData) {
     const pywalHash = Generators.pywalHash(colors);
     const pywalPalette = Generators.pywalPalette(colors);
 

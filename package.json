@@ -16,7 +16,7 @@
     "browser": "web-ext run",
     "web-ext-lint": "web-ext lint",
     "eslint": "npx eslint ./src/**/*.ts",
-    "eslint-watch": "npx esw -w --cache --color --ext .ts",
+    "eslint-watch": "npx esw -w --cache --color ./src/**/*.ts",
     "eslint-fix": "npx eslint --fix ./src/**/*.ts",
     "tests": "npx jest --verbose",
     "debug": "run-p watch browser",
@@ -26,6 +26,8 @@
     "build:source": "bestzip artifacts/source.zip extension src tsconfig.json package.json yarn.lock rollup.config.js LICENSE README.md"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^15.0.0",
+    "@rollup/plugin-node-resolve": "^9.0.0",
     "@types/firefox-webext-browser": "^70.0.1",
     "@types/jest": "^26.0.10",
     "@typescript-eslint/eslint-plugin": "^3.9.1",
@@ -68,12 +70,25 @@
     "preset": "ts-jest",
     "testEnvironment": "node",
     "moduleNameMapper": {
-      "^@ui/(.*)$": [ "<rootDir>/src/ui/$1" ],
-      "^@pywalfox/(.*)$": [ "<rootDir>/src/$1" ],
-      "^@utils/(.*)$": [ "<rootDir>/src/utils/$1" ],
-      "^@config/(.*)$": [ "<rootDir>/src/config/$1" ],
-      "^@definitions": [ "<rootDir>/src/definitions" ],
-      "^@communication/(.*)$": [ "<rootDir>/src/communication/$1" ]
+      "^lodash-es$": "lodash",
+      "^@ui/(.*)$": [
+        "<rootDir>/src/ui/$1"
+      ],
+      "^@pywalfox/(.*)$": [
+        "<rootDir>/src/$1"
+      ],
+      "^@utils/(.*)$": [
+        "<rootDir>/src/utils/$1"
+      ],
+      "^@config/(.*)$": [
+        "<rootDir>/src/config/$1"
+      ],
+      "^@definitions": [
+        "<rootDir>/src/definitions"
+      ],
+      "^@communication/(.*)$": [
+        "<rootDir>/src/communication/$1"
+      ]
     }
   },
   "eslintConfig": {
@@ -90,6 +105,7 @@
       "no-console": "off",
       "no-param-reassign": "off",
       "no-prototype-builtins": "off",
+      "prefer-object-spread": "off",
       "class-methods-use-this": "off",
       "object-curly-newline": "off",
       "no-plusplus": [
@@ -107,5 +123,9 @@
         }
       ]
     }
+  },
+  "dependencies": {
+    "just-filter": "^1.1.19",
+    "just-merge": "^1.1.0"
   }
 }

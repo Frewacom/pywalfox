@@ -38,12 +38,12 @@ export default class NativeApp {
       return message.data;
     }
 
-    this.logError('Recieved invalid message from native app. The \'data\' field is undefined.');
+    this.logError('Received invalid message from native app. The \'data\' field is undefined.');
     return null;
   }
 
   private async onMessage(message: INativeAppMessage) {
-    console.debug(message);
+    console.debug('[native] Message received:', message);
     switch (message.action) {
       case NATIVE_MESSAGES.VERSION:
         this.onVersionResponse(message);
@@ -62,7 +62,7 @@ export default class NativeApp {
         this.onCssFontSizeResponse(message);
         break;
       case NATIVE_MESSAGES.INVALID_ACTION:
-        this.logError(`Native app recieved unhandled message action: ${message.action}`);
+        this.logError(`Native app received unhandled message action: ${message.action}`);
         break;
       default:
         this.logError(`Received unhandled message action: ${message.action}`);
@@ -99,19 +99,20 @@ export default class NativeApp {
   private onCssToggleResponse(message: INativeAppMessage) {
     const target = this.getData(message);
 
-    if (message.success) {
-      if (!target) {
-        this.logError('Custom CSS was applied successfully, but target was not specified');
-        return;
-      } else if (!Object.values(CSSTargets).includes(target)) {
-        this.logError(`Custom CSS was applied successfully, but target "${target}" is invalid`);
-        return;
-      }
-
-      this.callbacks.cssToggleSuccess(target);
-    } else {
+    if (!message.success) {
       this.callbacks.cssToggleFailed(target, message.error);
+      return;
     }
+
+    if (!target) {
+      this.logError('Custom CSS was applied successfully, but target was not specified');
+      return;
+    } else if (!Object.values(CSSTargets).includes(target)) {
+      this.logError(`Custom CSS was applied successfully, but target "${target}" is invalid`);
+      return;
+    }
+
+    this.callbacks.cssToggleSuccess(target);
   }
 
   private onCssFontSizeResponse(message: INativeAppMessage) {
@@ -139,7 +140,7 @@ export default class NativeApp {
       clearTimeout(this.versionCheckTimeout);
       clearTimeout(this.connectedCheckTimeout);
       this.callbacks.disconnected();
-      console.log(`Disconnected from native messaging host: ${error}`);
+      console.log(`[native] Disconnected from native messaging host: ${error}`);
     }
   }
 
@@ -151,7 +152,7 @@ export default class NativeApp {
   private sendMessage(message: INativeAppRequest) {
     if (!this.isConnected) {
       // If we are not connected, it means that an error occured. No point to try and reconnect
-      console.error('Failed to send data to native app. You are not connected');
+      console.error('[native] Failed to send data to native app. You are not connected');
       return;
     }
 

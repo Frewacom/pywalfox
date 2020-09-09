@@ -76,8 +76,8 @@ export interface IThemeTemplate {
 export type IGlobalTemplates = Record<ITemplateThemeMode, NonNullable<IThemeTemplate>>;
 
 export interface IUserTheme {
-  customColors?: ICustomColors;
-  userTemplate?: Partial<IThemeTemplate>;
+  customColors?: NonNullable<ICustomColors>;
+  userTemplate?: NonNullable<Partial<IThemeTemplate>>;
 }
 
 export type IUserThemes = Partial<Record<IPywalHash, Record<ITemplateThemeMode, IUserTheme>>>;

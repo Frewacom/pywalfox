@@ -5,10 +5,7 @@ import {
   ITheme,
   IUserTheme,
   IBrowserTheme,
-  IBrowserThemeTemplate,
-  IPaletteTemplate,
   IThemeTemplate,
-  IDuckDuckGoThemeTemplate,
   ITimeIntervalEndpoint,
   IExtensionState,
   IExtensionOptions,
@@ -20,6 +17,8 @@ import {
 
 import { DEFAULT_CSS_FONT_SIZE } from '@config/general';
 import { DEFAULT_THEME_DARK, DEFAULT_THEME_LIGHT } from '@config/default-themes';
+
+import merge from 'just-merge';
 
 export default class State {
   private initialState: IExtensionState;
@@ -51,6 +50,12 @@ export default class State {
         intervalEnd: { hour: 19, minute: 0, stringFormat: '19:00' },
       },
     };
+
+    browser.storage.onChanged.addListener(this.onStateChanged.bind(this));
+  }
+
+  private onStateChanged(changes: browser.storage.StorageChange, areaName: string) {
+    console.debug(`[${areaName}] State change:`, changes);
   }
 
   private async set(newState: {}) {
@@ -60,67 +65,62 @@ export default class State {
 
   private updateGlobalTemplate(data: Partial<IThemeTemplate>) {
     const currentThemeMode = this.getTemplateThemeMode();
+    const globalTemplate = this.currentState.globalTemplates[currentThemeMode] || {};
+    const updatedTemplate = merge({}, globalTemplate, data);
 
     return this.set({
       globalTemplates: {
-        [currentThemeMode]: {
-          ...this.currentState.globalTemplates[currentThemeMode],
-          ...data,
-        },
+        [currentThemeMode]: updatedTemplate,
       },
     });
   }
 
   private updateGeneratedTheme(data: Partial<ITheme>) {
+    const generatedTheme = this.currentState.generatedTheme || {};
+    const updatedTheme = merge({}, generatedTheme, data);
+
     return this.set({
-      generatedTheme: {
-        ...this.currentState.generatedTheme,
-        ...data,
-      }
+      generatedTheme: updatedTheme,
     });
   }
 
   private updateGeneratedTemplate(data: Partial<IThemeTemplate>) {
-    return this.set({
-      generatedTheme: {
-        ...this.currentState.generatedTheme,
-        template: {
-          ...this.currentState.generatedTheme.template,
-          ...data,
-        },
-      },
-    });
+    const generatedTheme = this.currentState.generatedTheme;
+
+    if (!generatedTheme) {
+      return;
+    }
+
+    const updatedTemplate = merge({}, generatedTheme.template, data);
+    return this.updateGeneratedTheme({ template: updatedTemplate });
   }
 
-  // TODO: Setting a template, e.g. 'browser' overwrites all other defined templates
   private updateCurrentTheme(data: Partial<IUserTheme>) {
     const pywalHash = this.getPywalHash();
     const currentThemeMode = this.getTemplateThemeMode();
-    const savedTheme = Object.assign({}, this.currentState.userThemes[pywalHash]);
 
-    if (Object.keys(savedTheme).length === 0) {
-      savedTheme[currentThemeMode] = data;
-    } else {
-      savedTheme[currentThemeMode] = {
-        ...savedTheme[currentThemeMode],
-        ...data,
-      };
+    if (pywalHash === null) {
+      return;
     }
+
+    const currentTheme = this.currentState.userThemes[pywalHash] || {};
+    const updatedTheme = merge({}, currentTheme, {
+      [currentThemeMode]: data,
+    });
 
     return this.set({
       userThemes: {
         ...this.currentState.userThemes,
-        [pywalHash]: savedTheme,
+        [pywalHash]: updatedTheme,
       },
     });
   }
 
   private updateOptions(option: Partial<IExtensionOptions>) {
+    const updatedOptions = merge({}, this.currentState.options, option);
+
     return this.set({
-      options: {
-        ...this.currentState.options,
-        ...option,
-      },
+      options: updatedOptions,
     });
   }
 
@@ -161,14 +161,13 @@ export default class State {
   }
 
   public getGeneratedTemplate() {
-    const currentThemeMode = this.getTemplateThemeMode();
-    const generatedTemplate = this.currentState.generatedTheme.template;
+    const { generatedTheme } = this.currentState;
 
-    if (generatedTemplate) {
-      return generatedTemplate;
+    if (!generatedTheme) {
+      return this.currentState.globalTemplates[this.getTemplateThemeMode()];
     }
 
-    return this.currentState.globalTemplates[currentThemeMode];
+    return generatedTheme.template;
   }
 
   public getIsDay() {
@@ -199,7 +198,13 @@ export default class State {
 
   public getGlobalTemplate() {
     const currentThemeMode = this.getTemplateThemeMode();
-    return this.currentState.globalTemplates[currentThemeMode];
+    const { globalTemplates } = this.currentState;
+
+    if (!globalTemplates) {
+      return currentThemeMode === ThemeModes.Dark ? DEFAULT_THEME_DARK : DEFAULT_THEME_LIGHT;
+    }
+
+    return globalTemplates[currentThemeMode];
   }
 
   public getGeneratedTheme() {
@@ -266,16 +271,16 @@ export default class State {
     return this.updateGeneratedTemplate(template);
   }
 
-  public setTemplate(userTemplate: Partial<IThemeTemplate>) {
+  public setBrowserTheme(browser: IBrowserTheme) {
+    return this.updateGeneratedTheme({ browser });
+  }
+
+  public setUserTemplate(userTemplate: Partial<IThemeTemplate>) {
     return this.updateCurrentTheme({ userTemplate });
   }
 
   public setCustomColors(customColors: ICustomColors) {
     return this.updateCurrentTheme({ customColors });
-  }
-
-  public setBrowserTheme(browser: IBrowserTheme) {
-    return this.updateGeneratedTheme({ browser });
   }
 
   public setVersion(version: number) {
@@ -347,15 +352,13 @@ export default class State {
   }
 
   public async load() {
-    this.currentState = <IExtensionState>await browser.storage.local.get(this.initialState);
+    this.currentState = await browser.storage.local.get(this.initialState) as IExtensionState;
 
-    // Make sure default state is present in storage
-    await browser.storage.local.set(this.currentState);
-
-    this.dump();
+    // TODO: Should we do this? If we have large amounts of stored data this would be expensive
+    //await browser.storage.local.set(this.currentState);
   }
 
   public dump() {
-    console.log(this.currentState);
+    console.debug(this.currentState);
   }
 }
