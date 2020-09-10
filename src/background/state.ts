@@ -52,6 +52,7 @@ export default class State {
         fontSize: DEFAULT_CSS_FONT_SIZE,
         duckduckgo: false,
         darkreader: false,
+        fetchOnStartup: false,
         autoTimeStart: { hour: 10, minute: 0, stringFormat: '10:00' },
         autoTimeEnd: { hour: 19, minute: 0, stringFormat: '19:00' },
       },
@@ -212,6 +213,10 @@ export default class State {
     return this.currentState.options.darkreader;
   }
 
+  public getFetchOnStartupEnabled() {
+    return this.currentState.options.fetchOnStartup;
+  }
+
   public getCssEnabled(target: string) {
     return this.getProperty(this.currentState.options, target);
   }
@@ -281,6 +286,10 @@ export default class State {
 
   public setDarkreaderEnabled(enabled: boolean) {
     return this.setOption('darkreader', enabled);
+  }
+
+  public setFetchOnStartupEnabled(enabled: boolean) {
+    return this.setOption('fetchOnStartup', enabled);
   }
 
   public setCssEnabled(target: CSSTargets, enabled: boolean) {

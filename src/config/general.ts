@@ -72,6 +72,7 @@ export const EXTENSION_OPTIONS = {
   USER_CONTENT: CSSTargets.UserContent,
   DUCKDUCKGO: 'duckduckgo',
   DARKREADER: 'darkreader',
+  FETCH_ON_STARTUP: 'fetchOnStartup',
 };
 
 export const NATIVE_MESSAGES = {

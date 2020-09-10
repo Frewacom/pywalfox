@@ -165,6 +165,7 @@ export interface IExtensionOptions {
   fontSize: number;
   duckduckgo: boolean;
   darkreader: boolean;
+  fetchOnStartup: boolean;
   autoTimeStart: ITimeIntervalEndpoint;
   autoTimeEnd: ITimeIntervalEndpoint;
 }
