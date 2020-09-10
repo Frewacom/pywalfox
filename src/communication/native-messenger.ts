@@ -81,17 +81,27 @@ export default class NativeApp {
   }
 
   private onPywalColorsResponse(message: INativeAppMessage) {
-    if (message.success) {
-      const pywalData: IPywalData = this.getData(message);
+    if (!message.success) {
+      this.callbacks.pywalColorsFetchFailed(message.error);
+      return;
+    }
 
-      if (!pywalData) {
-        this.logError('Pywal data was read successfully but contained null');
-        return;
-      }
+    const pywalData = this.getData(message);
 
+    if (!pywalData) {
+      this.logError('Pywal data was read successfully but contained null');
+      return;
+    }
+
+    if (pywalData.hasOwnProperty('wallpaper')) {
       this.callbacks.pywalColorsFetchSuccess(pywalData);
     } else {
-      this.callbacks.pywalColorsFetchFailed(message.error);
+      /* Native app version >= 2.7 returns a completely different response type compared
+       * to previous versions. This means that fetching will not work unless the user updates.
+       * The backwards compatibility fix is simple, so I figured it is fine to leave it in here
+       * if the user does not want to update for some reason.
+       */
+      this.callbacks.pywalColorsFetchSuccess({ colors: pywalData, wallpaper: null });
     }
   }
 
