@@ -190,6 +190,12 @@ export interface IOptionSetData {
   value?: any;
 }
 
+export interface IThemeData {
+  pywalColors: IPywalColors;
+  customColors: ICustomColors;
+  template: IThemeTemplate;
+}
+
 export interface IThemeModeData {
   mode: ThemeModes;
   templateMode: ITemplateThemeMode;
@@ -286,6 +292,7 @@ export interface IExtensionOptions {
 
 export interface IExtensionState {
   version: number,
+  stateVersion: number;
   connected: boolean;
   updateMuted: boolean;
   mode: ThemeModes;

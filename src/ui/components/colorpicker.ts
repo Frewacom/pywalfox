@@ -168,7 +168,7 @@ export default class Colorpicker extends Dialog {
     this.selectedElement = null;
   }
 
-  public setData(
+  public update(
     pywalColors: IPywalColors,
     customColors: Partial<IPalette>,
     template: IPaletteTemplate,
@@ -177,6 +177,8 @@ export default class Colorpicker extends Dialog {
     this.setPywalColors(pywalColors);
     this.setCustomColors(customColors);
     this.setPaletteTemplate(template);
+
+    this.updateSelected();
   }
 
   public setPywalColors(pywalColors: IPywalColors) {

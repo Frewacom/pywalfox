@@ -2,11 +2,13 @@ import {
   IPalette,
   IInitialData,
   IPywalColors,
+  ICustomColors,
   IThemeTemplate,
   ITimeIntervalEndpoint,
   IPaletteTemplate,
   IBrowserThemeTemplate,
   ThemeModes,
+  IThemeData,
   IThemeModeData,
   ITemplateThemeMode,
   IDebuggingInfoData,
@@ -44,12 +46,9 @@ export function sendNotification(title: string, message: string, error = false) 
   sendMessage({ action: EXTENSION_MESSAGES.NOTIFCATION, data: notificationData });
 }
 
-export function sendPywalColors(pywalColors: IPywalColors) {
-  sendMessage({ action: EXTENSION_MESSAGES.PYWAL_COLORS_SET, data: pywalColors });
-}
-
-export function sendTemplate(template: IThemeTemplate) {
-  sendMessage({ action: EXTENSION_MESSAGES.TEMPLATE_SET, data: template });
+export function sendTheme(pywalColors: IPywalColors, customColors: ICustomColors, template: IThemeTemplate) {
+  const themeData: IThemeData = { pywalColors, customColors, template };
+  sendMessage({ action: EXTENSION_MESSAGES.THEME_SET, data: themeData });
 }
 
 export function sendThemeMode(mode: ThemeModes, templateMode: ITemplateThemeMode) {

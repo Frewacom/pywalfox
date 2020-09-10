@@ -15,7 +15,7 @@ import {
   ThemeModes,
 } from '@definitions';
 
-import { DEFAULT_CSS_FONT_SIZE } from '@config/general';
+import { STATE_VERSION, DEFAULT_CSS_FONT_SIZE } from '@config/general';
 import { DEFAULT_THEME_DARK, DEFAULT_THEME_LIGHT } from '@config/default-themes';
 
 import merge from 'just-merge';
@@ -27,6 +27,7 @@ export default class State {
   constructor() {
     this.initialState = {
       version: 0.0,
+      stateVersion: 0.0,
       connected: false,
       updateMuted: false,
       mode: ThemeModes.Dark,
@@ -104,9 +105,10 @@ export default class State {
       return;
     }
 
+    // TODO: This merge is broken
     const currentTheme = this.currentState.userThemes[pywalHash] || {};
     const updatedTheme = merge({}, currentTheme, {
-      [currentThemeMode]: data,
+      [currentThemeMode]: data
     });
 
     return this.set({
@@ -235,8 +237,8 @@ export default class State {
   public getInterval() {
     const { intervalStart, intervalEnd } = this.currentState.options;
     return {
-      start: intervalStart,
-      end: intervalEnd,
+      intervalStart,
+      intervalEnd,
     };
   }
 
@@ -362,6 +364,20 @@ export default class State {
 
   public async load() {
     this.currentState = await browser.storage.local.get(this.initialState) as IExtensionState;
+
+    const currentStateVersion = this.currentState.stateVersion;
+
+    if (currentStateVersion !== STATE_VERSION) {
+      if (currentStateVersion === 0.0) {
+        // Migrating from <= 2.0.4
+        await browser.storage.local.clear();
+        const migratedState = { ...this.initialState };
+
+        // TODO: Add migration
+
+        await browser.storage.local.set(migratedState);
+      }
+    }
 
     // TODO: Should we do this? If we have large amounts of stored data this would be expensive
     //await browser.storage.local.set(this.currentState);

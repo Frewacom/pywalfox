@@ -500,7 +500,6 @@ function createPaletteContent() {
 }
 
 function setInitialData(data: IInitialData) {
-  console.log(data);
   themepicker.setSelectedMode(data.themeMode, data.templateThemeMode);
 
   if (data.isApplied) {
@@ -511,11 +510,10 @@ function setInitialData(data: IInitialData) {
     updateOptionState(optionData);
   });
 
-  colorpicker.setData(data.pywalColors, data.userTheme.customColors, data.template.palette);
-  colorpicker.updateSelected();
+  colorpicker.update(data.pywalColors, data.userTheme.customColors, data.template.palette);
 
-  updatePaletteTemplateInputs(data.template.palette, data.pywalColors);
   updateBrowserThemeTemplateInputs(data.template.browser);
+  updatePaletteTemplateInputs(data.template.palette, data.pywalColors);
   setDebuggingInfo(data.debuggingInfo);
 
   pywalColors = data.pywalColors;
@@ -527,24 +525,17 @@ function handleExtensionMessage({ action, data }: IExtensionMessage) {
     case EXTENSION_MESSAGES.INITIAL_DATA_SET:
       setInitialData(data);
       break;
-    case EXTENSION_MESSAGES.PYWAL_COLORS_SET:
-      colorpicker.setPywalColors(data);
-      colorpicker.setCustomColors(null);
-      colorpicker.updateSelected();
-      updatePaletteTemplateInputs(template.palette, data);
+    case EXTENSION_MESSAGES.THEME_SET:
+      colorpicker.update(data.pywalColors, data.customColors, data.template.palette);
+      updateBrowserThemeTemplateInputs(data.template.browser);
+      updatePaletteTemplateInputs(data.template.palette, data.pywalColors);
       document.body.classList.add(ENABLED_BODY_CLASS);
-      pywalColors = data;
+      pywalColors = data.pywalColors;
+      template = data.template;
       break;
     case EXTENSION_MESSAGES.CUSTOM_COLORS_SET:
       colorpicker.setCustomColors(data);
       colorpicker.updateSelected();
-      break;
-    case EXTENSION_MESSAGES.TEMPLATE_SET:
-      colorpicker.setPaletteTemplate(data.palette);
-      colorpicker.updateSelected();
-      updateBrowserThemeTemplateInputs(data.browser);
-      updatePaletteTemplateInputs(data.palette, pywalColors);
-      template = data;
       break;
     case EXTENSION_MESSAGES.PALETTE_TEMPLATE_SET:
       colorpicker.setPaletteTemplate(data);

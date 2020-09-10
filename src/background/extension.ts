@@ -65,8 +65,8 @@ export default class Extension {
   }
 
   private startAutoThemeMode() {
-    const { start, end } = this.state.getInterval();
-    this.autoMode.start(start, end);
+    const { intervalStart, intervalEnd } = this.state.getInterval();
+    this.autoMode.start(intervalStart, intervalEnd);
   }
 
   private setOption(optionData: IOptionSetData) {
@@ -158,8 +158,7 @@ export default class Extension {
         this.setOption(data);
         break;
       case EXTENSION_MESSAGES.UPDATE_PAGE_MUTE:
-        this.state.setUpdateMuted(true);
-        this.updatePage.close();
+        this.setUpdateMuted();
         break;
       default:
         break;
@@ -249,7 +248,7 @@ export default class Extension {
     this.state.setGeneratedTheme(generatedTheme);
     this.state.setApplied(true);
 
-    Messenger.UI.sendTemplate(template);
+    Messenger.UI.sendTheme(pywalColors, mergedCustomColors, template);
 
     return generatedTheme;
   }
@@ -361,18 +360,17 @@ export default class Extension {
 
   private updateThemeForCurrentMode() {
     const pywalColors = this.state.getPywalColors();
-    const template = this.state.getGeneratedTemplate();
-    const { customColors } = this.state.getUserTheme();
-
-    Messenger.UI.sendPaletteTemplate(template.palette);
-    Messenger.UI.sendBrowserThemeTemplate(template.browser);
-    Messenger.UI.sendCustomColors(customColors);
 
     if (pywalColors) {
-      return this.setThemes(pywalColors, customColors);
+      return this.setThemes(pywalColors);
     }
 
     return null;
+  }
+
+  private setUpdateMuted() {
+    this.state.setUpdateMuted(true);
+    this.updatePage.close();
   }
 
   private async setThemeMode(mode: ThemeModes) {
@@ -544,7 +542,6 @@ export default class Extension {
     }
 
     Messenger.UI.sendDebuggingOutput('Pywal colors were fetched from daemon and applied successfully');
-    Messenger.UI.sendPywalColors(pywalPalette);
   }
 
   private onPywalColorsFetchFailed(error: string) {

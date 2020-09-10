@@ -1,5 +1,7 @@
 import { CSSTargets } from '@definitions';
 
+export const STATE_VERSION = 1.0;
+
 export const RESPONSE_TIMEOUT_MS = 3000;
 export const MIN_REQUIRED_DAEMON_VERSION = 2.7;
 export const DEFAULT_CSS_FONT_SIZE = 13;
@@ -28,16 +30,15 @@ export const EXTERNAL_MESSAGES = {
 export const EXTENSION_MESSAGES = {
   INITIAL_DATA_GET: 'initial:data:get',
   INITIAL_DATA_SET: 'initial:data:set',
+  THEME_SET: 'theme:set',
   THEME_FETCH: 'theme:fetch',
   THEME_DISABLE: 'theme:disable',
   THEME_MODE_SET: 'theme:mode:set',
   TEMPLATE_THEME_MODE_GET: 'template:theme:mode:get',
   TEMPLATE_THEME_MODE_SET: 'template:theme:mode:set',
   PALETTE_COLOR_SET: 'palette:color:set',
-  TEMPLATE_SET: 'template:set',
   PALETTE_TEMPLATE_SET: 'palette:template:set',
   BROWSER_THEME_TEMPLATE_SET: 'browser:template:set',
-  PYWAL_COLORS_SET: 'pywal:colors:set',
   CUSTOM_COLORS_SET: 'custom:colors:set',
   OPTION_SET: 'option:set',
   FONT_SIZE_SET: 'font:size:set',
