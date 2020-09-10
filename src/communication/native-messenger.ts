@@ -156,13 +156,19 @@ export default class NativeApp {
 
   public connect() {
     this.port = browser.runtime.connectNative('pywalfox');
-    this.isConnected = true;
+    const error = this.port.error;
 
-    this.versionCheckTimeout = window.setTimeout(this.callbacks.updateNeeded, RESPONSE_TIMEOUT_MS);
-    this.connectedCheckTimeout = window.setTimeout(this.callbacks.connected, RESPONSE_TIMEOUT_MS);
+    if (!error) {
+      this.isConnected = true;
 
-    this.setupListeners();
-    this.requestVersion();
+      this.setupListeners();
+      this.versionCheckTimeout = window.setTimeout(this.callbacks.updateNeeded, RESPONSE_TIMEOUT_MS);
+      this.requestVersion();
+
+      this.callbacks.connected();
+    } else {
+      console.error(`Failed to connect to native app: ${error.message}`);
+    }
   }
 
   public requestVersion() {
