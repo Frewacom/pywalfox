@@ -543,7 +543,7 @@ export default class Extension {
     Messenger.UI.sendDebuggingInfo({ connected: false, version: this.state.getVersion() });
   }
 
-  private async onPywalColorsFetchSuccess({ colors, wallpaper }: IPywalData) {
+  private async onPywalColorsFetchSuccess({ colors }: IPywalData) {
     const pywalPalette = Generators.pywalPalette(colors);
     Messenger.UI.sendDebuggingOutput('Pywal colors were fetched from daemon and applied successfully');
     Messenger.UI.sendPywalColors(pywalPalette);

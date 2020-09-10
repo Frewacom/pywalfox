@@ -115,7 +115,7 @@ export default class NativeApp {
       const updatedFontSize = this.getData(message);
 
       if (!updatedFontSize) {
-        this.logError('Font size was updated successfully, but the updated font size was not specified');
+        this.logError('Font size was updated successfully, but the new size was not specified');
         return;
       }
 
@@ -156,13 +156,17 @@ export default class NativeApp {
 
   public connect() {
     this.port = browser.runtime.connectNative('pywalfox');
-    const error = this.port.error;
+    const { error } = this.port;
 
     if (!error) {
       this.isConnected = true;
 
       this.setupListeners();
-      this.versionCheckTimeout = window.setTimeout(this.callbacks.updateNeeded, RESPONSE_TIMEOUT_MS);
+      this.versionCheckTimeout = window.setTimeout(
+        this.callbacks.updateNeeded,
+        RESPONSE_TIMEOUT_MS,
+      );
+
       this.requestVersion();
 
       this.callbacks.connected();
