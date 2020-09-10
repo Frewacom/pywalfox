@@ -93,8 +93,11 @@ export default class Extension {
       case EXTENSION_OPTIONS.DARKREADER:
         this.setDarkreaderEnabled(optionData);
         break;
+      case EXTENSION_OPTIONS.FETCH_ON_STARTUP:
+        this.setFetchOnStartupEnabled(optionData);
+        break;
       default:
-        Messenger.UI.sendDebuggingOutput(`Received unhandled option: ${optionData.option}`);
+        Messenger.UI.sendDebuggingOutput(`Received unhandled option: ${optionData.option}`, true);
     }
   }
 
@@ -308,6 +311,11 @@ export default class Extension {
     }
   }
 
+  private setFetchOnStartupEnabled({ option, enabled }) {
+    this.state.setFetchOnStartupEnabled(enabled);
+    Messenger.UI.sendOption(option, enabled);
+  }
+
   private setDuckduckgoEnabled() {
     const enabled = this.state.getDuckduckgoEnabled();
 
@@ -337,7 +345,7 @@ export default class Extension {
     }
   }
 
-  private setSavedColorscheme({ browser, extension }: ITheme) {
+  private setSavedTheme({ browser, extension }: ITheme) {
     console.log('Applying saved theme');
     this.setBrowserTheme(browser);
     this.updateExtensionPagesTheme(extension);
@@ -508,6 +516,10 @@ export default class Extension {
   }
 
   private nativeAppConnected() {
+    if (this.state.getApplied() && this.state.getFetchOnStartupEnabled()) {
+      this.nativeMessenger.requestPywalColors();
+    }
+
     this.state.setConnected(true);
   }
 
@@ -589,18 +601,21 @@ export default class Extension {
     await this.stateLoadPromise;
     this.stateLoadPromise = null;
 
-    const savedColorscheme = this.state.getGeneratedTheme();
-    const currentThemeMode = this.state.getThemeMode();
+    const isApplied = this.state.getApplied();
+    const shouldFetch = this.state.getFetchOnStartupEnabled();
     const isDarkreaderEnabled = this.state.getDarkreaderEnabled();
 
     // Run this after creating the extension pages so that the themes can be
     // set if the pages were reopened on launch.
-    if (savedColorscheme !== null) {
+    if (isApplied && !shouldFetch) {
+      const savedTheme = this.state.getGeneratedTheme();
+      const currentThemeMode = this.state.getThemeMode();
+
       if (currentThemeMode === ThemeModes.Auto) {
         this.startAutoThemeMode();
       }
 
-      this.setSavedColorscheme(savedColorscheme);
+      this.setSavedTheme(savedTheme);
     }
 
     this.nativeMessenger.connect();

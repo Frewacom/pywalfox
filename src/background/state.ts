@@ -46,6 +46,7 @@ export default class State {
         fontSize: DEFAULT_CSS_FONT_SIZE,
         duckduckgo: false,
         darkreader: false,
+        fetchOnStartup: false,
         intervalStart: { hour: 10, minute: 0, stringFormat: '10:00' },
         intervalEnd: { hour: 19, minute: 0, stringFormat: '19:00' },
       },
@@ -219,12 +220,16 @@ export default class State {
     return this.currentState.options.darkreader;
   }
 
-  public getCssEnabled(target: CSSTargets) {
-    return this.currentState.options[target];
+  public getFetchOnStartupEnabled() {
+    return this.currentState.options.fetchOnStartup;
   }
 
   public getCssFontSize() {
     return this.currentState.options.fontSize;
+  }
+
+  public getCssEnabled(target: CSSTargets) {
+    return this.currentState.options[target];
   }
 
   public getInterval() {
@@ -327,12 +332,8 @@ export default class State {
     return this.updateOptions({ darkreader });
   }
 
-  public setCssEnabled(target: CSSTargets, enabled: boolean) {
-    return this.updateOptions({ [target]: enabled });
-  }
-
-  public setCssFontSize(fontSize: number) {
-    return this.updateOptions({ fontSize });
+  public setFetchOnStartupEnabled(fetchOnStartup: boolean) {
+    return this.updateOptions({ fetchOnStartup });
   }
 
   public setIntervalStart(intervalStart: ITimeIntervalEndpoint) {
@@ -341,6 +342,14 @@ export default class State {
 
   public setIntervalEnd(intervalEnd: ITimeIntervalEndpoint) {
     return this.updateOptions({ intervalEnd });
+  }
+
+  public setCssEnabled(target: CSSTargets, enabled: boolean) {
+    return this.updateOptions({ [target]: enabled });
+  }
+
+  public setCssFontSize(fontSize: number) {
+    return this.updateOptions({ fontSize });
   }
 
   public resetCustomColors() {

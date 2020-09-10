@@ -500,6 +500,7 @@ function createPaletteContent() {
 }
 
 function setInitialData(data: IInitialData) {
+  console.log(data);
   themepicker.setSelectedMode(data.themeMode, data.templateThemeMode);
 
   if (data.isApplied) {
