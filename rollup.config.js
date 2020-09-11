@@ -3,6 +3,7 @@ import clear from 'rollup-plugin-clear';
 import postcss from 'rollup-plugin-postcss';
 import analyze from 'rollup-plugin-analyzer';
 import { terser } from 'rollup-plugin-terser';
+import resolve from '@rollup/plugin-node-resolve';
 import typescript from 'rollup-plugin-typescript2';
 import { typescriptPaths } from 'rollup-plugin-typescript-paths';
 
@@ -11,6 +12,7 @@ import urlresolve from 'postcss-url';
 
 const production = !process.env.ROLLUP_WATCH;
 const defaultPlugins = [
+  resolve(),
   typescript(),
   typescriptPaths(),
   production && terser(),

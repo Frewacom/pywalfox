@@ -37,17 +37,7 @@
               </div>
               <i icon="chevron"></i>
             </div>
-            <div class="card-content column expand" id="palette-content">
-              <template id="palette-template">
-                <div class="setting row expand space-between v-center">
-                  <div class="box column align-left">
-                    <p class="setting-title"></p>
-                    <p class="setting-description"></p>
-                  </div>
-                  <button data-color="" class="btn btn-color dialog-arrow"></button>
-                </div>
-              </template>
-            </div>
+            <div class="card-content column expand" id="palette-content" />
           </section>
           <aside class="dialog" id="colorpicker">
             <div id="colorpicker-grid"></div>
@@ -160,20 +150,7 @@
               You are always modifying the template for the currently selected theme mode.
             </p>
           </div>
-          <div class="card-content column expand" id="palette-template-content">
-            <template id="palette-edit-template">
-              <div class="setting row expand space-between v-center">
-                <div class="box column align-left">
-                  <p class="setting-title"></p>
-                  <p class="setting-description"></p>
-                </div>
-                <div class="box row v-center">
-                  <div class="btn btn-color color-preview margin-right-sm"></div>
-                  <input type="number" data-target="" min="0" max="" />
-                </div>
-              </div>
-            </template>
-          </div>
+          <div class="card-content column expand" id="palette-template-content" />
         </section>
         <section class="setting-card card expand space-between margin-bottom-card">
           <div class="setting-card-header card-header expand row v-center space-between clickable">
@@ -216,17 +193,7 @@
               </a>
             </div>
           </div>
-          <div class="card-content column expand" id="theme-template-content">
-            <template id="theme-template">
-              <div class="setting row expand space-between v-center">
-                <div class="box column align-left">
-                  <p class="setting-title"></p>
-                  <p class="setting-description"></p>
-                </div>
-                <!-- Select element is inserted dynamically -->
-              </div>
-            </template>
-          </div>
+          <div class="card-content column expand" id="theme-template-content" />
         </section>
         <section class="setting-card card expand space-between">
           <div class="setting-card-header card-header expand row v-center space-between clickable">
@@ -255,16 +222,7 @@
           </div>
         </section>
       </main>
-      <section id="notification-container">
-        <template id="notification-template">
-          <div class="notification box row v-center">
-            <i class="icon-sm" icon=""></i>
-            <p class="notification-title"></p>
-            <p class="notification-content"></p>
-            <button class="btn notification-close"></button>
-          </div>
-        </template>
-      </section>
+      <section id="notification-container" />
     </div>
     <script src="../dist/settings.bundle.js"></script>
   </body>

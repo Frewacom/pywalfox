@@ -467,9 +467,30 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
+"@rollup/plugin-node-resolve@^9.0.0":
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/@rollup/plugin-node-resolve/-/plugin-node-resolve-9.0.0.tgz#39bd0034ce9126b39c1699695f440b4b7d2b62e6"
+  integrity sha512-gPz+utFHLRrd41WMP13Jq5mqqzHL3OXrfj3/MkSyB6UBIcuNt9j60GCbarzMzdf1VHFpOxfQh/ez7wyadLMqkg==
+  dependencies:
+    "@rollup/pluginutils" "^3.1.0"
+    "@types/resolve" "1.17.1"
+    builtin-modules "^3.1.0"
+    deepmerge "^4.2.2"
+    is-module "^1.0.0"
+    resolve "^1.17.0"
+
 "@rollup/pluginutils@^3.0.8":
   version "3.0.10"
   resolved "https://registry.yarnpkg.com/@rollup/pluginutils/-/pluginutils-3.0.10.tgz#a659b9025920378494cd8f8c59fbf9b3a50d5f12"
+  dependencies:
+    "@types/estree" "0.0.39"
+    estree-walker "^1.0.1"
+    picomatch "^2.2.2"
+
+"@rollup/pluginutils@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@rollup/pluginutils/-/pluginutils-3.1.0.tgz#706b4524ee6dc8b103b3c995533e5ad680c02b9b"
+  integrity sha512-GksZ6pr6TpIjHm8h9lSQ8pi8BE9VeubNT0OMJ3B5uZJ8pz73NPiqOtCog/x2/QzM1ENChPKxMDhiQuRHsqc+lg==
   dependencies:
     "@types/estree" "0.0.39"
     estree-walker "^1.0.1"
@@ -606,6 +627,13 @@
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.2.tgz#690a1475b84f2a884fd07cd797c00f5f31356ea8"
 
+"@types/resolve@1.17.1":
+  version "1.17.1"
+  resolved "https://registry.yarnpkg.com/@types/resolve/-/resolve-1.17.1.tgz#3afd6ad8967c77e4376c598a82ddd58f46ec45d6"
+  integrity sha512-yy7HuzQhj0dhGpD8RLXSZWEkLsV9ibvxvi6EiJ3bkqLAO1RGo0WbkWQiwpRlSFymTJRz0d3k5LM3kkx8ArDbLw==
+  dependencies:
+    "@types/node" "*"
+
 "@types/stack-utils@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-1.0.1.tgz#0a851d3bd96498fa25c33ab7278ed3bd65f06c3e"
@@ -673,6 +701,11 @@
   resolved "https://registry.yarnpkg.com/@typescript-eslint/visitor-keys/-/visitor-keys-3.9.1.tgz#92af3747cdb71509199a8f7a4f00b41d636551d1"
   dependencies:
     eslint-visitor-keys "^1.1.0"
+
+"@ungap/create-content@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@ungap/create-content/-/create-content-0.2.0.tgz#f123a7c79f391d853600abf6dba44034a8ced58e"
+  integrity sha512-CvmX0Mr5PfFARDBbSef0B+SAqSeMKaHOG/twJi9nbPtp/MiNPgyBLqZndiyO3RXQ0RXy6TqwarvB6KWzTmc4MQ==
 
 JSONSelect@0.2.1:
   version "0.2.1"
@@ -1293,6 +1326,11 @@ buffer@^5.5.0:
   dependencies:
     base64-js "^1.0.2"
     ieee754 "^1.1.4"
+
+builtin-modules@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/builtin-modules/-/builtin-modules-3.1.0.tgz#aad97c15131eb76b65b50ef208e7584cd76a7484"
+  integrity sha512-k0KL0aWZuBt2lrxrcASWDfwOLMnodeQjodT/1SxEQAXsHANgo6ZC/VEaSEHCXt7aSTZ4/4H5LKa+tBXmW7Vtvw==
 
 bunyan@1.8.12:
   version "1.8.12"
@@ -3446,6 +3484,11 @@ is-installed-globally@^0.3.1:
 is-mergeable-object@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/is-mergeable-object/-/is-mergeable-object-1.1.1.tgz#faaa3ed1cfce87d6f7d2f5885e92cc30af3e2ebf"
+
+is-module@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/is-module/-/is-module-1.0.0.tgz#3258fb69f78c14d5b815d664336b4cffb6441591"
+  integrity sha1-Mlj7afeMFNW4FdZkM2tM/7ZEFZE=
 
 is-npm@^4.0.0:
   version "4.0.0"
@@ -6811,6 +6854,41 @@ typescript@^3.9.3:
   version "3.9.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.3.tgz#d3ac8883a97c26139e42df5e93eeece33d610b8a"
 
+uarray@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/uarray/-/uarray-1.0.0.tgz#e89bf0ea2129596f4bf653b66e53246ed6562b6c"
+  integrity sha512-LHmiAd5QuAv7pU2vbh+Zq9YOnqVK0H764p2Ozinpfy9ka58OID4IsGLiXsitqH7n0NAIDxvax1A/kDXpii/Ckg==
+
+udomdiff@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/udomdiff/-/udomdiff-1.1.0.tgz#1d0c4741b93a2ffd10728ca4cea15b277cc3082f"
+  integrity sha512-aqjTs5x/wsShZBkVagdafJkP8S3UMGhkHKszsu1cszjjZ7iOp86+Qb3QOFYh01oWjPMy5ZTuxD6hw5uTKxd+VA==
+
+uhandlers@^0.3.6:
+  version "0.3.6"
+  resolved "https://registry.yarnpkg.com/uhandlers/-/uhandlers-0.3.6.tgz#11af355469775b4704729a4347b831e32193ca59"
+  integrity sha512-0Wz12YKWdbxJWJTPEIUPXrhMAVEMmzBvuTB9O3HaOdR7vKVkaiVsyJpEZILiA8D5Li9aXPMHSs5iEVasM/j8BA==
+  dependencies:
+    uarray "^1.0.0"
+
+uhtml@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/uhtml/-/uhtml-2.1.1.tgz#316bc12f182ab299344554f7389c5d5f18f89378"
+  integrity sha512-2lR3NXVMJ7se0+Uznv3GJLw9w5sCIfQs3Kc0x90EXc6S7MsDCikVkw8wzi0OXawfZ5KziUYemfj+kSwackZrjw==
+  dependencies:
+    "@ungap/create-content" "^0.2.0"
+    uarray "^1.0.0"
+    udomdiff "^1.1.0"
+    uhandlers "^0.3.6"
+    umap "^1.0.2"
+    uparser "^0.2.1"
+    uwire "^1.1.0"
+
+umap@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/umap/-/umap-1.0.2.tgz#2d7d4b145ad8c9f957921460798f3e221347c981"
+  integrity sha512-bW127HgG4H4VAD6qlqO5vCC+7bnlYvZ6A6BdwyGblkWvlEG7VYpj1bcpf3iJpvyKmkPZWDIeZDmoULz67ec7NA==
+
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/unicode-canonical-property-names-ecmascript/-/unicode-canonical-property-names-ecmascript-1.0.4.tgz#2619800c4c825800efdd8343af7dd9933cbe2818"
@@ -6867,6 +6945,11 @@ unset-value@^1.0.0:
   dependencies:
     has-value "^0.3.1"
     isobject "^3.0.0"
+
+uparser@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/uparser/-/uparser-0.2.1.tgz#0251e7bca14ebeb222b79baf806784e40870ad47"
+  integrity sha512-hTwK8e+bAaER8gJBOysoFGjRPsX/xOthSPR/ieI9EgTf1rts9ey25tbDXIU0rDr/cGcLsvkCo1n8J/eccfAvvw==
 
 upath@1.2.0, upath@^1.1.1:
   version "1.2.0"
@@ -6929,6 +7012,13 @@ uuid@^3.0.0, uuid@^3.3.2:
 uuid@^8.3.0:
   version "8.3.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.0.tgz#ab738085ca22dc9a8c92725e459b1d507df5d6ea"
+
+uwire@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/uwire/-/uwire-1.1.0.tgz#ae72a770a140311a0d640aebb21131a7934988ca"
+  integrity sha512-XJPmJnySabt8D0/wnfFFywgUOBnXszDEW32nEVIfOx1n6gLTZSp+X+70+blSnHKNiIUVSFPmmRuxOal0I/aB5g==
+  dependencies:
+    uarray "^1.0.0"
 
 v8-compile-cache@^2.0.3:
   version "2.1.1"

@@ -18,7 +18,7 @@ import {
 
 import { EXTENSION_THEME_SELCTOR } from '@config/general';
 import { EXTENDED_PYWAL_COLORS } from '@config/default-themes';
-import { THEME_TEMPLATE_DATA, PALETTE_TEMPLATE_DATA } from '@config/template-data';
+import { BROWSER_TEMPLATE_DATA, PALETTE_TEMPLATE_DATA } from '@config/template-data';
 
 import { changeLuminance } from '@utils/colors';
 
@@ -91,7 +91,7 @@ export function generatePalette(
 }
 
 export function generateBrowserTheme(palette: IPalette, template: IThemeTemplate) {
-  return createObjectFromTemplateData<IBrowserTheme>(THEME_TEMPLATE_DATA, palette, template);
+  return createObjectFromTemplateData<IBrowserTheme>(BROWSER_TEMPLATE_DATA, palette, template);
 }
 
 export function generateDuckduckgoTheme(palette: IPalette, template: IDuckDuckGoThemeTemplate) {

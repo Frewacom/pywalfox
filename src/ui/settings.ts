@@ -24,7 +24,7 @@ import {
 } from '@config/general';
 
 import {
-  THEME_TEMPLATE_DATA,
+  BROWSER_TEMPLATE_DATA,
   PALETTE_TEMPLATE_DATA,
 } from '@config/template-data';
 
@@ -34,6 +34,8 @@ import Messenger from '@communication/messenger';
 import Dialog from './components/dialog';
 import Colorpicker from './components/colorpicker';
 import Themepicker from './components/themepicker';
+
+import { render, html } from 'uhtml';
 
 const optionButtons = <NodeListOf<HTMLElement>>document.querySelectorAll('button[data-option]');
 const helpToggleButtons = <NodeListOf<HTMLElement>>document.querySelectorAll('button[data-help]');
@@ -51,12 +53,8 @@ const debuggingOutput = <HTMLTextAreaElement>document.getElementById('debugging-
 const debuggingVersion = <HTMLParagraphElement>document.getElementById('debugging-version');
 const debuggingConnected = <HTMLParagraphElement>document.getElementById('debugging-connected');
 
-const paletteContent = <HTMLDivElement>document.getElementById('palette-content');
-const paletteTemplateContent = <HTMLDivElement>document.getElementById('palette-template-content');
 const paletteTemplateResetButton = <HTMLButtonElement>document.getElementById('palette-template-reset');
 const paletteTemplateCurrentButton = <HTMLButtonElement>document.getElementById('palette-template-current');
-
-const themeTemplateContent = <HTMLDivElement>document.getElementById('theme-template-content');
 const themeTemplateResetButton = <HTMLButtonElement>document.getElementById('theme-template-reset');
 
 const notificationContainer = <HTMLDivElement>document.getElementById('notification-container');
@@ -71,7 +69,7 @@ let template: IColorschemeTemplate = null;
 
 const optionButtonsLookup: INodeLookup = {};
 const paletteTemplateInputLookup: INodeLookup = {};
-const themeTemplateInputLookup: INodeLookup = {};
+const browserTemplateInputLookup: INodeLookup = {};
 
 function openDialog(dialog: Dialog, target: HTMLElement) {
   if (!Utils.isOpen(overlay)) {
@@ -169,7 +167,7 @@ function onFontSizeSave() {
     const option = fontSizeSaveInput.getAttribute('data-option');
     Messenger.UI.requestFontSizeSet(option, parseInt(fontSizeSaveInput.value, 10));
   } else {
-    createNotification({
+    renderNotification({
       title: 'Custom font size',
       message: 'Invalid value, should be between 10-20 pixels',
       error: true,
@@ -185,7 +183,7 @@ function validateAutoTimeInterval() {
     return true;
   }
 
-  createNotification({ title: 'Auto mode', message: 'Start time is greater than end time', error: true });
+  renderNotification({ title: 'Auto mode', message: 'Start time is greater than end time', error: true });
   return false;
 }
 
@@ -246,12 +244,13 @@ function onPaletteTemplateInputChanged(e: Event) {
   }
 }
 
-function onThemeTemplateInputChanged(target: HTMLSelectElement) {
+function onBrowserTemplateInputChanged(e: Event) {
+  const target = <HTMLSelectElement>e.target;
   const targetId = target.getAttribute('data-target');
-  const { value } = <HTMLOptionElement>target[target.selectedIndex];
+  const value = target.value;
 
   if (!template.browser.hasOwnProperty(targetId)) {
-    console.error(`Invalid 'data-target' attribute on theme template input: ${targetId}`);
+    console.error(`Invalid 'data-target' attribute on browser template input: ${target}`);
     return;
   }
 
@@ -364,7 +363,7 @@ function updatePaletteTemplateInputs(
 
 function updateThemeTemplateInputs(updatedTemplate: IThemeTemplate) {
   Object.keys(updatedTemplate).forEach((key) => {
-    const element = <HTMLSelectElement>themeTemplateInputLookup[key];
+    const element = <HTMLSelectElement>browserTemplateInputLookup[key];
 
     if (element) {
       const defaultValue = updatedTemplate[key];
@@ -375,128 +374,105 @@ function updateThemeTemplateInputs(updatedTemplate: IThemeTemplate) {
   });
 }
 
-function createNotification(data: INotificationData) {
-  if (notificationContainer.childElementCount >= MAX_SIMULTANEOUS_NOTIFICATIONS) {
-    notificationContainer.removeChild(notificationContainer.firstElementChild);
-  }
-
-  const { title, message, error } = data;
-  const clone = <HTMLElement>notificationTemplate.content.cloneNode(true);
-  const containerElement = <HTMLElement>clone.querySelector('.notification');
-  const titleElement = <HTMLParagraphElement>clone.querySelector('.notification-title');
-  const contentElement = <HTMLParagraphElement>clone.querySelector('.notification-content');
-  const iconElement = <HTMLElement>clone.querySelector('i');
-  const closeElement = <HTMLButtonElement>clone.querySelector('button');
-
-  titleElement.innerText = `${title}:`;
-  contentElement.innerText = message;
-  iconElement.setAttribute('icon', error ? 'error' : 'bell');
-  error && containerElement.classList.add('error');
-
-  closeElement.addEventListener('click', () => notificationContainer.removeChild(containerElement));
-
-  notificationContainer.appendChild(clone);
-
-  containerElement.classList.add('fadeout');
-  setTimeout(() => containerElement.classList.remove('fadeout'), 50);
-  setTimeout(() => {
-    if (notificationContainer.contains(containerElement)) {
-      /**
-       * The notification might already be deleted if the
-       * MAX_SIMULTANEOUS_NOTIFICATIONS treshold is reached
-       */
-      notificationContainer.removeChild(containerElement);
-    }
-  }, NOTIFICATION_TIMEOUT);
+function createNotification({ title, message, error }: INotificationData) {
+  return html`
+    <div class="${['notification', 'box', 'row', 'v-center', error && 'error'].join(' ')}">
+      <i class="icon-sm" icon=${error ? 'error' : 'bell'}></i>
+      <p class="notification-title">${title}</p>
+      <p class="notification-content">${message}</p>
+      <button class="btn notification-close" onclick=${() => console.log('close')}></button>
+    </div>
+  `;
 }
 
-function createThemeTemplateContent() {
-  const themeTemplate = <HTMLTemplateElement>document.getElementById('theme-template');
-  const selectElement = <HTMLSelectElement>document.createElement('select');
+// TODO: Add support for rendering multiple notifications at the same time
+// TODO: Add close button handler
+// TODO: Add deletion of notification after NOTIFICATION_TIMEOUT has passed
+function renderNotification(data: INotificationData) {
+  const notificationElement = createNotification(data);
 
-  selectElement.classList.add('clickable');
+  render(notificationContainer, notificationElement);
 
-  Object.values(PaletteColors).forEach((color) => {
-    const optionElement = <HTMLOptionElement>document.createElement('option');
-    optionElement.innerText = color;
-    selectElement.appendChild(optionElement);
-  });
+  /* if (notificationContainer.childElementCount > 0) { */
+  /*   const notification = notificationContainer.firstElementChild; */
 
-  THEME_TEMPLATE_DATA.forEach((item: ITemplateItem) => {
-    const clone = <HTMLElement>themeTemplate.content.cloneNode(true);
-    const titleElement = <HTMLParagraphElement>clone.querySelector('.setting-title');
-    const contentElement = <HTMLParagraphElement>clone.querySelector('.setting-description');
-    const container = <HTMLElement>clone.querySelector('.setting');
-    const selectElementClone = <HTMLSelectElement>selectElement.cloneNode(true);
+  /*   // Trigger fadeout animation */
+  /*   notification.classList.remove('fadeout'); */
 
-    titleElement.innerText = item.title;
-    contentElement.innerText = item.description;
-    selectElementClone.setAttribute('data-target', item.target);
-
-    selectElementClone.addEventListener('change', () => onThemeTemplateInputChanged(selectElementClone));
-    themeTemplateInputLookup[item.target] = selectElementClone;
-
-    container.appendChild(selectElementClone);
-    themeTemplateContent.appendChild(clone);
-  });
+  /*   // Wait for animation and rerender with the new notification */
+  /*   setTimeout(() => render(notificationContainer, notificationElement), NOTIFICATION_TIMEOUT); */
+  /* } else { */
+  /* } */
 }
 
-// TODO: Create generic function for creating these elements
-function createPaletteItem(
-  parent: HTMLElement,
-  base: HTMLTemplateElement,
-  item: ITemplateItem,
-) {
-  const clone = <HTMLElement>base.content.cloneNode(true);
-  const titleElement = <HTMLParagraphElement>clone.querySelector('.setting-title');
-  const contentElement = <HTMLParagraphElement>clone.querySelector('.setting-description');
-  const buttonElement = <HTMLButtonElement>clone.querySelector('button');
+function createBrowserTemplateItem(item: ITemplateItem) {
+  const { title, description, target } = item;
 
-  titleElement.innerText = item.title;
-  contentElement.innerText = item.description;
-  buttonElement.setAttribute('data-target', item.target);
-  buttonElement.style.backgroundColor = `var(${item.cssVariable})`;
-
-  buttonElement.addEventListener('click', onColorClicked);
-
-  parent.appendChild(clone);
+  return html`
+    <div class="setting row expand space-between v-center">
+      <div class="box column align-left">
+        <p class="setting-title">${title}</p>
+        <p class="setting-description">${description}</p>
+      </div>
+      <select
+        class="clickable"
+        data-target=${target}
+        onchange=${onBrowserTemplateInputChanged}
+        ref=${(ref: HTMLElement) => browserTemplateInputLookup[target] = ref}
+      >
+        ${Object.values(PaletteColors).map((color) => html`<option>${color}</option>`)}
+      </select>
+    </div>
+  `;
 }
 
-function createPaletteTemplateItem(
-  parent: HTMLElement,
-  base: HTMLTemplateElement,
-  item: ITemplateItem,
-) {
-  const clone = <HTMLElement>base.content.cloneNode(true);
-  const titleElement = <HTMLParagraphElement>clone.querySelector('.setting-title');
-  const contentElement = <HTMLParagraphElement>clone.querySelector('.setting-description');
-  const inputElement = <HTMLInputElement>clone.querySelector('input');
-  const maxValue = (PYWAL_PALETTE_LENGTH - 1).toString();
-
-  titleElement.innerText = item.title;
-  contentElement.innerText = item.description;
-  inputElement.setAttribute('data-target', item.target);
-  inputElement.max = maxValue;
-
-  inputElement.addEventListener('change', onPaletteTemplateInputChanged);
-  paletteTemplateInputLookup[item.target] = inputElement;
-
-  parent.appendChild(clone);
+function createPaletteItem({ title, description, target, cssVariable }: ITemplateItem) {
+  return html`
+    <div class="setting row expand space-between v-center">
+      <div class="box column align-left">
+        <p class="setting-title">${title}</p>
+        <p class="setting-description">${description}</p>
+      </div>
+      <button
+        data-target=${target}
+        onclick=${onColorClicked}
+        class="btn btn-color dialog-arrow"
+        style="${`background-color:var(${cssVariable})`}"
+      />
+    </div>
+  `;
 }
 
-function createPaletteContent() {
-  const paletteTemplate = <HTMLTemplateElement>document.getElementById('palette-template');
-  const paletteEditTemplate = <HTMLTemplateElement>document.getElementById('palette-edit-template');
+function createPaletteTemplateItem({ title, description, target }: ITemplateItem) {
+  return html`
+    <div class="setting row expand space-between v-center">
+      <div class="box column align-left">
+        <p class="setting-title">${title}</p>
+        <p class="setting-description">${description}</p>
+      </div>
+      <div class="box row v-center">
+        <div class="btn btn-color color-preview margin-right-sm"></div>
+        <input
+          type="number"
+          data-target=${target}
+          min="0"
+          max=${PYWAL_PALETTE_LENGTH - 1}
+          onchange=${onPaletteTemplateInputChanged}
+          ref=${(ref: HTMLElement) => paletteTemplateInputLookup[target] = ref}
+        />
+      </div>
+    </div>
+  `;
+}
 
-  if (!paletteTemplate || !paletteEditTemplate) {
-    console.error('Missing required template in HTML-file for the palette');
-    return;
-  }
+function renderDynamicContent() {
+  const paletteContent = document.getElementById('palette-content');
+  const paletteTemplateContent = document.getElementById('palette-template-content');
+  const browserTemplateContent = document.getElementById('theme-template-content');
 
-  PALETTE_TEMPLATE_DATA.forEach((item: ITemplateItem) => {
-    createPaletteItem(paletteContent, paletteTemplate, item);
-    createPaletteTemplateItem(paletteTemplateContent, paletteEditTemplate, item);
-  });
+  render(paletteContent, html`${PALETTE_TEMPLATE_DATA.map(createPaletteItem)}`);
+  render(paletteTemplateContent, html`${PALETTE_TEMPLATE_DATA.map(createPaletteTemplateItem)}`);
+  render(browserTemplateContent, html`${BROWSER_TEMPLATE_DATA.map(createBrowserTemplateItem)}`)
 }
 
 function setInitialData(data: IInitialData) {
@@ -564,7 +540,7 @@ function handleExtensionMessage({ action, data }: IExtensionMessage) {
       updateOptionState(data);
       break;
     case EXTENSION_MESSAGES.NOTIFCATION:
-      createNotification(data);
+      renderNotification(data);
       break;
     case EXTENSION_MESSAGES.DEBUGGING_OUTPUT:
       writeOutput(data);
@@ -620,8 +596,7 @@ function setupListeners() {
 }
 
 setupListeners();
-createPaletteContent();
-createThemeTemplateContent();
+renderDynamicContent();
 
 Messenger.UI.requestInitialData();
 Utils.setVersionLabel(versionLabel);

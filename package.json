@@ -26,6 +26,7 @@
     "build:source": "bestzip artifacts/source.zip extension src tsconfig.json package.json yarn.lock rollup.config.js LICENSE README.md"
   },
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^9.0.0",
     "@types/firefox-webext-browser": "^70.0.1",
     "@types/jest": "^26.0.10",
     "@typescript-eslint/eslint-plugin": "^3.9.1",
@@ -49,6 +50,7 @@
     "ts-jest": "^26.2.0",
     "tslib": "^2.0.0",
     "typescript": "^3.9.3",
+    "uhtml": "^2.1.1",
     "web-ext": "^4.1.0"
   },
   "webExt": {
@@ -68,12 +70,24 @@
     "preset": "ts-jest",
     "testEnvironment": "node",
     "moduleNameMapper": {
-      "^@ui/(.*)$": [ "<rootDir>/src/ui/$1" ],
-      "^@pywalfox/(.*)$": [ "<rootDir>/src/$1" ],
-      "^@utils/(.*)$": [ "<rootDir>/src/utils/$1" ],
-      "^@config/(.*)$": [ "<rootDir>/src/config/$1" ],
-      "^@definitions": [ "<rootDir>/src/definitions" ],
-      "^@communication/(.*)$": [ "<rootDir>/src/communication/$1" ]
+      "^@ui/(.*)$": [
+        "<rootDir>/src/ui/$1"
+      ],
+      "^@pywalfox/(.*)$": [
+        "<rootDir>/src/$1"
+      ],
+      "^@utils/(.*)$": [
+        "<rootDir>/src/utils/$1"
+      ],
+      "^@config/(.*)$": [
+        "<rootDir>/src/config/$1"
+      ],
+      "^@definitions": [
+        "<rootDir>/src/definitions"
+      ],
+      "^@communication/(.*)$": [
+        "<rootDir>/src/communication/$1"
+      ]
     }
   },
   "eslintConfig": {

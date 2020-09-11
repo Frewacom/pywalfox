@@ -45,7 +45,7 @@ export const PALETTE_TEMPLATE_DATA: ITemplateItem[] = [
   },
 ];
 
-export const THEME_TEMPLATE_DATA: ITemplateItem[] = [
+export const BROWSER_TEMPLATE_DATA: ITemplateItem[] = [
   {
     title: 'Icons',
     description: 'The color of toolbar icons, excluding those in the find toolbar.',
