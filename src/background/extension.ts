@@ -2,15 +2,18 @@ import {
   IPalette,
   IPywalData,
   IPywalColors,
+  ICustomColors,
   ITheme,
   IBrowserTheme,
   IBrowserThemeTemplate,
   IOptionSetData,
   IExtensionTheme,
+  IUserThemeTemplate,
   IPaletteTemplate,
   IExtensionMessage,
   ThemeModes,
   CSSTargets,
+  PaletteColors,
 } from '@definitions';
 
 import {
@@ -217,18 +220,19 @@ export default class Extension {
   private setThemes(pywalColors: IPywalColors, newCustomColors?: Partial<IPalette>) {
     const mode = this.state.getTemplateThemeMode();
     const globalTemplate = this.state.getGlobalTemplate();
-    const { userTemplate, customColors } = this.state.getUserTheme();
-    let mergedCustomColors = customColors;
+    const { userTemplate } = this.state.getUserTheme();
+    let customColors = newCustomColors;
 
     if (newCustomColors) {
-      mergedCustomColors = Object.assign({}, customColors, newCustomColors);
-      this.state.setCustomColors(mergedCustomColors);
+      this.state.replaceCustomColors(newCustomColors);
+    } else {
+      customColors = this.state.getUserTheme().customColors;
     }
 
     const generatedTheme = Generators.theme(
       mode,
       pywalColors,
-      mergedCustomColors,
+      customColors,
       globalTemplate,
       userTemplate,
     );
@@ -245,10 +249,10 @@ export default class Extension {
       this.darkreaderMessenger.requestThemeSet(darkreader);
     }
 
-    this.state.setGeneratedTheme(generatedTheme);
     this.state.setApplied(true);
+    this.state.setGeneratedTheme(generatedTheme);
 
-    Messenger.UI.sendTheme(pywalColors, mergedCustomColors, template);
+    Messenger.UI.sendTheme(pywalColors, customColors, template);
 
     return generatedTheme;
   }
@@ -418,24 +422,23 @@ export default class Extension {
     Messenger.UI.sendThemeMode(mode, newTemplateMode);
   }
 
-  private async setPaletteTemplate(newTemplate: IPaletteTemplate) {
+  private async setPaletteTemplate(newTemplate: Partial<IPaletteTemplate>) {
     const pywalColors = this.state.getPywalColors();
     const { customColors } = this.state.getUserTheme();
-    let updatedTemplate = newTemplate;
+    const { palette } = this.state.getGlobalTemplate();
+    let updatedTemplate = Object.assign({}, palette, newTemplate);
 
-    if (updatedTemplate === null) {
-      updatedTemplate = this.state.getGlobalTemplate().palette;
-    }
-
-    await this.state.setUserTemplate({ palette: updatedTemplate });
+    await this.state.setUserTemplate({ palette: newTemplate });
 
     if (pywalColors) {
-      // Make sure that a color from the pywal palette is not used as a custom color.
-      let filteredCustomColors = customColors;
+      // If we have a custom color for a certain palette color and updates the template value
+      // for that palette color, we should remove the custom color and use the template only.
+      let filteredCustomColors: ICustomColors = {};
       if (customColors) {
-        filteredCustomColors = <Partial<IPalette>>Object.keys(customColors).filter((key) => {
-          const pywalColor = pywalColors[newTemplate[key]];
-          return pywalColor !== customColors[key];
+        Object.keys(customColors).forEach((key: PaletteColors) => {
+          if (!newTemplate.hasOwnProperty(key)) {
+            filteredCustomColors[key] = customColors[key];
+          }
         });
       }
 
@@ -446,15 +449,12 @@ export default class Extension {
     Messenger.UI.sendPaletteTemplate(updatedTemplate);
   }
 
-  private setBrowserThemeTemplate(newTemplate: IBrowserThemeTemplate) {
+  private setBrowserThemeTemplate(newTemplate: Partial<IBrowserThemeTemplate>) {
     const { palette } = this.state.getGeneratedTheme();
-    let updatedTemplate = newTemplate;
+    const { browser } = this.state.getGlobalTemplate();
+    let updatedTemplate = Object.assign({}, browser, newTemplate);
 
-    if (updatedTemplate === null) {
-      updatedTemplate = this.state.getGlobalTemplate().browser;
-    }
-
-    this.state.setUserTemplate({ browser: updatedTemplate });
+    this.state.setUserTemplate({ browser: newTemplate });
     this.state.setGeneratedTemplate({ browser: updatedTemplate });
 
     if (palette !== null) {
@@ -469,9 +469,15 @@ export default class Extension {
 
   private setPaletteColor(newCustomColors: Partial<IPalette>) {
     const pywalColors = this.state.getPywalColors();
+    const { customColors } = this.state.getUserTheme();
+    let mergedCustomColors = customColors;
+
+    if (newCustomColors) {
+      mergedCustomColors = Object.assign({}, customColors, newCustomColors);
+    }
 
     if (pywalColors !== null) {
-      this.setThemes(pywalColors, newCustomColors);
+      this.setThemes(pywalColors, mergedCustomColors);
     }
   }
 
@@ -612,7 +618,11 @@ export default class Extension {
         this.startAutoThemeMode();
       }
 
-      this.setSavedTheme(savedTheme);
+      if (!savedTheme) {
+        console.error('Failed to set saved theme, generated theme is null');
+      } else {
+        this.setSavedTheme(savedTheme);
+      }
     }
 
     this.nativeMessenger.connect();

@@ -127,15 +127,15 @@ export function requestOptionSet(option: string, enabled: boolean, value?: any) 
   sendMessage({ action: EXTENSION_MESSAGES.OPTION_SET, data: optionData });
 }
 
-export function requestThemeTemplateSet(template: IBrowserThemeTemplate) {
+export function requestBrowserThemeTemplateSet(template: Partial<IBrowserThemeTemplate>) {
   sendMessage({ action: EXTENSION_MESSAGES.BROWSER_THEME_TEMPLATE_SET, data: template });
 }
 
-export function requestThemeTemplateReset() {
+export function requestBrowserThemeTemplateReset() {
   sendMessage({ action: EXTENSION_MESSAGES.BROWSER_THEME_TEMPLATE_SET, data: null });
 }
 
-export function requestPaletteTemplateSet(template: IPaletteTemplate) {
+export function requestPaletteTemplateSet(template: Partial<IPaletteTemplate>) {
   sendMessage({ action: EXTENSION_MESSAGES.PALETTE_TEMPLATE_SET, data: template });
 }
 

@@ -230,7 +230,7 @@ function onHelpToggle(target: HTMLElement) {
 
 function onPaletteTemplateInputChanged(e: Event) {
   const target = <HTMLInputElement>e.target;
-  const targetId = target.getAttribute('data-target');
+  const targetId = <PaletteColors>target.getAttribute('data-target');
   const { value } = target;
 
   if (!template.palette.hasOwnProperty(targetId)) {
@@ -242,11 +242,11 @@ function onPaletteTemplateInputChanged(e: Event) {
     const index = parseInt(value, 10);
     template.palette[targetId] = index;
     updatePaletteTemplateColorPreview(target, pywalColors, index);
-    savePaletteTemplate();
+    Messenger.UI.requestPaletteTemplateSet({ [targetId]: index });
   }
 }
 
-function onThemeTemplateInputChanged(target: HTMLSelectElement) {
+function onBrowserThemeTemplateInputChanged(target: HTMLSelectElement) {
   const targetId = target.getAttribute('data-target');
   const { value } = <HTMLOptionElement>target[target.selectedIndex];
 
@@ -260,21 +260,12 @@ function onThemeTemplateInputChanged(target: HTMLSelectElement) {
     return;
   }
 
-  template.browser[targetId] = <PaletteColors>value;
-
-  saveThemeTemplate();
-}
-
-function savePaletteTemplate() {
-  if (template === null || !template.hasOwnProperty('palette')) {
-    console.error(`Template is null or the palette template is not set: ${template}`);
-    return;
-  }
-
-  Messenger.UI.requestPaletteTemplateSet(template.palette);
+  Messenger.UI.requestBrowserThemeTemplateSet({ [targetId]: value });
 }
 
 function onPaletteTemplateUseCurrent() {
+  const newTemplate: Partial<IPaletteTemplate> = {};
+
   Object.values(PaletteColors).forEach((targetId) => {
     const { index } = colorpicker.getSelectedData(targetId);
     const inputElement = <HTMLInputElement>paletteTemplateInputLookup[targetId];
@@ -291,19 +282,10 @@ function onPaletteTemplateUseCurrent() {
 
     updatePaletteTemplateColorPreview(inputElement, pywalColors, index);
     inputElement.value = index.toString();
-    template.palette[targetId] = index;
+    newTemplate[targetId] = index;
   });
 
-  savePaletteTemplate();
-}
-
-function saveThemeTemplate() {
-  if (template === null || !template.hasOwnProperty('browser')) {
-    console.error(`Template is null or the browser template is not set: ${template}`);
-    return;
-  }
-
-  Messenger.UI.requestThemeTemplateSet(template.browser);
+  Messenger.UI.requestPaletteTemplateSet(newTemplate);
 }
 
 function updateOptionState({ option, enabled, value }: IOptionSetData) {
@@ -433,7 +415,7 @@ function createThemeTemplateContent() {
     contentElement.innerText = item.description;
     selectElementClone.setAttribute('data-target', item.target);
 
-    selectElementClone.addEventListener('change', () => onThemeTemplateInputChanged(selectElementClone));
+    selectElementClone.addEventListener('change', () => onBrowserThemeTemplateInputChanged(selectElementClone));
     themeTemplateInputLookup[item.target] = selectElementClone;
 
     container.appendChild(selectElementClone);
@@ -585,7 +567,7 @@ function setupListeners() {
     onTimeIntervalSave(autoTimeEndInput, EXTENSION_OPTIONS.AUTO_TIME_END);
   }, 500));
 
-  themeTemplateResetButton.addEventListener('click', Messenger.UI.requestThemeTemplateReset);
+  themeTemplateResetButton.addEventListener('click', Messenger.UI.requestBrowserThemeTemplateReset);
 
   paletteTemplateCurrentButton.addEventListener('click', onPaletteTemplateUseCurrent);
   paletteTemplateResetButton.addEventListener('click', Messenger.UI.requestPaletteTemplateReset);

@@ -73,11 +73,17 @@ export interface IThemeTemplate {
   duckduckgo: IDuckDuckGoThemeTemplate;
 }
 
+export interface IUserThemeTemplate {
+  palette: Partial<IPaletteTemplate>;
+  browser: Partial<IBrowserThemeTemplate>;
+  duckduckgo: Partial<IDuckDuckGoThemeTemplate>;
+};
+
 export type IGlobalTemplates = Record<ITemplateThemeMode, NonNullable<IThemeTemplate>>;
 
 export interface IUserTheme {
-  customColors?: NonNullable<ICustomColors>;
-  userTemplate?: NonNullable<Partial<IThemeTemplate>>;
+  customColors?: ICustomColors;
+  userTemplate?: Partial<IUserThemeTemplate>;
 }
 
 export type IUserThemes = Partial<Record<IPywalHash, Record<ITemplateThemeMode, IUserTheme>>>;

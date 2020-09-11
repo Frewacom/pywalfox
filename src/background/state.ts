@@ -4,6 +4,7 @@ import {
   ICustomColors,
   ITheme,
   IUserTheme,
+  IUserThemeTemplate,
   IBrowserTheme,
   IThemeTemplate,
   ITimeIntervalEndpoint,
@@ -18,7 +19,7 @@ import {
 import { STATE_VERSION, DEFAULT_CSS_FONT_SIZE } from '@config/general';
 import { DEFAULT_THEME_DARK, DEFAULT_THEME_LIGHT } from '@config/default-themes';
 
-import merge from 'just-merge';
+import merge from 'deepmerge';
 
 export default class State {
   private initialState: IExtensionState;
@@ -68,7 +69,7 @@ export default class State {
   private updateGlobalTemplate(data: Partial<IThemeTemplate>) {
     const currentThemeMode = this.getTemplateThemeMode();
     const globalTemplate = this.currentState.globalTemplates[currentThemeMode] || {};
-    const updatedTemplate = merge({}, globalTemplate, data);
+    const updatedTemplate = merge(globalTemplate, data);
 
     return this.set({
       globalTemplates: {
@@ -79,7 +80,7 @@ export default class State {
 
   private updateGeneratedTheme(data: Partial<ITheme>) {
     const generatedTheme = this.currentState.generatedTheme || {};
-    const updatedTheme = merge({}, generatedTheme, data);
+    const updatedTheme = merge(generatedTheme, data);
 
     return this.set({
       generatedTheme: updatedTheme,
@@ -93,11 +94,11 @@ export default class State {
       return;
     }
 
-    const updatedTemplate = merge({}, generatedTheme.template, data);
+    const updatedTemplate = merge(generatedTheme.template, data);
     return this.updateGeneratedTheme({ template: updatedTemplate });
   }
 
-  private updateCurrentTheme(data: Partial<IUserTheme>) {
+  private updateCurrentTheme(data: Partial<IUserTheme>, shouldMerge = true) {
     const pywalHash = this.getPywalHash();
     const currentThemeMode = this.getTemplateThemeMode();
 
@@ -105,11 +106,16 @@ export default class State {
       return;
     }
 
-    // TODO: This merge is broken
     const currentTheme = this.currentState.userThemes[pywalHash] || {};
-    const updatedTheme = merge({}, currentTheme, {
-      [currentThemeMode]: data
-    });
+    let updatedTheme: IUserTheme = {};
+
+    if (shouldMerge) {
+      updatedTheme = merge(currentTheme, {
+        [currentThemeMode]: data
+      });
+    } else {
+      updatedTheme[currentThemeMode] = Object.assign({}, currentTheme[currentThemeMode], data);
+    }
 
     return this.set({
       userThemes: {
@@ -120,7 +126,7 @@ export default class State {
   }
 
   private updateOptions(option: Partial<IExtensionOptions>) {
-    const updatedOptions = merge({}, this.currentState.options, option);
+    const updatedOptions = merge(this.currentState.options, option);
 
     return this.set({
       options: updatedOptions,
@@ -282,12 +288,17 @@ export default class State {
     return this.updateGeneratedTheme({ browser });
   }
 
-  public setUserTemplate(userTemplate: Partial<IThemeTemplate>) {
+  public setUserTemplate(userTemplate: Partial<IUserThemeTemplate>) {
     return this.updateCurrentTheme({ userTemplate });
   }
 
   public setCustomColors(customColors: ICustomColors) {
     return this.updateCurrentTheme({ customColors });
+  }
+
+  // Replaces the current custom colors with 'customColors'
+  public replaceCustomColors(customColors: ICustomColors) {
+    return this.updateCurrentTheme({ customColors }, false);
   }
 
   public setVersion(version: number) {
