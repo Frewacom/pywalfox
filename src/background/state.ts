@@ -88,7 +88,7 @@ export default class State {
   }
 
   private updateGeneratedTemplate(data: Partial<IThemeTemplate>) {
-    const generatedTheme = this.currentState.generatedTheme;
+    const { generatedTheme } = this.currentState;
 
     if (!generatedTheme) {
       return;
@@ -111,7 +111,7 @@ export default class State {
 
     if (shouldMerge) {
       updatedTheme = merge(currentTheme, {
-        [currentThemeMode]: data
+        [currentThemeMode]: data,
       });
     } else {
       updatedTheme[currentThemeMode] = Object.assign({}, currentTheme[currentThemeMode], data);
@@ -376,52 +376,73 @@ export default class State {
   public async load() {
     const { stateVersion } = await browser.storage.local.get('stateVersion');
 
+    // TODO: Move migrations to separate function/file
     if (!stateVersion) {
       // Migrating from <= 2.0.4
       const previousState = await browser.storage.local.get();
-      const migratedState: unknown = {};
 
-      if (previousState.hasOwnProperty('options')) {
-        const {
-          userChrome,
-          userContent,
-          fontSize,
-          duckduckgo,
-          autoTimeStart,
-          autoTimeEnd,
-        } = previousState.options;
+      // No need to migrate if there is no previous state
+      if (Object.keys(previousState).length != 0) {
+        const migratedState: unknown = {};
 
-        migratedState['options'] = {
-          userChrome: userChrome || this.initialState.options.userChrome,
-          userContent: userContent || this.initialState.options.userContent,
-          fontSize: fontSize || this.initialState.options.fontSize,
-          duckduckgo: duckduckgo || this.initialState.options.duckduckgo,
-          intervalStart: autoTimeStart || this.initialState.options.intervalStart,
-          intervalEnd: autoTimeEnd || this.initialState.options.intervalEnd,
-        };
-      }
+        console.info(`[state] State is outdated, starting migration to state version: ${STATE_VERSION}`);
 
-      if (previousState.hasOwnProperty('theme')) {
-        const { isApplied, mode } = previousState.theme;
+        if (previousState.hasOwnProperty('options')) {
+          const {
+            userChrome,
+            userContent,
+            fontSize,
+            duckduckgo,
+            autoTimeStart,
+            autoTimeEnd,
+          } = previousState.options;
 
-        migratedState['isApplied'] = isApplied || this.initialState.isApplied;
-        migratedState['mode'] = mode || this.initialState.mode;
-
-        if (previousState.theme.hasOwnProperty('templates')) {
-          const { dark, light } = previousState.theme.templates;
-
-          migratedState['globalTemplates'] = {
-            [ThemeModes.Dark]: dark || this.initialState.globalTemplates.dark,
-            [ThemeModes.Light]: light || this.initialState.globalTemplates.light,
+          migratedState['options'] = {
+            userChrome: userChrome || this.initialState.options.userChrome,
+            userContent: userContent || this.initialState.options.userContent,
+            fontSize: fontSize || this.initialState.options.fontSize,
+            duckduckgo: duckduckgo || this.initialState.options.duckduckgo,
+            intervalStart: autoTimeStart || this.initialState.options.intervalStart,
+            intervalEnd: autoTimeEnd || this.initialState.options.intervalEnd,
           };
         }
-      }
 
-      await browser.storage.local.clear();
-      // Can't use 'this.set(..)' here, since 'this.currentState' is not defined
-      await browser.storage.local.set(migratedState);
+        if (previousState.hasOwnProperty('theme')) {
+          const { isApplied, mode } = previousState.theme;
+
+          migratedState['isApplied'] = isApplied || this.initialState.isApplied;
+          migratedState['mode'] = mode || this.initialState.mode;
+
+          if (previousState.theme.hasOwnProperty('templates')) {
+            const { dark, light } = previousState.theme.templates;
+
+            migratedState['globalTemplates'] = {
+              [ThemeModes.Dark]: dark || this.initialState.globalTemplates.dark,
+              [ThemeModes.Light]: light || this.initialState.globalTemplates.light,
+            };
+
+            // The duckduckgo template structure has been changed in version >= 2.0.5
+            // It might already have the correct template type if 'dark' or 'light' is
+            // undefined, but it is easier to it like this.
+            migratedState['globalTemplates'][ThemeModes.Dark].duckduckgo =
+              this.initialState.globalTemplates.dark.duckduckgo;
+
+            migratedState['globalTemplates'][ThemeModes.Light].duckduckgo =
+              this.initialState.globalTemplates.light.duckduckgo;
+          }
+        }
+
+        console.info('[state] Applying migrated state', migratedState);
+
+        // Can't use 'this.set(..)' here, since 'this.currentState' is not defined
+        await browser.storage.local.clear();
+        await browser.storage.local.set(migratedState);
+      } else {
+        // Save the initial state if no state is present
+        await browser.storage.local.set(this.initialState);
+      }
     } else if (stateVersion !== STATE_VERSION) {
-      console.warn('Invalid state version detected, but no migration exists');
+      console.info('[state] Invalid state version detected, but no migration exists');
     }
 
     this.currentState = await browser.storage.local.get(this.initialState) as IExtensionState;
@@ -430,6 +451,6 @@ export default class State {
   }
 
   public dump() {
-    console.debug(this.currentState);
+    console.debug('[state]', this.currentState);
   }
 }
