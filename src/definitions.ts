@@ -292,13 +292,13 @@ export interface IExtensionOptions {
   duckduckgo: boolean;
   darkreader: boolean;
   fetchOnStartup: boolean;
+  syncSettings: boolean;
   intervalStart: ITimeIntervalEndpoint;
   intervalEnd: ITimeIntervalEndpoint;
 }
 
-export interface IExtensionState {
+export interface ILocalExtensionState {
   version: number,
-  stateVersion: number;
   connected: boolean;
   updateMuted: boolean;
   mode: ThemeModes;
@@ -307,10 +307,16 @@ export interface IExtensionState {
   pywalColors: IPywalColors;
   pywalHash: IPywalHash;
   generatedTheme: ITheme;
+}
+
+export interface ISyncExtensionState {
+  stateVersion: number;
   globalTemplates: IGlobalTemplates;
   userThemes: IUserThemes;
   options: IExtensionOptions;
 }
+
+export type IExtensionState = ILocalExtensionState & ISyncExtensionState;
 
 /**
  * Expose 'wrappedJSObject' from the 'window' namespace.

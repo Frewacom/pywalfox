@@ -9,6 +9,8 @@ import {
   IThemeTemplate,
   ITimeIntervalEndpoint,
   IExtensionState,
+  ISyncExtensionState,
+  ILocalExtensionState,
   IExtensionOptions,
   IOptionSetData,
   ITemplateThemeMode,
@@ -19,18 +21,20 @@ import {
 import { STATE_VERSION, DEFAULT_CSS_FONT_SIZE } from '@config/general';
 import { DEFAULT_THEME_DARK, DEFAULT_THEME_LIGHT } from '@config/default-themes';
 
-import { applyMigration } from './migrations';
+import Migrations from './migrations';
 
 import merge from 'deepmerge';
 
 export default class State {
-  private initialState: IExtensionState;
-  public currentState: IExtensionState;
+  private initialLocalState: ILocalExtensionState;
+  private currentLocalState: ILocalExtensionState;
+  private initialSyncState: ISyncExtensionState;
+  private currentSyncState: ISyncExtensionState;
+  private shouldSync: boolean;
 
   constructor() {
-    this.initialState = {
+    this.initialLocalState = {
       version: 0.0,
-      stateVersion: 0.0,
       connected: false,
       updateMuted: false,
       mode: ThemeModes.Dark,
@@ -39,6 +43,10 @@ export default class State {
       pywalColors: null,
       pywalHash: null,
       generatedTheme: null,
+    };
+
+    this.initialSyncState = {
+      stateVersion: 0.0,
       globalTemplates: {
         [ThemeModes.Light]: DEFAULT_THEME_LIGHT,
         [ThemeModes.Dark]: DEFAULT_THEME_DARK,
@@ -51,10 +59,13 @@ export default class State {
         duckduckgo: false,
         darkreader: false,
         fetchOnStartup: true,
+        syncSettings: true,
         intervalStart: { hour: 10, minute: 0, stringFormat: '10:00' },
         intervalEnd: { hour: 19, minute: 0, stringFormat: '19:00' },
       },
     };
+
+    this.shouldSync = false;
 
     browser.storage.onChanged.addListener(this.onStateChanged.bind(this));
   }
@@ -63,27 +74,26 @@ export default class State {
     console.debug(`[${areaName}] State change:`, changes);
   }
 
-  private async set(newState: {}, sync = false) {
-    const store = sync ? browser.storage.sync : browser.storage.local;
+  private getSyncStore() {
+    if (this.shouldSync) {
+      return browser.storage.sync;
+    }
 
-    Object.assign(this.currentState, newState);
-    await store.set(newState);
+    return browser.storage.local;
   }
 
-  private updateGlobalTemplate(data: Partial<IThemeTemplate>) {
-    const currentThemeMode = this.getTemplateThemeMode();
-    const globalTemplate = this.currentState.globalTemplates[currentThemeMode] || {};
-    const updatedTemplate = merge(globalTemplate, data);
+  private async set(newState: {}) {
+    Object.assign(this.currentLocalState, newState);
+    await browser.storage.local.set(newState);
+  }
 
-    return this.set({
-      globalTemplates: {
-        [currentThemeMode]: updatedTemplate,
-      },
-    });
+  private async setSync(newState: {}) {
+    Object.assign(this.currentSyncState, newState);
+    await this.getSyncStore().set(newState);
   }
 
   private updateGeneratedTheme(data: Partial<ITheme>) {
-    const generatedTheme = this.currentState.generatedTheme || {};
+    const generatedTheme = this.currentLocalState.generatedTheme || {};
     const updatedTheme = merge(generatedTheme, data);
 
     return this.set({
@@ -92,7 +102,7 @@ export default class State {
   }
 
   private updateGeneratedTemplate(data: Partial<IThemeTemplate>) {
-    const { generatedTheme } = this.currentState;
+    const { generatedTheme } = this.currentLocalState;
 
     if (!generatedTheme) {
       return;
@@ -100,6 +110,18 @@ export default class State {
 
     const updatedTemplate = merge(generatedTheme.template, data);
     return this.updateGeneratedTheme({ template: updatedTemplate });
+  }
+
+  private updateGlobalTemplate(data: Partial<IThemeTemplate>) {
+    const currentThemeMode = this.getTemplateThemeMode();
+    const globalTemplate = this.currentSyncState.globalTemplates[currentThemeMode] || {};
+    const updatedTemplate = merge(globalTemplate, data);
+
+    return this.setSync({
+      globalTemplates: {
+        [currentThemeMode]: updatedTemplate,
+      },
+    });
   }
 
   private updateCurrentTheme(data: Partial<IUserTheme>, shouldMerge = true) {
@@ -110,7 +132,7 @@ export default class State {
       return;
     }
 
-    const currentTheme = this.currentState.userThemes[pywalHash] || {};
+    const currentTheme = this.currentSyncState.userThemes[pywalHash] || {};
     let updatedTheme: IUserTheme = {};
 
     if (shouldMerge) {
@@ -121,18 +143,18 @@ export default class State {
       updatedTheme[currentThemeMode] = Object.assign({}, currentTheme[currentThemeMode], data);
     }
 
-    return this.set({
+    return this.setSync({
       userThemes: {
-        ...this.currentState.userThemes,
+        ...this.currentSyncState.userThemes,
         [pywalHash]: updatedTheme,
       },
     });
   }
 
   private updateOptions(option: Partial<IExtensionOptions>) {
-    const updatedOptions = merge(this.currentState.options, option);
+    const updatedOptions = merge(this.currentSyncState.options, option);
 
-    return this.set({
+    return this.setSync({
       options: updatedOptions,
     });
   }
@@ -158,37 +180,37 @@ export default class State {
   }
 
   public getApplied() {
-    return this.currentState.isApplied;
+    return this.currentLocalState.isApplied;
   }
 
   public getVersion() {
-    return this.currentState.version;
+    return this.currentLocalState.version;
   }
 
   public getConnected() {
-    return this.currentState.connected;
+    return this.currentLocalState.connected;
   }
 
   public getUpdateMuted() {
-    return this.currentState.updateMuted;
+    return this.currentLocalState.updateMuted;
   }
 
   public getGeneratedTemplate() {
-    const { generatedTheme } = this.currentState;
+    const { generatedTheme } = this.currentLocalState;
 
     if (!generatedTheme) {
-      return this.currentState.globalTemplates[this.getTemplateThemeMode()];
+      return this.currentSyncState.globalTemplates[this.getTemplateThemeMode()];
     }
 
     return generatedTheme.template;
   }
 
   public getIsDay() {
-    return this.currentState.isDay;
+    return this.currentLocalState.isDay;
   }
 
   public getThemeMode() {
-    return this.currentState.mode;
+    return this.currentLocalState.mode;
   }
 
   public getTemplateThemeMode() {
@@ -202,16 +224,16 @@ export default class State {
   }
 
   public getPywalColors() {
-    return this.currentState.pywalColors;
+    return this.currentLocalState.pywalColors;
   }
 
   public getPywalHash() {
-    return this.currentState.pywalHash;
+    return this.currentLocalState.pywalHash;
   }
 
   public getGlobalTemplate() {
     const currentThemeMode = this.getTemplateThemeMode();
-    const { globalTemplates } = this.currentState;
+    const { globalTemplates } = this.currentSyncState;
 
     if (!globalTemplates) {
       return currentThemeMode === ThemeModes.Dark ? DEFAULT_THEME_DARK : DEFAULT_THEME_LIGHT;
@@ -221,31 +243,31 @@ export default class State {
   }
 
   public getGeneratedTheme() {
-    return this.currentState.generatedTheme;
+    return this.currentLocalState.generatedTheme;
   }
 
   public getDuckduckgoEnabled() {
-    return this.currentState.options.duckduckgo;
+    return this.currentSyncState.options.duckduckgo;
   }
 
   public getDarkreaderEnabled() {
-    return this.currentState.options.darkreader;
+    return this.currentSyncState.options.darkreader;
   }
 
   public getFetchOnStartupEnabled() {
-    return this.currentState.options.fetchOnStartup;
+    return this.currentSyncState.options.fetchOnStartup;
   }
 
   public getCssFontSize() {
-    return this.currentState.options.fontSize;
+    return this.currentSyncState.options.fontSize;
   }
 
   public getCssEnabled(target: CSSTargets) {
-    return this.currentState.options[target];
+    return this.currentSyncState.options[target];
   }
 
   public getInterval() {
-    const { intervalStart, intervalEnd } = this.currentState.options;
+    const { intervalStart, intervalEnd } = this.currentSyncState.options;
     return {
       intervalStart,
       intervalEnd,
@@ -255,8 +277,8 @@ export default class State {
   public getOptionsData() {
     const data: IOptionSetData[] = [];
 
-    Object.keys(this.currentState.options).forEach((key) => {
-      const value = this.currentState.options[key];
+    Object.keys(this.currentSyncState.options).forEach((key) => {
+      const value = this.currentSyncState.options[key];
 
       if (typeof value === 'boolean') {
         data.push({ option: key, enabled: value });
@@ -270,7 +292,7 @@ export default class State {
 
   public getUserTheme() {
     const pywalHash = this.getPywalHash();
-    const savedTheme = this.currentState.userThemes[pywalHash];
+    const savedTheme = this.currentSyncState.userThemes[pywalHash];
     const currentThemeMode = this.getTemplateThemeMode();
 
     if (!pywalHash || !savedTheme || !savedTheme[currentThemeMode]) {
@@ -369,6 +391,17 @@ export default class State {
     return this.updateOptions({ fontSize });
   }
 
+  public setSyncSettingsEnabled(syncSettings: boolean) {
+    const previousSyncStore = this.getSyncStore();
+    this.shouldSync = syncSettings;
+
+    // Transfer the synchronized state between local- and sync storage areas
+    // based on the value of 'syncSettings'
+    Migrations.transferSyncState(previousSyncStore, this.getSyncStore(), this.currentSyncState);
+
+    return this.updateOptions({ syncSettings });
+  }
+
   public resetCustomColors() {
     return this.setCustomColors(null);
   }
@@ -378,16 +411,33 @@ export default class State {
   }
 
   public async load() {
-    const { stateVersion } = await browser.storage.local.get('stateVersion');
+    const { stateVersion: syncStateVersion } = await browser.storage.sync.get('stateVersion');
+    const { stateVersion: localStateVersion } = await browser.storage.local.get('stateVersion');
+    let stateVersion: number = syncStateVersion;
 
-    await applyMigration(stateVersion, this.initialState);
+    if (syncStateVersion === undefined || syncStateVersion === null) {
+      // If 'stateVersion' is not present in sync storage, we assume that
+      // syncing is disabled and load all state from local
+      this.shouldSync = false;
+      stateVersion = localStateVersion;
+      console.log('[state] Loaded sync state from browser.storage.local');
+    } else {
+      this.shouldSync = true;
+      console.log('[state] Loaded sync state from browser.storage.sync');
+    }
 
-    this.currentState = await browser.storage.local.get(this.initialState) as IExtensionState;
+    const syncStore = this.getSyncStore();
 
-    return this.set({ stateVersion: STATE_VERSION });
-  }
+    await Migrations.applyMigration(stateVersion, this.initialSyncState, syncStore);
 
-  public dump() {
-    console.debug('[state]', this.currentState);
+    this.currentLocalState = <ILocalExtensionState>await browser.storage.local.get(
+      this.initialLocalState
+    );
+
+    this.currentSyncState = <ISyncExtensionState>await syncStore.get(
+      this.initialSyncState
+    );
+
+    await this.setSync({ stateVersion: STATE_VERSION });
   }
 }

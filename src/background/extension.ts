@@ -78,12 +78,13 @@ export default class Extension {
       return;
     }
 
+    // TODO: Handle options that only update the state in default case
     switch (optionData.option) {
       case EXTENSION_OPTIONS.FONT_SIZE:
         this.setCssFontSize(optionData.value);
         break;
       case EXTENSION_OPTIONS.DUCKDUCKGO:
-        this.setDDGEnabled(optionData);
+        this.setDuckduckgoEnabled(optionData);
         break;
       case EXTENSION_OPTIONS.USER_CHROME: /* Fallthrough */
       case EXTENSION_OPTIONS.USER_CONTENT:
@@ -98,6 +99,9 @@ export default class Extension {
         break;
       case EXTENSION_OPTIONS.FETCH_ON_STARTUP:
         this.setFetchOnStartupEnabled(optionData);
+        break;
+      case EXTENSION_OPTIONS.SYNC_SETTINGS:
+        this.setSyncSettingsEnabled(optionData);
         break;
       default:
         Messenger.UI.sendDebuggingOutput(`Received unhandled option: ${optionData.option}`, true);
@@ -134,7 +138,7 @@ export default class Extension {
         this.sendInitialData();
         break;
       case EXTENSION_MESSAGES.DDG_THEME_GET:
-        this.setDuckduckgoEnabled();
+        this.sendDuckduckgoTheme();
         break;
       case EXTENSION_MESSAGES.PALETTE_TEMPLATE_SET:
         this.setPaletteTemplate(data);
@@ -269,12 +273,12 @@ export default class Extension {
     browser.theme.update({ colors: browserTheme });
   }
 
-  private setDDGEnabled({ option, enabled }: IOptionSetData) {
-    const isDDGEnabled = this.state.getDuckduckgoEnabled();
+  private setDuckduckgoEnabled({ option, enabled }: IOptionSetData) {
+    const duckduckgoEnabled = this.state.getDuckduckgoEnabled();
 
-    if (enabled && !isDDGEnabled) {
+    if (enabled && !duckduckgoEnabled) {
       this.applyDuckDuckGoTheme();
-    } else if (!enabled && isDDGEnabled) {
+    } else if (!enabled && duckduckgoEnabled) {
       Messenger.DDG.resetTheme();
     }
 
@@ -319,7 +323,12 @@ export default class Extension {
     Messenger.UI.sendOption(option, enabled);
   }
 
-  private setDuckduckgoEnabled() {
+  private setSyncSettingsEnabled({ option, enabled }) {
+    this.state.setSyncSettingsEnabled(enabled);
+    Messenger.UI.sendOption(option, enabled);
+  }
+
+  private sendDuckduckgoTheme() {
     const enabled = this.state.getDuckduckgoEnabled();
 
     if (enabled) {

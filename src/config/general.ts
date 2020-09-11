@@ -74,6 +74,7 @@ export const EXTENSION_OPTIONS = {
   DUCKDUCKGO: 'duckduckgo',
   DARKREADER: 'darkreader',
   FETCH_ON_STARTUP: 'fetchOnStartup',
+  SYNC_SETTINGS: 'syncSettings',
 };
 
 export const NATIVE_MESSAGES = {
