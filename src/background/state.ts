@@ -374,24 +374,59 @@ export default class State {
   }
 
   public async load() {
-    this.currentState = await browser.storage.local.get(this.initialState) as IExtensionState;
+    const { stateVersion } = await browser.storage.local.get('stateVersion');
 
-    const currentStateVersion = this.currentState.stateVersion;
+    if (!stateVersion) {
+      // Migrating from <= 2.0.4
+      const previousState = await browser.storage.local.get();
+      const migratedState: unknown = {};
 
-    if (currentStateVersion !== STATE_VERSION) {
-      if (currentStateVersion === 0.0) {
-        // Migrating from <= 2.0.4
-        await browser.storage.local.clear();
-        const migratedState = { ...this.initialState };
+      if (previousState.hasOwnProperty('options')) {
+        const {
+          userChrome,
+          userContent,
+          fontSize,
+          duckduckgo,
+          autoTimeStart,
+          autoTimeEnd,
+        } = previousState.options;
 
-        // TODO: Add migration
-
-        await browser.storage.local.set(migratedState);
+        migratedState['options'] = {
+          userChrome: userChrome || this.initialState.options.userChrome,
+          userContent: userContent || this.initialState.options.userContent,
+          fontSize: fontSize || this.initialState.options.fontSize,
+          duckduckgo: duckduckgo || this.initialState.options.duckduckgo,
+          intervalStart: autoTimeStart || this.initialState.options.intervalStart,
+          intervalEnd: autoTimeEnd || this.initialState.options.intervalEnd,
+        };
       }
+
+      if (previousState.hasOwnProperty('theme')) {
+        const { isApplied, mode } = previousState.theme;
+
+        migratedState['isApplied'] = isApplied || this.initialState.isApplied;
+        migratedState['mode'] = mode || this.initialState.mode;
+
+        if (previousState.theme.hasOwnProperty('templates')) {
+          const { dark, light } = previousState.theme.templates;
+
+          migratedState['globalTemplates'] = {
+            [ThemeModes.Dark]: dark || this.initialState.globalTemplates.dark,
+            [ThemeModes.Light]: light || this.initialState.globalTemplates.light,
+          };
+        }
+      }
+
+      await browser.storage.local.clear();
+      // Can't use 'this.set(..)' here, since 'this.currentState' is not defined
+      await browser.storage.local.set(migratedState);
+    } else if (stateVersion !== STATE_VERSION) {
+      console.warn('Invalid state version detected, but no migration exists');
     }
 
-    // TODO: Should we do this? If we have large amounts of stored data this would be expensive
-    //await browser.storage.local.set(this.currentState);
+    this.currentState = await browser.storage.local.get(this.initialState) as IExtensionState;
+
+    return this.set({ stateVersion: STATE_VERSION });
   }
 
   public dump() {
