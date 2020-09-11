@@ -19,6 +19,8 @@ import {
 import { STATE_VERSION, DEFAULT_CSS_FONT_SIZE } from '@config/general';
 import { DEFAULT_THEME_DARK, DEFAULT_THEME_LIGHT } from '@config/default-themes';
 
+import { applyMigration } from './migrations';
+
 import merge from 'deepmerge';
 
 export default class State {
@@ -48,7 +50,7 @@ export default class State {
         fontSize: DEFAULT_CSS_FONT_SIZE,
         duckduckgo: false,
         darkreader: false,
-        fetchOnStartup: false,
+        fetchOnStartup: true,
         intervalStart: { hour: 10, minute: 0, stringFormat: '10:00' },
         intervalEnd: { hour: 19, minute: 0, stringFormat: '19:00' },
       },
@@ -61,9 +63,11 @@ export default class State {
     console.debug(`[${areaName}] State change:`, changes);
   }
 
-  private async set(newState: {}) {
+  private async set(newState: {}, sync = false) {
+    const store = sync ? browser.storage.sync : browser.storage.local;
+
     Object.assign(this.currentState, newState);
-    await browser.storage.local.set(newState);
+    await store.set(newState);
   }
 
   private updateGlobalTemplate(data: Partial<IThemeTemplate>) {
@@ -376,74 +380,7 @@ export default class State {
   public async load() {
     const { stateVersion } = await browser.storage.local.get('stateVersion');
 
-    // TODO: Move migrations to separate function/file
-    if (!stateVersion) {
-      // Migrating from <= 2.0.4
-      const previousState = await browser.storage.local.get();
-
-      // No need to migrate if there is no previous state
-      if (Object.keys(previousState).length != 0) {
-        const migratedState: unknown = {};
-
-        console.info(`[state] State is outdated, starting migration to state version: ${STATE_VERSION}`);
-
-        if (previousState.hasOwnProperty('options')) {
-          const {
-            userChrome,
-            userContent,
-            fontSize,
-            duckduckgo,
-            autoTimeStart,
-            autoTimeEnd,
-          } = previousState.options;
-
-          migratedState['options'] = {
-            userChrome: userChrome || this.initialState.options.userChrome,
-            userContent: userContent || this.initialState.options.userContent,
-            fontSize: fontSize || this.initialState.options.fontSize,
-            duckduckgo: duckduckgo || this.initialState.options.duckduckgo,
-            intervalStart: autoTimeStart || this.initialState.options.intervalStart,
-            intervalEnd: autoTimeEnd || this.initialState.options.intervalEnd,
-          };
-        }
-
-        if (previousState.hasOwnProperty('theme')) {
-          const { isApplied, mode } = previousState.theme;
-
-          migratedState['isApplied'] = isApplied || this.initialState.isApplied;
-          migratedState['mode'] = mode || this.initialState.mode;
-
-          if (previousState.theme.hasOwnProperty('templates')) {
-            const { dark, light } = previousState.theme.templates;
-
-            migratedState['globalTemplates'] = {
-              [ThemeModes.Dark]: dark || this.initialState.globalTemplates.dark,
-              [ThemeModes.Light]: light || this.initialState.globalTemplates.light,
-            };
-
-            // The duckduckgo template structure has been changed in version >= 2.0.5
-            // It might already have the correct template type if 'dark' or 'light' is
-            // undefined, but it is easier to it like this.
-            migratedState['globalTemplates'][ThemeModes.Dark].duckduckgo =
-              this.initialState.globalTemplates.dark.duckduckgo;
-
-            migratedState['globalTemplates'][ThemeModes.Light].duckduckgo =
-              this.initialState.globalTemplates.light.duckduckgo;
-          }
-        }
-
-        console.info('[state] Applying migrated state', migratedState);
-
-        // Can't use 'this.set(..)' here, since 'this.currentState' is not defined
-        await browser.storage.local.clear();
-        await browser.storage.local.set(migratedState);
-      } else {
-        // Save the initial state if no state is present
-        await browser.storage.local.set(this.initialState);
-      }
-    } else if (stateVersion !== STATE_VERSION) {
-      console.info('[state] Invalid state version detected, but no migration exists');
-    }
+    await applyMigration(stateVersion, this.initialState);
 
     this.currentState = await browser.storage.local.get(this.initialState) as IExtensionState;
 
