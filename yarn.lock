@@ -4194,6 +4194,11 @@ just-filter@^1.1.19:
   resolved "https://registry.yarnpkg.com/just-filter/-/just-filter-1.1.19.tgz#786b677bbbd26eddc78736bc10234aabaa91c446"
   integrity sha1-eGtne7vSbt3Hhza8ECNKq6qRxEY=
 
+just-typeof@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/just-typeof/-/just-typeof-2.0.0.tgz#c467134476b27e623dbb24f56af2fbacefb65b82"
+  integrity sha512-9CZPD3KH7sb6oLbgKRx7979HZO6R0E0Ton34zpURt159Sgj1HtKeBIdqKgEEZCjdGKYTnhbONJf7a5Jp5Of6iQ==
+
 jwa@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/jwa/-/jwa-1.4.1.tgz#743c32985cb9e98655530d53641b66c8645b039a"

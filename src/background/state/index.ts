@@ -24,6 +24,7 @@ import { DEFAULT_THEME_DARK, DEFAULT_THEME_LIGHT } from '@config/default-themes'
 import Migrations from './migrations';
 
 import merge from 'deepmerge';
+import typeOf from 'just-typeof';
 
 export default class State {
   private initialLocalState: ILocalExtensionState;
@@ -82,23 +83,47 @@ export default class State {
     return browser.storage.local;
   }
 
+  private async saveState<T>(
+    store: browser.storage.StorageArea,
+    newState: Partial<T>,
+    currentState: T,
+  ) {
+    const changes: Partial<T> = {};
+    Object.keys(newState).forEach((key) => {
+      const newValue = newState[key];
+      const currentValue = currentState[key];
+      const valueType = typeOf(newValue);
+
+      if (valueType === 'object' && newValue !== null && currentValue !== null) {
+        changes[key] = merge(currentValue, newValue);
+      } else {
+        changes[key] = newValue;
+      }
+
+      currentState[key] = changes[key];
+    });
+
+    await store.set(changes);
+  }
+
   private async set(newState: {}) {
-    Object.assign(this.currentLocalState, newState);
-    await browser.storage.local.set(newState);
+    this.saveState(
+      browser.storage.local,
+      newState,
+      this.currentLocalState,
+    );
   }
 
   private async setSync(newState: {}) {
-    Object.assign(this.currentSyncState, newState);
-    await this.getSyncStore().set(newState);
+    this.saveState(
+      this.getSyncStore(),
+      newState,
+      this.currentSyncState,
+    );
   }
 
   private updateGeneratedTheme(data: Partial<ITheme>) {
-    const generatedTheme = this.currentLocalState.generatedTheme || {};
-    const updatedTheme = merge(generatedTheme, data);
-
-    return this.set({
-      generatedTheme: updatedTheme,
-    });
+    return this.set({ generatedTheme: data });
   }
 
   private updateGeneratedTemplate(data: Partial<IThemeTemplate>) {
@@ -108,55 +133,43 @@ export default class State {
       return;
     }
 
-    const updatedTemplate = merge(generatedTheme.template, data);
-    return this.updateGeneratedTheme({ template: updatedTemplate });
-  }
-
-  private updateGlobalTemplate(data: Partial<IThemeTemplate>) {
-    const currentThemeMode = this.getTemplateThemeMode();
-    const globalTemplate = this.currentSyncState.globalTemplates[currentThemeMode] || {};
-    const updatedTemplate = merge(globalTemplate, data);
-
-    return this.setSync({
-      globalTemplates: {
-        [currentThemeMode]: updatedTemplate,
+    return this.set({
+      generatedTheme: {
+        template: data
       },
     });
   }
 
-  private updateCurrentTheme(data: Partial<IUserTheme>, shouldMerge = true) {
-    const pywalHash = this.getPywalHash();
+  private updateGlobalTemplate(data: Partial<IThemeTemplate>) {
     const currentThemeMode = this.getTemplateThemeMode();
+
+    return this.setSync({
+      globalTemplates: {
+        [currentThemeMode]: data,
+      },
+    });
+  }
+
+  private updateCurrentTheme(data: Partial<IUserTheme>) {
+    const pywalHash = this.getPywalHash();
 
     if (pywalHash === null) {
       return;
     }
 
-    const currentTheme = this.currentSyncState.userThemes[pywalHash] || {};
-    let updatedTheme: IUserTheme = {};
-
-    if (shouldMerge) {
-      updatedTheme = merge(currentTheme, {
-        [currentThemeMode]: data,
-      });
-    } else {
-      updatedTheme[currentThemeMode] = Object.assign({}, currentTheme[currentThemeMode], data);
-    }
+    const currentThemeMode = this.getTemplateThemeMode();
 
     return this.setSync({
       userThemes: {
-        ...this.currentSyncState.userThemes,
-        [pywalHash]: updatedTheme,
+        [pywalHash]: {
+          [currentThemeMode]: data,
+        },
       },
     });
   }
 
   private updateOptions(option: Partial<IExtensionOptions>) {
-    const updatedOptions = merge(this.currentSyncState.options, option);
-
-    return this.setSync({
-      options: updatedOptions,
-    });
+    return this.setSync({ options: option });
   }
 
   public getInitialData() {
@@ -322,9 +335,9 @@ export default class State {
     return this.updateCurrentTheme({ customColors });
   }
 
-  // Replaces the current custom colors with 'customColors'
-  public replaceCustomColors(customColors: ICustomColors) {
-    return this.updateCurrentTheme({ customColors }, false);
+  public async replaceCustomColors(customColors: ICustomColors) {
+    await this.setCustomColors(null);
+    await this.setCustomColors(customColors);
   }
 
   public setVersion(version: number) {
@@ -402,10 +415,6 @@ export default class State {
     return this.updateOptions({ syncSettings });
   }
 
-  public resetCustomColors() {
-    return this.setCustomColors(null);
-  }
-
   public resetGeneratedTheme() {
     return this.setGeneratedTheme(null);
   }
@@ -420,10 +429,10 @@ export default class State {
       // syncing is disabled and load all state from local
       this.shouldSync = false;
       stateVersion = localStateVersion;
-      console.log('[state] Loaded sync state from browser.storage.local');
+      console.log('[state] Loading sync state from browser.storage.local');
     } else {
       this.shouldSync = true;
-      console.log('[state] Loaded sync state from browser.storage.sync');
+      console.log('[state] Loading sync state from browser.storage.sync');
     }
 
     const syncStore = this.getSyncStore();
