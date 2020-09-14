@@ -24,22 +24,12 @@ async function applyMigration(
       console.info(`[state] State is outdated, starting migration to state version: ${STATE_VERSION}`);
 
       if (previousSyncState.hasOwnProperty('options')) {
-        const {
-          userChrome,
-          userContent,
-          fontSize,
-          duckduckgo,
-          autoTimeStart,
-          autoTimeEnd,
-        } = previousSyncState.options;
+        const { duckduckgo, autoTimeStart, autoTimeEnd } = previousSyncState.options;
 
         migratedState['options'] = {
-          userChrome: userChrome || initialSyncState.options.userChrome,
-          userContent: userContent || initialSyncState.options.userContent,
-          fontSize: fontSize || initialSyncState.options.fontSize,
-          duckduckgo: duckduckgo || initialSyncState.options.duckduckgo,
-          intervalStart: autoTimeStart || initialSyncState.options.intervalStart,
-          intervalEnd: autoTimeEnd || initialSyncState.options.intervalEnd,
+          duckduckgo: duckduckgo || initialSyncState.syncOptions.duckduckgo,
+          intervalStart: autoTimeStart || initialSyncState.syncOptions.intervalStart,
+          intervalEnd: autoTimeEnd || initialSyncState.syncOptions.intervalEnd,
         };
       }
 

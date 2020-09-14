@@ -285,10 +285,13 @@ export interface ITimeIntervalEndpoints {
 
 export type IAutoModeTriggerCallback = (isDay: boolean) => void;
 
-export interface IExtensionOptions {
+export interface ILocalExtensionOptions {
   [CSSTargets.UserChrome]: boolean;
   [CSSTargets.UserContent]: boolean;
   fontSize: number;
+}
+
+export interface ISyncExtensionOptions {
   duckduckgo: boolean;
   darkreader: boolean;
   fetchOnStartup: boolean;
@@ -296,6 +299,8 @@ export interface IExtensionOptions {
   intervalStart: ITimeIntervalEndpoint;
   intervalEnd: ITimeIntervalEndpoint;
 }
+
+export type IExtensionOptions = ILocalExtensionOptions & ISyncExtensionOptions;
 
 export interface ILocalExtensionState {
   version: number,
@@ -307,13 +312,14 @@ export interface ILocalExtensionState {
   pywalColors: IPywalColors;
   pywalHash: IPywalHash;
   generatedTheme: ITheme;
+  localOptions: ILocalExtensionOptions;
 }
 
 export interface ISyncExtensionState {
   stateVersion: number;
   globalTemplates: IGlobalTemplates;
   userThemes: IUserThemes;
-  options: IExtensionOptions;
+  syncOptions: ISyncExtensionOptions;
 }
 
 export type IExtensionState = ILocalExtensionState & ISyncExtensionState;

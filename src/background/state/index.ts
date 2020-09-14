@@ -8,10 +8,10 @@ import {
   IBrowserTheme,
   IThemeTemplate,
   ITimeIntervalEndpoint,
-  IExtensionState,
   ISyncExtensionState,
+  ISyncExtensionOptions,
   ILocalExtensionState,
-  IExtensionOptions,
+  ILocalExtensionOptions,
   IOptionSetData,
   ITemplateThemeMode,
   CSSTargets,
@@ -44,6 +44,11 @@ export default class State {
       pywalColors: null,
       pywalHash: null,
       generatedTheme: null,
+      localOptions: {
+        userChrome: false,
+        userContent: false,
+        fontSize: DEFAULT_CSS_FONT_SIZE,
+      },
     };
 
     this.initialSyncState = {
@@ -53,10 +58,7 @@ export default class State {
         [ThemeModes.Dark]: DEFAULT_THEME_DARK,
       },
       userThemes: {},
-      options: {
-        userChrome: false,
-        userContent: false,
-        fontSize: DEFAULT_CSS_FONT_SIZE,
+      syncOptions: {
         duckduckgo: false,
         darkreader: false,
         fetchOnStartup: true,
@@ -168,8 +170,12 @@ export default class State {
     });
   }
 
-  private updateOptions(option: Partial<IExtensionOptions>) {
-    return this.setSync({ options: option });
+  private updateLocalOptions(option: Partial<ILocalExtensionOptions>) {
+    return this.set({ localOptions: option });
+  }
+
+  private updateSyncOptions(option: Partial<ISyncExtensionOptions>) {
+    return this.setSync({ syncOptions: option });
   }
 
   public getInitialData() {
@@ -260,27 +266,27 @@ export default class State {
   }
 
   public getDuckduckgoEnabled() {
-    return this.currentSyncState.options.duckduckgo;
+    return this.currentSyncState.syncOptions.duckduckgo;
   }
 
   public getDarkreaderEnabled() {
-    return this.currentSyncState.options.darkreader;
+    return this.currentSyncState.syncOptions.darkreader;
   }
 
   public getFetchOnStartupEnabled() {
-    return this.currentSyncState.options.fetchOnStartup;
+    return this.currentSyncState.syncOptions.fetchOnStartup;
   }
 
   public getCssFontSize() {
-    return this.currentSyncState.options.fontSize;
+    return this.currentLocalState.localOptions.fontSize;
   }
 
   public getCssEnabled(target: CSSTargets) {
-    return this.currentSyncState.options[target];
+    return this.currentLocalState.localOptions[target];
   }
 
   public getInterval() {
-    const { intervalStart, intervalEnd } = this.currentSyncState.options;
+    const { intervalStart, intervalEnd } = this.currentSyncState.syncOptions;
     return {
       intervalStart,
       intervalEnd,
@@ -290,8 +296,8 @@ export default class State {
   public getOptionsData() {
     const data: IOptionSetData[] = [];
 
-    Object.keys(this.currentSyncState.options).forEach((key) => {
-      const value = this.currentSyncState.options[key];
+    Object.keys(this.currentSyncState.syncOptions).forEach((key) => {
+      const value = this.currentSyncState.syncOptions[key];
 
       if (typeof value === 'boolean') {
         data.push({ option: key, enabled: value });
@@ -377,31 +383,31 @@ export default class State {
   }
 
   public setDuckduckgoEnabled(duckduckgo: boolean) {
-    return this.updateOptions({ duckduckgo });
+    return this.updateSyncOptions({ duckduckgo });
   }
 
   public setDarkreaderEnabled(darkreader: boolean) {
-    return this.updateOptions({ darkreader });
+    return this.updateSyncOptions({ darkreader });
   }
 
   public setFetchOnStartupEnabled(fetchOnStartup: boolean) {
-    return this.updateOptions({ fetchOnStartup });
+    return this.updateSyncOptions({ fetchOnStartup });
   }
 
   public setIntervalStart(intervalStart: ITimeIntervalEndpoint) {
-    return this.updateOptions({ intervalStart });
+    return this.updateSyncOptions({ intervalStart });
   }
 
   public setIntervalEnd(intervalEnd: ITimeIntervalEndpoint) {
-    return this.updateOptions({ intervalEnd });
+    return this.updateSyncOptions({ intervalEnd });
   }
 
   public setCssEnabled(target: CSSTargets, enabled: boolean) {
-    return this.updateOptions({ [target]: enabled });
+    return this.updateLocalOptions({ [target]: enabled });
   }
 
   public setCssFontSize(fontSize: number) {
-    return this.updateOptions({ fontSize });
+    return this.updateLocalOptions({ fontSize });
   }
 
   public setSyncSettingsEnabled(syncSettings: boolean) {
@@ -412,7 +418,7 @@ export default class State {
     // based on the value of 'syncSettings'
     Migrations.transferSyncState(previousSyncStore, this.getSyncStore(), this.currentSyncState);
 
-    return this.updateOptions({ syncSettings });
+    return this.updateSyncOptions({ syncSettings });
   }
 
   public resetGeneratedTheme() {
