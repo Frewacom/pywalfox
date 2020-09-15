@@ -145,7 +145,7 @@
           <div class="setting-card-header card-header expand row v-center space-between clickable">
             <div class="box">
               <i icon="edit"></i>
-              <p class="card-title">Palette template<span class="scope-indicator margin-left-sm" id="palette-template-scope"></span></p>
+              <p class="card-title">Palette template<span class="scope-indicator" id="palette-template-scope"></span></p>
             </div>
             <i icon="chevron"></i>
           </div>
@@ -161,17 +161,24 @@
             </button>
           </div>
           <div class="card-content card-subsection column expand align-left" id="palette-template-help">
-            <h3 class="card-help-title">Creating a custom palette</h3>
+            <h3 class="card-help-title">Creating a custom palette template</h3>
             <p class="card-help-description">
               The palette is a collection of Pywal colors and it is generated when "Fetch Pywal colors" is clicked.
               A custom palette template allows you to manually select which Pywal colors should be used for the
-              background, text, etc.
+              background, text, etc. Your changes are <b>persistent</b> between fetches and the current theme mode.
               <br></br>
-              Your changes are <b>persistent</b> between fetches and the current theme mode.
+              There are two types of templates; global and wallpaper-specific. The global template is a base template
+              that will be used for <b>all</b> wallpapers. Changes to the wallpaper-specific template will <b>override</b>
+              the corresponding values in the global template.
+              <br><br>
+              If you for example want to have a different accent color for <b>all</b> wallpapers and colorschemes,
+              you can click on "Edit global template" and update the "Accent primary" index. If you then want to change it
+              for just a specific wallpaper you make sure to edit the wallpaper-specific template instead, as indicated by
+              the label at the top of the card.
               <br><br>
               The easiest way to create a palette template is to select colors using the "Palette" section above and then
               click "Load from current" here to automatically grab the selected colors from the palette, thus generating
-              a template. Click "Save template" to save the template.
+              a template. Your changes are automatically saved and applied.
               <br><br>
               You can change the colors of specific elements of the browser theme in the "Theme template" section below.
               <br><br>
@@ -198,7 +205,7 @@
           <div class="setting-card-header card-header expand row v-center space-between clickable">
             <div class="box">
               <i icon="template"></i>
-              <p class="card-title">Browser template<span class="scope-indicator margin-left-sm" id="browser-template-scope"></span></p>
+              <p class="card-title">Browser template<span class="scope-indicator" id="browser-template-scope"></span></p>
             </div>
             <i icon="chevron"></i>
           </div>
@@ -216,9 +223,11 @@
             <h3 class="card-help-title">Creating a custom theme template</h3>
             <p class="card-help-description">
               Custom theme templates allow you to customize the color of each browser element individually by associating
-              palette colors with specific elements.
+              palette colors with specific elements. Your changes are <b>persistent</b> between fetches and the current theme mode.
               <br><br>
-              Your changes are <b>persistent</b> between fetches and the current theme mode.
+              There are two types of templates; global and wallpaper-specific. The global template is a base template
+              that will be used for <b>all</b> wallpapers. Changes to the wallpaper-specific template will <b>override</b>
+              the corresponding values in the global template.
               <br><br>
               Not all elements are customizable since we are limited by the properties provided by the Theme API.<br>
               For further customization, use the included userContent and userChrome (or your own).

@@ -66,8 +66,8 @@ export enum DuckDuckGoThemeKeys {
 }
 
 export enum TemplateScopes {
-  Current = 'Current wallpaper only',
-  Global = 'Global base template',
+  Current = 'Current wallpaper',
+  Global = 'Global',
 }
 
 export type DuckDuckGoColorKeys = Exclude<DuckDuckGoSettingKeys, DuckDuckGoSettingKeys.ThemeId>;
