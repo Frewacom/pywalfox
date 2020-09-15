@@ -13,6 +13,8 @@ import { requestPaletteColorSet } from '@communication/content-scripts/ui';
 
 import Dialog from './dialog';
 
+import compare from 'just-compare';
+
 export default class Colorpicker extends Dialog {
   private grid: HTMLElement;
   private customColorButton: HTMLInputElement;
@@ -155,8 +157,6 @@ export default class Colorpicker extends Dialog {
     if (this.resetElement !== this.customColorButtonContainer) {
       const resetIndex = this.resetElement.getAttribute('data-color-index');
       const selectedIndex = this.selectedElement.getAttribute('data-color-index');
-      console.log(resetIndex);
-      console.log(selectedIndex);
 
       if (resetIndex === selectedIndex) {
         // Same color as before, do nothing
@@ -176,12 +176,18 @@ export default class Colorpicker extends Dialog {
     customColors: Partial<IPalette>,
     template: IPaletteTemplate,
   ) {
+    // TODO: This 'update' function should not be called at all unless
+    //       'template' or 'customColors' has been updated
+    const isTemplateEqual = compare(this.paletteTemplate, template);
+    const isCustomColorsEqual = compare(this.customColors, customColors);
+    const shouldUpdateResetElement = !isTemplateEqual || !isCustomColorsEqual;
+
     // TODO: Check if the call to 'this.setCustomColors' is needed
     this.setPywalColors(pywalColors);
     this.setCustomColors(customColors);
     this.setPaletteTemplate(template);
 
-    this.updateSelected();
+    this.updateSelected(shouldUpdateResetElement);
   }
 
   public setPywalColors(pywalColors: IPywalColors) {
@@ -236,7 +242,7 @@ export default class Colorpicker extends Dialog {
     return { element, color, index };
   }
 
-  public updateSelected() {
+  public updateSelected(updateResetElement = true) {
     if (this.target === null) {
       return;
     }
@@ -250,14 +256,15 @@ export default class Colorpicker extends Dialog {
     const { element, color } = this.getSelectedData(targetId);
 
     this.highlightSelectedColor(element);
-    this.resetElement = element;
-    this.resetCustomColor = null;
 
-    console.log('resetElement:',this.resetElement);
+    if (updateResetElement) {
+      this.resetElement = element;
+      this.resetCustomColor = null;
 
-    if (element === this.customColorButtonContainer) {
-      this.updateCustomColorInputValue(color);
-      this.resetCustomColor = color;
+      if (element === this.customColorButtonContainer) {
+        this.updateCustomColorInputValue(color);
+        this.resetCustomColor = color;
+      }
     }
   }
 }
