@@ -145,14 +145,15 @@
           <div class="setting-card-header card-header expand row v-center space-between clickable">
             <div class="box">
               <i icon="edit"></i>
-              <p class="card-title">Palette template</p>
+              <p class="card-title">Palette template<span class="scope-indicator margin-left-sm" id="palette-template-scope"></span></p>
             </div>
             <i icon="chevron"></i>
           </div>
           <div class="card-content card-content-header row expand v-center space-between sticky">
             <div class="box">
               <button class="btn btn-primary btn-sm margin-right-sm" id="palette-template-current">Load from current</button>
-              <button class="btn btn-lighter btn-sm" id="palette-template-reset">Reset to default</button>
+              <button class="btn btn-lighter btn-sm margin-right-sm" id="palette-template-reset">Reset to default</button>
+              <button class="btn btn-lighter btn-sm" id="palette-template-scope-switch">Edit global template</button>
             </div>
             <button class="btn btn-lighter btn-sm btn-h-sm" data-help="palette-template-help">
               <i icon="help-circle"></i>
@@ -197,13 +198,14 @@
           <div class="setting-card-header card-header expand row v-center space-between clickable">
             <div class="box">
               <i icon="template"></i>
-              <p class="card-title">Browser template</p>
+              <p class="card-title">Browser template<span class="scope-indicator margin-left-sm" id="browser-template-scope"></span></p>
             </div>
             <i icon="chevron"></i>
           </div>
           <div class="card-content card-content-header row expand v-center space-between sticky">
             <div class="box">
-              <button class="btn btn-lighter btn-sm" id="theme-template-reset">Reset to default</button>
+              <button class="btn btn-lighter btn-sm margin-right-sm" id="browser-template-reset">Reset to default</button>
+              <button class="btn btn-lighter btn-sm" id="browser-template-scope-switch">Edit global template</button>
             </div>
             <button class="btn btn-lighter btn-sm btn-h-sm" data-help="theme-template-help">
               <i icon="help-circle"></i>
@@ -234,7 +236,7 @@
               </a>
             </div>
           </div>
-          <div class="card-content column expand" id="theme-template-content">
+          <div class="card-content column expand" id="browser-template-content">
             <template id="theme-template">
               <div class="setting row expand space-between v-center">
                 <div class="box column align-left">

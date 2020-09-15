@@ -12,7 +12,7 @@ import Dialog from './dialog';
 export default class Themepicker extends Dialog {
   private themeSelectButton: HTMLElement;
   private modeButtons: NodeListOf<HTMLElement>;
-  private modeLookup: INodeLookup;
+  private modeLookup: INodeLookup<HTMLElement>;
   private currentClassName: ThemeModes;
 
   constructor() {

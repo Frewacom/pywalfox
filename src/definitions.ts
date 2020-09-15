@@ -1,3 +1,5 @@
+export type ValueOf<T> = T[keyof T];
+
 export interface IPywalColors extends Array<string> {
   [index: number]: string;
 }
@@ -61,6 +63,11 @@ export enum DuckDuckGoThemeKeys {
   Dark = 'd',
   Light = 'l',
   Pywalfox = 'pywalfox',
+}
+
+export enum TemplateScopes {
+  Current = 'Current wallpaper only',
+  Global = 'Global base template',
 }
 
 export type DuckDuckGoColorKeys = Exclude<DuckDuckGoSettingKeys, DuckDuckGoSettingKeys.ThemeId>;
@@ -234,8 +241,8 @@ export interface INativeAppMessageCallbacks {
   cssFontSizeSetFailed: (error: string) => void,
 }
 
-export interface INodeLookup {
-  [key: string]: HTMLElement;
+export interface INodeLookup<T> {
+  [key: string]: T;
 }
 
 export interface IInitialData {

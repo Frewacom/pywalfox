@@ -24,7 +24,7 @@ export default class Colorpicker extends Dialog {
   private resetElement: HTMLElement;
   private resetCustomColor: string;
   private selectedElement: HTMLElement;
-  private colorElementLookup: INodeLookup;
+  private colorElementLookup: INodeLookup<HTMLElement>;
 
   constructor() {
     super('colorpicker');
@@ -155,6 +155,9 @@ export default class Colorpicker extends Dialog {
     if (this.resetElement !== this.customColorButtonContainer) {
       const resetIndex = this.resetElement.getAttribute('data-color-index');
       const selectedIndex = this.selectedElement.getAttribute('data-color-index');
+      console.log(resetIndex);
+      console.log(selectedIndex);
+
       if (resetIndex === selectedIndex) {
         // Same color as before, do nothing
         return;
@@ -249,6 +252,8 @@ export default class Colorpicker extends Dialog {
     this.highlightSelectedColor(element);
     this.resetElement = element;
     this.resetCustomColor = null;
+
+    console.log('resetElement:',this.resetElement);
 
     if (element === this.customColorButtonContainer) {
       this.updateCustomColorInputValue(color);

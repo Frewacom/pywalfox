@@ -59,6 +59,10 @@
   display: flex;
 }
 
+.card[open] .scope-indicator {
+  display: inline;
+}
+
 .card[open] .card-header {
   border-bottom: 1px solid var(--border-color);
   border-bottom-left-radius: 0;
@@ -105,4 +109,15 @@
 
 .card-content-lg {
   padding: var(--spacing);
+}
+
+.scope-indicator {
+  display: none;
+  background-color: var(--background);
+  color: var(--accent-primary);
+	padding: var(--spacing-xsm) var(--spacing-sm);
+	border-radius: var(--border-radius-sm);
+	font-size: var(--font-size-sm);
+	font-weight: bold;
+  box-shadow: var(--box-shadow);
 }
