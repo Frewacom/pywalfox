@@ -123,8 +123,8 @@ function onColorClicked(e: Event) {
 }
 
 function setOptionEnabled(target: HTMLElement, enabled: boolean) {
-  if (target === null) {
-    console.error('Failed to update option state, target is null');
+  if (!target) {
+    console.error('Failed to update option state, target is undefined/null');
     return;
   }
 

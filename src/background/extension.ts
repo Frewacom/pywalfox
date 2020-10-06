@@ -262,9 +262,10 @@ export default class Extension {
     // Make sure that a color from the pywal palette is not used as a custom color.
     let filteredCustomColors = customColors;
     if (customColors !== null) {
-      filteredCustomColors = <Partial<IPalette>>Object.keys(customColors).filter((key) => {
-        const pywalColor = pywalColors[template[key]];
-        return pywalColor !== customColors[key];
+      Object.keys(customColors).forEach((key) => {
+        if (customColors[key] === pywalColors[template[key]]) {
+          delete customColors[key];
+        }
       });
     }
 

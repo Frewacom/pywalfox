@@ -119,7 +119,6 @@ export default class State {
       template: this.getTemplate(),
       customColors: this.getCustomColors(),
       themeMode: this.getThemeMode(),
-      // TODO: Fix this manual type inference
       templateThemeMode: this.getTemplateThemeMode() as ITemplateThemeMode,
       debuggingInfo: this.getDebuggingInfo(),
       options: this.getOptionsData(),
@@ -380,6 +379,13 @@ export default class State {
 
   public async load() {
     this.currentState = await browser.storage.local.get(this.initialState);
+
+    // Temporary state migration until a real migration system is implemented
+    if (this.getTemplate().duckduckgo.hasOwnProperty('modifier')) {
+      this.currentState.theme.templates.dark.duckduckgo = DEFAULT_THEME_DARK.duckduckgo;
+      this.currentState.theme.templates.light.duckduckgo = DEFAULT_THEME_LIGHT.duckduckgo;
+      await browser.storage.local.set(this.currentState);
+    }
   }
 
   public dump() {

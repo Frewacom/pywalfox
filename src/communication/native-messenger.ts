@@ -1,5 +1,4 @@
 import {
-  IPywalData,
   INativeAppMessage,
   INativeAppRequest,
   INativeAppMessageCallbacks,
