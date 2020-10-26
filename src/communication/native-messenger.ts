@@ -1,11 +1,10 @@
-import { RESPONSE_TIMEOUT, NATIVE_MESSAGES } from '../config/native';
-
 import {
-  IPywalColors,
   INativeAppMessage,
   INativeAppRequest,
-  INativeAppMessageCallbacks
-} from '../definitions';
+  INativeAppMessageCallbacks,
+} from '@definitions';
+
+import { RESPONSE_TIMEOUT_MS, NATIVE_MESSAGES } from '@config/general';
 
 /**
  * Implements the communcation with the native messaging host.
@@ -15,8 +14,9 @@ import {
  * user's computer and share resources that are otherwise inaccessible by the browser.
  * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging
  */
-export class NativeApp {
-  private isConnected: boolean;
+export default class NativeApp {
+  public isConnected: boolean;
+
   private port: browser.runtime.Port;
   private callbacks: INativeAppMessageCallbacks;
 
@@ -36,13 +36,13 @@ export class NativeApp {
       return message.data;
     }
 
-    this.logError(`Recieved invalid message from native app. The 'data' field is undefined.`);
+    this.logError('Recieved invalid message from native app. The \'data\' field is undefined.');
     return null;
   }
 
   private async onMessage(message: INativeAppMessage) {
     console.debug(message);
-    switch(message.action) {
+    switch (message.action) {
       case NATIVE_MESSAGES.VERSION:
         this.onVersionResponse(message);
         break;
@@ -80,17 +80,27 @@ export class NativeApp {
   }
 
   private onPywalColorsResponse(message: INativeAppMessage) {
-    if (message.success) {
-      const colors: IPywalColors = this.getData(message);
-
-      if (!colors) {
-        this.logError('Pywal colors were read successfully, but no colors were received');
-        return;
-      }
-
-      this.callbacks.pywalColorsFetchSuccess(colors);
-    } else {
+    if (!message.success) {
       this.callbacks.pywalColorsFetchFailed(message.error);
+      return;
+    }
+
+    const pywalData = this.getData(message);
+
+    if (!pywalData) {
+      this.logError('Pywal data was read successfully but contained null');
+      return;
+    }
+
+    if (pywalData.hasOwnProperty('wallpaper')) {
+      this.callbacks.pywalColorsFetchSuccess(pywalData);
+    } else {
+      /* Native app version >= 2.7 returns a completely different response type compared
+       * to previous versions. This means that fetching will not work unless the user updates.
+       * The backwards compatibility fix is simple, so I figured it is fine to leave it in here
+       * if the user does not want to update for some reason.
+       */
+      this.callbacks.pywalColorsFetchSuccess({ colors: pywalData, wallpaper: null });
     }
   }
 
@@ -114,11 +124,11 @@ export class NativeApp {
       const updatedFontSize = this.getData(message);
 
       if (!updatedFontSize) {
-        this.logError(`Font size was updated successfully, but the updated font size was not specified`);
+        this.logError('Font size was updated successfully, but the new size was not specified');
         return;
       }
 
-      this.callbacks.cssFontSizeSetSuccess(parseInt(updatedFontSize));
+      this.callbacks.cssFontSizeSetSuccess(parseInt(updatedFontSize, 10));
     } else {
       this.callbacks.cssFontSizeSetFailed(message.error);
     }
@@ -129,12 +139,12 @@ export class NativeApp {
     output && this.callbacks.output(output);
   }
 
-  private async onDisconnect(port: browser.runtime.Port) {
-    if (port.error) {
+  private async onDisconnect({ error }: browser.runtime.Port) {
+    if (error) {
       clearTimeout(this.versionCheckTimeout);
       clearTimeout(this.connectedCheckTimeout);
       this.callbacks.disconnected();
-      console.log('Disconnected from native messaging host');
+      console.log(`Disconnected from native messaging host: ${error}`);
     }
   }
 
@@ -143,17 +153,35 @@ export class NativeApp {
     this.port.onDisconnect.addListener(this.onDisconnect.bind(this));
   }
 
-  public connect() {
-    this.port = browser.runtime.connectNative('pywalfox');
-    this.isConnected = true;
-    this.versionCheckTimeout = window.setTimeout(this.callbacks.updateNeeded, RESPONSE_TIMEOUT);
-    this.connectedCheckTimeout = window.setTimeout(this.callbacks.connected, RESPONSE_TIMEOUT);
-    this.setupListeners();
-    this.requestVersion();
+  private sendMessage(message: INativeAppRequest) {
+    if (!this.isConnected) {
+      // If we are not connected, it means that an error occured. No point to try and reconnect
+      console.error('Failed to send data to native app. You are not connected');
+      return;
+    }
+
+    this.port.postMessage(message);
   }
 
-  private sendMessage(message: INativeAppRequest) {
-    this.port.postMessage(message);
+  public connect() {
+    this.port = browser.runtime.connectNative('pywalfox');
+    const { error } = this.port;
+
+    if (!error) {
+      this.isConnected = true;
+
+      this.setupListeners();
+      this.versionCheckTimeout = window.setTimeout(
+        this.callbacks.updateNeeded,
+        RESPONSE_TIMEOUT_MS,
+      );
+
+      this.requestVersion();
+
+      this.callbacks.connected();
+    } else {
+      console.error(`Failed to connect to native app: ${error.message}`);
+    }
   }
 
   public requestVersion() {
@@ -165,7 +193,8 @@ export class NativeApp {
   }
 
   public requestCssEnabled(target: string, enabled: boolean) {
-    this.sendMessage({ action: enabled ? NATIVE_MESSAGES.CSS_ENABLE : NATIVE_MESSAGES.CSS_DISABLE, target });
+    const action = enabled ? NATIVE_MESSAGES.CSS_ENABLE : NATIVE_MESSAGES.CSS_DISABLE;
+    this.sendMessage({ action, target });
   }
 
   public requestFontSizeSet(target: string, size: number) {

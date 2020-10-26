@@ -11,9 +11,7 @@ input, .input-container {
 }
 
 .input-container {
-  padding: 0 var(--spacing-xsm);
   overflow: hidden;
-  box-shadow: var(--box-shadow);
 }
 
 input[type="number"] {
@@ -30,7 +28,7 @@ input[type="time"] {
 input[type="number"]:hover,
 input[type="number"]:focus,
 .setting:hover input[type="number"] {
-  -moz-appearance: number-input;
+  -moz-appearance: initial;
 }
 
 select {
@@ -57,6 +55,9 @@ body.light select {
   background-blend-mode: difference;
 }
 
-select:hover {
-  filter: var(--brightness-filter-dark);
+select:hover,
+select:focus,
+input[type="number"]:hover,
+input[type="number"]:focus {
+  box-shadow: var(--box-shadow-button-hover);
 }

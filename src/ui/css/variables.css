@@ -29,6 +29,8 @@ body {
   --box-shadow: 0px 2px 10px 1px rgba(0,0,0,0.2);
   --box-shadow-card: 2px 4px 10px #00000012;
   --box-shadow-highlight: 0px 2px 12px 3px rgba(0,0,0,0.4);
+  --box-shadow-button-hover: var(--box-shadow);
+  --box-shadow-palette-color: 0px 0px 5px rgba(0,0,0,0.5);
   --box-shadow-card-content-header: 0px 5px 10px -8px #000000d6;
 
   --button-height-sm: 2.2rem;
@@ -57,10 +59,14 @@ body {
 
   --transition-time: 0.1s;
 
-  --lighter-background: rgba(255,255,255,0.05);
-  --lighter-background-hover: rgba(255,255,255,0.2);
+  --lighter-background: rgba(255,255,255,0.08);
+  --lighter-background-hover: rgba(255,255,255,0.1);
   --darker-background: rgba(0,0,0,0.2);
+
   --button-background: var(--background);
+  --button-background-hover: rgba(0,0,0,0.9);
+  --button-text: var(--text-focus);
+  --button-text-accent: var(--background);
 
   --background: #252525;
   --background-light: #444444;
@@ -83,13 +89,19 @@ body.light {
 
   --brightness-filter: brightness(107%);
   --border-color: rgba(0,0,0,0.15);
-  --lighter-background: rgba(0,0,0,0.05);
-  --lighter-background-hover: rgba(0,0,0,0.1);
+  --lighter-background: rgba(0,0,0,0.06);
+  --lighter-background-hover: rgba(0,0,0,0.09);
   --darker-background: var(--lighter-background);
-  --button-background: #ececec;
 
-  --box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+  --button-background: var(--background-light);
+  --button-background-hover: rgba(255,255,255,0.9);
+  --button-text: var(--text-focus);
+  --button-text-accent: var(--background-light);
+
+  --box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
+  --box-shadow-button-hover: 0 0 0 1px var(--text);
   --box-shadow-card: 0 1px 4px 0 rgba(12, 12, 13, 0.1);
   --box-shadow-highlight: var(--box-shadow);
   --box-shadow-card-content-header: 0px 5px 10px -8px rgba(0,0,0,0.2);
+  --box-shadow-palette-color: 0px 0px 1px rgba(0, 0, 0, 0.4);
 }

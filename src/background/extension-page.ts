@@ -1,6 +1,6 @@
-import { IExtensionTheme } from '../definitions';
+import { IExtensionTheme } from '@definitions';
 
-export class ExtensionPage {
+export default class ExtensionPage {
   protected tab: browser.tabs.Tab;
   protected currentTheme: IExtensionTheme;
   protected url: string;
@@ -13,9 +13,9 @@ export class ExtensionPage {
   }
 
   private async deleteDetached(tabs: browser.tabs.Tab[]) {
-    for (const tab of tabs) {
+    tabs.forEach(async (tab) => {
       await browser.tabs.remove(tab.id);
-    }
+    });
   }
 
   private attach(tab: browser.tabs.Tab) {
@@ -41,7 +41,7 @@ export class ExtensionPage {
     }
   }
 
-  private onClosed(tabId: number, removeInfo?: any) {
+  private onClosed(tabId: number) {
     if (this.tab !== null) {
       if (tabId === this.tab.id) {
         browser.tabs.onRemoved.removeListener(this.onClosed);
@@ -51,12 +51,11 @@ export class ExtensionPage {
     }
   }
 
-  private onUpdated(tabId: number, changeInfo: any, tab?: any) {
+  private onUpdated(tabId: number, changeInfo: any) {
     if (changeInfo.status === 'loading') {
       // The 'url' attribute is only available on loading
       if (changeInfo.url === this.url || changeInfo.url === undefined) {
         this.setTheme(this.currentTheme);
-        return;
       } else {
         this.onClosed(tabId);
       }
@@ -69,7 +68,7 @@ export class ExtensionPage {
     browser.tabs.onRemoved.addListener(this.onClosed.bind(this));
     browser.tabs.onUpdated.addListener(this.onUpdated.bind(this), {
       tabId: this.tab.id,
-      properties: [ 'status' ],
+      properties: ['status'],
     });
   }
 
@@ -103,7 +102,7 @@ export class ExtensionPage {
     browser.tabs.update(this.tab.id, { active: true });
   }
 
-  public async setTheme(extensionTheme: IExtensionTheme, resetCurrent=true) {
+  public async setTheme(extensionTheme: IExtensionTheme, resetCurrent = true) {
     if (this.tab !== null) {
       if (resetCurrent === true && this.currentTheme !== null) {
         await this.removeInsertedCss();
@@ -124,7 +123,7 @@ export class ExtensionPage {
   }
 
   public isOpen() {
-    return this.tab === null ? false : true;
+    return this.tab !== null;
   }
 
   public close() {

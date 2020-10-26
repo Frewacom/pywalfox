@@ -1,46 +1,30 @@
-import { DEFAULT_CSS_FONT_SIZE } from '../config/general';
-import { DEFAULT_THEME_DARK, DEFAULT_THEME_LIGHT } from '../config/default-themes';
-
 import {
   IPalette,
   IPaletteHash,
   IPywalColors,
   IColorscheme,
   IBrowserTheme,
-  ICustomColors,
   IExtensionOptions,
   IThemeTemplate,
   IPaletteTemplate,
   IColorschemeTemplate,
-  IColorschemeTemplates,
   IDuckDuckGoThemeTemplate,
   ITimeIntervalEndpoint,
+  IExtensionState,
   IOptionSetData,
+  ITemplateThemeMode,
   CSSTargets,
   ThemeModes,
   TemplateTypes,
   ColorschemeTypes,
-} from '../definitions';
+} from '@definitions';
 
-export interface IExtensionState {
-  version: number,
-  connected: boolean;
-  updateMuted: boolean;
-  theme: {
-    mode: ThemeModes;
-    isDay: boolean;
-    isApplied: boolean;
-    pywalColors: IPywalColors;
-    colorscheme: IColorscheme;
-    customColors: ICustomColors;
-    templates: IColorschemeTemplates;
-  };
-  options: IExtensionOptions;
-}
+import { DEFAULT_CSS_FONT_SIZE } from '@config/general';
+import { DEFAULT_THEME_DARK, DEFAULT_THEME_LIGHT } from '@config/default-themes';
 
-export class State {
+export default class State {
   private initialState: IExtensionState;
-  public currentState: { [key: string]: any };
+  public currentState: Partial<IExtensionState>;
 
   constructor() {
     this.initialState = {
@@ -67,9 +51,11 @@ export class State {
         userContent: false,
         fontSize: DEFAULT_CSS_FONT_SIZE,
         duckduckgo: false,
+        darkreader: false,
+        fetchOnStartup: false,
         autoTimeStart: { hour: 10, minute: 0, stringFormat: '10:00' },
         autoTimeEnd: { hour: 19, minute: 0, stringFormat: '19:00' },
-      }
+      },
     };
   }
 
@@ -133,7 +119,7 @@ export class State {
       template: this.getTemplate(),
       customColors: this.getCustomColors(),
       themeMode: this.getThemeMode(),
-      templateThemeMode: this.getTemplateThemeMode(),
+      templateThemeMode: this.getTemplateThemeMode() as ITemplateThemeMode,
       debuggingInfo: this.getDebuggingInfo(),
       options: this.getOptionsData(),
       fontSize: this.getCssFontSize(),
@@ -222,6 +208,14 @@ export class State {
     return this.currentState.options.duckduckgo;
   }
 
+  public getDarkreaderEnabled() {
+    return this.currentState.options.darkreader;
+  }
+
+  public getFetchOnStartupEnabled() {
+    return this.currentState.options.fetchOnStartup;
+  }
+
   public getCssEnabled(target: string) {
     return this.getProperty(this.currentState.options, target);
   }
@@ -233,20 +227,22 @@ export class State {
   public getAutoTimeInterval() {
     return {
       start: this.currentState.options.autoTimeStart,
-      end: this.currentState.options.autoTimeEnd
+      end: this.currentState.options.autoTimeEnd,
     };
   }
 
   public getOptionsData() {
-    let data: IOptionSetData[] = [];
-    for (const key in this.currentState.options) {
+    const data: IOptionSetData[] = [];
+
+    Object.keys(this.currentState.options).forEach((key) => {
       const value = this.currentState.options[key];
+
       if (typeof value === 'boolean') {
         data.push({ option: key, enabled: value });
       } else {
         data.push({ option: key, enabled: true, value });
       }
-    }
+    });
 
     return data;
   }
@@ -285,6 +281,14 @@ export class State {
 
   public setDDGThemeEnabled(enabled: boolean) {
     return this.setOption('duckduckgo', enabled);
+  }
+
+  public setDarkreaderEnabled(enabled: boolean) {
+    return this.setOption('darkreader', enabled);
+  }
+
+  public setFetchOnStartupEnabled(enabled: boolean) {
+    return this.setOption('fetchOnStartup', enabled);
   }
 
   public setCssEnabled(target: CSSTargets, enabled: boolean) {
@@ -331,8 +335,8 @@ export class State {
     return this.set({
       theme: {
         ...this.currentState.theme,
-        pywalColors: pywalColors,
-        colorscheme: colorscheme,
+        pywalColors,
+        colorscheme,
       },
     });
   }
@@ -375,7 +379,14 @@ export class State {
 
   public async load() {
     this.currentState = await browser.storage.local.get(this.initialState);
-}
+
+    // Temporary state migration until a real migration system is implemented
+    if (this.getTemplate().duckduckgo.hasOwnProperty('modifier')) {
+      this.currentState.theme.templates.dark.duckduckgo = DEFAULT_THEME_DARK.duckduckgo;
+      this.currentState.theme.templates.light.duckduckgo = DEFAULT_THEME_LIGHT.duckduckgo;
+      await browser.storage.local.set(this.currentState);
+    }
+  }
 
   public dump() {
     console.log(this.currentState);

@@ -1,9 +1,15 @@
-import { Dialog } from './dialog';
-import { ThemeModes, INodeLookup } from '../definitions';
-import { requestThemeModeSet } from './messenger';
-import * as Utils from './utils';
+import {
+  ThemeModes,
+  INodeLookup,
+  ITemplateThemeMode,
+} from '@definitions';
 
-export class Themepicker extends Dialog {
+import { setSelected, setDeselected } from '@utils/dom';
+import { requestThemeModeSet } from '@communication/content-scripts/ui';
+
+import Dialog from './dialog';
+
+export default class Themepicker extends Dialog {
   private themeSelectButton: HTMLElement;
   private modeButtons: NodeListOf<HTMLElement>;
   private modeLookup: INodeLookup;
@@ -29,50 +35,46 @@ export class Themepicker extends Dialog {
 
   private selectMode(target: HTMLElement, mode: ThemeModes) {
     if (this.selected !== null) {
-      Utils.deselect(this.selected);
+      setDeselected(this.selected);
     }
 
     if (this.themeSelectButton !== null) {
       switch (mode) {
+        // TODO: Remove call to 'innerHTML'
         case ThemeModes.Dark:
-          this.themeSelectButton.innerHTML = `<i icon="moon" class="icon-md"></i>Dark mode`;
+          this.themeSelectButton.innerHTML = '<i icon="moon" class="icon-md"></i>Dark mode';
           break;
         case ThemeModes.Light:
-          this.themeSelectButton.innerHTML = `<i icon="sun" class="icon-md"></i>Light mode`;
+          this.themeSelectButton.innerHTML = '<i icon="sun" class="icon-md"></i>Light mode';
           break;
         case ThemeModes.Auto:
-          this.themeSelectButton.innerHTML = `<i icon="auto" class="icon-md"></i>Auto mode`;
+          this.themeSelectButton.innerHTML = '<i icon="auto" class="icon-md"></i>Auto mode';
           break;
         default:
           console.error('Invalid theme type');
       }
     }
 
-    Utils.select(target);
+    setSelected(target);
     this.selected = target;
-
-    this.setBodyClass(mode);
-    this.removeAutoBodyClassIfNotEnabled(mode);
   }
 
-  private removeAutoBodyClassIfNotEnabled(mode: ThemeModes) {
-    if (mode !== ThemeModes.Auto) {
-      document.body.classList.remove('auto');
-    }
+  private applyAutoBodyClass() {
+    document.body.classList.add('auto');
   }
 
-  public setBodyClass(mode: ThemeModes) {
-    if (mode === ThemeModes.Auto) {
-      document.body.classList.add('auto');
-      return;
-    }
+  private removeAutoBodyClass() {
+    document.body.classList.remove('auto');
+  }
 
+  public setTemplateBodyClass(mode: ITemplateThemeMode) {
     if (this.currentClassName) {
       document.body.classList.remove(this.currentClassName);
     }
 
+    document.body.classList.add(mode);
+
     this.currentClassName = mode;
-    document.body.classList.add(this.currentClassName);
   }
 
   private onSetMode(target: HTMLElement) {
@@ -81,12 +83,21 @@ export class Themepicker extends Dialog {
     this.selectMode(target, mode);
   }
 
-  public setSelectedMode(mode: ThemeModes) {
+  public setSelectedMode(mode: ThemeModes, templateMode: ITemplateThemeMode) {
     const targetButton: HTMLElement = this.modeLookup[mode];
+
     if (targetButton) {
       this.selectMode(targetButton, mode);
     } else {
       console.error(`Could not find target button associated with the mode: ${mode}`);
     }
+
+    if (mode === ThemeModes.Auto) {
+      this.applyAutoBodyClass();
+    } else {
+      this.removeAutoBodyClass();
+    }
+
+    this.setTemplateBodyClass(templateMode);
   }
 }

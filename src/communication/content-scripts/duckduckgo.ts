@@ -1,17 +1,18 @@
-import { EXTENSION_MESSAGES, INJECT_URL_PATTERN } from '../config/general';
-
 import {
   IDuckDuckGoTheme,
   IExtensionMessage,
   IPaletteHash,
-  IDuckDuckGoThemeSetData
-} from '../definitions';
+  IDuckDuckGoThemeSetData,
+} from '@definitions';
+
+import { EXTENSION_MESSAGES, INJECT_URL_PATTERN } from '@config/general';
 
 async function sendMessage(message: IExtensionMessage) {
   const tabs = await browser.tabs.query({ url: INJECT_URL_PATTERN });
-  for (const tab of tabs) {
+
+  tabs.forEach((tab) => {
     browser.tabs.sendMessage(tab.id, message);
-  }
+  });
 }
 
 export function requestTheme() {
@@ -24,5 +25,5 @@ export function setTheme(hash: IPaletteHash, theme: IDuckDuckGoTheme) {
 }
 
 export function resetTheme() {
-  sendMessage({ action: EXTENSION_MESSAGES.DDG_THEME_RESET});
+  sendMessage({ action: EXTENSION_MESSAGES.DDG_THEME_RESET });
 }

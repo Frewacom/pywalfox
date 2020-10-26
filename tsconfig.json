@@ -1,11 +1,21 @@
 {
   "compilerOptions": {
-    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "noImplicitAny": false,
     "module": "es6",
     "target": "es6",
     "allowJs": true,
     "lib": ["dom"],
-    "removeComments": true
+    "removeComments": true,
+    "baseUrl": ".",
+    "paths": {
+      "@ui/*": [ "src/ui/*" ],
+      "@pywalfox/*": [ "src/*" ],
+      "@utils/*": [ "src/utils/*" ],
+      "@config/*": [ "src/config/*" ],
+      "@definitions": [ "src/definitions" ],
+      "@communication/*": [ "src/communication/*" ]
+    }
   },
   "include": [
     "./src"

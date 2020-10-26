@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <title>Pywalfox - Settings</title>
-    <link rel="stylesheet" href="./bundle.min.css">
+    <link rel="stylesheet" href="../dist/styles.bundle.css">
   </head>
   <body>
     <div class="wrapper">
@@ -15,10 +15,10 @@
             <h1 id="logo">Pywalfox<span id="version"></span></h1>
           </div>
           <div class="box" id="header-buttons">
-            <button class="btn btn-default btn-header margin-right-sm" id="disable">Disable theme</button>
+            <button class="btn btn-header margin-right-sm" id="disable">Disable theme</button>
             <button class="btn btn-primary btn-header" id="fetch">Fetch Pywal colors</button>
             <div class="separator"></div>
-            <button class="btn btn-default btn-header dialog-arrow" id="theme-select"></button>
+            <button class="btn btn-header dialog-arrow" id="theme-select"></button>
           </div>
         </div>
         <aside class="dialog" id="themepicker">
@@ -71,17 +71,31 @@
           <div class="card-content column expand">
             <div class="setting row expand space-between v-center no-highlight">
               <div class="box column align-left">
+                <p class="setting-title">Fetch colors on startup</p>
+                <p class="setting-description">Will automatically re-fetch pywal colors from native app on Firefox startup</p>
+              </div>
+              <button class="btn btn-default btn-fixed-width" data-option="fetchOnStartup">No</button>
+            </div>
+            <!-- <div class="setting row expand space-between v-center no-highlight"> -->
+            <!--   <div class="box column align-left"> -->
+            <!--     <p class="setting-title">Darkreader integration</p> -->
+            <!--     <p class="setting-description">Use your pywal colors on all websites supported by Darkreader</p> -->
+            <!--   </div> -->
+            <!--   <button class="btn btn-default btn-fixed-width" data-option="darkreader">No</button> -->
+            <!-- </div> -->
+            <div class="setting row expand space-between v-center no-highlight">
+              <div class="box column align-left">
                 <p class="setting-title">Use DuckDuckGo theme?</p>
                 <p class="setting-description">Applies matching theme to all DuckDuckGo-pages</p>
               </div>
-              <button class="btn btn-darker" data-option="duckduckgo">No</button>
+              <button class="btn btn-default btn-fixed-width" data-option="duckduckgo">No</button>
             </div>
             <div class="setting row expand space-between v-center no-highlight" id="user-chrome-option">
               <div class="box column align-left">
                 <p class="setting-title">Use included userChrome.css?</p>
                 <p class="setting-description">Bold text, styled dropdown and context menus</p>
               </div>
-              <button class="btn btn-darker" data-option="userChrome" async>No</button>
+              <button class="btn btn-default btn-fixed-width" data-option="userChrome" async>No</button>
             </div>
             <div class="setting row expand space-between v-center indent no-highlight" id="font-size-option">
               <div class="box column align-left">
@@ -95,7 +109,7 @@
                 <p class="setting-title">Use included userContent.css</p>
                 <p class="setting-description">Globally hides the page scrollbar</p>
               </div>
-              <button class="btn btn-darker" data-option="userContent" async>No</button>
+              <button class="btn btn-default btn-fixed-width" data-option="userContent" async>No</button>
             </div>
             <div class="setting row expand space-between v-center no-highlight" id="auto-time-interval-option">
               <div class="box column align-left">
@@ -119,8 +133,7 @@
           </div>
           <div class="card-content card-content-header row expand v-center space-between sticky">
             <div class="box">
-              <button class="btn btn-primary btn-sm margin-right-sm" id="palette-template-save">Save palette</button>
-              <button class="btn btn-lighter btn-sm margin-right-sm" id="palette-template-current">Load from current</button>
+              <button class="btn btn-primary btn-sm margin-right-sm" id="palette-template-current">Load from current</button>
               <button class="btn btn-lighter btn-sm" id="palette-template-reset">Reset to default</button>
             </div>
             <button class="btn btn-lighter btn-sm btn-h-sm" data-help="palette-template-help">
@@ -134,6 +147,8 @@
               The palette is a collection of Pywal colors and it is generated when "Fetch Pywal colors" is clicked.
               A custom palette template allows you to manually select which Pywal colors should be used for the
               background, text, etc.
+              <br></br>
+              Your changes are <b>persistent</b> between fetches and the current theme mode.
               <br><br>
               The easiest way to create a palette template is to select colors using the "Palette" section above and then
               click "Load from current" here to automatically grab the selected colors from the palette, thus generating
@@ -170,7 +185,6 @@
           </div>
           <div class="card-content card-content-header row expand v-center space-between sticky">
             <div class="box">
-              <button class="btn btn-primary btn-sm margin-right-sm" id="theme-template-save">Save template</button>
               <button class="btn btn-lighter btn-sm" id="theme-template-reset">Reset to default</button>
             </div>
             <button class="btn btn-lighter btn-sm btn-h-sm" data-help="theme-template-help">
@@ -184,6 +198,8 @@
               Custom theme templates allow you to customize the color of each browser element individually by associating
               palette colors with specific elements.
               <br><br>
+              Your changes are <b>persistent</b> between fetches and the current theme mode.
+              <br><br>
               Not all elements are customizable since we are limited by the properties provided by the Theme API.<br>
               For further customization, use the included userContent and userChrome (or your own).
               <br><br>
@@ -191,7 +207,7 @@
               You are always modifying the template for the currently selected theme mode.
             </p>
             <div class="box expand row v-center align-left">
-              <a class="row v-center margin-top btn btn-sm btn-flat margin-right-sm"
+              <a class="row v-center margin-top btn btn-lighter btn-sm margin-right-sm"
                  href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme#colors"
                  target="_blank"
                  rel="noopener noreferrer">
@@ -250,6 +266,6 @@
         </template>
       </section>
     </div>
-    <script src="./settings.min.js"></script>
+    <script src="../dist/settings.bundle.js"></script>
   </body>
 </html>

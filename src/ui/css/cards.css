@@ -54,7 +54,8 @@
   rotate: 180deg;
 }
 
-.card[open] .card-content {
+.card[open] .card-content,
+.card[open] .card-subsection[open] {
   display: flex;
 }
 
@@ -95,18 +96,13 @@
 
 .card-subsection,
 .card[open] .card-subsection {
-  padding: var(--spacing) var(--spacing);
+  padding: var(--spacing);
   border-left: 0.4em solid var(--accent-primary);
   background-color: var(--lighter-background);
   border-bottom: 1px solid var(--border-color);
   display: none;
 }
 
-.card[open] .card-subsection[open] {
-  display: flex;
-}
-
 .card-content-lg {
-  padding: var(--spacing) var(--spacing);
+  padding: var(--spacing);
 }
-

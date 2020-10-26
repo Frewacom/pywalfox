@@ -1,7 +1,7 @@
-import { setVersionLabel } from './utils';
-import { EXTENSION_MESSAGES } from '../config/general';
-import { IExtensionMessage, ThemeModes } from '../definitions';
-import { requestUpdatePageMute, requestTemplateThemeMode } from './messenger';
+import { setVersionLabel } from '@utils/dom';
+import { EXTENSION_MESSAGES } from '@config/general';
+import { IExtensionMessage, ThemeModes } from '@definitions';
+import { requestUpdatePageMute, requestTemplateThemeMode } from '@communication/content-scripts/ui';
 
 const versionLabel = <HTMLSpanElement>document.getElementById('version');
 const disableButton = <HTMLButtonElement>document.getElementById('disable-button');
@@ -9,15 +9,23 @@ let currentThemeMode: ThemeModes = null;
 
 function handleExtensionMessage({ action, data }: IExtensionMessage) {
   switch (action) {
-    case EXTENSION_MESSAGES.THEME_MODE_SET:
-      const { mode } = data;
-      if (currentThemeMode !== null) {
-        document.body.classList.remove(currentThemeMode);
-      }
-
-      document.body.classList.add(mode);
-      currentThemeMode = mode;
+    case EXTENSION_MESSAGES.THEME_MODE_SET: /* fallthrough */
+    case EXTENSION_MESSAGES.TEMPLATE_THEME_MODE_SET:
+      setThemeMode(data);
       break;
+    default:
+      break;
+  }
+}
+
+function setThemeMode(mode: ThemeModes) {
+  if (mode !== ThemeModes.Auto) {
+    if (currentThemeMode !== null) {
+      document.body.classList.remove(currentThemeMode);
+    }
+
+    document.body.classList.add(mode);
+    currentThemeMode = mode;
   }
 }
 

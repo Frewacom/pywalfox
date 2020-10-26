@@ -10,11 +10,6 @@
   background-color: var(--lighter-background);
 }
 
-body.light .setting:hover,
-body.light .setting[selected]:not(.no-highlight) {
-  box-shadow: var(--box-shadow);
-}
-
 .setting-title,
 .setting-description {
   font-size: var(--font-size-md);
@@ -37,7 +32,7 @@ body.light .setting[selected]:not(.no-highlight) {
   overflow: hidden;
   position: relative;
   box-sizing: border-box;
-  transition: border var(--transition-time);
+  transition: border, var(--transition-time);
 }
 
 #colorpicker-custom-container[selected] {

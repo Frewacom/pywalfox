@@ -1,18 +1,19 @@
-import * as Utils from './utils';
-
-import { Dialog } from './dialog';
-import { requestPaletteColorSet } from './messenger';
-import { PYWAL_PALETTE_LENGTH } from '../config/general';
-
 import {
   IPywalColors,
   IPaletteTemplate,
   IPalette,
   INodeLookup,
-  PaletteColors
-} from '../definitions';
+  PaletteColors,
+} from '@definitions';
 
-export class Colorpicker extends Dialog {
+import { rgbToHex } from '@utils/colors';
+import { setSelected, setDeselected } from '@utils/dom';
+import { PYWAL_PALETTE_LENGTH } from '@config/general';
+import { requestPaletteColorSet } from '@communication/content-scripts/ui';
+
+import Dialog from './dialog';
+
+export default class Colorpicker extends Dialog {
   private grid: HTMLElement;
   private customColorButton: HTMLInputElement;
   private customColorButtonContainer: HTMLElement;
@@ -68,29 +69,29 @@ export class Colorpicker extends Dialog {
 
   protected onOpen(currentTarget: HTMLElement, nextTarget: HTMLElement) {
     if (currentTarget !== null) {
-      Utils.deselect(currentTarget.parentElement);
+      setDeselected(currentTarget.parentElement);
     }
 
-    Utils.select(nextTarget.parentElement);
+    setSelected(nextTarget.parentElement);
   }
 
   protected onClose(currentTarget: HTMLElement) {
-    Utils.deselect(currentTarget.parentElement);
+    setDeselected(currentTarget.parentElement);
   }
 
   private highlightSelectedColor(element: HTMLElement) {
     if (element === null) {
       if (this.selected !== null) {
-        Utils.deselect(this.selected);
+        setDeselected(this.selected);
       }
       return;
     }
 
     if (this.selected !== null) {
-      Utils.deselect(this.selected);
+      setDeselected(this.selected);
     }
 
-    Utils.select(element);
+    setSelected(element);
     this.setCustomColor(element);
     this.selected = element;
   }
@@ -100,12 +101,12 @@ export class Colorpicker extends Dialog {
       return null;
     }
 
-    const colorIndex = parseInt(selectedElement.getAttribute('data-color-index'));
+    const colorIndex = parseInt(selectedElement.getAttribute('data-color-index'), 10);
     return this.pywalColors[colorIndex];
   }
 
   private updateCustomColorInputValue(color: string) {
-    this.customColorButton.value = Utils.rgbToHex(color);
+    this.customColorButton.value = rgbToHex(color);
   }
 
   private setCustomColor(element: HTMLElement) {
@@ -167,9 +168,14 @@ export class Colorpicker extends Dialog {
     this.selectedElement = null;
   }
 
-  public setData(pywalColors: IPywalColors, customColor: Partial<IPalette>, template: IPaletteTemplate) {
+  public setData(
+    pywalColors: IPywalColors,
+    customColors: Partial<IPalette>,
+    template: IPaletteTemplate,
+  ) {
+    // TODO: Check if the call to 'this.setCustomColors' is needed
     this.setPywalColors(pywalColors);
-    this.setCustomColors(customColor);
+    this.setCustomColors(customColors);
     this.setPaletteTemplate(template);
   }
 
@@ -180,13 +186,13 @@ export class Colorpicker extends Dialog {
 
     if (pywalColors !== null) {
       this.grid.childNodes.forEach((element: HTMLElement, index: number) => {
-        const color = pywalColors[index]
+        const color = pywalColors[index];
         element.style.backgroundColor = color;
         this.colorElementLookup[color] = element;
       });
     } else {
       this.grid.childNodes.forEach((element: HTMLElement) => {
-        element.style.backgroundColor = "";
+        element.style.backgroundColor = '';
       });
     }
   }
@@ -196,7 +202,7 @@ export class Colorpicker extends Dialog {
   }
 
   public setCustomColors(customColors: Partial<IPalette>) {
-    this.customColors = customColors ? customColors : {};
+    this.customColors = customColors || {};
   }
 
   public getSelectedData(targetId: string) {
@@ -208,7 +214,7 @@ export class Colorpicker extends Dialog {
       color = this.customColors[<PaletteColors>targetId];
       if (this.colorElementLookup.hasOwnProperty(color)) {
         element = this.colorElementLookup[color];
-        index = parseInt(element.getAttribute('data-color-index'));
+        index = parseInt(element.getAttribute('data-color-index'), 10);
       } else {
         element = this.customColorButtonContainer;
       }
@@ -248,5 +254,3 @@ export class Colorpicker extends Dialog {
     }
   }
 }
-
-

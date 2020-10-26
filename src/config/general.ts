@@ -1,6 +1,7 @@
-import { CSSTargets } from '../definitions';
+import { CSSTargets } from '@definitions';
 
-export const MIN_REQUIRED_DAEMON_VERSION = 2.5;
+export const RESPONSE_TIMEOUT_MS = 3000;
+export const MIN_REQUIRED_DAEMON_VERSION = 2.7;
 export const DEFAULT_CSS_FONT_SIZE = 13;
 export const PYWAL_PALETTE_LENGTH = 20;
 export const AUTO_MODE_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
@@ -9,17 +10,19 @@ export const NOTIFICATION_TIMEOUT = 5000;
 export const MAX_SIMULTANEOUS_NOTIFICATIONS = 3;
 
 export const ENABLED_BODY_CLASS = 'applied';
-export const DUCKDUCKGO_THEME_ID = 'pywalfox';
-export const INJECT_URL_PATTERN = [ '*://*.duckduckgo.com/*' ];
+export const EXTENSION_THEME_SELCTOR = 'body,body.light,body.dark';
+export const INJECT_URL_PATTERN = ['*://*.duckduckgo.com/*'];
+export const DARKREADER_CONNECTION_ID = 'addon@darkreader.org';
 
+// TODO: Move constants into an enum for better type validation
 export const EXTENSION_PAGES = {
-  UPDATE: 'dist/pages/update.html',
-  SETTINGS: 'dist/pages/settings.html',
+  UPDATE: 'ui/update.html',
+  SETTINGS: 'ui/settings.html',
 };
 
 export const EXTERNAL_MESSAGES = {
   COLORSCHEME: 'colors',
-  DISABLED: 'disabled'
+  DISABLED: 'disabled',
 };
 
 export const EXTENSION_MESSAGES = {
@@ -29,6 +32,7 @@ export const EXTENSION_MESSAGES = {
   THEME_DISABLE: 'theme:disable',
   THEME_MODE_SET: 'theme:mode:set',
   TEMPLATE_THEME_MODE_GET: 'template:theme:mode:get',
+  TEMPLATE_THEME_MODE_SET: 'template:theme:mode:set',
   PALETTE_COLOR_SET: 'palette:color:set',
   TEMPLATE_SET: 'template:set',
   PALETTE_TEMPLATE_SET: 'palette:template:set',
@@ -67,4 +71,22 @@ export const EXTENSION_OPTIONS = {
   USER_CHROME: CSSTargets.UserChrome,
   USER_CONTENT: CSSTargets.UserContent,
   DUCKDUCKGO: 'duckduckgo',
+  DARKREADER: 'darkreader',
+  FETCH_ON_STARTUP: 'fetchOnStartup',
+};
+
+export const NATIVE_MESSAGES = {
+  VERSION: 'debug:version',
+  OUTPUT: 'debug:output',
+  PYWAL_COLORS: 'action:colors',
+  INVALID_ACTION: 'action:invalid',
+  CSS_ENABLE: 'css:enable',
+  CSS_DISABLE: 'css:disable',
+  CSS_FONT_SIZE: 'css:font:size',
+};
+
+export const DARKREADER_MESSAGES = {
+  THEME: 'setTheme',
+  CHANGE_SETTINGS: 'changeSettings',
+  RESET: 'resetSettings',
 };

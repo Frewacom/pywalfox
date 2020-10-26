@@ -1,9 +1,18 @@
-import * as Utils from './utils';
-import * as Messenger from './messenger';
-
-import { Dialog } from './dialog';
-import { Colorpicker } from './colorpicker';
-import { Themepicker } from './themepicker';
+import {
+  IExtensionMessage,
+  IColorschemeTemplate,
+  ITimeIntervalEndpoint,
+  IPaletteTemplate,
+  IThemeTemplate,
+  IInitialData,
+  IOptionSetData,
+  INodeLookup,
+  IPywalColors,
+  ITemplateItem,
+  INotificationData,
+  IDebuggingInfoData,
+  PaletteColors,
+} from '@definitions';
 
 import {
   EXTENSION_OPTIONS,
@@ -12,28 +21,19 @@ import {
   ENABLED_BODY_CLASS,
   NOTIFICATION_TIMEOUT,
   MAX_SIMULTANEOUS_NOTIFICATIONS,
-} from '../config/general';
+} from '@config/general';
 
 import {
   THEME_TEMPLATE_DATA,
   PALETTE_TEMPLATE_DATA,
-} from '../config/template-data';
+} from '@config/template-data';
 
-import {
-    IExtensionMessage,
-    IColorschemeTemplate,
-    ITimeIntervalEndpoint,
-    IPaletteTemplate,
-    IThemeTemplate,
-    IInitialData,
-    IOptionSetData,
-    INodeLookup,
-    IPywalColors,
-    ITemplateItem,
-    INotificationData,
-    IDebuggingInfoData,
-    PaletteColors,
-} from '../definitions';
+import * as Utils from '@utils/dom';
+import Messenger from '@communication/messenger';
+
+import Dialog from './components/dialog';
+import Colorpicker from './components/colorpicker';
+import Themepicker from './components/themepicker';
 
 const optionButtons = <NodeListOf<HTMLElement>>document.querySelectorAll('button[data-option]');
 const helpToggleButtons = <NodeListOf<HTMLElement>>document.querySelectorAll('button[data-help]');
@@ -53,12 +53,10 @@ const debuggingConnected = <HTMLParagraphElement>document.getElementById('debugg
 
 const paletteContent = <HTMLDivElement>document.getElementById('palette-content');
 const paletteTemplateContent = <HTMLDivElement>document.getElementById('palette-template-content');
-const paletteTemplateSaveButton = <HTMLButtonElement>document.getElementById('palette-template-save');
 const paletteTemplateResetButton = <HTMLButtonElement>document.getElementById('palette-template-reset');
 const paletteTemplateCurrentButton = <HTMLButtonElement>document.getElementById('palette-template-current');
 
 const themeTemplateContent = <HTMLDivElement>document.getElementById('theme-template-content');
-const themeTemplateSaveButton = <HTMLButtonElement>document.getElementById('theme-template-save');
 const themeTemplateResetButton = <HTMLButtonElement>document.getElementById('theme-template-reset');
 
 const notificationContainer = <HTMLDivElement>document.getElementById('notification-container');
@@ -71,13 +69,13 @@ let currentDialog: Dialog = null;
 let pywalColors: IPywalColors = null;
 let template: IColorschemeTemplate = null;
 
-let optionButtonsLookup: INodeLookup = {};
-let paletteTemplateInputLookup: INodeLookup = {};
-let themeTemplateInputLookup: INodeLookup = {};
+const optionButtonsLookup: INodeLookup = {};
+const paletteTemplateInputLookup: INodeLookup = {};
+const themeTemplateInputLookup: INodeLookup = {};
 
 function openDialog(dialog: Dialog, target: HTMLElement) {
   if (!Utils.isOpen(overlay)) {
-    Utils.open(overlay);
+    Utils.setOpen(overlay);
   }
 
   if (currentDialog === dialog) {
@@ -100,7 +98,7 @@ function closeDialog() {
   }
 
   if (Utils.isOpen(overlay)) {
-    Utils.close(overlay);
+    Utils.setClosed(overlay);
   }
 }
 
@@ -110,11 +108,11 @@ function toggleIsAppliedBodyClass() {
 
 function setDebuggingInfo({ version, connected }: IDebuggingInfoData) {
   debuggingConnected.innerText = connected ? 'Connected' : 'Disconnected';
-  debuggingVersion.innerText = version == 0 ? 'version not set' : `version ${version}`;
+  debuggingVersion.innerText = `version ${version === 0 ? 'not set' : version}`;
 }
 
 function writeOutput(message: string) {
-  debuggingOutput.value += message + '\n';
+  debuggingOutput.value += `${message}\n`;
   debuggingOutput.scrollTop = debuggingOutput.scrollHeight; // Scrolls to bottom of textarea
 }
 
@@ -125,17 +123,22 @@ function onColorClicked(e: Event) {
 }
 
 function setOptionEnabled(target: HTMLElement, enabled: boolean) {
+  if (!target) {
+    console.error('Failed to update option state, target is undefined/null');
+    return;
+  }
+
   if (Utils.isSet('loading', target)) {
-    Utils.loaded(target);
+    Utils.setLoaded(target);
   }
 
   if (enabled) {
-    Utils.select(target);
-    Utils.select(target.parentElement);
+    Utils.setSelected(target);
+    Utils.setSelected(target.parentElement);
     target.innerText = 'Yes';
   } else {
-    Utils.deselect(target);
-    Utils.deselect(target.parentElement);
+    Utils.setDeselected(target);
+    Utils.setDeselected(target.parentElement);
     target.innerText = 'No';
   }
 }
@@ -143,17 +146,17 @@ function setOptionEnabled(target: HTMLElement, enabled: boolean) {
 function onOptionClicked(e: Event) {
   const target = <HTMLElement>e.target;
   const option = target.getAttribute('data-option');
-  const newState = Utils.isSet('selected', target) ? false : true;
+  const newState = !Utils.isSet('selected', target);
 
   if (Utils.isSet('async', target)) {
-    Utils.loading(target);
+    Utils.setLoading(target);
   }
 
-  Messenger.requestOptionSet(option, newState);
+  Messenger.UI.requestOptionSet(option, newState);
 }
 
 function onDisableClicked() {
-  Messenger.requestDisable();
+  Messenger.UI.requestDisable();
   colorpicker.setPywalColors(null);
   colorpicker.setCustomColors(null);
   colorpicker.updateSelected();
@@ -164,12 +167,12 @@ function onDisableClicked() {
 function onFontSizeSave() {
   if (fontSizeSaveInput.checkValidity()) {
     const option = fontSizeSaveInput.getAttribute('data-option');
-    Messenger.requestFontSizeSet(option, parseInt(fontSizeSaveInput.value));
+    Messenger.UI.requestFontSizeSet(option, parseInt(fontSizeSaveInput.value, 10));
   } else {
     createNotification({
       title: 'Custom font size',
       message: 'Invalid value, should be between 10-20 pixels',
-      error: true
+      error: true,
     });
   }
 }
@@ -187,35 +190,28 @@ function validateAutoTimeInterval() {
 }
 
 function createTimeIntervalObject(value: string) {
-  const valueList = value.split(':');
-  if (valueList.length !== 2) {
+  const [hour, minute] = value.split(':');
+
+  if (hour === undefined || minute === undefined) {
     console.error(`Could not create time interval object for ${value}`);
     return null;
   }
 
   const intervalObject: ITimeIntervalEndpoint = {
-    hour: parseInt(valueList[0]),
-    minute: parseInt(valueList[1]),
+    hour: parseInt(hour, 10),
+    minute: parseInt(minute, 10),
     stringFormat: value,
   };
 
   return intervalObject;
 }
 
-function onAutoTimeStartSave() {
+function onTimeIntervalSave(input: HTMLInputElement, action: string) {
   if (validateAutoTimeInterval()) {
-    const intervalObject = createTimeIntervalObject(autoTimeStartInput.value);
-    if (intervalObject !== null) {
-      Messenger.requestAutoTimeSet(EXTENSION_OPTIONS.AUTO_TIME_START, intervalObject);
-    }
-  }
-}
+    const intervalObject = createTimeIntervalObject(input.value);
 
-function onAutoTimeEndSave() {
-  if (validateAutoTimeInterval()) {
-    const intervalObject = createTimeIntervalObject(autoTimeEndInput.value);
     if (intervalObject !== null) {
-      Messenger.requestAutoTimeSet(EXTENSION_OPTIONS.AUTO_TIME_END, intervalObject);
+      Messenger.UI.requestAutoTimeSet(action, intervalObject);
     }
   }
 }
@@ -235,7 +231,7 @@ function onHelpToggle(target: HTMLElement) {
 function onPaletteTemplateInputChanged(e: Event) {
   const target = <HTMLInputElement>e.target;
   const targetId = target.getAttribute('data-target');
-  const value = target.value;
+  const { value } = target;
 
   if (!template.palette.hasOwnProperty(targetId)) {
     console.error(`Invalid/missing 'data-target' attribute on palette template input: ${targetId}`);
@@ -243,15 +239,16 @@ function onPaletteTemplateInputChanged(e: Event) {
   }
 
   if (target.checkValidity()) {
-    const index = parseInt(value);
+    const index = parseInt(value, 10);
     template.palette[targetId] = index;
     updatePaletteTemplateColorPreview(target, pywalColors, index);
+    savePaletteTemplate();
   }
 }
 
 function onThemeTemplateInputChanged(target: HTMLSelectElement) {
   const targetId = target.getAttribute('data-target');
-  const value = (<HTMLOptionElement>target[target.selectedIndex]).value;
+  const { value } = <HTMLOptionElement>target[target.selectedIndex];
 
   if (!template.browser.hasOwnProperty(targetId)) {
     console.error(`Invalid 'data-target' attribute on theme template input: ${targetId}`);
@@ -264,25 +261,27 @@ function onThemeTemplateInputChanged(target: HTMLSelectElement) {
   }
 
   template.browser[targetId] = <PaletteColors>value;
+
+  saveThemeTemplate();
 }
 
-function onPaletteTemplateSave() {
+function savePaletteTemplate() {
   if (template === null || !template.hasOwnProperty('palette')) {
     console.error(`Template is null or the palette template is not set: ${template}`);
     return;
   }
 
-  Messenger.requestPaletteTemplateSet(template.palette);
+  Messenger.UI.requestPaletteTemplateSet(template.palette);
 }
 
 function onPaletteTemplateUseCurrent() {
-  for (const targetId of Object.values(PaletteColors)) {
+  Object.values(PaletteColors).forEach((targetId) => {
     const { index } = colorpicker.getSelectedData(targetId);
     const inputElement = <HTMLInputElement>paletteTemplateInputLookup[targetId];
 
     if (index === null) {
       console.log(`Palette color '${targetId}' is set to a custom color and can not be used`);
-      continue;
+      return;
     }
 
     if (inputElement === null) {
@@ -293,16 +292,18 @@ function onPaletteTemplateUseCurrent() {
     updatePaletteTemplateColorPreview(inputElement, pywalColors, index);
     inputElement.value = index.toString();
     template.palette[targetId] = index;
-  }
+  });
+
+  savePaletteTemplate();
 }
 
-function onThemeTemplateSave() {
+function saveThemeTemplate() {
   if (template === null || !template.hasOwnProperty('browser')) {
     console.error(`Template is null or the browser template is not set: ${template}`);
     return;
   }
 
-  Messenger.requestThemeTemplateSet(template.browser);
+  Messenger.UI.requestThemeTemplateSet(template.browser);
 }
 
 function updateOptionState({ option, enabled, value }: IOptionSetData) {
@@ -317,15 +318,17 @@ function updateOptionState({ option, enabled, value }: IOptionSetData) {
       autoTimeEndInput.value = value.stringFormat;
       break;
     default:
-      const target = <HTMLButtonElement>optionButtonsLookup[option];
-      if (target) {
-        setOptionEnabled(target, enabled);
-      }
+      setOptionEnabled(<HTMLButtonElement>optionButtonsLookup[option], enabled);
   }
 }
 
-function updatePaletteTemplateColorPreview(element: HTMLElement, updatedPywalColors: IPywalColors, index: number) {
+function updatePaletteTemplateColorPreview(
+  element: HTMLElement,
+  updatedPywalColors: IPywalColors,
+  index: number,
+) {
   const previewElement = <HTMLElement>element.previousElementSibling;
+
   if (!previewElement) {
     console.error('Could not find preview element as sibling to:', element);
     return;
@@ -341,9 +344,14 @@ function updatePaletteTemplateColorPreview(element: HTMLElement, updatedPywalCol
   }
 }
 
-function updatePaletteTemplateInputs(updatedTemplate: IPaletteTemplate, updatedPywalColors: IPywalColors) {
-  for (const key in updatedTemplate) {
+// TODO: Write generic function for updating template inputs
+function updatePaletteTemplateInputs(
+  updatedTemplate: IPaletteTemplate,
+  updatedPywalColors: IPywalColors,
+) {
+  Object.keys(updatedTemplate).forEach((key) => {
     const element = <HTMLInputElement>paletteTemplateInputLookup[key];
+
     if (element) {
       const index = updatedTemplate[key];
       element.value = index.toString();
@@ -351,19 +359,20 @@ function updatePaletteTemplateInputs(updatedTemplate: IPaletteTemplate, updatedP
     } else {
       console.error(`Found unhandled palette template target: ${key}`);
     }
-  }
+  });
 }
 
 function updateThemeTemplateInputs(updatedTemplate: IThemeTemplate) {
-  for (const key in updatedTemplate) {
+  Object.keys(updatedTemplate).forEach((key) => {
     const element = <HTMLSelectElement>themeTemplateInputLookup[key];
+
     if (element) {
       const defaultValue = updatedTemplate[key];
       element.value = defaultValue;
     } else {
       console.error(`Found unhandled theme template target: ${key}`);
     }
-  }
+  });
 }
 
 function createNotification(data: INotificationData) {
@@ -379,7 +388,7 @@ function createNotification(data: INotificationData) {
   const iconElement = <HTMLElement>clone.querySelector('i');
   const closeElement = <HTMLButtonElement>clone.querySelector('button');
 
-  titleElement.innerText = title + ':';
+  titleElement.innerText = `${title}:`;
   contentElement.innerText = message;
   iconElement.setAttribute('icon', error ? 'error' : 'bell');
   error && containerElement.classList.add('error');
@@ -392,8 +401,11 @@ function createNotification(data: INotificationData) {
   setTimeout(() => containerElement.classList.remove('fadeout'), 50);
   setTimeout(() => {
     if (notificationContainer.contains(containerElement)) {
-      // The notification might already be deleted if the MAX_SIMULTANEOUS_NOTIFICATIONS treshold is reached
-      notificationContainer.removeChild(containerElement)
+      /**
+       * The notification might already be deleted if the
+       * MAX_SIMULTANEOUS_NOTIFICATIONS treshold is reached
+       */
+      notificationContainer.removeChild(containerElement);
     }
   }, NOTIFICATION_TIMEOUT);
 }
@@ -404,11 +416,11 @@ function createThemeTemplateContent() {
 
   selectElement.classList.add('clickable');
 
-  for (const color of Object.values(PaletteColors)) {
+  Object.values(PaletteColors).forEach((color) => {
     const optionElement = <HTMLOptionElement>document.createElement('option');
     optionElement.innerText = color;
     selectElement.appendChild(optionElement);
-  }
+  });
 
   THEME_TEMPLATE_DATA.forEach((item: ITemplateItem) => {
     const clone = <HTMLElement>themeTemplate.content.cloneNode(true);
@@ -429,7 +441,12 @@ function createThemeTemplateContent() {
   });
 }
 
-function createPaletteItem(parent: HTMLElement, base: HTMLTemplateElement, item: ITemplateItem) {
+// TODO: Create generic function for creating these elements
+function createPaletteItem(
+  parent: HTMLElement,
+  base: HTMLTemplateElement,
+  item: ITemplateItem,
+) {
   const clone = <HTMLElement>base.content.cloneNode(true);
   const titleElement = <HTMLParagraphElement>clone.querySelector('.setting-title');
   const contentElement = <HTMLParagraphElement>clone.querySelector('.setting-description');
@@ -438,13 +455,18 @@ function createPaletteItem(parent: HTMLElement, base: HTMLTemplateElement, item:
   titleElement.innerText = item.title;
   contentElement.innerText = item.description;
   buttonElement.setAttribute('data-target', item.target);
+  buttonElement.style.backgroundColor = `var(${item.cssVariable})`;
 
   buttonElement.addEventListener('click', onColorClicked);
 
   parent.appendChild(clone);
 }
 
-function createPaletteTemplateItem(parent: HTMLElement, base: HTMLTemplateElement, item: ITemplateItem) {
+function createPaletteTemplateItem(
+  parent: HTMLElement,
+  base: HTMLTemplateElement,
+  item: ITemplateItem,
+) {
   const clone = <HTMLElement>base.content.cloneNode(true);
   const titleElement = <HTMLParagraphElement>clone.querySelector('.setting-title');
   const contentElement = <HTMLParagraphElement>clone.querySelector('.setting-description');
@@ -478,16 +500,15 @@ function createPaletteContent() {
 }
 
 function setInitialData(data: IInitialData) {
-  themepicker.setSelectedMode(data.themeMode);
-  themepicker.setBodyClass(data.templateThemeMode);
+  themepicker.setSelectedMode(data.themeMode, data.templateThemeMode);
 
   if (data.isApplied) {
     toggleIsAppliedBodyClass();
   }
 
-  for (const optionData of data.options) {
+  data.options.forEach((optionData) => {
     updateOptionState(optionData);
-  }
+  });
 
   colorpicker.setData(data.pywalColors, data.customColors, data.template.palette);
   colorpicker.updateSelected();
@@ -534,11 +555,10 @@ function handleExtensionMessage({ action, data }: IExtensionMessage) {
       template.browser = data;
       break;
     case EXTENSION_MESSAGES.THEME_MODE_SET:
-      if (data.updateSelected) {
-        themepicker.setSelectedMode(data.mode);
-      } else {
-        themepicker.setBodyClass(data.mode);
-      }
+      themepicker.setSelectedMode(data.mode, data.templateMode);
+      break;
+    case EXTENSION_MESSAGES.TEMPLATE_THEME_MODE_SET:
+      themepicker.setTemplateBodyClass(data);
       break;
     case EXTENSION_MESSAGES.OPTION_SET:
       updateOptionState(data);
@@ -552,27 +572,39 @@ function handleExtensionMessage({ action, data }: IExtensionMessage) {
     case EXTENSION_MESSAGES.DEBUGGING_INFO_SET:
       setDebuggingInfo(data);
       break;
+    default:
+      break;
   }
 }
 
 function setupListeners() {
   overlay.addEventListener('click', closeDialog);
   disableButton.addEventListener('click', onDisableClicked);
-  fetchButton.addEventListener('click', Messenger.requestFetch);
+  fetchButton.addEventListener('click', Messenger.UI.requestFetch);
   themeButton.addEventListener('click', () => openDialog(themepicker, themeButton));
   fontSizeSaveInput.addEventListener('change', Utils.debounce(onFontSizeSave, 500));
-  autoTimeStartInput.addEventListener('change', Utils.debounce(onAutoTimeStartSave, 500));
-  autoTimeEndInput.addEventListener('change', Utils.debounce(onAutoTimeEndSave, 500));
 
-  themeTemplateSaveButton.addEventListener('click', onThemeTemplateSave);
-  themeTemplateResetButton.addEventListener('click', Messenger.requestThemeTemplateReset);
+  autoTimeStartInput.addEventListener('change', Utils.debounce(() => {
+    onTimeIntervalSave(autoTimeStartInput, EXTENSION_OPTIONS.AUTO_TIME_START);
+  }, 500));
 
-  paletteTemplateSaveButton.addEventListener('click', onPaletteTemplateSave);
+  autoTimeEndInput.addEventListener('change', Utils.debounce(() => {
+    onTimeIntervalSave(autoTimeEndInput, EXTENSION_OPTIONS.AUTO_TIME_END);
+  }, 500));
+
+  themeTemplateResetButton.addEventListener('click', Messenger.UI.requestThemeTemplateReset);
+
   paletteTemplateCurrentButton.addEventListener('click', onPaletteTemplateUseCurrent);
-  paletteTemplateResetButton.addEventListener('click', Messenger.requestPaletteTemplateReset);
+  paletteTemplateResetButton.addEventListener('click', Messenger.UI.requestPaletteTemplateReset);
 
-  helpToggleButtons.forEach((button: HTMLElement) => button.addEventListener('click', () => onHelpToggle(button)));
-  settingCardHeaders.forEach((header: HTMLElement) => header.addEventListener('click', () => Utils.toggleOpen(header.parentElement)));
+  helpToggleButtons.forEach((button: HTMLElement) => {
+    button.addEventListener('click', () => onHelpToggle(button));
+  });
+
+  settingCardHeaders.forEach((header: HTMLElement) => {
+    header.addEventListener('click', () => Utils.toggleOpen(header.parentElement));
+  });
+
   optionButtons.forEach((button: HTMLElement) => {
     const option = button.getAttribute('data-option');
     button.addEventListener('click', onOptionClicked);
@@ -591,5 +623,5 @@ setupListeners();
 createPaletteContent();
 createThemeTemplateContent();
 
-Messenger.requestInitialData();
+Messenger.UI.requestInitialData();
 Utils.setVersionLabel(versionLabel);
