@@ -34,7 +34,7 @@ Pywalfox is supported on GNU/Linux, MacOS and Windows.
 ## Installation
 
 1. `pip install pywalfox`
-2. `pywalfox setup`
+2. `pywalfox install`
 3. Get the Pywalfox add-on for
    - [Firefox](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/)
    - [Thunderbird](https://addons.thunderbird.net/en-US/thunderbird/addon/pywalfox/)
@@ -104,10 +104,11 @@ pip uninstall pywalfox  # Removes the pywalfox executable
 ```
 
 ## Troubleshooting
+* If you updated from pywalfox-native <= v2.6, re-run the installation using `pywalfox install`
 * If you updated Pywalfox and have issues, try re-running the setup script as described in [Installation](#installation) above.
 * Check the log in the Debugging section at the bottom of the Pywalfox settings page
 
-* If you have a permission error when running `pywalfox setup`, you can (probably) fix it by doing one of the following:
+* If you have a permission error when running `pywalfox install`, you can (probably) fix it by doing one of the following:
 
   - `chown <username> ~/.mozilla/native-messaging-hosts`
 
