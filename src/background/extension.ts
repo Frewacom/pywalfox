@@ -62,6 +62,7 @@ export default class Extension {
       cssToggleFailed: this.cssToggleFailed.bind(this),
       cssFontSizeSetSuccess: this.cssFontSizeSetSuccess.bind(this),
       cssFontSizeSetFailed: this.cssFontSizeSetFailed.bind(this),
+      themeModeSet: this.themeModeSet.bind(this),
     });
 
     browser.commands.onCommand.addListener(this.onCommand.bind(this));
@@ -605,6 +606,10 @@ export default class Extension {
 
   private cssFontSizeSetFailed(error: string) {
     Messenger.UI.sendNotification('Font size', error, false);
+  }
+
+  private themeModeSet(mode: ThemeModes) {
+    this.setThemeMode(mode);
   }
 
   public async start() {

@@ -83,6 +83,7 @@ export const NATIVE_MESSAGES = {
   CSS_ENABLE: 'css:enable',
   CSS_DISABLE: 'css:disable',
   CSS_FONT_SIZE: 'css:font:size',
+  THEME_MODE: 'theme:mode',
 };
 
 export const DARKREADER_MESSAGES = {

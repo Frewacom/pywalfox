@@ -234,6 +234,7 @@ export interface INativeAppMessageCallbacks {
   cssToggleFailed: (target: string, error: string) => void,
   cssFontSizeSetSuccess: (size: number) => void,
   cssFontSizeSetFailed: (error: string) => void,
+  themeModeSet: (mode: ThemeModes) => void,
 }
 
 export interface INodeLookup {

@@ -1,4 +1,5 @@
 import {
+  ThemeModes,
   INativeAppMessage,
   INativeAppRequest,
   INativeAppMessageCallbacks,
@@ -58,6 +59,9 @@ export default class NativeApp {
         break;
       case NATIVE_MESSAGES.CSS_FONT_SIZE:
         this.onCssFontSizeResponse(message);
+        break;
+      case NATIVE_MESSAGES.THEME_MODE:
+        this.onThemeModeResponse(message);
         break;
       case NATIVE_MESSAGES.INVALID_ACTION:
         this.logError(`Native app recieved unhandled message action: ${message.action}`);
@@ -131,6 +135,25 @@ export default class NativeApp {
       this.callbacks.cssFontSizeSetSuccess(parseInt(updatedFontSize, 10));
     } else {
       this.callbacks.cssFontSizeSetFailed(message.error);
+    }
+  }
+
+  private onThemeModeResponse(message: INativeAppMessage) {
+    const mode: string = this.getData(message);
+
+    if (!mode) {
+      this.logError('Received theme mode command, but the new mode was not specified');
+      return;
+    }
+
+    if (mode === ThemeModes.Dark) {
+      this.callbacks.themeModeSet(ThemeModes.Dark);
+    } else if (mode === ThemeModes.Light) {
+      this.callbacks.themeModeSet(ThemeModes.Light);
+    } else if (mode === ThemeModes.Auto) {
+      this.callbacks.themeModeSet(ThemeModes.Auto);
+    } else {
+      this.logError(`Received theme mode command, but the mode "${mode}" was invalid`);
     }
   }
 
