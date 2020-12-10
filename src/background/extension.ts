@@ -540,8 +540,8 @@ export default class Extension {
 
   private nativeAppDisconnected() {
     this.state.setConnected(false);
+    this.state.resetVersion();
 
-    Messenger.UI.sendDebuggingOutput('Disconnected from native app', true);
     Messenger.UI.sendDebuggingInfo({ connected: false, version: this.state.getVersion() });
   }
 

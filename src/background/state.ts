@@ -331,6 +331,10 @@ export default class State {
     });
   }
 
+  public resetVersion() {
+    return this.setVersion(0);
+  }
+
   public setColors(pywalColors: IPywalColors, colorscheme: IColorscheme) {
     return this.set({
       theme: {
