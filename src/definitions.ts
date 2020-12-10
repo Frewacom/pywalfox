@@ -65,6 +65,12 @@ export enum DuckDuckGoThemeKeys {
   Pywalfox = 'pywalfox',
 }
 
+export enum NativeAppErrors {
+  ManifestNotInstalled,
+  UnexpectedError,
+  Unknown,
+}
+
 export type DuckDuckGoColorKeys = Exclude<DuckDuckGoSettingKeys, DuckDuckGoSettingKeys.ThemeId>;
 
 export type ITemplateThemeMode = Exclude<ThemeModes, ThemeModes.Auto>;
@@ -235,6 +241,7 @@ export interface INativeAppMessageCallbacks {
   cssFontSizeSetSuccess: (size: number) => void,
   cssFontSizeSetFailed: (error: string) => void,
   themeModeSet: (mode: ThemeModes) => void,
+  connectionError: (type: NativeAppErrors) => void,
 }
 
 export interface INodeLookup {
