@@ -11,6 +11,7 @@ import {
   IExtensionMessage,
   ThemeModes,
   CSSTargets,
+  NativeAppErrors,
 } from '@definitions';
 
 import {
@@ -54,6 +55,7 @@ export default class Extension {
       connected: this.nativeAppConnected.bind(this),
       updateNeeded: this.updateNeeded.bind(this),
       disconnected: this.nativeAppDisconnected.bind(this),
+      connectionError: this.nativeAppConnectionError.bind(this),
       version: this.validateVersion.bind(this),
       output: Messenger.UI.sendDebuggingOutput.bind(this),
       pywalColorsFetchSuccess: this.onPywalColorsFetchSuccess.bind(this),
@@ -543,6 +545,10 @@ export default class Extension {
     this.state.resetVersion();
 
     Messenger.UI.sendDebuggingInfo({ connected: false, version: this.state.getVersion() });
+  }
+
+  private nativeAppConnectionError(errorType: NativeAppErrors) {
+    // TODO: Save error and display error page
   }
 
   private async onPywalColorsFetchSuccess({ colors }: IPywalData) {

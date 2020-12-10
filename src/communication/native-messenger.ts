@@ -2,6 +2,7 @@ import {
   ThemeModes,
   INativeAppMessage,
   INativeAppRequest,
+  NativeAppErrors,
   INativeAppMessageCallbacks,
 } from '@definitions';
 
@@ -169,6 +170,19 @@ export default class NativeApp {
   private async onDisconnect({ error }: browser.runtime.Port) {
     clearTimeout(this.versionCheckTimeout);
     clearTimeout(this.connectedCheckTimeout);
+
+    if (error) {
+      switch (error.message) {
+        case 'Error: No such native application pywalfox':
+          this.callbacks.connectionError(NativeAppErrors.ManifestNotInstalled);
+        case "Error: An unexpected error occurred":
+          // BUG: For some reason, the "File at path <path> does not exist, or is not executable"
+          // error does not get set, so we will just assume that is the cause for this for now.
+          this.callbacks.connectionError(NativeAppErrors.UnexpectedError);
+        default:
+          this.callbacks.connectionError(NativeAppErrors.Unknown);
+      }
+    }
 
     this.logError(`Disconnected from native messaging host: ${error}`);
 
