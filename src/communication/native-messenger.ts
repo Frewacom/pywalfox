@@ -28,8 +28,12 @@ export default class NativeApp {
     this.callbacks = callbacks;
   }
 
+  private log(message: string, error?: boolean) {
+    this.callbacks.output(message, error);
+  }
+
   private logError(error: string) {
-    this.callbacks.output(error, true);
+    this.log(error, true);
   }
 
   private getData(message: INativeAppMessage) {
@@ -163,12 +167,12 @@ export default class NativeApp {
   }
 
   private async onDisconnect({ error }: browser.runtime.Port) {
-    if (error) {
-      clearTimeout(this.versionCheckTimeout);
-      clearTimeout(this.connectedCheckTimeout);
-      this.callbacks.disconnected();
-      console.log(`Disconnected from native messaging host: ${error}`);
-    }
+    clearTimeout(this.versionCheckTimeout);
+    clearTimeout(this.connectedCheckTimeout);
+
+    this.logError(`Disconnected from native messaging host: ${error}`);
+
+    this.callbacks.disconnected();
   }
 
   private setupListeners() {
@@ -179,7 +183,7 @@ export default class NativeApp {
   private sendMessage(message: INativeAppRequest) {
     if (!this.isConnected) {
       // If we are not connected, it means that an error occured. No point to try and reconnect
-      console.error('Failed to send data to native app. You are not connected');
+      this.logError('Failed to send data to native app. You are not connected');
       return;
     }
 
@@ -203,7 +207,7 @@ export default class NativeApp {
 
       this.callbacks.connected();
     } else {
-      console.error(`Failed to connect to native app: ${error.message}`);
+      this.logError(`Failed to connect to native app: ${error.message}`);
     }
   }
 
