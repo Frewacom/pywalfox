@@ -18,6 +18,7 @@ export const DARKREADER_CONNECTION_ID = 'addon@darkreader.org';
 export const EXTENSION_PAGES = {
   UPDATE: 'ui/update.html',
   SETTINGS: 'ui/settings.html',
+  NATIVE_ERROR: 'ui/native_error.html',
 };
 
 export const EXTERNAL_MESSAGES = {
@@ -50,6 +51,7 @@ export const EXTENSION_MESSAGES = {
   CSS_DISABLE_SUCCESS: 'css:disable:success',
   CSS_DISABLE_FAILED: 'css:disable:failed',
   DEBUGGING_INFO_SET: 'debugging:info:set',
+  DEBUGGING_INFO_GET: 'debugging:info:get',
   DEBUGGING_OUTPUT: 'debugging:output',
   DDG_THEME_GET: 'ddg:theme:get',
   DDG_THEME_SET: 'ddg:theme:set',

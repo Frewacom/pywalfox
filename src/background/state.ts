@@ -16,6 +16,7 @@ import {
   CSSTargets,
   ThemeModes,
   TemplateTypes,
+  NativeAppErrors,
   ColorschemeTypes,
 } from '@definitions';
 
@@ -31,6 +32,7 @@ export default class State {
       version: 0.0,
       connected: false,
       updateMuted: false,
+      connectionError: null,
       theme: {
         mode: ThemeModes.Dark,
         isDay: false,
@@ -129,8 +131,9 @@ export default class State {
 
   public getDebuggingInfo() {
     return {
-      connected: this.getConnected(),
       version: this.getVersion(),
+      connected: this.getConnected(),
+      connectionError: this.getConnectionError(),
     };
   }
 
@@ -144,6 +147,10 @@ export default class State {
 
   public getConnected() {
     return this.currentState.connected;
+  }
+
+  public getConnectionError() {
+    return this.currentState.connectionError;
   }
 
   public getUpdateMuted() {
@@ -255,8 +262,12 @@ export default class State {
     return this.set({ connected });
   }
 
-  public setUpdateMuted(muted: boolean) {
-    return this.set({ updateMuted: muted });
+  public setConnectionError(connectionError: NativeAppErrors) {
+    return this.set({ connectionError });
+  }
+
+  public setUpdateMuted(updateMuted: boolean) {
+    return this.set({ updateMuted });
   }
 
   public setPaletteTemplate(template: IPaletteTemplate) {

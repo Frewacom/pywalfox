@@ -94,6 +94,10 @@ export function requestInitialData() {
   sendMessage({ action: EXTENSION_MESSAGES.INITIAL_DATA_GET });
 }
 
+export function requestDebuggingInfo() {
+  sendMessage({ action: EXTENSION_MESSAGES.DEBUGGING_INFO_GET });
+}
+
 export function requestFetch() {
   sendMessage({ action: EXTENSION_MESSAGES.THEME_FETCH });
 }

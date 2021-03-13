@@ -39,12 +39,15 @@ import ExtensionPage from './extension-page';
 
 export default class Extension {
   private state: State;
-  private nativeMessenger: NativeMessenger;
-  private darkreaderMessenger: DarkreaderMessenger;
-  private settingsPage: ExtensionPage;
-  private updatePage: ExtensionPage;
   private autoMode: AutoMode;
   private stateLoadPromise: Promise<void>;
+
+  private settingsPage: ExtensionPage;
+  private updatePage: ExtensionPage;
+  private nativeErrorPage: ExtensionPage;
+
+  private nativeMessenger: NativeMessenger;
+  private darkreaderMessenger: DarkreaderMessenger;
 
   constructor() {
     this.state = new State();
@@ -55,7 +58,6 @@ export default class Extension {
       connected: this.nativeAppConnected.bind(this),
       updateNeeded: this.updateNeeded.bind(this),
       disconnected: this.nativeAppDisconnected.bind(this),
-      connectionError: this.nativeAppConnectionError.bind(this),
       version: this.validateVersion.bind(this),
       output: Messenger.UI.sendDebuggingOutput.bind(this),
       pywalColorsFetchSuccess: this.onPywalColorsFetchSuccess.bind(this),
@@ -156,6 +158,9 @@ export default class Extension {
 
         Messenger.UI.sendInitialData(this.state.getInitialData());
         break;
+      case EXTENSION_MESSAGES.DEBUGGING_INFO_GET:
+        Messenger.UI.sendDebuggingInfo(this.state.getDebuggingInfo());
+        break;
       case EXTENSION_MESSAGES.DDG_THEME_GET:
         this.setDDGTheme();
         break;
@@ -195,6 +200,7 @@ export default class Extension {
   private updateExtensionPagesTheme(extensionTheme: IExtensionTheme) {
     this.settingsPage.setTheme(extensionTheme);
     this.updatePage.setTheme(extensionTheme);
+    this.nativeErrorPage.setTheme(extensionTheme);
   }
 
   private fetchTheme() {
@@ -540,15 +546,18 @@ export default class Extension {
     this.state.setConnected(true);
   }
 
-  private nativeAppDisconnected() {
+  private async nativeAppDisconnected(error: NativeAppErrors) {
     this.state.setConnected(false);
     this.state.resetVersion();
+    this.state.setConnectionError(error);
 
-    Messenger.UI.sendDebuggingInfo({ connected: false, version: this.state.getVersion() });
-  }
+    await this.nativeErrorPage.open();
 
-  private nativeAppConnectionError(errorType: NativeAppErrors) {
-    // TODO: Save error and display error page
+    Messenger.UI.sendDebuggingInfo({
+      version: this.state.getVersion(),
+      connected: false,
+      connectionError: error,
+    });
   }
 
   private async onPywalColorsFetchSuccess({ colors }: IPywalData) {
@@ -621,6 +630,7 @@ export default class Extension {
   public async start() {
     this.settingsPage = new ExtensionPage(EXTENSION_PAGES.SETTINGS);
     this.updatePage = new ExtensionPage(EXTENSION_PAGES.UPDATE);
+    this.nativeErrorPage = new ExtensionPage(EXTENSION_PAGES.NATIVE_ERROR);
 
     this.stateLoadPromise = this.state.load();
     await this.stateLoadPromise;
