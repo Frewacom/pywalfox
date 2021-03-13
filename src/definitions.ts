@@ -69,6 +69,7 @@ export enum NativeAppErrors {
   ManifestNotInstalled,
   UnexpectedError,
   Unknown,
+  None,
 }
 
 export type DuckDuckGoColorKeys = Exclude<DuckDuckGoSettingKeys, DuckDuckGoSettingKeys.ThemeId>;
@@ -181,6 +182,8 @@ export interface IExtensionMessage {
   data?: any;
 }
 
+export type IExtensionMessageCallback = (message: IExtensionMessage) => void;
+
 export type IDarkreaderErrorCallback = (message: string) => void;
 
 export interface IDarkreaderDarkscheme {
@@ -231,7 +234,7 @@ export interface INativeAppRequest {
 export interface INativeAppMessageCallbacks {
   connected: () => void,
   updateNeeded: () => void,
-  disconnected: () => void,
+  disconnected: (error: NativeAppErrors) => void,
   version: (version: string) => void,
   output: (message: string, error?: boolean) => void,
   pywalColorsFetchSuccess: (pywalData: IPywalData) => void,
@@ -241,7 +244,6 @@ export interface INativeAppMessageCallbacks {
   cssFontSizeSetSuccess: (size: number) => void,
   cssFontSizeSetFailed: (error: string) => void,
   themeModeSet: (mode: ThemeModes) => void,
-  connectionError: (type: NativeAppErrors) => void,
 }
 
 export interface INodeLookup {
@@ -264,6 +266,7 @@ export interface IInitialData {
 export interface IDebuggingInfoData {
   version: number;
   connected: boolean;
+  connectionError: NativeAppErrors;
 }
 
 export interface INotificationData {
@@ -300,6 +303,7 @@ export type IAutoModeTriggerCallback = (isDay: boolean) => void;
 export interface IExtensionState {
   version: number,
   connected: boolean;
+  connectionError: NativeAppErrors,
   updateMuted: boolean;
   theme: {
     mode: ThemeModes;

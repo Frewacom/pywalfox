@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>Pywalfox - Update/install required</title>
+    <title>Pywalfox - Connection error</title>
     <link rel="stylesheet" href="../dist/styles.bundle.css">
   </head>
   <body>
@@ -15,39 +15,47 @@
         <section class="card expand space-between margin-bottom-lg" open>
           <div class="card-header no-hover expand row v-center">
             <i icon="message"></i>
-            <p class="card-title">Native messenger update</p>
+            <p class="card-title">Native messenger connection error</p>
           </div>
           <div class="card-content card-subsection column expand align-left" open>
             <h3 class="card-help-title">Why am I getting this?</h3>
             <p class="card-help-description">
-              The installed Pywalfox native messaging application is outdated.<br>
-              If you do not fix this, you may experience issues and certain features may not be available.<br><br>
-
-              If you encounter bugs with the new version, refer to the open issues on GitHub (or create a new one).<br>
+              The Pywalfox extension could not create a connection to the native messenger.
+              This might happen if the native messenger is outdated or if it is not installed correctly.
+              Because of this, the extension will not work as expected.<br><br>
+              Please refer to the following links or try the suggested fix below.
             </p>
             <div class="row v-center margin-top-sm">
-              <a class="row v-center btn btn-sm btn-lighter margin-right-sm" href="https://github.com/frewacom/pywalfox/issues" target="_blank" rel="noopener noreferrer">
+              <a
+                class="row v-center btn btn-sm btn-lighter margin-right-sm"
+                href="https://github.com/frewacom/pywalfox/issues"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <i icon="external-link"></i>
                 GitHub issues
               </a>
-              <a class="row v-center btn btn-sm btn-lighter margin-right-sm" href="https://github.com/frewacom/pywalfox#installation" target="_blank" rel="noopener noreferrer">
+              <a
+                class="row v-center btn btn-sm btn-lighter margin-right-sm"
+                href="https://github.com/frewacom/pywalfox#installation"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <i icon="external-link"></i>
                 Installation guide
               </a>
-              <a class="row v-center btn btn-sm btn-lighter" href="https://github.com/frewacom/pywalfox#troubleshooting" target="_blank" rel="noopener noreferrer">
+              <a
+                class="row v-center btn btn-sm btn-lighter"
+                href="https://github.com/frewacom/pywalfox#troubleshooting"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <i icon="external-link" class="icon-md"></i>
                 Troubleshooting guide
               </a>
             </div>
           </div>
           <div class="card-content card-content-lg-padding padding-v-lg column expand">
-            <p class="margin-bottom">
-              If you have previously installed the Pywalfox native messaging application,
-              you can simply run the following command to update to the latest version (assuming you installed it using pip):
-            </p>
-            <code class="margin-bottom">
-              pip install --upgrade pywalfox
-            </code>
             <div class="box row expand v-center margin-bottom-sm margin-top">
               <button class="btn btn-primary expand margin-right-sm" id="disable-button">Do not remind me again</button>
             </div>
@@ -55,6 +63,6 @@
         </section>
       </main>
     </div>
-    <script src="../dist/update.bundle.js"></script>
+    <script src="../dist/native_error.bundle.js"></script>
   </body>
 </html>
