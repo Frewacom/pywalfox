@@ -66,3 +66,12 @@ body.auto #auto-time-interval-option,
 #user-chrome-option[selected] + #font-size-option {
   display: flex;
 }
+
+.settings-separator {
+    height: 1px;
+    width: calc(100% - 2 * var(--spacing-md));
+    background-color: var(--border-color);
+    border: 0;
+    box-sizing: border-box;
+    margin: var(--spacing-sm) var(--spacing-md);
+}

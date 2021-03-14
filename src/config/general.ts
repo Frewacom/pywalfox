@@ -76,6 +76,8 @@ export const EXTENSION_OPTIONS = {
   DUCKDUCKGO: 'duckduckgo',
   DARKREADER: 'darkreader',
   FETCH_ON_STARTUP: 'fetchOnStartup',
+  UPDATE_MUTED: 'updateMuted',
+  NATIVE_ERROR_MUTED: 'nativeErrorMuted',
 };
 
 export const NATIVE_MESSAGES = {

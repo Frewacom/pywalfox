@@ -31,8 +31,6 @@ export default class State {
     this.initialState = {
       version: 0.0,
       connected: false,
-      updateMuted: false,
-      nativeErrorMuted: false,
       nativeError: null,
       theme: {
         mode: ThemeModes.Dark,
@@ -58,6 +56,8 @@ export default class State {
         fetchOnStartup: false,
         autoTimeStart: { hour: 10, minute: 0, stringFormat: '10:00' },
         autoTimeEnd: { hour: 19, minute: 0, stringFormat: '19:00' },
+        updateMuted: false,
+        nativeErrorMuted: false,
       },
     };
   }
@@ -155,11 +155,11 @@ export default class State {
   }
 
   public getNativeErrorMuted() {
-    return this.currentState.nativeErrorMuted;
+    return this.currentState.options.nativeErrorMuted;
   }
 
   public getUpdateMuted() {
-    return this.currentState.updateMuted;
+    return this.currentState.options.updateMuted;
   }
 
   public getTemplate() {
@@ -271,14 +271,6 @@ export default class State {
     return this.set({ nativeError });
   }
 
-  public setNativeErrorMuted(nativeErrorMuted: boolean) {
-    return this.set({ nativeErrorMuted });
-  }
-
-  public setUpdateMuted(updateMuted: boolean) {
-    return this.set({ updateMuted });
-  }
-
   public setPaletteTemplate(template: IPaletteTemplate) {
     return this.setIndividualTemplate('palette', template);
   }
@@ -297,6 +289,14 @@ export default class State {
 
   public setBrowserTheme(browserTheme: IBrowserTheme) {
     return this.setColorschemeProperty('browser', browserTheme);
+  }
+
+  public setUpdateMuted(enabled: boolean) {
+    return this.setOption('updateMuted', enabled);
+  }
+
+  public setNativeErrorMuted(enabled: boolean) {
+    return this.setOption('nativeErrorMuted', enabled);
   }
 
   public setDDGThemeEnabled(enabled: boolean) {
