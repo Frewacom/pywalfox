@@ -175,6 +175,8 @@ export interface IExtensionOptions {
   fetchOnStartup: boolean;
   autoTimeStart: ITimeIntervalEndpoint;
   autoTimeEnd: ITimeIntervalEndpoint;
+  updateMuted: boolean;
+  nativeErrorMuted: boolean;
 }
 
 export interface IExtensionMessage {
@@ -309,8 +311,6 @@ export interface IExtensionState {
   version: number,
   connected: boolean;
   nativeError: INativeAppError,
-  updateMuted: boolean;
-  nativeErrorMuted: boolean;
   theme: {
     mode: ThemeModes;
     isDay: boolean;

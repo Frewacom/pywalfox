@@ -117,6 +117,12 @@ export default class Extension {
       case EXTENSION_OPTIONS.FETCH_ON_STARTUP:
         this.setFetchOnStartupEnabled(optionData);
         break;
+      case EXTENSION_OPTIONS.NATIVE_ERROR_MUTED:
+        this.setNativeErrorMuted(optionData);
+        break;
+      case EXTENSION_OPTIONS.UPDATE_MUTED:
+        this.setUpdateMuted(optionData);
+        break;
       default:
         Messenger.UI.sendDebuggingOutput(`Received unhandled option: ${optionData.option}`, true);
     }
@@ -345,6 +351,16 @@ export default class Extension {
 
   private setFetchOnStartupEnabled({ option, enabled }) {
     this.state.setFetchOnStartupEnabled(enabled);
+    Messenger.UI.sendOption(option, enabled);
+  }
+
+  private setUpdateMuted({ option, enabled }) {
+    this.state.setUpdateMuted(enabled);
+    Messenger.UI.sendOption(option, enabled);
+  }
+
+  private setNativeErrorMuted({ option, enabled }) {
+    this.state.setNativeErrorMuted(enabled);
     Messenger.UI.sendOption(option, enabled);
   }
 
