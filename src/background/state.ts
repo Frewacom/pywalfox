@@ -12,11 +12,11 @@ import {
   ITimeIntervalEndpoint,
   IExtensionState,
   IOptionSetData,
+  INativeAppError,
   ITemplateThemeMode,
   CSSTargets,
   ThemeModes,
   TemplateTypes,
-  NativeAppErrors,
   ColorschemeTypes,
 } from '@definitions';
 
@@ -32,7 +32,8 @@ export default class State {
       version: 0.0,
       connected: false,
       updateMuted: false,
-      connectionError: null,
+      nativeErrorMuted: false,
+      nativeError: null,
       theme: {
         mode: ThemeModes.Dark,
         isDay: false,
@@ -133,7 +134,7 @@ export default class State {
     return {
       version: this.getVersion(),
       connected: this.getConnected(),
-      connectionError: this.getConnectionError(),
+      nativeError: this.getNativeError(),
     };
   }
 
@@ -149,8 +150,12 @@ export default class State {
     return this.currentState.connected;
   }
 
-  public getConnectionError() {
-    return this.currentState.connectionError;
+  public getNativeError() {
+    return this.currentState.nativeError;
+  }
+
+  public getNativeErrorMuted() {
+    return this.currentState.nativeErrorMuted;
   }
 
   public getUpdateMuted() {
@@ -262,8 +267,12 @@ export default class State {
     return this.set({ connected });
   }
 
-  public setConnectionError(connectionError: NativeAppErrors) {
-    return this.set({ connectionError });
+  public setNativeError(nativeError: INativeAppError) {
+    return this.set({ nativeError });
+  }
+
+  public setNativeErrorMuted(nativeErrorMuted: boolean) {
+    return this.set({ nativeErrorMuted });
   }
 
   public setUpdateMuted(updateMuted: boolean) {

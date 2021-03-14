@@ -9,9 +9,9 @@ import {
   IExtensionTheme,
   IPaletteTemplate,
   IExtensionMessage,
+  INativeAppError,
   ThemeModes,
   CSSTargets,
-  NativeAppErrors,
 } from '@definitions';
 
 import {
@@ -191,6 +191,10 @@ export default class Extension {
       case EXTENSION_MESSAGES.UPDATE_PAGE_MUTE:
         this.state.setUpdateMuted(true);
         this.updatePage.close();
+        break;
+      case EXTENSION_MESSAGES.NATIVE_ERROR_PAGE_MUTE:
+        this.state.setNativeErrorMuted(true);
+        this.nativeErrorPage.close();
         break;
       default:
         break;
@@ -546,17 +550,19 @@ export default class Extension {
     this.state.setConnected(true);
   }
 
-  private async nativeAppDisconnected(error: NativeAppErrors) {
+  private async nativeAppDisconnected(nativeError: INativeAppError) {
     this.state.setConnected(false);
     this.state.resetVersion();
-    this.state.setConnectionError(error);
+    this.state.setNativeError(nativeError);
 
-    await this.nativeErrorPage.open();
+    if (!this.state.getNativeErrorMuted()) {
+        await this.nativeErrorPage.open();
+    }
 
     Messenger.UI.sendDebuggingInfo({
       version: this.state.getVersion(),
       connected: false,
-      connectionError: error,
+      nativeError: nativeError,
     });
   }
 

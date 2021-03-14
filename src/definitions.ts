@@ -218,6 +218,11 @@ export interface IThemeModeData {
   templateMode: ITemplateThemeMode;
 }
 
+export interface INativeAppError {
+  type: NativeAppErrors;
+  message: string;
+}
+
 export interface INativeAppMessage {
   action: string;
   success: boolean;
@@ -234,7 +239,7 @@ export interface INativeAppRequest {
 export interface INativeAppMessageCallbacks {
   connected: () => void,
   updateNeeded: () => void,
-  disconnected: (error: NativeAppErrors) => void,
+  disconnected: (nativeError: INativeAppError) => void,
   version: (version: string) => void,
   output: (message: string, error?: boolean) => void,
   pywalColorsFetchSuccess: (pywalData: IPywalData) => void,
@@ -266,7 +271,7 @@ export interface IInitialData {
 export interface IDebuggingInfoData {
   version: number;
   connected: boolean;
-  connectionError: NativeAppErrors;
+  nativeError: INativeAppError;
 }
 
 export interface INotificationData {
@@ -303,8 +308,9 @@ export type IAutoModeTriggerCallback = (isDay: boolean) => void;
 export interface IExtensionState {
   version: number,
   connected: boolean;
-  connectionError: NativeAppErrors,
+  nativeError: INativeAppError,
   updateMuted: boolean;
+  nativeErrorMuted: boolean;
   theme: {
     mode: ThemeModes;
     isDay: boolean;
