@@ -151,3 +151,7 @@ export function requestPaletteTemplateReset() {
 export function requestUpdatePageMute() {
   sendMessage({ action: EXTENSION_MESSAGES.UPDATE_PAGE_MUTE });
 }
+
+export function requestNativeErrorPageMute() {
+  sendMessage({ action: EXTENSION_MESSAGES.NATIVE_ERROR_PAGE_MUTE });
+}

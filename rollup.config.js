@@ -63,9 +63,9 @@ export default [
     plugins: defaultPlugins,
   },
   {
-    input: 'src/ui/native_error.ts',
+    input: 'src/ui/native-error.ts',
     output: {
-      file: 'extension/dist/native_error.bundle.js',
+      file: 'extension/dist/native-error.bundle.js',
       format: 'iife',
     },
     plugins: defaultPlugins,
