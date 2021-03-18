@@ -6,16 +6,15 @@ import {
 
 import {
   requestDebuggingInfo,
-  requestNativeErrorPageMute
+  requestNativeErrorPageMute,
 } from '@communication/content-scripts/ui';
 
 import { EXTENSION_MESSAGES } from '@config/general';
 import { initializeExtensionPage } from '@ui/page';
 
-const errorElement = <HTMLParagraphElement>document.getElementById('error-message');
-const fixElement = <HTMLParagraphElement>document.getElementById('fix-message');
-const fixCodeElement = <HTMLParagraphElement>document.getElementById('fix-code');
+const retryButton = <HTMLButtonElement>document.getElementById('retry-button');
 const disableButton = <HTMLButtonElement>document.getElementById('disable-button');
+const errorElement = <HTMLParagraphElement>document.getElementById('error-message');
 
 function setConnectionError({ nativeError }: IDebuggingInfoData) {
   switch (nativeError.type) {
@@ -43,6 +42,10 @@ function handleExtensionMessage({ action, data }: IExtensionMessage) {
   }
 }
 
+// Connection to the native messaging host will automatically be made
+// on extension load. The easiest way to implement this funcitonality is
+// by simply reloading the extension.
+retryButton.addEventListener('click', () => browser.runtime.reload());
 disableButton.addEventListener('click', requestNativeErrorPageMute);
 
 initializeExtensionPage(
