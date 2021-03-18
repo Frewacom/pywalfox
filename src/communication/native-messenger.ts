@@ -169,7 +169,6 @@ export default class NativeApp {
   }
 
   private async onDisconnect(port: browser.runtime.Port) {
-    console.log(port);
     const { error } = port;
 
     clearTimeout(this.versionCheckTimeout);
