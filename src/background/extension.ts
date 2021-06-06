@@ -654,7 +654,7 @@ export default class Extension {
     this.updatePage = new ExtensionPage(EXTENSION_PAGES.UPDATE);
     this.nativeErrorPage = new ExtensionPage(EXTENSION_PAGES.NATIVE_ERROR);
 
-    this.stateLoadPromise = this.state.load();
+    this.stateLoadPromise = this.state.load(this.updateThemeForCurrentMode.bind(this));
     await this.stateLoadPromise;
     this.stateLoadPromise = null;
 
