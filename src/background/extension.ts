@@ -572,13 +572,13 @@ export default class Extension {
     this.state.setNativeError(nativeError);
 
     if (!this.state.getNativeErrorMuted()) {
-        await this.nativeErrorPage.open();
+      await this.nativeErrorPage.open();
     }
 
     Messenger.UI.sendDebuggingInfo({
       version: this.state.getVersion(),
       connected: false,
-      nativeError: nativeError,
+      nativeError,
     });
   }
 

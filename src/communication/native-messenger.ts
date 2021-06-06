@@ -183,12 +183,15 @@ export default class NativeApp {
       switch (error.message) {
         case 'Error: No such native application pywalfox':
           nativeError.type = NativeAppErrors.ManifestNotInstalled;
-        case "Error: An unexpected error occurred":
+          break;
+        case 'Error: An unexpected error occurred':
           // BUG: For some reason, the "File at path <path> does not exist, or is not executable"
           // error does not get set, so we will just assume that is the cause for this for now.
           nativeError.type = NativeAppErrors.UnexpectedError;
+          break;
         default:
           nativeError.type = NativeAppErrors.Unknown;
+          break;
       }
 
       nativeError.message = error.message;
