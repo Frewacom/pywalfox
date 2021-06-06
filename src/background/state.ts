@@ -18,6 +18,7 @@ import {
   ThemeModes,
   TemplateTypes,
   ColorschemeTypes,
+  PaletteColors,
 } from '@definitions';
 
 import { DEFAULT_CSS_FONT_SIZE } from '@config/general';
@@ -53,7 +54,7 @@ export default class State {
         fontSize: DEFAULT_CSS_FONT_SIZE,
         duckduckgo: false,
         darkreader: false,
-        fetchOnStartup: false,
+        fetchOnStartup: true,
         autoTimeStart: { hour: 10, minute: 0, stringFormat: '10:00' },
         autoTimeEnd: { hour: 19, minute: 0, stringFormat: '19:00' },
         updateMuted: false,
@@ -401,14 +402,37 @@ export default class State {
     });
   }
 
-  public async load() {
+  public async load(themeRefreshCallback: () => void) {
+    let shouldRefresh = false
+    const browserInfo = await browser.runtime.getBrowserInfo()
     this.currentState = await browser.storage.local.get(this.initialState);
 
     // Temporary state migration until a real migration system is implemented
     if (this.getTemplate().duckduckgo.hasOwnProperty('modifier')) {
       this.currentState.theme.templates.dark.duckduckgo = DEFAULT_THEME_DARK.duckduckgo;
       this.currentState.theme.templates.light.duckduckgo = DEFAULT_THEME_LIGHT.duckduckgo;
-      await browser.storage.local.set(this.currentState);
+    }
+
+    // Fix for v89 tab border
+    if (browserInfo?.version && browserInfo.version.split('.')[0] === '89') {
+      const { dark, light } = this.currentState.theme.templates
+
+      // We make sure to only change this property if it has not been modified by the user
+      if (dark.browser.tab_line === PaletteColors.AccentPrimary) {
+          this.currentState.theme.templates.dark.browser.tab_line = PaletteColors.BackgroundLight
+          shouldRefresh = true
+      }
+
+      if (light.browser.tab_line === PaletteColors.AccentPrimary) {
+          this.currentState.theme.templates.light.browser.tab_line = PaletteColors.BackgroundLight
+          shouldRefresh = true
+      }
+    }
+
+    await browser.storage.local.set(this.currentState);
+
+    if (shouldRefresh) {
+        themeRefreshCallback()
     }
   }
 

@@ -60,7 +60,7 @@ export const BASE_BROWSER_TEMPLATE = {
   tab_loading: PaletteColors.AccentPrimary,
   tab_background_text: PaletteColors.Text,
   tab_selected: PaletteColors.BackgroundLight,
-  tab_line: PaletteColors.AccentPrimary,
+  tab_line: PaletteColors.BackgroundLight,
   toolbar: PaletteColors.BackgroundLight,
   toolbar_field_text: PaletteColors.Text,
   toolbar_field_text_focus: PaletteColors.TextFocus,
