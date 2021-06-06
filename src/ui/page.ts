@@ -34,9 +34,9 @@ function setThemeMode(mode: ThemeModes) {
   currentThemeMode = mode;
 }
 
-export function initializeExtensionPage(
+export default function initializeExtensionPage(
   versionLabel: HTMLElement,
-  callback: IExtensionMessageCallback
+  callback: IExtensionMessageCallback,
 ) {
   if (callback) {
     messageCallback = callback;

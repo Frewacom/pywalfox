@@ -1,7 +1,7 @@
 import {
   NativeAppErrors,
   IExtensionMessage,
-  IDebuggingInfoData
+  IDebuggingInfoData,
 } from '@definitions';
 
 import {
@@ -9,8 +9,8 @@ import {
   requestNativeErrorPageMute,
 } from '@communication/content-scripts/ui';
 
+import initializeExtensionPage from '@ui/page';
 import { EXTENSION_MESSAGES } from '@config/general';
-import { initializeExtensionPage } from '@ui/page';
 
 const retryButton = <HTMLButtonElement>document.getElementById('retry-button');
 const disableButton = <HTMLButtonElement>document.getElementById('disable-button');

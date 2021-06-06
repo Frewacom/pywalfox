@@ -403,8 +403,8 @@ export default class State {
   }
 
   public async load(themeRefreshCallback: () => void) {
-    let shouldRefresh = false
-    const browserInfo = await browser.runtime.getBrowserInfo()
+    let shouldRefresh = false;
+    const browserInfo = await browser.runtime.getBrowserInfo();
     this.currentState = await browser.storage.local.get(this.initialState);
 
     // Temporary state migration until a real migration system is implemented
@@ -415,24 +415,24 @@ export default class State {
 
     // Fix for v89 tab border
     if (browserInfo?.version && browserInfo.version.split('.')[0] === '89') {
-      const { dark, light } = this.currentState.theme.templates
+      const { dark, light } = this.currentState.theme.templates;
 
       // We make sure to only change this property if it has not been modified by the user
       if (dark.browser.tab_line === PaletteColors.AccentPrimary) {
-          this.currentState.theme.templates.dark.browser.tab_line = PaletteColors.BackgroundLight
-          shouldRefresh = true
+        this.currentState.theme.templates.dark.browser.tab_line = PaletteColors.BackgroundLight;
+        shouldRefresh = true;
       }
 
       if (light.browser.tab_line === PaletteColors.AccentPrimary) {
-          this.currentState.theme.templates.light.browser.tab_line = PaletteColors.BackgroundLight
-          shouldRefresh = true
+        this.currentState.theme.templates.light.browser.tab_line = PaletteColors.BackgroundLight;
+        shouldRefresh = true;
       }
     }
 
     await browser.storage.local.set(this.currentState);
 
     if (shouldRefresh) {
-        themeRefreshCallback()
+      themeRefreshCallback();
     }
   }
 
