@@ -22,7 +22,7 @@ With Pywalfox you can:
 - [x] Easily update the theme using the add-on GUI and/or the command line
 - [x] Automatically switch between a dark and a light theme based on the time of day
 
-![](images/demo_v204.gif)
+![](images/demo_v207_ffproton.gif)
 
 ## Requirements
 - Firefox and/or Thunderbird
@@ -55,11 +55,11 @@ This command allows integration of Pywalfox into e.g. system theming scripts and
 Pywalfox comes with extensive customization options divided into the "Palette", "Palette template" and "Theme template" sections in the add-on settings GUI.
 
 #### The palette
-The palette in the "Palette" section is used to temporarily customize one or more colors from the Pywal palette. 
+The palette in the "Palette" section is used to temporarily customize one or more colors from the Pywal palette.
 You can use one of the generated colors, or choose any color from a colorwheel. Changes to the palette will be reset when clicking "Fetch Pywal colors" or when running `pywalfox update`.
 
 #### Palette templates
-If you want your palette customizations to be persistent (unlike the regular palette) you must save your current palette as a so-called palette template. 
+If you want your palette customizations to be persistent (unlike the regular palette) you must save your current palette as a so-called palette template.
 
 Saving a palette template is quite simple:
 
@@ -68,7 +68,7 @@ Saving a palette template is quite simple:
    - *Colors from outside the Pywal palette (i.e. from the colorwheel) cannot be used in a template*.
 3. Click "Load from current" in the "Palette template" section below.
    - *The colors can also be set directly in the "Palette template" section using Pywal color indices.*
-4. Click "Save palette" to save the palette template. 
+4. Click "Save palette" to save the palette template.
 
 Your custom palette will now be applied whenever you update the browser theme.
 
