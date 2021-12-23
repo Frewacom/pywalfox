@@ -6,6 +6,7 @@
 [<img src="https://img.shields.io/amo/stars/pywalfox">](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/)
 [<img src="https://img.shields.io/amo/users/pywalfox">](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/)
 [<img src="https://img.shields.io/amo/dw/pywalfox">](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/)
+[<img src="https://img.shields.io/aur/version/python-pywalfox">](https://aur.archlinux.org/packages/python-pywalfox/)
 [<img src="https://img.shields.io/github/license/frewacom/pywalfox">](https://www.mozilla.org/en-US/MPL/2.0/FAQ/)
 
 > Dynamic theming of Firefox (and Thunderbird) using your Pywal colors
@@ -17,8 +18,8 @@ Introducing **Pywalfox**, an add-on that themes [Firefox](https://addons.mozilla
 
 With Pywalfox you can:
 - [x] Customize the colors of almost every UI element
-- [x] Automatically theme DuckDuckGo :duck: searches in Firefox (optional)
-- [x] Have bold text, styled dropdowns and much more (optional)
+- [x] Automatically theme DuckDuckGo :duck: searches in Firefox *(optional)*
+- [x] Have bold text, styled dropdowns and much more *(optional)*
 - [x] Easily update the theme using the add-on GUI and/or the command line
 - [x] Automatically switch between a dark and a light theme based on the time of day
 
@@ -33,16 +34,18 @@ Pywalfox is supported on GNU/Linux, MacOS and Windows.
 
 ## Installation
 
-1. `pip install pywalfox`
-2. `pywalfox install`
+1. Install **either** through [PyPi](https://pypi.org/project/pywalfox/) **or** via the [Arch User Repository](https://aur.archlinux.org/packages/python-pywalfox/) (AUR), i.e.
+   - `pip install pywalfox` on any operating system that has the [Python Package Installer](https://github.com/pypa/pip) (`pip`)
+   - `paru -S python-pywalfox` on Arch Linux-based distributions, if you use [`paru`](https://github.com/morganamilo/paru) as your AUR helper
+2. Run `pywalfox install` in your terminal
 3. Get the Pywalfox add-on for
    - [Firefox](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/)
    - [Thunderbird](https://addons.thunderbird.net/en-US/thunderbird/addon/pywalfox/)
 4. Restart Firefox and/or Thunderbird
-5. Generate Pywal colors with your preferred method, use e.g. [this guide](https://github.com/dylanaraps/pywal/wiki/Getting-Started).
-6. Click the Pywalfox icon in the Firefox/Thunderbird UI to access the theme settings and click "Fetch Pywal colors". A theme generated from your Pywal colors should now be applied.
+5. Generate Pywal colors with your preferred method, use e.g. [this guide](https://github.com/dylanaraps/pywal/wiki/Getting-Started)
+6. Click the Pywalfox icon in the Firefox/Thunderbird UI to access the theme settings and click "Fetch Pywal colors". This should apply a theme that uses your Pywal colors to the Firefox/Thunderbird GUI!
 
-The Python package installed through `pip` is the [Pywalfox native messaging application](https://github.com/Frewacom/pywalfox-native), which fetches your Pywal colors for the Pywalfox add-on, which in turn feeds them to the [Theme API](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme).
+The Python package that we install in the first step is the [Pywalfox native messaging application](https://github.com/Frewacom/pywalfox-native), which fetches your Pywal colors for the Pywalfox add-on, which in turn feeds them to the [Theme API](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme).
 
 *Please review the [Troubleshooting](#troubleshooting) section if something is not working correctly.*
 
