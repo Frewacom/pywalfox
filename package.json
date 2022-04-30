@@ -1,6 +1,6 @@
 {
   "name": "pywalfox",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "Extension for dyanmic theming of your browser using your Pywal colors ",
   "repository": {
     "type": "git",
