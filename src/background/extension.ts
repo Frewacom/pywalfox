@@ -303,9 +303,6 @@ export default class Extension {
   private setBrowserTheme(browserTheme: IBrowserTheme, mode?: ThemeModes.Dark | ThemeModes.Light) {
     const modeString = (mode === ThemeModes.Dark) ? 'dark' : 'light';
 
-    console.log(mode);
-    console.log(modeString);
-
     browser.theme.update({
       colors: browserTheme,
       properties: {
