@@ -252,7 +252,7 @@ export default class Extension {
     const template = this.state.getTemplate();
     const colorscheme = Generators.colorscheme(mode, pywalColors, customColors, template);
 
-    this.setBrowserTheme(colorscheme.browser);
+    this.setBrowserTheme(colorscheme.browser, mode);
     this.updateExtensionPagesTheme(colorscheme.extension);
 
     if (this.state.getDDGThemeEnabled()) {
@@ -300,8 +300,18 @@ export default class Extension {
     }
   }
 
-  private setBrowserTheme(browserTheme: IBrowserTheme) {
-    browser.theme.update({ colors: browserTheme });
+  private setBrowserTheme(browserTheme: IBrowserTheme, mode?: ThemeModes.Dark | ThemeModes.Light) {
+    const modeString = (mode === ThemeModes.Dark) ? 'dark' : 'light';
+
+    browser.theme.update({
+      colors: browserTheme,
+      properties: {
+        // @ts-ignore
+        color_scheme: modeString,
+        // @ts-ignore
+        content_color_scheme: modeString,
+      },
+    });
   }
 
   private setDDGEnabled({ option, enabled }: IOptionSetData) {
