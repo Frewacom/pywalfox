@@ -1,120 +1,88 @@
 import {
   ITimeIntervalEndpoint,
   IAutoModeTriggerCallback,
+  ThemeModes,
 } from '@definitions';
 
 import { sendDebuggingOutput } from '@communication/content-scripts/ui';
-import { AUTO_MODE_INTERVAL_MS } from '@config/general';
 
-export function minuteNumberToMs(minute: number, currentSecond: number) {
-  return Math.abs(minute * 60 * 1000 - (currentSecond * 1000));
-}
-
-export function checkIfDayTime(
-  currentDate: Date,
-  startTime: ITimeIntervalEndpoint,
-  endTime: ITimeIntervalEndpoint,
-) {
-  const currentHour = currentDate.getHours();
-  const currentMinute = currentDate.getMinutes();
-  const currentSecond = currentDate.getSeconds();
-  let timeoutDelay = AUTO_MODE_INTERVAL_MS;
-  let result = false;
-
-  if (currentHour > startTime.hour && currentHour < endTime.hour) {
-    if (currentHour === (endTime.hour - 1) && endTime.minute <= AUTO_MODE_INTERVAL_MS) {
-      const difference = (60 + endTime.minute) - currentMinute;
-      if (difference < AUTO_MODE_INTERVAL_MS && difference !== 0) {
-        timeoutDelay = minuteNumberToMs(difference, currentSecond);
-      }
-    }
-    result = true;
-  } else if (currentHour === startTime.hour) {
-    if (currentMinute >= startTime.minute) {
-      result = true;
-    } else {
-      const difference = startTime.minute - currentMinute;
-      if (difference < AUTO_MODE_INTERVAL_MS) {
-        timeoutDelay = minuteNumberToMs(difference, currentSecond);
-      }
-    }
-  } else if (currentHour === endTime.hour && currentMinute < endTime.minute) {
-    const difference = endTime.minute - currentMinute;
-    if (difference < AUTO_MODE_INTERVAL_MS && difference !== 0) {
-      timeoutDelay = minuteNumberToMs(difference, currentSecond);
-    }
-    result = true;
-  }
-
-  return {
-    result,
-    timeoutDelay,
-  };
-}
+export const AUTO_MODE_ALARM_ID = 'pywalfox-auto-mode-alarm';
 
 export default class AutoMode {
   private startTime: ITimeIntervalEndpoint;
   private endTime: ITimeIntervalEndpoint;
   private callback: IAutoModeTriggerCallback;
-  private checkTimeout: number;
   private isDay: boolean;
 
   constructor(callback: IAutoModeTriggerCallback) {
     this.callback = callback;
-
     this.startTime = null;
     this.endTime = null;
-    this.checkTimeout = null;
-    this.isDay = null;
+
+    browser.alarms.onAlarm.addListener(this.update.bind(this));
   }
 
-  private deleteCurrentTimeout(printOutput = false) {
-    if (this.checkTimeout !== null) {
-      clearTimeout(this.checkTimeout);
-      this.checkTimeout = null;
+  private endpointToDate(endpoint: ITimeIntervalEndpoint) {
+    const date = new Date();
+    date.setHours(endpoint.hour);
+    date.setMinutes(endpoint.minute);
+    date.setSeconds(0);
+    return date;
+  }
 
-      printOutput && sendDebuggingOutput('Stopped auto theme mode');
-    }
+  private isCurrentlyDay() {
+    const currentDate = new Date();
+    const startDate = this.endpointToDate(this.startTime);
+    const endDate = this.endpointToDate(this.endTime);
+
+    return currentDate >= startDate && currentDate < endDate;
   }
 
   private update() {
-    const { result, timeoutDelay } = checkIfDayTime(new Date(), this.startTime, this.endTime);
-
-    if (result !== this.isDay) {
-      this.callback(result);
-    }
-
-    this.checkTimeout = window.setTimeout(() => this.update.bind(this), timeoutDelay);
-    this.isDay = result;
+    console.log("update called");
+    this.isDay = this.isCurrentlyDay();
+    this.callback(this.isDay);
+    this.updateTimer();
   }
 
-  private applyUpdatedInterval() {
-    this.deleteCurrentTimeout();
-    this.update();
-    sendDebuggingOutput('Updated interval for auto theme mode');
+  private updateTimer() {
+    browser.alarms.clear(AUTO_MODE_ALARM_ID);
+    const currentDate = new Date();
+
+    if (this.isCurrentlyDay()) {
+      const endDate = this.endpointToDate(this.endTime);
+      browser.alarms.create(AUTO_MODE_ALARM_ID, { when: endDate.valueOf() })
+    } else {
+      const startDate = this.endpointToDate(this.startTime);
+      if (currentDate > startDate)
+         startDate.setDate(startDate.getDate() + 1);
+
+      browser.alarms.create(AUTO_MODE_ALARM_ID, { when: startDate.valueOf() })
+    }
   }
 
   public start(startTime: ITimeIntervalEndpoint, endTime: ITimeIntervalEndpoint) {
     this.startTime = startTime;
     this.endTime = endTime;
-    this.applyUpdatedInterval();
+    this.update();
     sendDebuggingOutput('Started auto theme mode');
   }
 
   public setStartTime(startTime: ITimeIntervalEndpoint, isApplied: boolean) {
     this.startTime = startTime;
-    isApplied && this.applyUpdatedInterval();
+    isApplied && this.update();
   }
 
   public setEndTime(endTime: ITimeIntervalEndpoint, isApplied: boolean) {
     this.endTime = endTime;
-    isApplied && this.applyUpdatedInterval();
+    isApplied && this.update();
   }
 
   public getStartTime() { return this.startTime; }
   public getEndTime() { return this.endTime; }
 
   public stop() {
-    this.deleteCurrentTimeout(true);
+    browser.alarms.clear(AUTO_MODE_ALARM_ID);
+    sendDebuggingOutput('Stopped auto theme mode');
   }
 }

@@ -10,9 +10,9 @@
         }
     },
     "applications": {
-      "gecko": {
-        "id": "pywalfox@frewacom.org"
-      }
+        "gecko": {
+            "id": "pywalfox@frewacom.org"
+        }
     },
     "icons": {
         "48": "icons/icon-48.png"
@@ -36,42 +36,42 @@
         "fetch_pywal_colors": {
             "description": "Fetches your Pywal colors and updates your browser theme",
             "suggested_key": {
-              "default": "Ctrl+Alt+F",
-              "mac": "MacCtrl+Alt+F"
+                "default": "Ctrl+Alt+F",
+                "mac": "MacCtrl+Alt+F"
             }
         },
         "disable_theme": {
             "description": "Disables the Pywalfox theme",
             "suggested_key": {
-              "default": "Ctrl+Alt+R",
-              "mac": "MacCtrl+Alt+R"
+                "default": "Ctrl+Alt+R",
+                "mac": "MacCtrl+Alt+R"
             }
         },
         "enable_dark_mode": {
             "description": "Enables the Pywalfox Dark mode",
             "suggested_key": {
-              "default": "Ctrl+Alt+D",
-              "mac": "MacCtrl+Alt+D"
+                "default": "Ctrl+Alt+D",
+                "mac": "MacCtrl+Alt+D"
             }
         },
         "enable_light_mode": {
             "description": "Enables the Pywalfox Light mode",
             "suggested_key": {
-              "default": "Ctrl+Alt+L",
-              "mac": "MacCtrl+Alt+L"
+                "default": "Ctrl+Alt+L",
+                "mac": "MacCtrl+Alt+L"
             }
         },
         "enable_auto_mode": {
             "description": "Enables the Pywalfox Auto mode",
             "suggested_key": {
-              "default": "Ctrl+Alt+A",
-              "mac": "MacCtrl+Alt+A"
+                "default": "Ctrl+Alt+A",
+                "mac": "MacCtrl+Alt+A"
             }
         },
         "_execute_browser_action": {
             "suggested_key": {
-              "default": "Ctrl+Alt+P",
-              "mac": "MacCtrl+Alt+P"
+                "default": "Ctrl+Alt+P",
+                "mac": "MacCtrl+Alt+P"
             }
         }
     },
@@ -79,6 +79,7 @@
         "nativeMessaging",
         "theme",
         "storage",
-        "tabs"
+        "tabs",
+        "alarms"
     ]
 }
