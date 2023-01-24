@@ -1,7 +1,6 @@
 import {
   ITimeIntervalEndpoint,
   IAutoModeTriggerCallback,
-  ThemeModes,
 } from '@definitions';
 
 import { sendDebuggingOutput } from '@communication/content-scripts/ui';
@@ -39,7 +38,6 @@ export default class AutoMode {
   }
 
   private update() {
-    console.log("update called");
     this.isDay = this.isCurrentlyDay();
     this.callback(this.isDay);
     this.updateTimer();
@@ -51,13 +49,14 @@ export default class AutoMode {
 
     if (this.isCurrentlyDay()) {
       const endDate = this.endpointToDate(this.endTime);
-      browser.alarms.create(AUTO_MODE_ALARM_ID, { when: endDate.valueOf() })
+      browser.alarms.create(AUTO_MODE_ALARM_ID, { when: endDate.valueOf() });
     } else {
       const startDate = this.endpointToDate(this.startTime);
-      if (currentDate > startDate)
-         startDate.setDate(startDate.getDate() + 1);
+      if (currentDate > startDate) {
+        startDate.setDate(startDate.getDate() + 1);
+      }
 
-      browser.alarms.create(AUTO_MODE_ALARM_ID, { when: startDate.valueOf() })
+      browser.alarms.create(AUTO_MODE_ALARM_ID, { when: startDate.valueOf() });
     }
   }
 
