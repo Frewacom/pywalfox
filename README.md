@@ -193,15 +193,6 @@ This section lists some common problems and how to (hopefully) fix them.
 This [troubleshooting guide from Mozilla](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#Troubleshooting) may be of use if you encounter an error that is not listed here.
 
 - Librewolf users must use an experimental version of `pywalfox-native` for now, see [#68](https://github.com/Frewacom/pywalfox/issues/68#issuecomment-873381669).
-- If you updated from `pywalfox-native` version ≤ `2.6`, re-run the installation using `pywalfox install`.
-- If you updated Pywalfox and encounter some kind of issue, re-run the setup script as described in the installation instructions above.
-- If `pywalfox install` yields a permission error, try the following:
-  - `chown <username> ~/.mozilla/native-messaging-hosts`
-
-     or
-
-  - `rm -r ~/.mozilla/native-messaging-hosts`; the setup script will then recreate it with the correct permissions.
-- The error `Received unhandled message action: invalidMessage`, means that you are using an outdated daemon version. Install the newest one by following the installation instructions above.
 
 You should also
 - check the log in the Debugging section at the bottom of the Pywalfox settings page for any errors;
