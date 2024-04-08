@@ -18,7 +18,7 @@
 - Tired of Firefox and Thunderbird not respecting your gorgeous Pywal colors like the rest of your system?
 - Looking to rack up some karma :arrow_up: on [/r/unixporn](https://reddit.com/r/unixporn)?
 
-Introducing **Pywalfox**, an add-on that themes [Firefox](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/) and [Thunderbird](https://addons.thunderbird.net/sv-SE/thunderbird/addon/pywalfox/) with your [Pywal](https://github.com/dylanaraps/pywal) colors using the official [Theme API](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme) from Mozilla!
+Introducing **Pywalfox**, an add-on that themes [Firefox](https://addons.mozilla.org/firefox/addon/pywalfox/) and [Thunderbird](https://addons.thunderbird.net/thunderbird/addon/pywalfox/) with your [Pywal](https://github.com/dylanaraps/pywal) colors using the official [Theme API](https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme) from Mozilla!
 
 With Pywalfox you can:
 - [x] Customize the colors of almost every UI element
@@ -73,8 +73,8 @@ Install from [PyPi](https://pypi.org/project/pywalfox/) with [`pip`](https://git
 
 2. Run `pywalfox install` in your terminal.
 3. Get the Pywalfox add-on for
-   - [Firefox](https://addons.mozilla.org/en-US/firefox/addon/pywalfox/)
-   - [Thunderbird](https://addons.thunderbird.net/en-US/thunderbird/addon/pywalfox/)
+   - [Firefox](https://addons.mozilla.org/firefox/addon/pywalfox/)
+   - [Thunderbird](https://addons.thunderbird.net/thunderbird/addon/pywalfox/)
 4. Restart Firefox and/or Thunderbird.
 5. Generate Pywal colors with your preferred method, use e.g. [this guide](https://github.com/dylanaraps/pywal/wiki/Getting-Started).
 6. Click the Pywalfox icon in the Firefox/Thunderbird UI and click "Fetch Pywal colors". This should apply a theme that uses your Pywal colors to the Firefox/Thunderbird GUI!
@@ -157,7 +157,7 @@ The colors are identified by their names as seen in the "Palette template" secti
 </details>
 
 > **Note** <br>
-> Every browser element currently supported by the [Theme API](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme) can be customized.
+> Every browser element currently supported by the [Theme API](https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme) can be customized.
 
 
 ### 🌗 Theme modes
@@ -167,7 +167,7 @@ There are three different theme modes: "Dark" (🌙), "Light" (☀) and "Auto" (
 > The dark and light modes have *separate* theme and palette templates. You will always modifiy the template for the currently selected mode.
 
 ### 🖺 Further theming with the included userChrome.css and userContent.css in Firefox
-Some browser elements (e.g. the context menus) are not available through the [Theme API](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme). Pywalfox includes two custom CSS stylesheets (for Firefox) which apply your theme to some of these browser elements.
+Some browser elements (e.g. the context menus) are not available through the [Theme API](https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme). Pywalfox includes two custom CSS stylesheets (for Firefox) which apply your theme to some of these browser elements.
 
 <table><tr><td>
 Before you enable the custom CSS sheets in the add-on settings GUI you must navigate to <code>about:config</code> and set <code>toolkit.legacyUserProfileCustomizations.stylesheets</code> to <code>true</code>.
@@ -190,7 +190,7 @@ depending on your chosen installation method.
 
 ## 🔧 Troubleshooting
 This section lists some common problems and how to (hopefully) fix them.
-This [troubleshooting guide from Mozilla](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#Troubleshooting) may be of use if you encounter an error that is not listed here.
+This [troubleshooting guide from Mozilla](https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#Troubleshooting) may be of use if you encounter an error that is not listed here.
 
 - Librewolf users must use an experimental version of `pywalfox-native` for now, see [#68](https://github.com/Frewacom/pywalfox/issues/68#issuecomment-873381669).
 
@@ -210,7 +210,7 @@ Common errors include:
 <br>
 <table><tr><td>
 
-   The manifest is not installed properly. Try installing the manifest manually by following the instructions [here](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_manifests.).
+   The manifest is not installed properly. Try installing the manifest manually by following the instructions [here](https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/Native_manifests.).
 
    The manifest is located at `<path-to-python-site-packages>/pywalfox/assets/manifest.json`.
 
