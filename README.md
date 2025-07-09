@@ -241,7 +241,7 @@ Common errors include:
 ## 🚧 Development setup
 Do you want to hack on Pywalfox? Start here:
 ```bash
-git clone git@github.com/frewacom/pywalfox.git # or use your own fork
+git clone git@github.com:Frewacom/pywalfox.git # or use your own fork
 cd pywalfox
 yarn install # or npm if you do not have yarn installed
 yarn run debug
