@@ -125,6 +125,7 @@ export interface IColorscheme {
   extension: IExtensionTheme;
   duckduckgo: IDuckDuckGoTheme;
   darkreader: IDarkreaderScheme;
+  website: string;
 }
 
 export interface IThemeTemplate {

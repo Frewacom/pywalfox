@@ -80,6 +80,7 @@
         "theme",
         "storage",
         "tabs",
-        "alarms"
+        "alarms",
+        "<all_urls>"
     ]
 }

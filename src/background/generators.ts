@@ -59,6 +59,7 @@ export function generateColorscheme(
     extension: generateExtensionTheme(palette),
     duckduckgo: generateDuckduckgoTheme(palette, template.duckduckgo),
     darkreader: generateDarkreaderScheme(palette, mode),
+    website: generateWebsiteCSS(palette),
   };
 }
 
@@ -121,6 +122,17 @@ export function generateExtensionTheme(palette: IPalette) {
   return `${EXTENSION_THEME_SELCTOR}{${variables}}`;
 }
 
+export function generateWebsiteCSS(palette: IPalette) {
+  let variables: string = '';
+
+  PALETTE_TEMPLATE_DATA.forEach(({ target, cssVariable }) => {
+    const variableName = cssVariable.replace('--', '--pywalfox-');
+    variables += `${variableName}:${palette[target]};`;
+  });
+
+  return `:root{${variables}}`;
+}
+
 export function generateDarkreaderScheme({ background, text }: IPalette, mode: ITemplateThemeMode) {
   if (mode === ThemeModes.Dark) {
     return {
@@ -164,4 +176,5 @@ export default {
   pywalPalette: generatePywalPalette,
   duckduckgo: generateDuckduckgoTheme,
   darkreader: generateDarkreaderScheme,
+  website: generateWebsiteCSS,
 };

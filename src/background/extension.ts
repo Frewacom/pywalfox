@@ -48,6 +48,7 @@ export default class Extension {
 
   private nativeMessenger: NativeMessenger;
   private darkreaderMessenger: DarkreaderMessenger;
+  private registeredContentScript: any;
 
   constructor() {
     this.state = new State();
@@ -244,6 +245,8 @@ export default class Extension {
     this.state.setCustomColors(null);
     this.state.setApplied(false);
 
+    this.injectWebsiteCSS(null);
+
     Messenger.UI.sendDebuggingOutput('Theme was disabled');
   }
 
@@ -266,6 +269,8 @@ export default class Extension {
     this.state.setColors(pywalColors, colorscheme);
     this.state.setCustomColors(customColors || null);
     this.state.setApplied(true);
+
+    this.injectWebsiteCSS(colorscheme.website);
 
     return colorscheme;
   }
@@ -689,6 +694,43 @@ export default class Extension {
 
     if (isDarkreaderEnabled) {
       this.darkreaderMessenger.connect();
+    }
+  }
+
+  private async injectWebsiteCSS(css: string | null) {
+    if (this.registeredContentScript) {
+      await this.registeredContentScript.unregister();
+      this.registeredContentScript = null;
+    }
+
+    if (!css) {
+      return;
+    }
+
+    try {
+      // @ts-ignore
+      this.registeredContentScript = await browser.contentScripts.register({
+        matches: ['<all_urls>'],
+        css: [{ code: css }],
+        runAt: 'document_start',
+        allFrames: true,
+      });
+    } catch (e) {
+      console.error('Failed to register content script:', e);
+    }
+
+    const tabs = await browser.tabs.query({ discarded: false });
+    // eslint-disable-next-line no-restricted-syntax
+    for (const tab of tabs) {
+      if (tab.id) {
+        browser.tabs.insertCSS(tab.id, {
+          code: css,
+          allFrames: true,
+          runAt: 'document_start',
+        }).catch((e) => {
+          console.warn('Failed to inject CSS into live tab:', e);
+        });
+      }
     }
   }
 }
