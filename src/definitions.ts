@@ -80,6 +80,7 @@ export interface IBrowserTheme {
   icons: string;
   icons_attention: string;
   frame: string;
+  frame_inactive: string;
   tab_text: string;
   tab_loading: string;
   tab_background_text: string;
@@ -87,6 +88,7 @@ export interface IBrowserTheme {
   tab_line: string;
   tab_background_separator: string;
   toolbar: string;
+  toolbar_text: string;
   toolbar_field: string;
   toolbar_field_focus: string;
   toolbar_field_text: string;
@@ -101,6 +103,7 @@ export interface IBrowserTheme {
   toolbar_vertical_separator: string;
   ntp_background: string;
   ntp_text: string;
+  ntp_card_background: string;
   popup: string;
   popup_border: string;
   popup_text: string;
@@ -111,7 +114,6 @@ export interface IBrowserTheme {
   sidebar_text: string;
   sidebar_highlight: string;
   sidebar_highlight_text: string;
-  bookmark_text: string;
   button_background_hover: string;
   button_background_active: string;
 }

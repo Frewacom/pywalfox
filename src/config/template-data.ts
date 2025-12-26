@@ -62,6 +62,11 @@ export const THEME_TEMPLATE_DATA: ITemplateItem[] = [
     target: 'frame',
   },
   {
+    title: 'Frame inactive',
+    description: 'The color of the header area background when the window is inactive.',
+    target: 'frame_inactive',
+  },
+  {
     title: 'Tab text',
     description: 'The text color for the selected tab.',
     target: 'tab_text',
@@ -87,14 +92,14 @@ export const THEME_TEMPLATE_DATA: ITemplateItem[] = [
     target: 'tab_line',
   },
   {
-    title: 'Tab background separator',
-    description: 'The color of the vertical separator of the background tabs.',
-    target: 'tab_background_separator',
-  },
-  {
     title: 'Toolbar',
     description: 'The background color for the navigation bar, the bookmarks bar, and the selected tab.',
     target: 'toolbar',
+  },
+  {
+    title: 'Toolbar text',
+    description: 'The text color in the navigation bar and bookmarks bar.',
+    target: 'toolbar_text',
   },
   {
     title: 'Toolbar field',
@@ -125,11 +130,6 @@ export const THEME_TEMPLATE_DATA: ITemplateItem[] = [
     title: 'Toolbar field border focus',
     description: 'The focused border color for fields in the toolbar.',
     target: 'toolbar_field_border_focus',
-  },
-  {
-    title: 'Toolbar field separator',
-    description: 'The color of separators inside the URL bar.',
-    target: 'toolbar_field_separator',
   },
   {
     title: 'Toolbar field highlight',
@@ -165,6 +165,11 @@ export const THEME_TEMPLATE_DATA: ITemplateItem[] = [
     title: 'New tab page text',
     description: 'The new tab page text color.',
     target: 'ntp_text',
+  },
+  {
+    title: 'New tab page card background',
+    description: 'The background color of cards on the new tab page.',
+    target: 'ntp_card_background',
   },
   {
     title: 'Popup',
@@ -215,11 +220,6 @@ export const THEME_TEMPLATE_DATA: ITemplateItem[] = [
     title: 'Sidebar highlight text',
     description: 'The text color of highlighted rows in sidebars.',
     target: 'sidebar_highlight_text',
-  },
-  {
-    title: 'Bookmark text',
-    description: 'The color of text and icons in the bookmark and find bars.',
-    target: 'bookmark_text',
   },
   {
     title: 'Button background hover',
