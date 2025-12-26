@@ -142,7 +142,7 @@ export const THEME_TEMPLATE_DATA: ITemplateItem[] = [
     target: 'toolbar_field_highlight_text',
   },
   {
-    title: 'Toolbar bottom_separator',
+    title: 'Toolbar bottom separator',
     description: 'The color of the line separating the bottom of the toolbar from the region below.',
     target: 'toolbar_bottom_separator',
   },
