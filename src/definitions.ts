@@ -215,6 +215,7 @@ export interface IOptionSetData {
   option: string;
   enabled: boolean;
   value?: any;
+  skipConfirmation?: boolean;
 }
 
 export interface IThemeModeData {

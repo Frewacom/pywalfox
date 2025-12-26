@@ -384,8 +384,12 @@ export default class Extension {
     }
   }
 
-  private setCustomCSSEnabled({ option, enabled }: IOptionSetData) {
+  private setCustomCSSEnabled({ option, enabled, skipConfirmation }: IOptionSetData) {
     if (Object.values(CSSTargets).includes(<CSSTargets>option)) {
+      if (enabled && !skipConfirmation && !this.state.getCssEnabled(option)) {
+        Messenger.UI.sendCssEnableConfirmation(option);
+        return;
+      }
       this.nativeMessenger.requestCssEnabled(option, enabled);
     } else {
       const action = enabled ? 'enable' : 'disable';

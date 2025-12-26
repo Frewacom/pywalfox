@@ -572,8 +572,37 @@ function handleExtensionMessage({ action, data }: IExtensionMessage) {
     case EXTENSION_MESSAGES.DEBUGGING_INFO_SET:
       setDebuggingInfo(data);
       break;
+    case EXTENSION_MESSAGES.CSS_ENABLE_CONFIRMATION:
+      handleCssEnableConfirmation(data);
+      break;
     default:
       break;
+  }
+}
+
+function handleCssEnableConfirmation(target: string) {
+  const targetName = target === EXTENSION_OPTIONS.USER_CHROME ? 'userChrome.css' : 'userContent.css';
+  // eslint-disable-next-line no-alert
+  const confirmed = window.confirm(
+    `IMPORTANT: Before enabling "${targetName}", you must:\n\n`
+    + '1. Go to about:config in Firefox\n'
+    + '2. Set "toolkit.legacyUserProfileCustomizations.stylesheets" to true\n'
+    + '3. Restart Firefox\n\n'
+    + `WARNING: Enabling this will copy the Pywalfox ${targetName} file to your Firefox profile.\n\n`
+    + `If you already have a custom ${targetName} file, it will be OVERWRITTEN and your changes will be lost.\n\n`
+    + 'Do you want to continue?'
+  );
+
+  if (confirmed) {
+    browser.runtime.sendMessage({
+      action: EXTENSION_MESSAGES.OPTION_SET,
+      data: { option: target, enabled: true, skipConfirmation: true }
+    }).catch(() => {});
+  } else {
+    const button = optionButtonsLookup[target];
+    if (button) {
+      button.classList.remove('enabled');
+    }
   }
 }
 

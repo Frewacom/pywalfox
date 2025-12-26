@@ -155,3 +155,7 @@ export function requestUpdatePageMute() {
 export function requestNativeErrorPageMute() {
   sendMessage({ action: EXTENSION_MESSAGES.NATIVE_ERROR_PAGE_MUTE });
 }
+
+export function sendCssEnableConfirmation(target: string) {
+  sendMessage({ action: EXTENSION_MESSAGES.CSS_ENABLE_CONFIRMATION, data: target });
+}

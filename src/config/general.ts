@@ -56,6 +56,7 @@ export const EXTENSION_MESSAGES = {
   DDG_THEME_GET: 'ddg:theme:get',
   DDG_THEME_SET: 'ddg:theme:set',
   DDG_THEME_RESET: 'ddg:theme:reset',
+  CSS_ENABLE_CONFIRMATION: 'css:enable:confirmation',
 };
 
 export const EXTENSION_COMMANDS = {

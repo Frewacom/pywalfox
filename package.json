@@ -64,6 +64,9 @@
     "run": {
       "startUrl": [
         "about:debugging"
+      ],
+      "pref": [
+        "toolkit.legacyUserProfileCustomizations.stylesheets=true"
       ]
     }
   },
