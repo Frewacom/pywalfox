@@ -590,13 +590,13 @@ function handleCssEnableConfirmation(target: string) {
     + '3. Restart Firefox\n\n'
     + `WARNING: Enabling this will copy the Pywalfox ${targetName} file to your Firefox profile.\n\n`
     + `If you already have a custom ${targetName} file, it will be OVERWRITTEN and your changes will be lost.\n\n`
-    + 'Do you want to continue?'
+    + 'Do you want to continue?',
   );
 
   if (confirmed) {
     browser.runtime.sendMessage({
       action: EXTENSION_MESSAGES.OPTION_SET,
-      data: { option: target, enabled: true, skipConfirmation: true }
+      data: { option: target, enabled: true, skipConfirmation: true },
     }).catch(() => {});
   } else {
     const button = optionButtonsLookup[target];

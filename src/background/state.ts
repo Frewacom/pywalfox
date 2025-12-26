@@ -429,6 +429,21 @@ export default class State {
       }
     }
 
+    // Add new Theme API properties for existing users
+    const { dark, light } = this.currentState.theme.templates;
+    if (!dark.browser.hasOwnProperty('frame_inactive')) {
+      this.currentState.theme.templates.dark.browser.frame_inactive = DEFAULT_THEME_DARK.browser.frame_inactive;
+      this.currentState.theme.templates.dark.browser.toolbar_text = DEFAULT_THEME_DARK.browser.toolbar_text;
+      this.currentState.theme.templates.dark.browser.ntp_card_background = DEFAULT_THEME_DARK.browser.ntp_card_background;
+      shouldRefresh = true;
+    }
+    if (!light.browser.hasOwnProperty('frame_inactive')) {
+      this.currentState.theme.templates.light.browser.frame_inactive = DEFAULT_THEME_LIGHT.browser.frame_inactive;
+      this.currentState.theme.templates.light.browser.toolbar_text = DEFAULT_THEME_LIGHT.browser.toolbar_text;
+      this.currentState.theme.templates.light.browser.ntp_card_background = DEFAULT_THEME_LIGHT.browser.ntp_card_background;
+      shouldRefresh = true;
+    }
+
     await browser.storage.local.set(this.currentState);
 
     if (shouldRefresh) {
