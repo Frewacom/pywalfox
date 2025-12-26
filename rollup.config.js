@@ -2,8 +2,8 @@ import path from 'path';
 import clear from 'rollup-plugin-clear';
 import postcss from 'rollup-plugin-postcss';
 import analyze from 'rollup-plugin-analyzer';
-import { terser } from 'rollup-plugin-terser';
-import typescript from 'rollup-plugin-typescript2';
+import terser from '@rollup/plugin-terser';
+import typescript from '@rollup/plugin-typescript';
 import { typescriptPaths } from 'rollup-plugin-typescript-paths';
 
 import cssimport from 'postcss-import';
@@ -11,7 +11,11 @@ import urlresolve from 'postcss-url';
 
 const production = !process.env.ROLLUP_WATCH;
 const defaultPlugins = [
-  typescript(),
+  typescript({
+    compilerOptions: {
+      outDir: 'extension/dist'
+    }
+  }),
   typescriptPaths(),
   production && terser(),
   production && analyze({ summaryOnly: true }),
