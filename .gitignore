@@ -4,3 +4,4 @@
 /daemon/
 /dist
 .eslintcache
+.firefox-profile
