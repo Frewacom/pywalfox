@@ -30,7 +30,7 @@ export default class State {
 
   constructor() {
     this.initialState = {
-      version: 0.0,
+      version: '0',
       connected: false,
       nativeError: null,
       theme: {
@@ -260,7 +260,7 @@ export default class State {
     return data;
   }
 
-  public setVersion(version: number) {
+  public setVersion(version: string) {
     return this.set({ version });
   }
 
@@ -353,7 +353,7 @@ export default class State {
   }
 
   public resetVersion() {
-    return this.setVersion(0);
+    return this.setVersion('0');
   }
 
   public setColors(pywalColors: IPywalColors, colorscheme: IColorscheme) {

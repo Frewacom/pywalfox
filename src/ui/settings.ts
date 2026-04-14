@@ -108,7 +108,7 @@ function toggleIsAppliedBodyClass() {
 
 function setDebuggingInfo({ version, connected }: IDebuggingInfoData) {
   debuggingConnected.innerText = connected ? 'Connected' : 'Disconnected';
-  debuggingVersion.innerText = `version ${version === 0 ? 'not set' : version}`;
+  debuggingVersion.innerText = `native messaging host v${version === '0' ? 'not set' : version}`;
 }
 
 function writeOutput(message: string) {

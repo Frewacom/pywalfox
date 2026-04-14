@@ -551,12 +551,11 @@ export default class Extension {
   }
 
   private validateVersion(version: string) {
-    const versionNumber = parseFloat(version);
-    if (versionNumber < MIN_REQUIRED_DAEMON_VERSION) {
+    if (parseFloat(version) < MIN_REQUIRED_DAEMON_VERSION) {
       this.updateNeeded();
     }
 
-    this.state.setVersion(versionNumber);
+    this.state.setVersion(version);
   }
 
   private updateNeeded() {

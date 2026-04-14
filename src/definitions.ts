@@ -274,7 +274,7 @@ export interface IInitialData {
 }
 
 export interface IDebuggingInfoData {
-  version: number;
+  version: string;
   connected: boolean;
   nativeError: INativeAppError;
 }
@@ -311,7 +311,7 @@ export interface ITimeIntervalEndpoints {
 export type IAutoModeTriggerCallback = (isDay: boolean) => void;
 
 export interface IExtensionState {
-  version: number,
+  version: string,
   connected: boolean;
   nativeError: INativeAppError,
   theme: {
