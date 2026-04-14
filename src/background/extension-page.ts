@@ -78,7 +78,12 @@ export default class ExtensionPage {
 
   private async create() {
     try {
-      this.tab = await browser.tabs.create({ url: this.url, active: false });
+      const [currentTab] = await browser.tabs.query({ active: true, currentWindow: true });
+      const createOptions: browser.tabs._CreateCreateProperties = { url: this.url, active: false };
+      if (currentTab) {
+        createOptions.index = currentTab.index + 1;
+      }
+      this.tab = await browser.tabs.create(createOptions);
     } catch (error) {
       console.error(`Could not open ${this.url}: ${error}`);
       return;
