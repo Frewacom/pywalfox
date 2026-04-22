@@ -1,0 +1,63 @@
+name: CD
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Build extension
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          corepack: true
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Compile extension
+        run: yarn build:compile
+
+      - name: Build extension
+        run: yarn build:dist
+
+      - name: Build source
+        run: yarn build:source
+
+      - name: Validate extension
+        run: yarn web-ext-lint
+
+      - name: Store distributions
+        uses: actions/upload-artifact@v4
+        with:
+          name: extension-distributions
+          path: artifacts/*.zip
+
+  github-release:
+    name: Create GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download distributions
+        uses: actions/download-artifact@v4
+        with:
+          name: extension-distributions
+          path: artifacts/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: artifacts/*.zip
+          generate_release_notes: true
+          prerelease: ${{ contains(github.ref, 'rc') || contains(github.ref, 'alpha') || contains(github.ref, 'beta') || contains(github.ref, 'dev') }}
