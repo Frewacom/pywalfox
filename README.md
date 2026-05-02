@@ -39,7 +39,6 @@ With Pywalfox you can:
    ```sh
    pipx install pywalfox
    ```
-   > [!TIP]
    > Don't have `pipx`? Install it first, then re-run the command above:
    > - **Arch Linux:** `pacman -S python-pipx` 
    > - **Ubuntu:** `apt install pipx`
@@ -54,7 +53,7 @@ With Pywalfox you can:
 
 This should apply a theme with your Pywal colors!
 
-> **Note** <br>
+> [!NOTE]
 > If you have problems: please review the Troubleshooting section below before opening a Github issue.
 
 ## 🎨 Usage
@@ -131,7 +130,7 @@ The colors are identified by their names as seen in the "Palette template" secti
 ### Theme modes
 There are three different theme modes: "Dark" (🌙), "Light" (☀) and "Auto" (👁)️. Selecting "Auto" will automatically switch between the other two modes based on a time interval found in the "General" section of the add-on settings GUI.
 
-> **Note** <br>
+> [!Note]
 > The dark and light modes have *separate* theme and palette templates. You will always modifiy the template for the currently selected mode.
 
 ### Further theming with the included userChrome.css and userContent.css in Firefox
@@ -263,6 +262,7 @@ Common errors include:
 </details>
 
 <br>
+
 > [!IMPORTANT]
 > The errors in the browser console are not limited to just Pywalfox!
 
