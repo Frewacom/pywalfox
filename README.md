@@ -4,12 +4,13 @@
   Pywalfox
 </h1>
 <h4 align="center">🎨 Dynamic theming of Firefox 🦊 (and Thunderbird 🐦) using your Pywal colors</h4>
+
 <div align="center">
      <a href="https://addons.mozilla.org/en-US/firefox/addon/pywalfox"><img src="https://img.shields.io/amo/v/pywalfox"/></a>
      <a href="https://addons.mozilla.org/en-US/firefox/addon/pywalfox"><img src="https://img.shields.io/amo/stars/pywalfox"/></a>
      <a href="https://addons.mozilla.org/en-US/firefox/addon/pywalfox"><img src="https://img.shields.io/amo/users/pywalfox"/></a>
      <a href="https://addons.mozilla.org/en-US/firefox/addon/pywalfox"><img src="https://img.shields.io/amo/dw/pywalfox"/></a>
-     <a href="https://aur.archlinux.org/packages/python-pywalfox"><img src="https://img.shields.io/aur/version/python-pywalfox"/></a>
+     <a href="https://pypi.org/project/pywalfox/"><img src="https://img.shields.io/pypi/v/pywalfox"/></a>
      <a href="https://www.mozilla.org/en-US/MPL/2.0/FAQ"><img src="https://img.shields.io/github/license/frewacom/pywalfox"/></a>
 </div>
 
@@ -29,67 +30,40 @@ With Pywalfox you can:
 
 ![](images/demo_v207_ffproton.gif)
 
-## ✅ Requirements
-- Firefox and/or Thunderbird
-- Python (version `2.7.X` or `3.X`)
-- [Pywal](https://github.com/dylanaraps/pywal)
-
-> **Note** <br>
-> Pywalfox is supported on GNU/Linux, MacOS and Windows.
-
 ## 👨‍💻 Installation
 
-1. Install the [Pywalfox native messaging application](https://github.com/Frewacom/pywalfox-native) using one of two methods below (depending on your operating system).
-<details align=center>
-<summary>
-<img height=15 src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Archlinux-icon-crystal-64.svg"/> <b>Arch Linux only (AUR) - click me!</b>
-</summary>
-<table align=center><tr><td>
-
-Install from the <a href="https://aur.archlinux.org/packages/python-pywalfox/">Arch User Repository (AUR)<a>, e.g.
-
-Paru: <br>
-`paru -S python-pywalfox`
-
-Yay: <br>
-`yay -S python-pywalfox`
-
-</td></tr></table>
-</details>
-
-<details align=center>
-<summary>
-<b>GNU/Linux, MacOS, Windows - click me!</b>
-</summary>
-<table align=center><tr><td>
-
-Install from [PyPi](https://pypi.org/project/pywalfox/) with [`pip`](https://github.com/pypa/pip), i.e.
-
-`pip install pywalfox`
-
-</td></tr></table>
-
-</details>
-
-2. Run `pywalfox install` in your terminal.
-3. Get the Pywalfox add-on for
+1. Get the add-on for
    - [Firefox](https://addons.mozilla.org/firefox/addon/pywalfox/)
    - [Thunderbird](https://addons.thunderbird.net/thunderbird/addon/pywalfox/)
-4. Restart Firefox and/or Thunderbird.
-5. Generate Pywal colors with your preferred method, use e.g. [this guide](https://github.com/dylanaraps/pywal/wiki/Getting-Started).
-6. Click the Pywalfox icon in the Firefox/Thunderbird UI and click "Fetch Pywal colors". This should apply a theme that uses your Pywal colors to the Firefox/Thunderbird GUI!
+1. Install the [native messaging application](https://github.com/Frewacom/pywalfox-native) ([PyPI](https://pypi.org/project/pywalfox/)) using your preferred method, with e.g. `pip` or `pipx`:
+   ```sh
+   pipx install pywalfox
+   ```
+   > [!TIP]
+   > Don't have `pipx`? Install it first, then re-run the command above:
+   > - **Arch Linux:** `pacman -S python-pipx` 
+   > - **Ubuntu:** `apt install pipx`
+   > - **macOS:** `brew install pipx`
+   > - **Windows:** `winget install Python.Python.3.14`, then `pip install pywalfox` instead
+1. Run `pywalfox install` in your terminal.
+   - Firefox forks (e.g. LibreWolf) require [extra arguments](#firefox-forks). Flatpaks require [extra steps](#flatpaks).
+1. Restart Firefox and/or Thunderbird.
+1. Generate a theme with [Pywal](https://github.com/dylanaraps/pywal) or equivalent (e.g., `wal --theme gruvbox`). You may refer to [this guide](https://github.com/dylanaraps/pywal/wiki/Getting-Started).
+1. Click the Pywalfox icon in the Firefox/Thunderbird UI and then "Fetch Pywal colors". 
+<!--(or use the [AUR package](https://aur.archlinux.org/packages/python-pywalfox/))-->
+
+This should apply a theme with your Pywal colors!
 
 > **Note** <br>
 > If you have problems: please review the Troubleshooting section below before opening a Github issue.
 
-## 🤔 Usage
+## 🎨 Usage
 
-### 🗔 Update the theme through your terminal
+### Update the theme through your terminal
 Run `pywalfox update` in your terminal to trigger an update of the browser theme.
-This command allows you to integrate Pywalfox into e.g. system theming scripts.
-It is functionally equivalent to clicking "Fetch Pywal colors" in the add-on settings GUI (accessible from your toolbar).
+This command can integrate Pywalfox into e.g. system theming scripts, and is functionally equivalent to clicking "Fetch Pywal colors" in the add-on settings GUI (accessible from your toolbar).
 
-### 🎨 Customization
+### Customization
 The add-on settings GUI comes with extensive customization options divided into the following sections:
 
 <details>
@@ -99,7 +73,6 @@ The add-on settings GUI comes with extensive customization options divided into 
 </b>
 </summary>
 
-<br>
 <table><tr><td>
 
 The palette in the "Palette" section is used to temporarily customize one or more colors from the Pywal palette.
@@ -119,7 +92,6 @@ You can use one of the generated colors, or choose any color from a colorwheel.
 </b>
 </summary>
 
-<br>
 <table><tr><td>
 
 If you want your palette customizations to be persistent (unlike the regular palette) you must save your current palette as a *palette template*:
@@ -144,7 +116,6 @@ Your custom palette will now be applied whenever you update the browser theme.
 </b>
 </summary>
 
-<br>
 <table><tr><td>
 
 The theme template assigns colors (from your palette template) to different browser elements.
@@ -156,17 +127,15 @@ The colors are identified by their names as seen in the "Palette template" secti
 
 </details>
 
-> **Note** <br>
-> Every browser element currently supported by the [Theme API](https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme) can be customized.
 
-
-### 🌗 Theme modes
+### Theme modes
 There are three different theme modes: "Dark" (🌙), "Light" (☀) and "Auto" (👁)️. Selecting "Auto" will automatically switch between the other two modes based on a time interval found in the "General" section of the add-on settings GUI.
 
 > **Note** <br>
 > The dark and light modes have *separate* theme and palette templates. You will always modifiy the template for the currently selected mode.
 
-### 🖺 Further theming with the included userChrome.css and userContent.css in Firefox
+### Further theming with the included userChrome.css and userContent.css in Firefox
+
 Some browser elements (e.g. the context menus) are not available through the [Theme API](https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme). Pywalfox includes two custom CSS stylesheets (for Firefox) which apply your theme to some of these browser elements.
 
 <table><tr><td>
@@ -180,7 +149,7 @@ pywalfox uninstall # Removes the manifest from native-messaging-hosts
 ```
 and then
 ```bash
-pip uninstall pywalfox # if you installed with pip
+pipx uninstall pywalfox # if you installed with pipx
 ```
 or
 ```bash
@@ -191,15 +160,75 @@ depending on your chosen installation method.
 ## 🔧 Troubleshooting
 This section lists some common problems and how to (hopefully) fix them.
 This [troubleshooting guide from Mozilla](https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#Troubleshooting) may be of use if you encounter an error that is not listed here.
+First of all:
+- Check the log in the Debugging section at the bottom of the Pywalfox settings page for any errors.
+- Verify that `~/.cache/wal/colors` exists and contains colors generated by Pywal.
+- Verify that `path` in `~/<native-messaging-hosts-folder>/pywalfox.json` is a valid path.
 
-- Librewolf users must use an experimental version of `pywalfox-native` for now, see [#68](https://github.com/Frewacom/pywalfox/issues/68#issuecomment-873381669).
+### Firefox forks
 
-You should also
-- check the log in the Debugging section at the bottom of the Pywalfox settings page for any errors;
-- verify that `~/.cache/wal/colors` exists and contains the colors generated by Pywal;
-- verify that `path` in `~/<native-messaging-hosts-folder>/pywalfox.json` is a valid path.
+Forks may require custom paths to the manifest and profile directory during installation:
+```sh
+pywalfox install --manifest-path ~/.mozilla/native-messaging-hosts \
+                 --profile-path  ~/.config/librewolf/librewolf
+```
+The above example is for LibreWolf (non-Flatpak version). Paths vary across forks.
 
-### 🚫 Common errors in the browser console
+### Flatpaks
+
+Flatpak sandboxing prevents direct access to host binaries, so a wrapper script is needed. 
+The steps below use the LibreWolf Flatpak as an example. 
+You may need to adapt the instructions for your particular browser.
+
+1. Create a wrapper script at `~/.var/app/io.gitlab.librewolf-community/pywalfox-wrapper.sh`:
+   ```sh
+   #!/bin/sh
+   flatpak-spawn --host ~/.local/bin/pywalfox "$@"
+   ```
+1. Make the wrapper script executable: 
+   ```sh
+   chmod +x ~/.var/app/io.gitlab.librewolf-community/pywalfox-wrapper.sh
+   ```
+1. Install the native messaging host with additional arguments for your particular paths, e.g. 
+   ```sh
+   pywalfox install \
+   --manifest-path ~/.var/app/io.gitlab.librewolf-community/.librewolf/native-messaging-hosts \
+   --profile-path  ~/.var/app/io.gitlab.librewolf-community/.librewolf/
+   ```
+1. Edit the manifest in `~/.var/app/io.gitlab.librewolf-community/.librewolf/native-messaging-hosts/pywalfox.json`) and point its `path` to the wrapper script. Use an absolute path as below, replacing `<USER>` with your username.
+   ```sh
+   {
+     "name": "pywalfox",
+     "description": "Automatically theme your browser using the colors generated by Pywal",
+     "path": "/home/<USER>/.var/app/io.gitlab.librewolf-community/pywalfox-wrapper.sh",
+     "type": "stdio",
+     "allowed_extensions": [ "pywalfox@frewacom.org" ]
+   }
+   ```
+1. Grant Talk permissions:
+   ```sh
+   flatpak override --user \
+     --talk-name=org.freedesktop.Flatpak \
+     --talk-name=org.freedesktop.portal.Flatpak \
+     --system-talk-name=org.freedesktop.Flatpak \
+     io.gitlab.librewolf-community
+   ```
+   Verify that the correct permission have been granted, i.e.
+   ```sh
+   flatpak override --user --talk-name=org.freedesktop.Flatpak io.gitlab.librewolf-community
+   ```
+   should output
+   ```sh
+   [Session Bus Policy]
+   org.freedesktop.Flatpak=talk
+   org.freedesktop.portal.Flatpak=talk
+   
+   [System Bus Policy]
+   org.freedesktop.Flatpak=talk
+   ```
+1. Restart the browser. Fetching Pywal colors should now work.
+
+### Common errors in the browser console
 It is a good idea to check the Firefox browser console (`Tools > Web developer > Browser console`) for errors.
 Common errors include:
 
@@ -207,7 +236,6 @@ Common errors include:
 <b><code>ExtensionError: No such native application pywalfox</code></b>
 </summary>
 
-<br>
 <table><tr><td>
 
    The manifest is not installed properly. Try installing the manifest manually by following the instructions [here](https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/Native_manifests.).
@@ -225,7 +253,6 @@ Common errors include:
 <b><code>stderr output from native app pywalfox: <installation-path>/main.sh: line 3: pywalfox: command not found</code></b>
 </summary>
 
-<br>
 <table><tr><td>
 
   Pywalfox assumes that the `pywalfox` executable is in your `PATH`.
@@ -235,11 +262,12 @@ Common errors include:
 </td></tr></table>
 </details>
 
-> **Note** <br>
-> The errors in the `Browser Console` are not limited to just Pywalfox!
+<br>
+> [!IMPORTANT]
+> The errors in the browser console are not limited to just Pywalfox!
 
 ## 🚧 Development setup
-Do you want to hack on Pywalfox? Start here:
+Do you want to hack on the Pywalfox add-on? Start here:
 ```bash
 git clone git@github.com:Frewacom/pywalfox.git # or use your own fork
 cd pywalfox
