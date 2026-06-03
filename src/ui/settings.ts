@@ -30,6 +30,8 @@ import {
 
 import * as Utils from '@utils/dom';
 import Messenger from '@communication/messenger';
+import { requestExtensionTheme } from '@communication/content-scripts/ui';
+import { applyExtensionTheme } from '@ui/page';
 
 import Dialog from './components/dialog';
 import Colorpicker from './components/colorpicker';
@@ -523,6 +525,9 @@ function setInitialData(data: IInitialData) {
 
 function handleExtensionMessage({ action, data }: IExtensionMessage) {
   switch (action) {
+    case EXTENSION_MESSAGES.EXTENSION_THEME_SET:
+      applyExtensionTheme(data);
+      break;
     case EXTENSION_MESSAGES.INITIAL_DATA_SET:
       setInitialData(data);
       break;
@@ -653,4 +658,5 @@ createPaletteContent();
 createThemeTemplateContent();
 
 Messenger.UI.requestInitialData();
+requestExtensionTheme();
 Utils.setVersionLabel(versionLabel);

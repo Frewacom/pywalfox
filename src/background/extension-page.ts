@@ -1,4 +1,5 @@
 import { IExtensionTheme } from '@definitions';
+import { EXTENSION_MESSAGES } from '@config/general';
 
 export default class ExtensionPage {
   protected tab: browser.tabs.Tab;
@@ -72,14 +73,16 @@ export default class ExtensionPage {
     });
   }
 
-  private async removeInsertedCss() {
-    return browser.tabs.removeCSS(this.tab.id, { code: this.currentTheme });
-  }
-
   private async create() {
     try {
-      const [currentTab] = await browser.tabs.query({ active: true, currentWindow: true });
-      const createOptions: browser.tabs._CreateCreateProperties = { url: this.url, active: false };
+      const [currentTab] = await browser.tabs.query({
+        active: true,
+        currentWindow: true,
+      });
+      const createOptions: browser.tabs._CreateCreateProperties = {
+        url: this.url,
+        active: false,
+      };
       if (currentTab) {
         createOptions.index = currentTab.index + 1;
       }
@@ -95,7 +98,7 @@ export default class ExtensionPage {
   public async open() {
     if (!this.isOpen()) {
       await this.create();
-      await this.setTheme(this.currentTheme, false);
+      await this.setTheme(this.currentTheme);
     }
 
     // TODO: Focus window when the page has loaded to avoid flickering when applying CSS
@@ -107,21 +110,14 @@ export default class ExtensionPage {
     browser.tabs.update(this.tab.id, { active: true });
   }
 
-  public async setTheme(extensionTheme: IExtensionTheme, resetCurrent = true) {
+  public async setTheme(extensionTheme: IExtensionTheme) {
     if (this.tab !== null) {
-      if (resetCurrent === true && this.currentTheme !== null) {
-        await this.removeInsertedCss();
-      }
-
-      if (extensionTheme !== null) {
-        console.log(`Inserting CSS for ${this.url}`);
-        await browser.tabs.insertCSS(this.tab.id, {
-          code: extensionTheme,
-          runAt: 'document_start',
-          cssOrigin: 'author',
-          allFrames: true,
-        });
-      }
+      browser.tabs
+        .sendMessage(this.tab.id, {
+          action: EXTENSION_MESSAGES.EXTENSION_THEME_SET,
+          data: extensionTheme,
+        })
+        .catch(() => {});
     }
 
     this.currentTheme = extensionTheme;

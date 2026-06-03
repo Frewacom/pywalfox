@@ -202,6 +202,9 @@ export default class Extension {
         this.state.setNativeErrorMuted(true);
         this.nativeErrorPage.close();
         break;
+      case EXTENSION_MESSAGES.EXTENSION_THEME_GET:
+        Messenger.UI.sendExtensionTheme(this.state.getExtensionTheme());
+        break;
       default:
         break;
     }

@@ -2,6 +2,7 @@ import {
   IPalette,
   IInitialData,
   IPywalColors,
+  IExtensionTheme,
   IColorschemeTemplate,
   ITimeIntervalEndpoint,
   IPaletteTemplate,
@@ -158,4 +159,12 @@ export function requestNativeErrorPageMute() {
 
 export function sendCssEnableConfirmation(target: string) {
   sendMessage({ action: EXTENSION_MESSAGES.CSS_ENABLE_CONFIRMATION, data: target });
+}
+
+export function requestExtensionTheme() {
+  sendMessage({ action: EXTENSION_MESSAGES.EXTENSION_THEME_GET });
+}
+
+export function sendExtensionTheme(css: IExtensionTheme | null) {
+  sendMessage({ action: EXTENSION_MESSAGES.EXTENSION_THEME_SET, data: css });
 }
