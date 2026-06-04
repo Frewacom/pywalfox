@@ -53,6 +53,7 @@ export default class State {
         userContent: false,
         fontSize: DEFAULT_CSS_FONT_SIZE,
         duckduckgo: false,
+        websiteCssVariables: false,
         darkreader: false,
         fetchOnStartup: true,
         autoTimeStart: { hour: 10, minute: 0, stringFormat: '10:00' },
@@ -221,6 +222,10 @@ export default class State {
     return this.currentState.options.duckduckgo;
   }
 
+  public getWebsiteCssVariablesEnabled() {
+    return this.currentState.options.websiteCssVariables;
+  }
+
   public getDarkreaderEnabled() {
     return this.currentState.options.darkreader;
   }
@@ -302,6 +307,10 @@ export default class State {
 
   public setDDGThemeEnabled(enabled: boolean) {
     return this.setOption('duckduckgo', enabled);
+  }
+
+  public setWebsiteCssVariablesEnabled(enabled: boolean) {
+    return this.setOption('websiteCssVariables', enabled);
   }
 
   public setDarkreaderEnabled(enabled: boolean) {
@@ -427,6 +436,10 @@ export default class State {
         this.currentState.theme.templates.light.browser.tab_line = PaletteColors.BackgroundLight;
         shouldRefresh = true;
       }
+    }
+
+    if (!this.currentState.options.hasOwnProperty('websiteCssVariables')) {
+      this.currentState.options.websiteCssVariables = this.initialState.options.websiteCssVariables;
     }
 
     // Add new Theme API properties for existing users

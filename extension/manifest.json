@@ -28,6 +28,11 @@
         {
             "matches": ["*://*.duckduckgo.com/*"],
             "js": ["dist/duckduckgo.js"]
+        },
+        {
+            "matches": ["<all_urls>"],
+            "js": ["dist/website.js"],
+            "run_at": "document_start"
         }
     ],
     "commands": {
@@ -79,5 +84,8 @@
         "storage",
         "tabs",
         "alarms"
+    ],
+    "optional_permissions": [
+        "<all_urls>"
     ]
 }

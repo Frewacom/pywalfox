@@ -145,13 +145,33 @@ function setOptionEnabled(target: HTMLElement, enabled: boolean) {
   }
 }
 
-function onOptionClicked(e: Event) {
+async function onOptionClicked(e: Event) {
   const target = <HTMLElement>e.target;
   const option = target.getAttribute('data-option');
   const newState = !Utils.isSet('selected', target);
 
   if (Utils.isSet('async', target)) {
     Utils.setLoading(target);
+  }
+
+  if (option === EXTENSION_OPTIONS.WEBSITE_CSS_VARIABLES && newState) {
+    const permissionGranted = await browser.permissions.request({ origins: ['<all_urls>'] });
+
+    if (!permissionGranted) {
+      createNotification({
+        title: 'Website CSS variables',
+        message: 'Website permission is required to expose CSS variables to websites',
+        error: true,
+      });
+      updateOptionState({ option, enabled: false });
+      return;
+    }
+
+    browser.runtime.sendMessage({
+      action: EXTENSION_MESSAGES.OPTION_SET,
+      data: { option, enabled: newState, permissionGranted },
+    }).catch(() => {});
+    return;
   }
 
   Messenger.UI.requestOptionSet(option, newState);

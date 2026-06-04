@@ -57,6 +57,7 @@ export function generateColorscheme(
     palette,
     browser: generateBrowserTheme(palette, template.browser),
     extension: generateExtensionTheme(palette),
+    website: generateWebsiteTheme(palette),
     duckduckgo: generateDuckduckgoTheme(palette, template.duckduckgo),
     darkreader: generateDarkreaderScheme(palette, mode),
   };
@@ -111,14 +112,23 @@ export function generateDuckduckgoTheme(palette: IPalette, template: IDuckDuckGo
   return theme;
 }
 
-export function generateExtensionTheme(palette: IPalette) {
+function generateThemeVariables(palette: IPalette, prefix = '') {
   let variables: string = '';
 
   PALETTE_TEMPLATE_DATA.forEach(({ target, cssVariable }) => {
-    variables += `${cssVariable}:${palette[target]};`;
+    const variableName = prefix ? `${prefix}-${cssVariable.substring(2)}` : cssVariable;
+    variables += `${variableName}:${palette[target]};`;
   });
 
-  return `${EXTENSION_THEME_SELCTOR}{${variables}}`;
+  return variables;
+}
+
+export function generateExtensionTheme(palette: IPalette) {
+  return `${EXTENSION_THEME_SELCTOR}{${generateThemeVariables(palette)}}`;
+}
+
+export function generateWebsiteTheme(palette: IPalette) {
+  return `:root{${generateThemeVariables(palette, '--pywalfox')}}`;
 }
 
 export function generateDarkreaderScheme({ background, text }: IPalette, mode: ITemplateThemeMode) {
@@ -161,6 +171,7 @@ export default {
   browser: generateBrowserTheme,
   colorscheme: generateColorscheme,
   extension: generateExtensionTheme,
+  website: generateWebsiteTheme,
   pywalPalette: generatePywalPalette,
   duckduckgo: generateDuckduckgoTheme,
   darkreader: generateDarkreaderScheme,

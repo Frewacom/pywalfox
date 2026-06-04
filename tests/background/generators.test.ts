@@ -118,8 +118,25 @@ describe('generateDuckduckgoTheme', () => {
   });
 
   test('removes the hash symbol from each hex color', () => {
-    Object.values(theme).forEach((color: string) => {
+    Object.values(theme as Record<string, string>).forEach((color) => {
       expect(color.charAt(0)).not.toBe('#');
     });
+  });
+});
+
+
+describe('generateWebsiteTheme', () => {
+  const theme: string = Generators.website(defaultPalette);
+
+  test('creates namespaced CSS variables for websites', () => {
+    expect(theme).toContain(':root{');
+    expect(theme).toContain('--pywalfox-background:');
+    expect(theme).toContain('--pywalfox-background-light:');
+    expect(theme).toContain('--pywalfox-accent-primary:');
+  });
+
+  test('does not expose generic extension CSS variable names', () => {
+    expect(theme).not.toContain('--background:');
+    expect(theme).not.toContain('--text:');
   });
 });

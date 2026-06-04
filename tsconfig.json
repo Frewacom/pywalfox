@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "moduleResolution": "node",
+    "skipLibCheck": true,
     "esModuleInterop": true,
     "noImplicitAny": false,
     "module": "es6",

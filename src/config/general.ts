@@ -11,6 +11,7 @@ export const MAX_SIMULTANEOUS_NOTIFICATIONS = 3;
 export const ENABLED_BODY_CLASS = 'applied';
 export const EXTENSION_THEME_SELCTOR = 'body,body.light,body.dark';
 export const INJECT_URL_PATTERN = ['*://*.duckduckgo.com/*'];
+export const WEBSITE_INJECT_URL_PATTERN = ['http://*/*', 'https://*/*'];
 export const DARKREADER_CONNECTION_ID = 'addon@darkreader.org';
 
 // TODO: Move constants into an enum for better type validation
@@ -59,6 +60,9 @@ export const EXTENSION_MESSAGES = {
   CSS_ENABLE_CONFIRMATION: 'css:enable:confirmation',
   EXTENSION_THEME_GET: 'extension:theme:get',
   EXTENSION_THEME_SET: 'extension:theme:set',
+  WEBSITE_THEME_GET: 'website:theme:get',
+  WEBSITE_THEME_SET: 'website:theme:set',
+  WEBSITE_THEME_RESET: 'website:theme:reset',
 };
 
 export const EXTENSION_COMMANDS = {
@@ -76,6 +80,7 @@ export const EXTENSION_OPTIONS = {
   USER_CHROME: CSSTargets.UserChrome,
   USER_CONTENT: CSSTargets.UserContent,
   DUCKDUCKGO: 'duckduckgo',
+  WEBSITE_CSS_VARIABLES: 'websiteCssVariables',
   DARKREADER: 'darkreader',
   FETCH_ON_STARTUP: 'fetchOnStartup',
   UPDATE_MUTED: 'updateMuted',

@@ -51,6 +51,14 @@ export default [
     plugins: defaultPlugins,
   },
   {
+    input: 'src/inject/website.ts',
+    output: {
+      file: 'extension/dist/website.js',
+      format: 'iife',
+    },
+    plugins: defaultPlugins,
+  },
+  {
     input: 'src/ui/settings.ts',
     output: {
       file: 'extension/dist/settings.bundle.js',

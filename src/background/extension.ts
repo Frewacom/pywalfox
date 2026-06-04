@@ -48,10 +48,14 @@ export default class Extension {
 
   private nativeMessenger: NativeMessenger;
   private darkreaderMessenger: DarkreaderMessenger;
+  private websiteThemeTabIds: Set<number>;
+  private websiteContentScript: browser.contentScripts.RegisteredContentScript;
 
   constructor() {
     this.state = new State();
     this.stateLoadPromise = null;
+    this.websiteThemeTabIds = new Set();
+    this.websiteContentScript = null;
     this.darkreaderMessenger = new DarkreaderMessenger(this.onDarkreaderError.bind(this));
     this.autoMode = new AutoMode(this.onThemeChangeTrigger.bind(this));
     this.nativeMessenger = new NativeMessenger({
@@ -71,6 +75,8 @@ export default class Extension {
 
     browser.commands.onCommand.addListener(this.onCommand.bind(this));
     browser.runtime.onMessage.addListener(this.onMessage.bind(this));
+    browser.tabs.onUpdated.addListener(this.onTabUpdated.bind(this));
+    browser.tabs.onRemoved.addListener(this.onTabRemoved.bind(this));
     browser.browserAction.onClicked.addListener(() => this.settingsPage.open());
   }
 
@@ -102,6 +108,9 @@ export default class Extension {
         break;
       case EXTENSION_OPTIONS.DUCKDUCKGO:
         this.setDDGEnabled(optionData);
+        break;
+      case EXTENSION_OPTIONS.WEBSITE_CSS_VARIABLES:
+        this.setWebsiteCssVariablesEnabled(optionData);
         break;
       case EXTENSION_OPTIONS.USER_CHROME: /* Fallthrough */
       case EXTENSION_OPTIONS.USER_CONTENT:
@@ -152,7 +161,7 @@ export default class Extension {
   }
 
   /* Handles incoming messages from the UI and other content scripts. */
-  private async onMessage({ action, data }: IExtensionMessage) {
+  private async onMessage({ action, data }: IExtensionMessage, sender?: browser.runtime.MessageSender) {
     switch (action) {
       case EXTENSION_MESSAGES.INITIAL_DATA_GET:
         // If the settings page is open on firefox startup, the initial data will be
@@ -205,6 +214,16 @@ export default class Extension {
       case EXTENSION_MESSAGES.EXTENSION_THEME_GET:
         Messenger.UI.sendExtensionTheme(this.state.getExtensionTheme());
         break;
+      case EXTENSION_MESSAGES.WEBSITE_THEME_GET:
+        if (this.stateLoadPromise !== null) {
+          await this.stateLoadPromise;
+        }
+
+        if (this.state.getWebsiteCssVariablesEnabled() && sender?.tab?.id !== undefined) {
+          this.websiteThemeTabIds.add(sender.tab.id);
+          Messenger.Website.setThemeForTab(sender.tab.id, this.getWebsiteTheme());
+        }
+        break;
       default:
         break;
     }
@@ -214,6 +233,97 @@ export default class Extension {
     this.settingsPage.setTheme(extensionTheme);
     this.updatePage.setTheme(extensionTheme);
     this.nativeErrorPage.setTheme(extensionTheme);
+  }
+
+  private getWebsiteTheme() {
+    const colorscheme = this.state.getColorscheme();
+
+    if (!colorscheme) {
+      return null;
+    }
+
+    if (colorscheme.website) {
+      return colorscheme.website;
+    }
+
+    if (colorscheme.palette) {
+      return Generators.website(colorscheme.palette);
+    }
+
+    return null;
+  }
+
+  private getWebsiteThemeTabIds() {
+    return Array.from(this.websiteThemeTabIds);
+  }
+
+  private updateWebsiteTheme(websiteTheme: IExtensionTheme) {
+    const tabIds = this.getWebsiteThemeTabIds();
+
+    if (!this.state.getWebsiteCssVariablesEnabled() && websiteTheme) {
+      return;
+    }
+
+    if (websiteTheme) {
+      Messenger.Website.setTheme(tabIds, websiteTheme);
+    } else {
+      Messenger.Website.resetTheme(tabIds);
+    }
+  }
+
+  private async registerWebsiteContentScript() {
+    if (this.websiteContentScript) {
+      return true;
+    }
+
+    const hasPermission = await Messenger.Website.checkWebsiteCssVariablesPermission();
+
+    if (!hasPermission) {
+      return false;
+    }
+
+    try {
+      this.websiteContentScript = await Messenger.Website.registerContentScript();
+      return true;
+    } catch (error) {
+      Messenger.UI.sendDebuggingOutput(`Could not register website CSS variables content script: ${error}`, true);
+      return false;
+    }
+  }
+
+  private async unregisterWebsiteContentScript() {
+    if (!this.websiteContentScript) {
+      return;
+    }
+
+    await this.websiteContentScript.unregister();
+    this.websiteContentScript = null;
+  }
+
+  private async injectWebsiteTheme(tabId: number) {
+    const injected = await Messenger.Website.injectScript(tabId);
+
+    if (injected && this.state.getWebsiteCssVariablesEnabled()) {
+      this.websiteThemeTabIds.add(tabId);
+      Messenger.Website.setThemeForTab(tabId, this.getWebsiteTheme());
+    }
+  }
+
+  private async injectWebsiteThemes() {
+    const tabIds = await Messenger.Website.injectScripts();
+
+    tabIds.forEach((tabId) => this.websiteThemeTabIds.add(tabId));
+    this.updateWebsiteTheme(this.getWebsiteTheme());
+  }
+
+  private onTabUpdated(tabId: number, changeInfo: browser.tabs._OnUpdatedChangeInfo) {
+    if (this.state.currentState && changeInfo.status === 'loading') {
+      this.websiteThemeTabIds.delete(tabId);
+    }
+  }
+
+  private onTabRemoved(tabId: number) {
+    this.websiteThemeTabIds.delete(tabId);
   }
 
   private fetchTheme() {
@@ -228,8 +338,10 @@ export default class Extension {
   }
 
   private resetThemes() {
+    this.updateWebsiteTheme(null);
     browser.theme.reset();
     this.updateExtensionPagesTheme(null);
+    this.updateWebsiteTheme(null);
 
     if (this.state.getThemeMode() === ThemeModes.Auto) {
       this.autoMode.stop();
@@ -255,8 +367,10 @@ export default class Extension {
     const template = this.state.getTemplate();
     const colorscheme = Generators.colorscheme(mode, pywalColors, customColors, template);
 
+    this.updateWebsiteTheme(colorscheme.website);
     this.setBrowserTheme(colorscheme.browser, mode);
     this.updateExtensionPagesTheme(colorscheme.extension);
+    this.updateWebsiteTheme(colorscheme.website);
 
     if (this.state.getDDGThemeEnabled()) {
       Messenger.DDG.setTheme(colorscheme.hash, colorscheme.duckduckgo);
@@ -328,6 +442,52 @@ export default class Extension {
 
     Messenger.UI.sendOption(option, enabled);
     this.state.setDDGThemeEnabled(enabled);
+  }
+
+  private async setWebsiteCssVariablesEnabled({ option, enabled, permissionGranted }: IOptionSetData) {
+    const isEnabled = this.state.getWebsiteCssVariablesEnabled();
+
+    if (enabled && !isEnabled) {
+      const hasPermission = permissionGranted || await Messenger.Website.checkWebsiteCssVariablesPermission();
+
+      if (!hasPermission) {
+        Messenger.UI.sendOption(option, false);
+        Messenger.UI.sendNotification(
+          'Website CSS variables',
+          'Pywalfox needs website permission before CSS variables can be exposed to websites',
+          true,
+        );
+        return;
+      }
+
+      const registered = await this.registerWebsiteContentScript();
+
+      if (!registered) {
+        Messenger.UI.sendOption(option, false);
+        Messenger.UI.sendNotification(
+          'Website CSS variables',
+          'Could not register website CSS variables content script',
+          true,
+        );
+        return;
+      }
+
+      this.websiteThemeTabIds.clear();
+      await this.state.setWebsiteCssVariablesEnabled(true);
+      Messenger.UI.sendOption(option, true);
+      await this.injectWebsiteThemes();
+      return;
+    }
+
+    if (!enabled && isEnabled) {
+      this.updateWebsiteTheme(null);
+      this.websiteThemeTabIds.clear();
+      await this.unregisterWebsiteContentScript();
+      await Messenger.Website.removeWebsiteCssVariablesPermission();
+    }
+
+    await this.state.setWebsiteCssVariablesEnabled(enabled);
+    Messenger.UI.sendOption(option, enabled);
   }
 
   private getDarkreaderScheme() {
@@ -412,8 +572,10 @@ export default class Extension {
 
   private setSavedColorscheme(colorscheme: IColorscheme) {
     console.log('Applying saved colorscheme');
+    this.updateWebsiteTheme(this.getWebsiteTheme());
     this.setBrowserTheme(colorscheme.browser);
     this.updateExtensionPagesTheme(colorscheme.extension);
+    this.updateWebsiteTheme(this.getWebsiteTheme());
     this.state.setApplied(true);
   }
 
@@ -677,6 +839,11 @@ export default class Extension {
     const isApplied = this.state.getApplied();
     const shouldFetch = this.state.getFetchOnStartupEnabled();
     const isDarkreaderEnabled = this.state.getDarkreaderEnabled();
+    const isWebsiteCssVariablesEnabled = this.state.getWebsiteCssVariablesEnabled();
+
+    if (isWebsiteCssVariablesEnabled && await this.registerWebsiteContentScript()) {
+      await this.injectWebsiteThemes();
+    }
 
     // Run this after creating the extension pages so that the themes can be
     // set if the pages were reopened on launch.
@@ -689,6 +856,10 @@ export default class Extension {
       }
 
       this.setSavedColorscheme(savedColorscheme);
+    }
+
+    if (isWebsiteCssVariablesEnabled) {
+      this.injectWebsiteThemes();
     }
 
     this.nativeMessenger.connect();
