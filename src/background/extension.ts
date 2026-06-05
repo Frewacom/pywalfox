@@ -271,14 +271,17 @@ export default class Extension {
     }
   }
 
-  private async registerWebsiteContentScript() {
+  private async registerWebsiteContentScript(hasPermission?: boolean) {
     if (this.websiteContentScript) {
       return true;
     }
 
-    const hasPermission = await Messenger.Website.checkWebsiteCssVariablesPermission();
+    // Accept a pre-confirmed permission flag so we don't re-check after the UI
+    // already granted it. Re-checking can return false in the brief window
+    // between grant and the browser updating its internal state.
+    const permitted = hasPermission ?? await Messenger.Website.checkWebsiteCssVariablesPermission();
 
-    if (!hasPermission) {
+    if (!permitted) {
       return false;
     }
 
@@ -310,10 +313,20 @@ export default class Extension {
   }
 
   private async injectWebsiteThemes() {
-    const tabIds = await Messenger.Website.injectScripts();
+    const tabs = await Messenger.Website.getWebsiteTabs();
+    const websiteTheme = this.getWebsiteTheme();
 
-    tabIds.forEach((tabId) => this.websiteThemeTabIds.add(tabId));
-    this.updateWebsiteTheme(this.getWebsiteTheme());
+    // Inject the content script into each tab and immediately send the theme
+    // in the same awaited call — guaranteeing the listener is registered before
+    // WEBSITE_THEME_SET arrives. Firing setTheme after a bulk injectScripts()
+    // call races against script execution and the message is silently dropped.
+    await Promise.all(tabs.map(async (tab) => {
+      if (tab.id === undefined) return;
+      const injected = await Messenger.Website.injectScriptAndSetTheme(tab.id, websiteTheme);
+      if (injected) {
+        this.websiteThemeTabIds.add(tab.id);
+      }
+    }));
   }
 
   private onTabUpdated(tabId: number, changeInfo: browser.tabs._OnUpdatedChangeInfo) {
@@ -460,7 +473,7 @@ export default class Extension {
         return;
       }
 
-      const registered = await this.registerWebsiteContentScript();
+      const registered = await this.registerWebsiteContentScript(hasPermission);
 
       if (!registered) {
         Messenger.UI.sendOption(option, false);

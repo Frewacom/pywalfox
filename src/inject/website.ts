@@ -46,8 +46,19 @@ function onMessage({ action, data }: IExtensionMessage) {
   }
 }
 
+// Always (re-)register the message listener so that when the background
+// injects this script into an already-loaded tab (e.g. when the user
+// toggles "Expose CSS variables" on), the tab can immediately receive
+// WEBSITE_THEME_SET without requiring a page reload.
+// The guard only prevents sending WEBSITE_THEME_GET twice on a fresh load
+// where the registered content-script and executeScript both fire.
+if (pywalfoxWindow.pywalfoxWebsiteThemeLoaded) {
+  browser.runtime.onMessage.removeListener(onMessage);
+}
+
+browser.runtime.onMessage.addListener(onMessage);
+
 if (!pywalfoxWindow.pywalfoxWebsiteThemeLoaded) {
   pywalfoxWindow.pywalfoxWebsiteThemeLoaded = true;
-  browser.runtime.onMessage.addListener(onMessage);
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.WEBSITE_THEME_GET }).catch(() => {});
 }

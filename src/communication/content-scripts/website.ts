@@ -42,14 +42,28 @@ export function registerContentScript() {
 
 export async function injectScript(tabId: number) {
   try {
+    // 'document_idle' ensures the script actually runs on already-loaded tabs.
+    // 'document_start' is silently skipped by Firefox for tabs past that phase.
     await browser.tabs.executeScript(tabId, {
       file: 'dist/website.js',
-      runAt: 'document_start',
+      runAt: 'document_idle',
     });
     return true;
   } catch (_) {
     return false;
   }
+}
+
+export async function injectScriptAndSetTheme(tabId: number, css: IExtensionTheme) {
+  // executeScript is awaited before sending the theme message so that the
+  // content script's onMessage listener is guaranteed to be registered before
+  // WEBSITE_THEME_SET arrives. Sending the message before the script finishes
+  // executing is a race that causes the message to be silently dropped.
+  const injected = await injectScript(tabId);
+  if (injected) {
+    sendMessageToTab(tabId, { action: EXTENSION_MESSAGES.WEBSITE_THEME_SET, data: css });
+  }
+  return injected;
 }
 
 export async function injectScripts() {
