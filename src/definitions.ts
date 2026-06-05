@@ -218,7 +218,6 @@ export interface IOptionSetData {
   enabled: boolean;
   value?: any;
   skipConfirmation?: boolean;
-  permissionGranted?: boolean;
 }
 
 export interface IThemeModeData {

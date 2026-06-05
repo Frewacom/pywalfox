@@ -53,7 +53,7 @@ export default class State {
         userContent: false,
         fontSize: DEFAULT_CSS_FONT_SIZE,
         duckduckgo: false,
-        websiteCssVariables: false,
+        websiteCssVariables: true,
         darkreader: false,
         fetchOnStartup: true,
         autoTimeStart: { hour: 10, minute: 0, stringFormat: '10:00' },
@@ -439,7 +439,7 @@ export default class State {
     }
 
     if (!this.currentState.options.hasOwnProperty('websiteCssVariables')) {
-      this.currentState.options.websiteCssVariables = this.initialState.options.websiteCssVariables;
+      this.currentState.options.websiteCssVariables = true;
     }
 
     // Add new Theme API properties for existing users

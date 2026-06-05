@@ -24,14 +24,6 @@ export function requestTheme() {
   browser.runtime.sendMessage({ action: EXTENSION_MESSAGES.WEBSITE_THEME_GET }).catch(() => {});
 }
 
-export const checkWebsiteCssVariablesPermission = () => (
-  browser.permissions.contains({ origins: ['<all_urls>'] })
-);
-
-export const removeWebsiteCssVariablesPermission = () => (
-  browser.permissions.remove({ origins: ['<all_urls>'] }).catch(() => false)
-);
-
 export function registerContentScript() {
   return browser.contentScripts.register({
     matches: WEBSITE_INJECT_URL_PATTERN,

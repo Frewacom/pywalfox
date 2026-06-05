@@ -271,18 +271,9 @@ export default class Extension {
     }
   }
 
-  private async registerWebsiteContentScript(hasPermission?: boolean) {
+  private async registerWebsiteContentScript() {
     if (this.websiteContentScript) {
       return true;
-    }
-
-    // Accept a pre-confirmed permission flag so we don't re-check after the UI
-    // already granted it. Re-checking can return false in the brief window
-    // between grant and the browser updating its internal state.
-    const permitted = hasPermission ?? await Messenger.Website.checkWebsiteCssVariablesPermission();
-
-    if (!permitted) {
-      return false;
     }
 
     try {
@@ -457,23 +448,11 @@ export default class Extension {
     this.state.setDDGThemeEnabled(enabled);
   }
 
-  private async setWebsiteCssVariablesEnabled({ option, enabled, permissionGranted }: IOptionSetData) {
+  private async setWebsiteCssVariablesEnabled({ option, enabled }: IOptionSetData) {
     const isEnabled = this.state.getWebsiteCssVariablesEnabled();
 
     if (enabled && !isEnabled) {
-      const hasPermission = permissionGranted || await Messenger.Website.checkWebsiteCssVariablesPermission();
-
-      if (!hasPermission) {
-        Messenger.UI.sendOption(option, false);
-        Messenger.UI.sendNotification(
-          'Website CSS variables',
-          'Pywalfox needs website permission before CSS variables can be exposed to websites',
-          true,
-        );
-        return;
-      }
-
-      const registered = await this.registerWebsiteContentScript(hasPermission);
+      const registered = await this.registerWebsiteContentScript();
 
       if (!registered) {
         Messenger.UI.sendOption(option, false);
@@ -496,7 +475,6 @@ export default class Extension {
       this.updateWebsiteTheme(null);
       this.websiteThemeTabIds.clear();
       await this.unregisterWebsiteContentScript();
-      await Messenger.Website.removeWebsiteCssVariablesPermission();
     }
 
     await this.state.setWebsiteCssVariablesEnabled(enabled);
@@ -854,8 +832,10 @@ export default class Extension {
     const isDarkreaderEnabled = this.state.getDarkreaderEnabled();
     const isWebsiteCssVariablesEnabled = this.state.getWebsiteCssVariablesEnabled();
 
-    if (isWebsiteCssVariablesEnabled && await this.registerWebsiteContentScript()) {
-      await this.injectWebsiteThemes();
+    this.nativeMessenger.connect();
+
+    if (isDarkreaderEnabled) {
+      this.darkreaderMessenger.connect();
     }
 
     // Run this after creating the extension pages so that the themes can be
@@ -872,13 +852,15 @@ export default class Extension {
     }
 
     if (isWebsiteCssVariablesEnabled) {
-      this.injectWebsiteThemes();
-    }
-
-    this.nativeMessenger.connect();
-
-    if (isDarkreaderEnabled) {
-      this.darkreaderMessenger.connect();
+      this.registerWebsiteContentScript()
+        .then(async (registered) => {
+          if (registered) {
+            await this.injectWebsiteThemes();
+          }
+        })
+        .catch((error) => {
+          Messenger.UI.sendDebuggingOutput(`Could not initialize website CSS variables: ${error}`, true);
+        });
     }
   }
 }
