@@ -81,7 +81,7 @@ export const BASE_BROWSER_TEMPLATE = {
   sidebar: PaletteColors.BackgroundLight,
   sidebar_text: PaletteColors.Text,
   sidebar_highlight: PaletteColors.AccentPrimary,
-  sidebar_highlight_text: PaletteColors.TextFocus,
+  sidebar_highlight_text: PaletteColors.Background,
   button_background_hover: PaletteColors.BackgroundExtra,
   button_background_active: PaletteColors.BackgroundExtra,
 };
